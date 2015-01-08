@@ -812,7 +812,7 @@ state_idle++;
 			//20:["Alchemy_Tier3_Experimentation_Rank20"],
 			//19:["Alchemical Research","Rank 20 Experimentation","Upgrade Mixologist","Upgrade Apothecary","Hire an additional Apothecary"],
 			//20:["Alchemy_Tier2_Aquavitae_2"],
-			20:["Alchemy_Tier3_Protection_Potion_Major","Alchemy_Tier3_Potency_Potion_Major","Alchemy_Tier2_Aquaregia","Alchemy_Tier3_Refine_Basic","Alchemy_Tier3_Gather_Components"],
+			20:["Alchemy_Tier3_Protection_Potion_Major","Alchemy_Tier2_Aquaregia","Alchemy_Tier3_Refine_Basic","Alchemy_Tier3_Gather_Components"],
 		},
 	},
 ];
@@ -826,6 +826,7 @@ state_idle++;
 	{name: 'trainassets',		  title: 'Train Assets',						 def: true,	 type:'checkbox', tooltip:'Enable training/upgrading of asset worker resources'},
 	{name: 'refinead',			  title: 'Refine AD',							 def: true,	 type:'checkbox', tooltip:'Enable refining of AD on character switch'},
 	{name: 'openrewards',		  title: 'Open Reward Chests',					 def: false,  type:'checkbox', tooltip:'Enable opeing of leadership chests on character switch'}, //MAC-NW
+	{name: 'limitskillkits',	  title: 'Limit Skill Node Kit Stacks', def: false,  type:'checkbox', tooltip:'Enable removing skill node kits when there is more than 50 in a stack'}, //MAC-NW
 	{name: 'autoreload',		  title: 'Auto Reload',							 def: false, type:'checkbox', tooltip:'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)'},
 	{name: 'autologin',			  title: 'Attempt to login automatically',		 def: false, type:'checkbox', tooltip:'Automatically attempt to login to the neverwinter gateway site'},
 	{name: 'nw_username',		  title: '	Neverwinter Username',				 def: '',	 type:'text',	  tooltip:''},
@@ -950,7 +951,6 @@ state_idle++;
 					var currentTasks = unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.filter(function(entry) { return entry.category == tasklist[i].taskName; });
 					if (currentTasks.length < settings[tasklist[i].taskName]) {
 						unsafeWindow.client.professionFetchTaskList('craft_' + tasklist[i].taskName);
-						unsafeWindow.client.dataModel.fetchVendor('Nw_Gateway_Professions_Merchant');
 						window.setTimeout(function() { createNextTask(tasklist[i], 0); }, delay.SHORT);
 						return true;
 					}
@@ -1438,8 +1438,35 @@ def.resolve();
 	
 	// MAC-NW
 	
+	function vendorItemsLimited(_Pattern,_Limit) {
+        var _pbags = client.dataModel.model.ent.main.inventory.playerbags;
+        var limit = (parseInt(_Limit) > 99) ? 99 : parseInt(_Limit);
+        var itemMatches = [];
+        console.log("Removing Excess Skill Node Kits...");
+        $.each(_pbags, function( bi, bag ) {
+            bag.slots.forEach(function( slot ) {
+                if (slot && _Pattern.test(slot.name)) {
+                    if (!itemMatches[slot.name])
+                        itemMatches[slot.name]=[];
+                    itemMatches[slot.name][itemMatches[slot.name].length] = slot;
+                    if (slot.count > limit) {
+                        var vendor = {vendor:"Nw_Gateway_Professions_Merchant"};
+                        vendor.id = slot.uid;
+                        vendor.count = slot.count - 50;
+                        console.log('Selling',vendor.count,slot.name,'to vendor.');
+                        window.setTimeout(function () {client.sendCommand('GatewayVendor_SellItemToVendor', vendor);}, 500);
+                    }
+                }
+            });
+        });
+        console.log(itemMatches);
+    }
+    
 	function switchChar() {
-		
+        
+        // MAC-NW -- Pause before processing additional features pre character swtich
+		PauseSettings();
+        
 		if (settings["refinead"]) {
 			var _currencies = unsafeWindow.client.dataModel.model.ent.main.currencies;
 			if (_currencies.diamondsconvertleft && _currencies.roughdiamonds) {
@@ -1466,9 +1493,7 @@ def.resolve();
 			}
 			
 		} else { console.log("Zen Exchange AD transfer not enabled. Skipping Zex Posting.."); }
-		// MAC-NW
-		
-		//MAC-NW
+
 		if (settings["openrewards"]) {
 			var _pbags = client.dataModel.model.ent.main.inventory.playerbags;
 			var _cRewardPat = /Reward_Item_Chest/;
@@ -1485,8 +1510,15 @@ def.resolve();
 				});
 			});
 		}
-		//MAC-NW
-		
+
+		if (settings["limitskillkits"])
+            vendorItemsLimited(/Item_Consumable_Skill/,50);
+        
+        // MAC-NW -- Unpause before processing additional features pre character swtich
+		unPauseSettings();
+        
+        // MAC-NW (endchanges)
+        
 		console.log("Switching Characters");
 		
 		var chardelay, chardate = null, nowdate = new Date();
@@ -1656,19 +1688,25 @@ def.resolve();
 		// MAC-NW -- AD Consolidation -- Banker Withdraw Secion
 		try {
 			var testChar = unsafeWindow.client.dataModel.model.ent.main.name;
+            unsafeWindow.client.dataModel.fetchVendor('Nw_Gateway_Professions_Merchant');
+            console.log("Loaded datamodel for", charname);
 		}
 		catch (e) {
 			// TODO: Use callback function
 			window.setTimeout(function() {loadCharacter(charname);}, delay.SHORT);
 			return;
 		}
-		
+        
+		// MAC-NW -- Pause before processing additional features pre character swtich
+		PauseSettings();
+        
 		if (settings["autoexchange"]) {
 			
 			unsafeWindow.client.dataModel.fetchExchangeAccountData();
 			
 			try {
 				var testExData = unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders;
+                console.log("Loaded zen exchange data for", charname);
 			}
 			catch (e) {
 				// TODO: Use callback function
@@ -1701,8 +1739,25 @@ def.resolve();
 			unsafeWindow.client.dataModel.loadEntityByName(charname);
 			
 		} else { console.log("Zen Exchange AD transfer not enabled. Skipping Zex Posting.."); }
-		// MAC-NW
-		
+        // MAC-NW
+        
+        // MAC-NW -- Moved Professoin Merchant loading here with testing/waiting to make sure it loads
+		try {
+			var testProfMerchant = client.dataModel.model.vendor.items;
+            console.log("Loaded profession merchant for", charname);
+		}
+		catch (e) {
+			// TODO: Use callback function
+			window.setTimeout(function() {loadCharacter(charname);}, delay.SHORT);
+			return;
+		}
+        
+        if (settings["limitskillkits"])
+            vendorItemsLimited(/Item_Consumable_Skill/,50);
+        
+        // MAC-NW -- Unpause before processing additional features pre character swtich
+		unPauseSettings();
+        
 		dfdNextRun.resolve();
 	}
 	
@@ -1917,19 +1972,29 @@ document.getElementById("charContainer"+val).style.display="block";\
 			$("#pauseButton").show();
 			$("#settingsPanel").hide();
 		});
-		$("#pauseButton").click(function() {
-			settings["paused"] = !settings["paused"]
-			setTimeout(function() { GM_setValue("paused", settings["paused"]); }, 0);
-			$("#settings_paused").prop("checked", settings["paused"]);
-			$("#pauseButton img").attr("src",(settings["paused"]?image_play:image_pause));
-			$("#pauseButton img").attr("title","Click to "+(settings["paused"]?"resume":"pause")+" task script");
-		});
+		$("#pauseButton").click(PauseSettings);
 		
 		// Use setTimeout to workaround permission issues when calling GM functions from main window
 		$("#settings_save").click(function() { setTimeout(function() { SaveSettings();}, 0)});
 		customRadio("radio_position");
 	}
-	
+    
+	function PauseSettings() {
+			settings["paused"] = !settings["paused"]
+			setTimeout(function() { GM_setValue("paused", settings["paused"]); }, 0);
+			$("#settings_paused").prop("checked", settings["paused"]);
+			$("#pauseButton img").attr("src",(settings["paused"]?image_play:image_pause));
+			$("#pauseButton img").attr("title","Click to "+(settings["paused"]?"resume":"pause")+" task script");
+	}
+    
+	function unPauseSettings() {
+			settings["paused"] = false;
+			setTimeout(function() { GM_setValue("paused", settings["paused"]); }, 0);
+			$("#settings_paused").prop("checked", settings["paused"]);
+			$("#pauseButton img").attr("src",(settings["paused"]?image_play:image_pause));
+			$("#pauseButton img").attr("title","Click to "+(settings["paused"]?"resume":"pause")+" task script");
+	}
+    
 	function SaveSettings() {
 		var charcount = settings["charcount"];
 		
