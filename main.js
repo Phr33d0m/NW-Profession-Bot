@@ -23,7 +23,7 @@ NW Gateway Professions Bot Contributors
 -----------------------------------
 Kakoura, Nametaken, rotten_mind, Frankescript, Brent
 */
-// @version 1.05.0.1f
+// @version 1.05.0.1j
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -32,6 +32,28 @@ Kakoura, Nametaken, rotten_mind, Frankescript, Brent
 // ==/UserScript==
 
 /* RELEASE NOTES
+1.05.0.01j
+- RC for ver. 1.05.0.02
+- rebuild sell items selection method, now more comprehensive
+	* vendoring function now use array to vendor item objects
+- Vendoring list, current version
+	* sell all Runes/Enchants rank 1 - 2
+	* limit, altars 80, skill kits 50, healing potions T 1 - 3 10
+- re-edited warning "Tooltip"
+- selecting "what skill kit character not need" when selling
+- merged back the split of the pause function
+- added a parameter to specify pause/unpause/toggle (defaults to toggle as in original behavior)
+- tasklist updates
+BETA 1.05.0.1i
+- edited "sell items" list
+- edited/added WARNING´s on tooltip
+BETA 1.05.0.1h
+- added "sell skill kits", works same as "open_rewards" (experimental, inventory cleaning needs more specific "sell filter" and event what trigger "sell"  )
+- changed switching character and completing character task logic, trying prevent wrong task execution after  switch
+- refined "save settings" function 
+- WinterEvent tasklist got new additions
+1.05.01G
+- Github release
 1.05.0.1f
 - minor tasklist updates
 - added button "open all(99)", opens rewardchest
@@ -571,7 +593,7 @@ state_idle++;
 				0:["Event_Winter_Tier0_Intro"],
 				1:["Event_Winter_Tier1_Rankup",/*"Event_Winter_Tier1_Shiny_Lure",*/"Event_Winter_Tier1_Refine","Event_Winter_Tier1_Gather"],
 				2:["Event_Winter_Tier1_Rankup_2",/*"Event_Winter_Tier1_Fishingpole_Blue","Event_Winter_Tier1_Shiny_Lure_Mass",*/"Event_Winter_Tier1_Refine_2","Event_Winter_Tier1_Gather_2"],
-				3:[/*"Event_Winter_Tier1_Lightwine","Event_Winter_Tier1_Mesmerizing_Lure",*/"Event_Winter_Tier1_Gather_3"],
+				3:[/*"Event_Winter_Tier1_Heros_Feast","Event_Winter_Tier1_Lightwine","Event_Winter_Tier1_Sparkliest_Gem","Event_Winter_Tier1_Mesmerizing_Lure",*/"Event_Winter_Tier1_Gather_3"],
 			},
 		},
 		
@@ -734,25 +756,25 @@ state_idle++;
 		taskName:"Artificing",
 		level: {
 			0:["Artificing_Tier0_Intro_1"],
-			1:["Artificing_Tier1_Symbol_Virtuous_1","Artificing_Tier1_Refine_Basic"],
-			2:["Artificing_Tier1_Icon_Virtuous_1","Artificing_Tier1_Refine_Basic"],
-			3:["Artificing_Tier1_Icon_Virtuous_1","Artificing_Tier1_Refine_Basic"],
-			4:["Artificing_Tier1_Icon_Virtuous_2","Artificing_Tier1_Refine_Basic"],
-			5:["Artificing_Tier1_Icon_Virtuous_2","Artificing_Tier1_Refine_Basic"],
-			6:["Artificing_Tier1_Icon_Virtuous_2","Artificing_Tier1_Refine_Basic"],
-			7:["Artificing_Tier1_Icon_Virtuous_2","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			8:["Artificing_Tier2_Icon_Virtuous_3","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			9:["Artificing_Tier2_Icon_Virtuous_3","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			10:["Artificing_Tier2_Icon_Virtuous_3","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			11:["Artificing_Tier2_Icon_Virtuous_3","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			12:["Artificing_Tier2_Icon_Virtuous_3","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			13:["Artificing_Tier2_Icon_Virtuous_3","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			14:["Artificing_Tier3_Icon_Virtuous_4","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			15:["Artificing_Tier3_Icon_Virtuous_4","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			16:["Artificing_Tier3_Icon_Virtuous_4","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			17:["Artificing_Tier3_Icon_Virtuous_5","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			18:["Artificing_Tier3_Icon_Virtuous_5","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			19:["Artificing_Tier3_Icon_Virtuous_5","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+			1:["Artificing_Tier1_Symbol_Virtuous_1","Artificing_Tier1_Pactblade_Convergence_1","Artificing_Tier1_Refine_Basic"],
+			2:["Artificing_Tier1_Icon_Virtuous_1","Artificing_Tier1_Pactblade_Convergence_1","Artificing_Tier1_Refine_Basic"],
+			3:["Artificing_Tier1_Icon_Virtuous_1","Artificing_Tier1_Pactblade_Convergence_1","Artificing_Tier1_Refine_Basic"],
+			4:["Artificing_Tier1_Icon_Virtuous_2","Artificing_Tier1_Pactblade_Convergence_1","Artificing_Tier1_Refine_Basic"],
+			5:["Artificing_Tier1_Icon_Virtuous_2","Artificing_Tier1_Pactblade_Convergence_1","Artificing_Tier1_Refine_Basic"],
+			6:["Artificing_Tier1_Icon_Virtuous_2","Artificing_Tier1_Pactblade_Convergence_1","Artificing_Tier1_Refine_Basic"],
+			7:["Artificing_Tier1_Icon_Virtuous_2","Artificing_Tier2_Pactblade_Temptation_2","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+			8:["Artificing_Tier2_Icon_Virtuous_3","Artificing_Tier2_Pactblade_Temptation_3","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+			9:["Artificing_Tier2_Icon_Virtuous_3","Artificing_Tier2_Pactblade_Temptation_3","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+			10:["Artificing_Tier2_Icon_Virtuous_3","Artificing_Tier2_Pactblade_Temptation_3","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+			11:["Artificing_Tier2_Icon_Virtuous_3","Artificing_Tier2_Pactblade_Temptation_3","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+			12:["Artificing_Tier2_Icon_Virtuous_3","Artificing_Tier2_Pactblade_Temptation_3","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+			13:["Artificing_Tier2_Icon_Virtuous_3","Artificing_Tier2_Pactblade_Temptation_3","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+			14:["Artificing_Tier3_Icon_Virtuous_4","Artificing_Tier3_Pactblade_Temptation_4","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+			15:["Artificing_Tier3_Icon_Virtuous_4","Artificing_Tier3_Pactblade_Temptation_4","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+			16:["Artificing_Tier3_Icon_Virtuous_4","Artificing_Tier3_Pactblade_Temptation_4","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+			17:["Artificing_Tier3_Icon_Virtuous_5","Artificing_Tier3_Pactblade_Temptation_5","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+			18:["Artificing_Tier3_Icon_Virtuous_5","Artificing_Tier3_Pactblade_Temptation_5","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+			19:["Artificing_Tier3_Icon_Virtuous_5","Artificing_Tier3_Pactblade_Temptation_5","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
 			20:["Artificing_Tier2_Refine_Basic"],
 			//19:["Virtuous Icon +5","Upgrade Engraver","Upgrade Carver","Hire an additional Carver"],
 			//20:["7:Craft Ornamental metal and Carved Wood"],
@@ -811,7 +833,7 @@ state_idle++;
 			19:["Alchemy_Tier3_Experiment_Rank20","Alchemy_Tier3_Experimentation_Rank19"],
 			//20:["Alchemy_Tier3_Experimentation_Rank20"],
 			//19:["Alchemical Research","Rank 20 Experimentation","Upgrade Mixologist","Upgrade Apothecary","Hire an additional Apothecary"],
-			//20:["Alchemy_Tier2_Aquavitae_2"],
+			//20:["Alchemy_Tier2_Aquavitae_2"],,"Alchemy_Tier3_Potency_Potion_Major"
 			20:["Alchemy_Tier3_Protection_Potion_Major","Alchemy_Tier2_Aquaregia","Alchemy_Tier3_Refine_Basic","Alchemy_Tier3_Gather_Components"],
 		},
 	},
@@ -822,22 +844,22 @@ state_idle++;
 	{name: 'paused',			  title: 'Pause Script',						 def: false, type:'checkbox', tooltip:'Disable All Automation'},
 	{name: 'debug',				  title: 'Enable Debug',						 def: false, type:'checkbox', tooltip:'Enable all debug output to console', onsave: function(newValue, oldValue) {console=newValue?unsafeWindow.console||fouxConsole:fouxConsole;}},
 	{name: 'optionals',			  title: 'Fill Optional Assets',				 def: true,	 type:'checkbox', tooltip:'Enable to include selecting the optional assets of tasks'},
-	{name: 'autopurchase',		  title: 'Auto Purchase Resources',				 def: true,	 type:'checkbox', tooltip:'Automatically purchase required resources from gateway shop (100 at a time)'},
+	{name: 'autopurchase',		  title: 'Auto Purchase Resources',				 def: true,	 type:'checkbox', tooltip:'Automatically purchase required resources from gateway shop (30 at a time)'},
 	{name: 'trainassets',		  title: 'Train Assets',						 def: true,	 type:'checkbox', tooltip:'Enable training/upgrading of asset worker resources'},
 	{name: 'refinead',			  title: 'Refine AD',							 def: true,	 type:'checkbox', tooltip:'Enable refining of AD on character switch'},
-	{name: 'openrewards',		  title: 'Open Reward Chests',					 def: false,  type:'checkbox', tooltip:'Enable opeing of leadership chests on character switch'}, //MAC-NW
-	{name: 'limitskillkits',	  title: 'Limit Skill Node Kit Stacks', def: false,  type:'checkbox', tooltip:'Enable removing skill node kits when there is more than 50 in a stack'}, //MAC-NW
+	{name: 'openrewards',		  title: 'Open Reward Chests',					 def: false, type:'checkbox', tooltip:'Enable opening of leadership chests on character switch, recomended use with "Automatic Vendoring"'}, //MAC-NW edited by RottenMind
+	{name: 'limitskillkits',	  title: 'Automatic Vendoring',			 		 def: false, type:'checkbox', tooltip:'WARNING, Enable automatic sell items, check script description'}, //MAC-NW edited by RottenMind
 	{name: 'autoreload',		  title: 'Auto Reload',							 def: false, type:'checkbox', tooltip:'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)'},
 	{name: 'autologin',			  title: 'Attempt to login automatically',		 def: false, type:'checkbox', tooltip:'Automatically attempt to login to the neverwinter gateway site'},
 	{name: 'nw_username',		  title: '	Neverwinter Username',				 def: '',	 type:'text',	  tooltip:''},
 	{name: 'nw_password',		  title: '	Neverwinter Password',				 def: '',	 type:'password', tooltip:''},
 	{name: 'charcount',			  title: '	Number of Characters',				 def: '2',	 type:'text',	  tooltip:'Enter number of characters to use (reload page to update settings form)'},
 	// MAC-NW AD Consolidation
-	{name: 'autoexchange',		  title: 'Consolidate AD via ZEX',				 def: false, type:'checkbox', tooltip:'Automatically attempt to post, cancel and withdraw AD via ZEX and consolidate to designated character'},
-	{name: 'bankchar',			  title: '	Character Name of Banker',			 def: '',	type:'text',	  tooltip:'Enter name of the character to hold account AD'},
-	{name: 'banktransmin',		  title: '	Min AD for Transfer',				 def: '22000',	 type:'text', tooltip:'Enter minimum AD limit for it to be cosidered for transfer off a character'},
-	{name: 'bankcharmin',		  title: '	Min Character balance',				 def: '8000',	type:'text',  tooltip:'Enter the amount of AD to always keep available on characters'},
-	{name: 'banktransrate',		  title: '	AD per Zen Rate (in zen)',			 def: '300',   type:'text',	  tooltip:'Enter default rate to use for transfering through ZEX'},
+	{name: 'autoexchange',		  title: 'Consolidate AD via ZEX',				 def: false,	type:'checkbox',	tooltip:'Automatically attempt to post, cancel and withdraw AD via ZEX and consolidate to designated character'},
+	{name: 'bankchar',			  title: '	Character Name of Banker',			 def: '',		type:'text',		tooltip:'Enter name of the character to hold account AD'},
+	{name: 'banktransmin',		  title: '	Min AD for Transfer',				 def: '22000',	type:'text',		tooltip:'Enter minimum AD limit for it to be cosidered for transfer off a character'},
+	{name: 'bankcharmin',		  title: '	Min Character balance',				 def: '8000',	type:'text',		tooltip:'Enter the amount of AD to always keep available on characters'},
+	{name: 'banktransrate',		  title: '	AD per Zen Rate (in zen)',			 def: '300',	type:'text',		tooltip:'Enter default rate to use for transfering through ZEX'},
 	// MAC-NW
 ];
 	
@@ -965,7 +987,7 @@ state_idle++;
 		// TODO: Add code to get next task finish time
 		chartimers[charcurrent] = getNextFinishedTask();
 		
-		// Add diamond count	883			 // Add diamond count
+		// Add diamond count
 		chardiamonds[charcurrent] = unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds;
 		
 		return false;
@@ -1438,34 +1460,44 @@ def.resolve();
 	
 	// MAC-NW
 	
-	function vendorItemsLimited(_Pattern,_Limit) {
+	function vendorItemsLimited(_items) {
         var _pbags = client.dataModel.model.ent.main.inventory.playerbags;
-        var limit = (parseInt(_Limit) > 99) ? 99 : parseInt(_Limit);
-        var itemMatches = [];
-        console.log("Removing Excess Skill Node Kits...");
+        var _delay = 400;
+        var _sellCount = 0;
         $.each(_pbags, function( bi, bag ) {
             bag.slots.forEach(function( slot ) {
-                if (slot && _Pattern.test(slot.name)) {
-                    if (!itemMatches[slot.name])
-                        itemMatches[slot.name]=[];
-                    itemMatches[slot.name][itemMatches[slot.name].length] = slot;
-                    if (slot.count > limit) {
-                        var vendor = {vendor:"Nw_Gateway_Professions_Merchant"};
-                        vendor.id = slot.uid;
-                        vendor.count = slot.count - 50;
-                        console.log('Selling',vendor.count,slot.name,'to vendor.');
-                        window.setTimeout(function () {client.sendCommand('GatewayVendor_SellItemToVendor', vendor);}, 500);
+                for (i = 0; i < _items.length; i++) {
+                    var _Limit = (parseInt(_items[i].limit) > 99) ? 99 : parseInt(_items[i].limit);
+                    var _Pattern = _items[i].pattern;
+                    //if (slot) console.log('Checking for',_Pattern,'slot name:',slot.name,'limit:',_Limit);
+                    if (slot && _Pattern.test(slot.name)) {
+                        if (slot.name == "Item_Consumable_Skill_Dungeoneering" && (unsafeWindow.client.dataModel.model.ent.main.classtype == "Player_Guardian" || unsafeWindow.client.dataModel.model.ent.main.classtype == "Player_Greatweapon"))
+                            _Limit=0;
+                        if (slot.name == "Item_Consumable_Skill_Religion" && unsafeWindow.client.dataModel.model.ent.main.classtype == "Player_Devoted")
+                            _Limit=0;
+                        if (slot.name == "Item_Consumable_Skill_Thievery" && unsafeWindow.client.dataModel.model.ent.main.classtype == "Player_Trickster")
+                            _Limit=0;
+                        if (slot.name == "Item_Consumable_Skill_Arcana" && (unsafeWindow.client.dataModel.model.ent.main.classtype == "Player_Controller" || unsafeWindow.client.dataModel.model.ent.main.classtype == "Player_Scourge"))
+                            _Limit=0;
+                        if (slot.name == "Item_Consumable_Skill_Nature" && unsafeWindow.client.dataModel.model.ent.main.classtype == "Player_Archer")
+                            _Limit=0;
+                        if (slot.count > _Limit) {
+                            _sellCount++;
+                            var vendor = {vendor:"Nw_Gateway_Professions_Merchant"};
+                            vendor.id = slot.uid;
+                            vendor.count = slot.count - _Limit;
+                            console.log('Selling',vendor.count,slot.name,'to vendor.');
+                            window.setTimeout(function () {client.sendCommand('GatewayVendor_SellItemToVendor', vendor);}, _delay);
+                            _delay = _delay + 100;
+                        }
                     }
                 }
             });
         });
-        console.log(itemMatches);
+        return _sellCount;
     }
     
 	function switchChar() {
-        
-        // MAC-NW -- Pause before processing additional features pre character swtich
-		PauseSettings();
         
 		if (settings["refinead"]) {
 			var _currencies = unsafeWindow.client.dataModel.model.ent.main.currencies;
@@ -1495,7 +1527,7 @@ def.resolve();
 		} else { console.log("Zen Exchange AD transfer not enabled. Skipping Zex Posting.."); }
 
 		if (settings["openrewards"]) {
-			var _pbags = client.dataModel.model.ent.main.inventory.playerbags;
+			var _pbags = unsafeWindow.client.dataModel.model.ent.main.inventory.playerbags;
 			var _cRewardPat = /Reward_Item_Chest/;
 			console.log("Opening Rewards");
 			$.each(_pbags, function( bi, bag ) {
@@ -1511,11 +1543,27 @@ def.resolve();
 			});
 		}
 
-		if (settings["limitskillkits"])
-            vendorItemsLimited(/Item_Consumable_Skill/,50);
+        if (settings["limitskillkits"]) {
+            var _vendorItems=[];
+            var _sellCount=0;
+            _vendorItems[_vendorItems.length] = {pattern:/Item_Consumable_Skill/,limit:50}
+            _vendorItems[_vendorItems.length] = {pattern:/Item_Portable_Altar/,limit:80}
+            _vendorItems[_vendorItems.length] = {pattern:/T1_Enchantment/,limit:0}
+            _vendorItems[_vendorItems.length] = {pattern:/T1_Runestone/,limit:0}
+            _vendorItems[_vendorItems.length] = {pattern:/T2_Enchantment/,limit:0}
+            _vendorItems[_vendorItems.length] = {pattern:/T2_Runestone/,limit:0}
+			_vendorItems[_vendorItems.length] = {pattern:/Potion_Healing_1/,limit:10}
+            _vendorItems[_vendorItems.length] = {pattern:/Potion_Healing_2/,limit:10}
+            _vendorItems[_vendorItems.length] = {pattern:/Potion_Healing_3/,limit:10}
+            //_vendorItems[_vendorItems.length] = {pattern:/Potion_Healing_4/,limit:0}
+			_sellCount = vendorItemsLimited(_vendorItems);
+            if (_sellCount > 0) {
+                var _sellWait = _sellCount * 500;
+                PauseSettings("pause");
+                window.setTimeout(function() {PauseSettings("unpause");}, _sellWait);
+            }
+        }
         
-        // MAC-NW -- Unpause before processing additional features pre character swtich
-		unPauseSettings();
         
         // MAC-NW (endchanges)
         
@@ -1685,7 +1733,7 @@ def.resolve();
 		console.log("Loading gateway script for", charname);
 		unsafeWindow.client.dataModel.loadEntityByName(charname);
 		
-		// MAC-NW -- AD Consolidation -- Banker Withdraw Secion
+		// MAC-NW -- AD Consolidation -- Banker Withdraw Section
 		try {
 			var testChar = unsafeWindow.client.dataModel.model.ent.main.name;
             unsafeWindow.client.dataModel.fetchVendor('Nw_Gateway_Professions_Merchant');
@@ -1696,9 +1744,6 @@ def.resolve();
 			window.setTimeout(function() {loadCharacter(charname);}, delay.SHORT);
 			return;
 		}
-        
-		// MAC-NW -- Pause before processing additional features pre character swtich
-		PauseSettings();
         
 		if (settings["autoexchange"]) {
 			
@@ -1741,7 +1786,7 @@ def.resolve();
 		} else { console.log("Zen Exchange AD transfer not enabled. Skipping Zex Posting.."); }
         // MAC-NW
         
-        // MAC-NW -- Moved Professoin Merchant loading here with testing/waiting to make sure it loads
+        // MAC-NW -- Moved Profession Merchant loading here with testing/waiting to make sure it loads
 		try {
 			var testProfMerchant = client.dataModel.model.vendor.items;
             console.log("Loaded profession merchant for", charname);
@@ -1751,13 +1796,28 @@ def.resolve();
 			window.setTimeout(function() {loadCharacter(charname);}, delay.SHORT);
 			return;
 		}
-        
-        if (settings["limitskillkits"])
-            vendorItemsLimited(/Item_Consumable_Skill/,50);
-        
-        // MAC-NW -- Unpause before processing additional features pre character swtich
-		unPauseSettings();
-        
+
+        if (settings["limitskillkits"]) {
+            var _vendorItems=[];
+            var _sellCount=0;
+            _vendorItems[_vendorItems.length] = {pattern:/Item_Consumable_Skill/,limit:50}
+            _vendorItems[_vendorItems.length] = {pattern:/Item_Portable_Altar/,limit:80}
+            _vendorItems[_vendorItems.length] = {pattern:/T1_Enchantment/,limit:0}
+            _vendorItems[_vendorItems.length] = {pattern:/T1_Runestone/,limit:0}
+			_vendorItems[_vendorItems.length] = {pattern:/T2_Enchantment/,limit:0}
+            _vendorItems[_vendorItems.length] = {pattern:/T2_Runestone/,limit:0}
+            _vendorItems[_vendorItems.length] = {pattern:/Potion_Healing_1/,limit:10}
+            _vendorItems[_vendorItems.length] = {pattern:/Potion_Healing_2/,limit:10}
+            _vendorItems[_vendorItems.length] = {pattern:/Potion_Healing_3/,limit:10}
+            //_vendorItems[_vendorItems.length] = {pattern:/Potion_Healing_4/,limit:0}
+			_sellCount = vendorItemsLimited(_vendorItems);
+            if (_sellCount > 0) {
+                var _sellWait = _sellCount * 500;
+                PauseSettings("pause");
+                window.setTimeout(function() {PauseSettings("unpause");}, _sellWait);
+            }
+        }
+
 		dfdNextRun.resolve();
 	}
 	
@@ -1979,16 +2039,14 @@ document.getElementById("charContainer"+val).style.display="block";\
 		customRadio("radio_position");
 	}
     
-	function PauseSettings() {
-			settings["paused"] = !settings["paused"]
-			setTimeout(function() { GM_setValue("paused", settings["paused"]); }, 0);
-			$("#settings_paused").prop("checked", settings["paused"]);
-			$("#pauseButton img").attr("src",(settings["paused"]?image_play:image_pause));
-			$("#pauseButton img").attr("title","Click to "+(settings["paused"]?"resume":"pause")+" task script");
-	}
-    
-	function unPauseSettings() {
-			settings["paused"] = false;
+	function PauseSettings(_action) {
+            _action = (typeof _action !== 'undefined') ? _action : "toggle";
+			if (_action == "toggle")
+				settings["paused"] = !settings["paused"];
+			if (_action == "pause")
+				settings["paused"] = true;
+			if (_action == "unpause")
+				settings["paused"] = false;
 			setTimeout(function() { GM_setValue("paused", settings["paused"]); }, 0);
 			$("#settings_paused").prop("checked", settings["paused"]);
 			$("#pauseButton img").attr("src",(settings["paused"]?image_play:image_pause));
