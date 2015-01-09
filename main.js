@@ -11,7 +11,7 @@
 // @include http://gatewaysitedown.playneverwinter.com
 // @include http://gatewaysitedown.playneverwinter.com/*
 // @originalAuthor Mustex/Bunta
-// @modifiedBy NW Gateway Professions Bot Developers & Contributors
+// @modifiedBy NW gateway Professions Bot Developers & Contributors
 
 /* NW Gateway Professions Bot Developers & Contributors
 
@@ -23,7 +23,7 @@ NW Gateway Professions Bot Contributors
 -----------------------------------
 Kakoura, Nametaken, rotten_mind, Frankescript, Brent
 */
-// @version 1.05.0.1j
+// @version 1.05.0.1k
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -32,34 +32,38 @@ Kakoura, Nametaken, rotten_mind, Frankescript, Brent
 // ==/UserScript==
 
 /* RELEASE NOTES
-1.05.0.01j
-- RC for ver. 1.05.0.02
+1.05.0.1k
+- RC2 for ver. 1.0.05.2
+- added Vendoring to UI
+- added Vendoring "safety" setting what check item is "unbound"
+- code clearing
+1.05.0.1j
+- RC1 for ver. 1.05.0.2
 - rebuild sell items selection method, now more comprehensive
 	* vendoring function now use array to vendor item objects
 - Vendoring list, current version
 	* sell all Runes/Enchants rank 1 - 2
 	* limit, altars 80, skill kits 50, healing potions T 1 - 3 10
-- re-edited warning "Tooltip"
-- selecting "what skill kit character not need" when selling
+- re-edited warning "Tooltip"- selecting "what skill kit character not need" when selling
 - merged back the split of the pause function
 - added a parameter to specify pause/unpause/toggle (defaults to toggle as in original behavior)
 - tasklist updates
-BETA 1.05.0.1i
+ BETA 1.05.0.1i
 - edited "sell items" list
 - edited/added WARNING´s on tooltip
-BETA 1.05.0.1h
+ BETA 1.05.0.1h
 - added "sell skill kits", works same as "open_rewards" (experimental, inventory cleaning needs more specific "sell filter" and event what trigger "sell"  )
 - changed switching character and completing character task logic, trying prevent wrong task execution after  switch
-- refined "save settings" function 
+- refined "save settings" function
 - WinterEvent tasklist got new additions
-1.05.01G
-- Github release
+ 1.05.01G
+ - Github release
 1.05.0.1f
 - minor tasklist updates
 - added button "open all(99)", opens rewardchest
 - fixed "open rewardchest" disconnect issues(need furter testing, RM)
 - fixed unnecessary ZEX visit´s
-- 
+-
 1.05.0.1e
 - Info page updates for non-compatible browser/XXXmonkey
 
@@ -249,7 +253,7 @@ var s_paused = false;	   // extend the paused setting to the Page Reloading func
 
 (function() {
 	var $				   = unsafeWindow.$;
-	
+
 	//MAC-NW
 	$.fn.waitUntilExists = function (handler, shouldRunHandlerOnce, isChild) {
 		var found = 'found';
@@ -284,19 +288,19 @@ var s_paused = false;	   // extend the paused setting to the Page Reloading func
 				console.log("ERROR: Did not succeed to add open all tooltip.");
 			}
 	});
-	
+
 	$('.vendor-quantity-block span.attention').waitUntilExists(function () {
 		if ($('.vendor-quantity-block span.attention span').length)
 			$('.vendor-quantity-block span.attention').replaceWith('<div class="input-field button"><div class="input-bg-left"></div><div class="input-bg-mid"></div><div class="input-bg-right"></div><button onclick="$(\'input[name=inventorySellQty]\').val(\'' + $(".vendor-quantity-block span.attention span").text() + '\');">All (' + $(".vendor-quantity-block span.attention span").text() + ')</button></div>');
 	});
-	
+
 	$('div.notification div.messages li').waitUntilExists(function () {
 		if ($("div.notification div.messages li").length > 2)
 			$("div.notification div.messages li").eq(0).remove();
 	});
-	
+
 	//MAC-NW
-	
+
 	var state_loading	   = 0;	  // If "Page Loading" takes longer than 30 seconds, reload page (maybe a javascript error)
 	var state_loading_time = 30;  // default of 30 seconds
 	var chardiamonds = {};
@@ -317,14 +321,14 @@ var s_paused = false;	   // extend the paused setting to the Page Reloading func
 					return;
 				}
 			}
-			
+
 			// check for errors
 			if ($("title").text().match(/Error/) || $("div.modal-content h3").text().match(/Disconnected/)) {
 				console.log("Error detected - relogging");
 				unsafeWindow.location.href = "http://gateway.playneverwinter.com";
 				return;
 			}
-			
+
 			if ($("div.loading-image:visible").length) {
 				last_location = location.href;
 				state_idle = 0;
@@ -338,10 +342,10 @@ var s_paused = false;	   // extend the paused setting to the Page Reloading func
 					console.log("Page Loading ...", state_loading + "s");
 				}
 			}
-			// TODO: Add check for Gateway disconnected
+			// TODO: Add check for gateway disconnected
 			//<div class="modal-content" id="modal_content"><h3>Disconnected from Gateway</h3><p>You have been disconnected.</p><button type="button" class="modal-button" onclick="window.location.reload(true);">Close</button>
-			
-			
+
+
 			/* Can't use idle check with dataModel methods
 else if (location.href == last_location) {
 state_loading = 0;
@@ -367,7 +371,7 @@ state_idle++;
 })();
 
 (function() {
-	
+
 	/**
 * Add a string of CSS to the main page
 *
@@ -385,7 +389,7 @@ state_idle++;
 	function countLeadingSpaces(str) {
 		return str.match(/^(\s*)/)[1].length;
 	}
-	
+
 	var image_pause = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAY" +
 		"AAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAKT2lDQ1BQaG90b3Nob3AgSUNDIHByb2" +
 		"ZpbGUAAHjanVNnVFPpFj333vRCS4iAlEtvUhUIIFJCi4AUkSYqIQkQSoghodkVUcERRUUEG" +
@@ -525,8 +529,8 @@ state_idle++;
 		"pBQpI8GJDTR050zkNzK0bMMZLvUNZ8yCfy6Wvbc1NVyi4dloXjqWvds6uvp41pFmpVOKJWd" +
 		"6bgwxkmTMIotWKpwrfBkZl7uMonUHf5wSlV2+fUZrjnXdzrmyy7djD8GWTW9e51z557o1Tz" +
 		"85FH/WkOkaHQAAAABJRU5ErkJggg==";
-	
-	
+
+
 	// Setup global closure variables
 	var $ = unsafeWindow.jQuery;
 	var timerHandle = 0;
@@ -542,7 +546,7 @@ state_idle++;
 		DEFAULT : 10000, // default delay
 		TIMEOUT : 60000, // delay for cycle processing timeout
 	};
-	
+
 	/*
 * Tasklist can be modified to configure the training you want to perform.
 * The configurable options window sets how many profession slots you want to use for each profession.
@@ -585,7 +589,7 @@ state_idle++;
 				20:["Leadership_Tier3_20r_Master2","Leadership_Tier3_20r_Master1","Leadership_Tier3_20r_Master3","Leadership_Tier3_20_Destroy","Leadership_Tier3_13r_Protectdiamonds","Leadership_Tier2_12_Taxes","Leadership_Tier3_16_Fight","Leadership_Tier2_10_Battle","Leadership_Tier3_13_Patrol","Leadership_Tier2_9_Chart","Leadership_Tier1_5_Explore"],
 			},
 		},
-		
+
 		{
 			//WinterEvent
 			taskName:"WinterEvent",
@@ -596,7 +600,7 @@ state_idle++;
 				3:[/*"Event_Winter_Tier1_Heros_Feast","Event_Winter_Tier1_Lightwine","Event_Winter_Tier1_Sparkliest_Gem","Event_Winter_Tier1_Mesmerizing_Lure",*/"Event_Winter_Tier1_Gather_3"],
 			},
 		},
-		
+
 		{
 			// Black Ice Shaping
 			taskName:"BlackIce",
@@ -605,264 +609,272 @@ state_idle++;
 				2:["Blackice_Tier1_Process_Blackice"],
 				3:["Blackice_Tier1_Process_Blackice"],
 				/*
-1:["Forge Hammerstone Pick","Gather Raw Black Ice","Truesilver Pick Grip","Process Raw Black Ice","Upgrade Chillwright","Hire an additional Chillwright"],
-2:["Forge Hammerstone Pick","Gather Raw Black Ice","Truesilver Pick Grip","Process Raw Black Ice","Upgrade Chillwright","Hire an additional Chillwright"],
-3:["Forge Hammerstone Pick","Gather Raw Black Ice","Truesilver Pick Grip","Process Raw Black Ice","Upgrade Chillwright","Hire an additional Chillwright"],
-*/
-},
-},
-	{
-		// Jewelcrafting
-		taskName:"Jewelcrafting",
-		level: {
-			0:["Jewelcrafting_Tier0_Intro"],
-			1:[ "Jewelcrafting_Tier1_Waist_Offense_1","Jewelcrafting_Tier1_Refine_Basic","Jewelcrafting_Tier1_Gather_Basic"],
-			2:[ "Jewelcrafting_Tier1_Waist_Offense_1","Jewelcrafting_Tier1_Refine_Basic","Jewelcrafting_Tier1_Gather_Basic"],
-			3:[ "Jewelcrafting_Tier1_Neck_Offense_1","Jewelcrafting_Tier1_Waist_Offense_1","Jewelcrafting_Tier1_Refine_Basic","Jewelcrafting_Tier1_Gather_Basic"],
-			4:[ "Jewelcrafting_Tier1_Neck_Offense_1","Jewelcrafting_Tier1_Waist_Misc_1","Jewelcrafting_Tier1_Refine_Basic","Jewelcrafting_Tier1_Gather_Basic"],
-			5:[ "Jewelcrafting_Tier1_Neck_Offense_1","Jewelcrafting_Tier1_Waist_Misc_1","Jewelcrafting_Tier1_Refine_Basic","Jewelcrafting_Tier1_Gather_Basic"],
-			6:["Jewelcrafting_Tier1_Neck_Misc_1","Jewelcrafting_Tier1_Waist_Misc_1","Jewelcrafting_Tier1_Refine_Basic","Jewelcrafting_Tier1_Gather_Basic"],
-			7:[ "Jewelcrafting_Tier2_Waist_Offense_2","Jewelcrafting_Tier2_Refine_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
-			8:[ "Jewelcrafting_Tier2_Waist_Offense_2","Jewelcrafting_Tier2_Refine_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
-			9:[ "Jewelcrafting_Tier2_Neck_Offense_2","Jewelcrafting_Tier2_Waist_Offense_2","Jewelcrafting_Tier2_Refine_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
-			10:[ "Jewelcrafting_Tier2_Waist_Misc_2","Jewelcrafting_Tier2_Neck_Offense_2", "Jewelcrafting_Tier2_Refine_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
-			11:[ "Jewelcrafting_Tier2_Waist_Misc_2","Jewelcrafting_Tier2_Neck_Offense_2", "Jewelcrafting_Tier2_Refine_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
-			12:[ "Jewelcrafting_Tier2_Waist_Misc_2","Jewelcrafting_Tier2_Neck_Offense_2", "Jewelcrafting_Tier2_Refine_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
-			13:["Jewelcrafting_Tier2_Neck_Misc_2","Jewelcrafting_Tier2_Waist_Misc_2", "Jewelcrafting_Tier2_Refine_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
-			14:[ "Jewelcrafting_Tier3_Waist_Offense_3","Jewelcrafting_Tier3_Refine_Basic","Jewelcrafting_Tier3_Gather_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
-			15:[ "Jewelcrafting_Tier3_Waist_Offense_3","Jewelcrafting_Tier3_Refine_Basic","Jewelcrafting_Tier3_Gather_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
-			16:["Jewelcrafting_Tier3_Neck_Offense_3","Jewelcrafting_Tier3_Waist_Defense_3", "Jewelcrafting_Tier3_Refine_Basic","Jewelcrafting_Tier3_Gather_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
-			17:["Jewelcrafting_Tier3_Neck_Defense_3","Jewelcrafting_Tier3_Waist_Defense_3", "Jewelcrafting_Tier3_Refine_Basic","Jewelcrafting_Tier3_Gather_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
-			18:["Jewelcrafting_Tier3_Neck_Defense_3","Jewelcrafting_Tier3_Waist_Defense_3", "Jewelcrafting_Tier3_Refine_Basic","Jewelcrafting_Tier3_Gather_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
-			19:["Jewelcrafting_Tier3_Neck_Defense_3","Jewelcrafting_Tier3_Waist_Defense_3", "Jewelcrafting_Tier3_Refine_Basic","Jewelcrafting_Tier3_Gather_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
-			20:["Jewelcrafting_Tier2_Refine_Basic","Jewelcrafting_Tier1_Refine_Basic"],
+				 1:["Forge Hammerstone Pick","Gather Raw Black Ice","Truesilver Pick Grip","Process Raw Black Ice","Upgrade Chillwright","Hire an additional Chillwright"],
+				 2:["Forge Hammerstone Pick","Gather Raw Black Ice","Truesilver Pick Grip","Process Raw Black Ice","Upgrade Chillwright","Hire an additional Chillwright"],
+				 3:["Forge Hammerstone Pick","Gather Raw Black Ice","Truesilver Pick Grip","Process Raw Black Ice","Upgrade Chillwright","Hire an additional Chillwright"],
+				 */
+			},
 		},
-	},
-	{
-		// Mailsmithing
-		taskName:"Armorsmithing_Med",
-		level: {
-			0:["Med_Armorsmithing_Tier0_Intro"],
-			1:["Med_Armorsmithing_Tier1_Chain_Boots_1","Med_Armorsmithing_Tier1_Chain_Shirt_1"],
-			2:["Med_Armorsmithing_Tier1_Chain_Armor_1","Med_Armorsmithing_Tier1_Chain_Pants_1"],
-			3:["Med_Armorsmithing_Tier1_Chain_Armor_1","Med_Armorsmithing_Tier1_Chain_Boots_Set_1"],
-			4:["Med_Armorsmithing_Tier1_Chain_Armor_1","Med_Armorsmithing_Tier1_Chain_Boots_Set_1"],
-			5:["Med_Armorsmithing_Tier1_Chain_Armor_Set_1","Med_Armorsmithing_Tier1_Chain_Boots_Set_1"],
-			6:["Med_Armorsmithing_Tier1_Chain_Armor_Set_1","Med_Armorsmithing_Tier1_Chain_Boots_Set_1"],
-			7:["Med_Armorsmithing_Tier1_Chain_Armor_Set_1","Med_Armorsmithing_Tier2_Chain_Boots_Set_1","Med_Armorsmithing_Tier2_Chain_Shirt"],
-			8:["Med_Armorsmithing_Tier2_Chain_Armor_Set_1","Med_Armorsmithing_Tier2_Chain_Pants_1","Med_Armorsmithing_Tier2_Chain_Boots_Set_1","Med_Armorsmithing_Tier2_Chain_Shirt"],
-			9:["Med_Armorsmithing_Tier2_Chain_Armor_Set_1","Med_Armorsmithing_Tier2_Chain_Pants_1","Med_Armorsmithing_Tier2_Chain_Boots_Set_1","Med_Armorsmithing_Tier2_Chain_Shirt"],
-			10:["Med_Armorsmithing_Tier2_Chain_Armor_Set_1","Med_Armorsmithing_Tier2_Chain_Pants_1","Med_Armorsmithing_Tier2_Chain_Boots_Set_1","Med_Armorsmithing_Tier2_Chain_Shirt_2"],
-			11:["Med_Armorsmithing_Tier2_Chain_Armor_Set_1","Med_Armorsmithing_Tier2_Chain_Pants_2","Med_Armorsmithing_Tier2_Chain_Boots_Set_1","Med_Armorsmithing_Tier2_Chain_Shirt_2","Med_Armorsmithing_Tier2_Chain_Pants_1"],
-			12:["Med_Armorsmithing_Tier2_Chain_Armor_Set_1","Med_Armorsmithing_Tier2_Chain_Pants_2","Med_Armorsmithing_Tier2_Chain_Boots_Set_1","Med_Armorsmithing_Tier2_Chain_Shirt_2","Med_Armorsmithing_Tier2_Chain_Pants_1"],
-			13:["Med_Armorsmithing_Tier2_Chain_Armor_Set_1","Med_Armorsmithing_Tier2_Chain_Pants_2","Med_Armorsmithing_Tier2_Chain_Boots_Set_1","Med_Armorsmithing_Tier2_Chain_Shirt_2","Med_Armorsmithing_Tier2_Chain_Pants_1"],
-			14:["Med_Armorsmithing_Tier2_Chain_Armor_Set_1","Med_Armorsmithing_Tier2_Chain_Pants_2","Med_Armorsmithing_Tier3_Chain_Shirt","Med_Armorsmithing_Tier3_Chain_Boots_Set_1"],
-			15:["Med_Armorsmithing_Tier3_Chain_Armor_Set_1","Med_Armorsmithing_Tier3_Chain_Pants","Med_Armorsmithing_Tier3_Chain_Shirt2","Med_Armorsmithing_Tier3_Chain_Boots_Set_1"],
-			16:["Med_Armorsmithing_Tier3_Chain_Armor_Set_1","Med_Armorsmithing_Tier3_Chain_Pants2","Med_Armorsmithing_Tier3_Chain_Shirt2","Med_Armorsmithing_Tier3_Chain_Helm_Set_1","Med_Armorsmithing_Tier3_Chain_Pants"],
-			17:["Med_Armorsmithing_Tier3_Chain_Armor_Set_1","Med_Armorsmithing_Tier3_Chain_Pants2","Med_Armorsmithing_Tier3_Chain_Shirt2","Med_Armorsmithing_Tier3_Chain_Helm_Set_1","Med_Armorsmithing_Tier3_Chain_Pants"],
-			18:["Med_Armorsmithing_Tier3_Chain_Armor_Set_1","Med_Armorsmithing_Tier3_Chain_Pants2","Med_Armorsmithing_Tier3_Chain_Shirt2","Med_Armorsmithing_Tier3_Chain_Helm_Set_1","Med_Armorsmithing_Tier3_Chain_Pants"],
-			19:["Med_Armorsmithing_Tier3_Chain_Armor_Set_1","Med_Armorsmithing_Tier3_Chain_Pants2","Med_Armorsmithing_Tier3_Chain_Shirt2","Med_Armorsmithing_Tier3_Chain_Helm_Set_1","Med_Armorsmithing_Tier3_Chain_Pants"],
-			20:["Med_Armorsmithing_Tier2_Refine_Basic"],
-			//19:["Chain Armor +4","Fancy Chain Pants","Fancy Chain Shirt","Chain Helm +4","Ornate Chain Pants","Upgrade Blacksmith","Upgrade Prospector","Hire an additional Prospector"],
-			//20:["Forge Steel Rings and Scales"],
+		{
+			// Jewelcrafting
+			taskName:"Jewelcrafting",
+			level: {
+				0:["Jewelcrafting_Tier0_Intro"],
+				1:[ "Jewelcrafting_Tier1_Waist_Offense_1","Jewelcrafting_Tier1_Refine_Basic","Jewelcrafting_Tier1_Gather_Basic"],
+				2:[ "Jewelcrafting_Tier1_Waist_Offense_1","Jewelcrafting_Tier1_Refine_Basic","Jewelcrafting_Tier1_Gather_Basic"],
+				3:[ "Jewelcrafting_Tier1_Neck_Offense_1","Jewelcrafting_Tier1_Waist_Offense_1","Jewelcrafting_Tier1_Refine_Basic","Jewelcrafting_Tier1_Gather_Basic"],
+				4:[ "Jewelcrafting_Tier1_Neck_Offense_1","Jewelcrafting_Tier1_Waist_Misc_1","Jewelcrafting_Tier1_Refine_Basic","Jewelcrafting_Tier1_Gather_Basic"],
+				5:[ "Jewelcrafting_Tier1_Neck_Offense_1","Jewelcrafting_Tier1_Waist_Misc_1","Jewelcrafting_Tier1_Refine_Basic","Jewelcrafting_Tier1_Gather_Basic"],
+				6:["Jewelcrafting_Tier1_Neck_Misc_1","Jewelcrafting_Tier1_Waist_Misc_1","Jewelcrafting_Tier1_Refine_Basic","Jewelcrafting_Tier1_Gather_Basic"],
+				7:[ "Jewelcrafting_Tier2_Waist_Offense_2","Jewelcrafting_Tier2_Refine_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
+				8:[ "Jewelcrafting_Tier2_Waist_Offense_2","Jewelcrafting_Tier2_Refine_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
+				9:[ "Jewelcrafting_Tier2_Neck_Offense_2","Jewelcrafting_Tier2_Waist_Offense_2","Jewelcrafting_Tier2_Refine_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
+				10:[ "Jewelcrafting_Tier2_Waist_Misc_2","Jewelcrafting_Tier2_Neck_Offense_2", "Jewelcrafting_Tier2_Refine_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
+				11:[ "Jewelcrafting_Tier2_Waist_Misc_2","Jewelcrafting_Tier2_Neck_Offense_2", "Jewelcrafting_Tier2_Refine_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
+				12:[ "Jewelcrafting_Tier2_Waist_Misc_2","Jewelcrafting_Tier2_Neck_Offense_2", "Jewelcrafting_Tier2_Refine_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
+				13:["Jewelcrafting_Tier2_Neck_Misc_2","Jewelcrafting_Tier2_Waist_Misc_2", "Jewelcrafting_Tier2_Refine_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
+				14:[ "Jewelcrafting_Tier3_Waist_Offense_3","Jewelcrafting_Tier3_Refine_Basic","Jewelcrafting_Tier3_Gather_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
+				15:[ "Jewelcrafting_Tier3_Waist_Offense_3","Jewelcrafting_Tier3_Refine_Basic","Jewelcrafting_Tier3_Gather_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
+				16:["Jewelcrafting_Tier3_Neck_Offense_3","Jewelcrafting_Tier3_Waist_Defense_3", "Jewelcrafting_Tier3_Refine_Basic","Jewelcrafting_Tier3_Gather_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
+				17:["Jewelcrafting_Tier3_Neck_Defense_3","Jewelcrafting_Tier3_Waist_Defense_3", "Jewelcrafting_Tier3_Refine_Basic","Jewelcrafting_Tier3_Gather_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
+				18:["Jewelcrafting_Tier3_Neck_Defense_3","Jewelcrafting_Tier3_Waist_Defense_3", "Jewelcrafting_Tier3_Refine_Basic","Jewelcrafting_Tier3_Gather_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
+				19:["Jewelcrafting_Tier3_Neck_Defense_3","Jewelcrafting_Tier3_Waist_Defense_3", "Jewelcrafting_Tier3_Refine_Basic","Jewelcrafting_Tier3_Gather_Basic","Jewelcrafting_Tier2_Gather_Basic","Jewelcrafting_Tier1_Gather_Basic"],
+				20:["Jewelcrafting_Tier2_Refine_Basic","Jewelcrafting_Tier1_Refine_Basic"],
+			},
 		},
-	},
-	{
-		// Platesmithing
-		taskName:"Armorsmithing_Heavy",
-		level: {
-			0:["Hvy_Armorsmithing_Tier0_Intro"],
-			1:["Hvy_Armorsmithing_Tier1_Plate_Boots_1","Hvy_Armorsmithing_Tier1_Plate_Shirt_1","Hvy_Armorsmithing_Tier1_Shield_1"],
-			2:["Hvy_Armorsmithing_Tier1_Plate_Armor_1","Hvy_Armorsmithing_Tier1_Plate_Pants_1"],
-			3:["Hvy_Armorsmithing_Tier1_Plate_Armor_1","Hvy_Armorsmithing_Tier1_Plate_Boots_Set_1"],
-			4:["Hvy_Armorsmithing_Tier1_Plate_Armor_1","Hvy_Armorsmithing_Tier1_Plate_Boots_Set_1"],
-			5:["Hvy_Armorsmithing_Tier1_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier1_Plate_Boots_Set_1"],
-			6:["Hvy_Armorsmithing_Tier1_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier1_Plate_Boots_Set_1"],
-			7:["Hvy_Armorsmithing_Tier1_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1","Hvy_Armorsmithing_Tier2_Plate_Shirt","Hvy_Armorsmithing_Tier2_Shield_Set_1"],
-			8:["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier2_Plate_Pants_1","Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1","Hvy_Armorsmithing_Tier2_Plate_Shirt"],
-			9:["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier2_Plate_Pants_1","Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1","Hvy_Armorsmithing_Tier2_Plate_Shirt"],
-			10:["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier2_Plate_Pants_1","Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1","Hvy_Armorsmithing_Tier2_Plate_Shirt_2"],
-			11:["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier2_Plate_Pants_2","Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1","Hvy_Armorsmithing_Tier2_Plate_Shirt_2","Hvy_Armorsmithing_Tier2_Plate_Pants_1"],
-			12:["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier2_Plate_Pants_2","Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1","Hvy_Armorsmithing_Tier2_Plate_Shirt_2","Hvy_Armorsmithing_Tier2_Plate_Pants_1"],
-			13:["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier2_Plate_Pants_2","Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1","Hvy_Armorsmithing_Tier2_Plate_Shirt_2","Hvy_Armorsmithing_Tier2_Plate_Pants_1"],
-			14:["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier2_Plate_Pants_2","Hvy_Armorsmithing_Tier3_Plate_Shirt","Hvy_Armorsmithing_Tier3_Plate_Boots_Set_1"],
-			15:["Hvy_Armorsmithing_Tier3_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier3_Plate_Pants","Hvy_Armorsmithing_Tier3_Plate_Shirt2","Hvy_Armorsmithing_Tier3_Plate_Boots_Set_1"],
-			16:["Hvy_Armorsmithing_Tier3_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier3_Plate_Pants2","Hvy_Armorsmithing_Tier3_Plate_Shirt2","Hvy_Armorsmithing_Tier3_Plate_Helm_Set_1","Hvy_Armorsmithing_Tier3_Plate_Pants"],
-			17:["Hvy_Armorsmithing_Tier3_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier3_Plate_Pants2","Hvy_Armorsmithing_Tier3_Plate_Shirt2","Hvy_Armorsmithing_Tier3_Plate_Helm_Set_1","Hvy_Armorsmithing_Tier3_Plate_Pants"],
-			18:["Hvy_Armorsmithing_Tier3_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier3_Plate_Pants2","Hvy_Armorsmithing_Tier3_Plate_Shirt2","Hvy_Armorsmithing_Tier3_Plate_Helm_Set_1","Hvy_Armorsmithing_Tier3_Plate_Pants"],
-			19:["Hvy_Armorsmithing_Tier3_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier3_Plate_Pants2","Hvy_Armorsmithing_Tier3_Plate_Shirt2","Hvy_Armorsmithing_Tier3_Plate_Helm_Set_1","Hvy_Armorsmithing_Tier3_Plate_Pants"],
-			20:["Hvy_Armorsmithing_Tier2_Refine_Basic"],
-			//19:["Plate Armor +4","Fancy Plate Pants","Fancy Plate Shirt","Plate Helm +4","Ornate Plate Pants","Upgrade Armorer","Upgrade Miner","Hire an additional Miner"],
-			//20:["Forge Steel Plates"],
+		{
+			// Mailsmithing
+			taskName:"Armorsmithing_Med",
+			level: {
+				0:["Med_Armorsmithing_Tier0_Intro"],
+				1:["Med_Armorsmithing_Tier1_Chain_Boots_1","Med_Armorsmithing_Tier1_Chain_Shirt_1"],
+				2:["Med_Armorsmithing_Tier1_Chain_Armor_1","Med_Armorsmithing_Tier1_Chain_Pants_1"],
+				3:["Med_Armorsmithing_Tier1_Chain_Armor_1","Med_Armorsmithing_Tier1_Chain_Boots_Set_1"],
+				4:["Med_Armorsmithing_Tier1_Chain_Armor_1","Med_Armorsmithing_Tier1_Chain_Boots_Set_1"],
+				5:["Med_Armorsmithing_Tier1_Chain_Armor_Set_1","Med_Armorsmithing_Tier1_Chain_Boots_Set_1"],
+				6:["Med_Armorsmithing_Tier1_Chain_Armor_Set_1","Med_Armorsmithing_Tier1_Chain_Boots_Set_1"],
+				7:["Med_Armorsmithing_Tier1_Chain_Armor_Set_1","Med_Armorsmithing_Tier2_Chain_Boots_Set_1","Med_Armorsmithing_Tier2_Chain_Shirt"],
+				8:["Med_Armorsmithing_Tier2_Chain_Armor_Set_1","Med_Armorsmithing_Tier2_Chain_Pants_1","Med_Armorsmithing_Tier2_Chain_Boots_Set_1","Med_Armorsmithing_Tier2_Chain_Shirt"],
+				9:["Med_Armorsmithing_Tier2_Chain_Armor_Set_1","Med_Armorsmithing_Tier2_Chain_Pants_1","Med_Armorsmithing_Tier2_Chain_Boots_Set_1","Med_Armorsmithing_Tier2_Chain_Shirt"],
+				10:["Med_Armorsmithing_Tier2_Chain_Armor_Set_1","Med_Armorsmithing_Tier2_Chain_Pants_1","Med_Armorsmithing_Tier2_Chain_Boots_Set_1","Med_Armorsmithing_Tier2_Chain_Shirt_2"],
+				11:["Med_Armorsmithing_Tier2_Chain_Armor_Set_1","Med_Armorsmithing_Tier2_Chain_Pants_2","Med_Armorsmithing_Tier2_Chain_Boots_Set_1","Med_Armorsmithing_Tier2_Chain_Shirt_2","Med_Armorsmithing_Tier2_Chain_Pants_1"],
+				12:["Med_Armorsmithing_Tier2_Chain_Armor_Set_1","Med_Armorsmithing_Tier2_Chain_Pants_2","Med_Armorsmithing_Tier2_Chain_Boots_Set_1","Med_Armorsmithing_Tier2_Chain_Shirt_2","Med_Armorsmithing_Tier2_Chain_Pants_1"],
+				13:["Med_Armorsmithing_Tier2_Chain_Armor_Set_1","Med_Armorsmithing_Tier2_Chain_Pants_2","Med_Armorsmithing_Tier2_Chain_Boots_Set_1","Med_Armorsmithing_Tier2_Chain_Shirt_2","Med_Armorsmithing_Tier2_Chain_Pants_1"],
+				14:["Med_Armorsmithing_Tier2_Chain_Armor_Set_1","Med_Armorsmithing_Tier2_Chain_Pants_2","Med_Armorsmithing_Tier3_Chain_Shirt","Med_Armorsmithing_Tier3_Chain_Boots_Set_1"],
+				15:["Med_Armorsmithing_Tier3_Chain_Armor_Set_1","Med_Armorsmithing_Tier3_Chain_Pants","Med_Armorsmithing_Tier3_Chain_Shirt2","Med_Armorsmithing_Tier3_Chain_Boots_Set_1"],
+				16:["Med_Armorsmithing_Tier3_Chain_Armor_Set_1","Med_Armorsmithing_Tier3_Chain_Pants2","Med_Armorsmithing_Tier3_Chain_Shirt2","Med_Armorsmithing_Tier3_Chain_Helm_Set_1","Med_Armorsmithing_Tier3_Chain_Pants"],
+				17:["Med_Armorsmithing_Tier3_Chain_Armor_Set_1","Med_Armorsmithing_Tier3_Chain_Pants2","Med_Armorsmithing_Tier3_Chain_Shirt2","Med_Armorsmithing_Tier3_Chain_Helm_Set_1","Med_Armorsmithing_Tier3_Chain_Pants"],
+				18:["Med_Armorsmithing_Tier3_Chain_Armor_Set_1","Med_Armorsmithing_Tier3_Chain_Pants2","Med_Armorsmithing_Tier3_Chain_Shirt2","Med_Armorsmithing_Tier3_Chain_Helm_Set_1","Med_Armorsmithing_Tier3_Chain_Pants"],
+				19:["Med_Armorsmithing_Tier3_Chain_Armor_Set_1","Med_Armorsmithing_Tier3_Chain_Pants2","Med_Armorsmithing_Tier3_Chain_Shirt2","Med_Armorsmithing_Tier3_Chain_Helm_Set_1","Med_Armorsmithing_Tier3_Chain_Pants"],
+				20:["Med_Armorsmithing_Tier2_Refine_Basic"],
+				//19:["Chain Armor +4","Fancy Chain Pants","Fancy Chain Shirt","Chain Helm +4","Ornate Chain Pants","Upgrade Blacksmith","Upgrade Prospector","Hire an additional Prospector"],
+				//20:["Forge Steel Rings and Scales"],
+			},
 		},
-	},
-	{
-		taskName:"Leatherworking",
-		level: {
-			0:["Leatherworking_Tier0_Intro_1"],
-			1:["Leatherworking_Tier1_Leather_Boots_1","Leatherworking_Tier1_Leather_Shirt_1"],
-			2:["Leatherworking_Tier1_Leather_Armor_1","Leatherworking_Tier1_Leather_Pants_1"],
-			3:["Leatherworking_Tier1_Leather_Armor_1","Leatherworking_Tier1_Leather_Boots_Set_1"],
-			4:["Leatherworking_Tier1_Leather_Armor_1","Leatherworking_Tier1_Leather_Boots_Set_1"],
-			5:["Leatherworking_Tier1_Leather_Armor_Set_1","Leatherworking_Tier1_Leather_Boots_Set_1"],
-			6:["Leatherworking_Tier1_Leather_Armor_Set_1","Leatherworking_Tier1_Leather_Boots_Set_1"],
-			7:["Leatherworking_Tier1_Leather_Armor_Set_1","Leatherworking_Tier2_Leather_Boots_Set_1","Leatherworking_Tier2_Leather_Shirt"],
-			8:["Leatherworking_Tier2_Leather_Armor_Set_1","Leatherworking_Tier2_Leather_Pants_1","Leatherworking_Tier2_Leather_Boots_Set_1","Leatherworking_Tier2_Leather_Shirt"],
-			9:["Leatherworking_Tier2_Leather_Armor_Set_1","Leatherworking_Tier2_Leather_Pants_1","Leatherworking_Tier2_Leather_Boots_Set_1","Leatherworking_Tier2_Leather_Shirt"],
-			10:["Leatherworking_Tier2_Leather_Armor_Set_1","Leatherworking_Tier2_Leather_Pants_1","Leatherworking_Tier2_Leather_Boots_Set_1","Leatherworking_Tier2_Leather_Shirt_2"],
-			11:["Leatherworking_Tier2_Leather_Armor_Set_1","Leatherworking_Tier2_Leather_Pants_2","Leatherworking_Tier2_Leather_Boots_Set_1","Leatherworking_Tier2_Leather_Shirt_2","Leatherworking_Tier2_Leather_Pants_1"],
-			12:["Leatherworking_Tier2_Leather_Armor_Set_1","Leatherworking_Tier2_Leather_Pants_2","Leatherworking_Tier2_Leather_Boots_Set_1","Leatherworking_Tier2_Leather_Shirt_2","Leatherworking_Tier2_Leather_Pants_1"],
-			13:["Leatherworking_Tier2_Leather_Armor_Set_1","Leatherworking_Tier2_Leather_Pants_2","Leatherworking_Tier2_Leather_Boots_Set_1","Leatherworking_Tier2_Leather_Shirt_2","Leatherworking_Tier2_Leather_Pants_1"],
-			14:["Leatherworking_Tier2_Leather_Armor_Set_1","Leatherworking_Tier2_Leather_Pants_2","Ornate Leatherworking_Tier1_Leather_Shirt_1","Leatherworking_Tier3_Leather_Boots_Set_1"],
-			15:["Leatherworking_Tier3_Leather_Armor_Set_1","Leatherworking_Tier3_Leather_Pants","Leatherworking_Tier3_Leather_Shirt2","Leatherworking_Tier3_Leather_Boots_Set_1"],
-			16:["Leatherworking_Tier3_Leather_Armor_Set_1","Leatherworking_Tier3_Leather_Pants2","Leatherworking_Tier3_Leather_Shirt2","Leatherworking_Tier3_Leather_Helm_Set_1","Leatherworking_Tier3_Leather_Pants"],
-			17:["Leatherworking_Tier3_Leather_Armor_Set_1","Leatherworking_Tier3_Leather_Pants2","Leatherworking_Tier3_Leather_Shirt2","Leatherworking_Tier3_Leather_Helm_Set_1","Leatherworking_Tier3_Leather_Pants"],
-			18:["Leatherworking_Tier3_Leather_Armor_Set_1","Leatherworking_Tier3_Leather_Pants2","Leatherworking_Tier3_Leather_Shirt2","Leatherworking_Tier3_Leather_Helm_Set_1","Leatherworking_Tier3_Leather_Pants"],
-			19:["Leatherworking_Tier3_Leather_Armor_Set_1","Leatherworking_Tier3_Leather_Pants2","Leatherworking_Tier3_Leather_Shirt2","Leatherworking_Tier3_Leather_Helm_Set_1","Leatherworking_Tier3_Leather_Pants"],
-			20:["Leatherworking_Tier2_Refine_Basic"],
-			//19:["Leather Armor +4","Fancy Leather Pants","Fancy Leather Shirt","Leather Helm +4","Ornate Leather Pants","Upgrade Tanner","Upgrade Skinner","Hire an additional Skinner"],
-			//20:["Cure Tough Pelts"],
+		{
+			// Platesmithing
+			taskName:"Armorsmithing_Heavy",
+			level: {
+				0:["Hvy_Armorsmithing_Tier0_Intro"],
+				1:["Hvy_Armorsmithing_Tier1_Plate_Boots_1","Hvy_Armorsmithing_Tier1_Plate_Shirt_1","Hvy_Armorsmithing_Tier1_Shield_1"],
+				2:["Hvy_Armorsmithing_Tier1_Plate_Armor_1","Hvy_Armorsmithing_Tier1_Plate_Pants_1"],
+				3:["Hvy_Armorsmithing_Tier1_Plate_Armor_1","Hvy_Armorsmithing_Tier1_Plate_Boots_Set_1"],
+				4:["Hvy_Armorsmithing_Tier1_Plate_Armor_1","Hvy_Armorsmithing_Tier1_Plate_Boots_Set_1"],
+				5:["Hvy_Armorsmithing_Tier1_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier1_Plate_Boots_Set_1"],
+				6:["Hvy_Armorsmithing_Tier1_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier1_Plate_Boots_Set_1"],
+				7:["Hvy_Armorsmithing_Tier1_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1","Hvy_Armorsmithing_Tier2_Plate_Shirt","Hvy_Armorsmithing_Tier2_Shield_Set_1"],
+				8:["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier2_Plate_Pants_1","Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1","Hvy_Armorsmithing_Tier2_Plate_Shirt"],
+				9:["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier2_Plate_Pants_1","Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1","Hvy_Armorsmithing_Tier2_Plate_Shirt"],
+				10:["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier2_Plate_Pants_1","Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1","Hvy_Armorsmithing_Tier2_Plate_Shirt_2"],
+				11:["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier2_Plate_Pants_2","Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1","Hvy_Armorsmithing_Tier2_Plate_Shirt_2","Hvy_Armorsmithing_Tier2_Plate_Pants_1"],
+				12:["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier2_Plate_Pants_2","Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1","Hvy_Armorsmithing_Tier2_Plate_Shirt_2","Hvy_Armorsmithing_Tier2_Plate_Pants_1"],
+				13:["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier2_Plate_Pants_2","Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1","Hvy_Armorsmithing_Tier2_Plate_Shirt_2","Hvy_Armorsmithing_Tier2_Plate_Pants_1"],
+				14:["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier2_Plate_Pants_2","Hvy_Armorsmithing_Tier3_Plate_Shirt","Hvy_Armorsmithing_Tier3_Plate_Boots_Set_1"],
+				15:["Hvy_Armorsmithing_Tier3_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier3_Plate_Pants","Hvy_Armorsmithing_Tier3_Plate_Shirt2","Hvy_Armorsmithing_Tier3_Plate_Boots_Set_1"],
+				16:["Hvy_Armorsmithing_Tier3_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier3_Plate_Pants2","Hvy_Armorsmithing_Tier3_Plate_Shirt2","Hvy_Armorsmithing_Tier3_Plate_Helm_Set_1","Hvy_Armorsmithing_Tier3_Plate_Pants"],
+				17:["Hvy_Armorsmithing_Tier3_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier3_Plate_Pants2","Hvy_Armorsmithing_Tier3_Plate_Shirt2","Hvy_Armorsmithing_Tier3_Plate_Helm_Set_1","Hvy_Armorsmithing_Tier3_Plate_Pants"],
+				18:["Hvy_Armorsmithing_Tier3_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier3_Plate_Pants2","Hvy_Armorsmithing_Tier3_Plate_Shirt2","Hvy_Armorsmithing_Tier3_Plate_Helm_Set_1","Hvy_Armorsmithing_Tier3_Plate_Pants"],
+				19:["Hvy_Armorsmithing_Tier3_Plate_Armor_Set_1","Hvy_Armorsmithing_Tier3_Plate_Pants2","Hvy_Armorsmithing_Tier3_Plate_Shirt2","Hvy_Armorsmithing_Tier3_Plate_Helm_Set_1","Hvy_Armorsmithing_Tier3_Plate_Pants"],
+				20:["Hvy_Armorsmithing_Tier2_Refine_Basic"],
+				//19:["Plate Armor +4","Fancy Plate Pants","Fancy Plate Shirt","Plate Helm +4","Ornate Plate Pants","Upgrade Armorer","Upgrade Miner","Hire an additional Miner"],
+				//20:["Forge Steel Plates"],
+			},
 		},
-	},
-	{
-		taskName:"Tailoring",
-		level: {
-			0:["Tailoring_Tier0_Intro"],
-			1:["Tailoring_Tier1_Cloth_Boots_1","Tailoring_Tier1_Cloth_Shirt_1"],
-			2:["Tailoring_Tier1_Cloth_Armor_1","Tailoring_Tier1_Cloth_Pants_1"],
-			3:["Tailoring_Tier1_Cloth_Armor_1","Tailoring_Tier1_Cloth_Boots_Set_1"],
-			4:["Tailoring_Tier1_Cloth_Armor_1","Tailoring_Tier1_Cloth_Boots_Set_1"],
-			5:["Tailoring_Tier1_Cloth_Armor_Set_1","Tailoring_Tier1_Cloth_Boots_Set_1"],
-			6:["Tailoring_Tier1_Cloth_Armor_Set_1","Tailoring_Tier1_Cloth_Boots_Set_1"],
-			7:["Tailoring_Tier1_Cloth_Armor_Set_1","Tailoring_Tier2_Cloth_Boots_Set_1","Tailoring_Tier2_Cloth_Shirt"],
-			8:["Tailoring_Tier2_Cloth_Armor_Set_1","Tailoring_Tier2_Cloth_Pants_1","Tailoring_Tier2_Cloth_Boots_Set_1","Tailoring_Tier2_Cloth_Shirt"],
-			9:["Tailoring_Tier2_Cloth_Armor_Set_1","Tailoring_Tier2_Cloth_Pants_1","Tailoring_Tier2_Cloth_Boots_Set_1","Tailoring_Tier2_Cloth_Shirt"],
-			10:["Tailoring_Tier2_Cloth_Armor_Set_1","Tailoring_Tier2_Cloth_Pants_1","Tailoring_Tier2_Cloth_Boots_Set_1","Tailoring_Tier2_Cloth_Shirt_2"],
-			11:["Tailoring_Tier2_Cloth_Armor_Set_1","Tailoring_Tier2_Cloth_Pants_2","Tailoring_Tier2_Cloth_Boots_Set_1","Tailoring_Tier2_Cloth_Shirt_2","Tailoring_Tier2_Cloth_Pants_1"],
-			12:["Tailoring_Tier2_Cloth_Armor_Set_1","Tailoring_Tier2_Cloth_Pants_2","Tailoring_Tier2_Cloth_Boots_Set_1","Tailoring_Tier2_Cloth_Shirt_2","Tailoring_Tier2_Cloth_Pants_1"],
-			13:["Tailoring_Tier2_Cloth_Armor_Set_1","Tailoring_Tier2_Cloth_Pants_2","Tailoring_Tier2_Cloth_Boots_Set_1","Tailoring_Tier2_Cloth_Shirt_2","Tailoring_Tier2_Cloth_Pants_1"],
-			14:["Tailoring_Tier2_Cloth_Armor_Set_1","Tailoring_Tier2_Cloth_Pants_2", "Tailoring_Tier3_Cloth_Shirt","Tailoring_Tier3_Cloth_Boots_Set_1"],
-			15:["Tailoring_Tier3_Cloth_Armor_Set_1","Tailoring_Tier3_Cloth_Pants","Tailoring_Tier3_Cloth_Shirt2","Tailoring_Tier3_Cloth_Boots_Set_1"],
-			16:["Tailoring_Tier3_Cloth_Armor_Set_1","Tailoring_Tier3_Cloth_Pants2","Tailoring_Tier3_Cloth_Shirt2","Tailoring_Tier3_Cloth_Helm_Set_1","Tailoring_Tier3_Cloth_Pants"],
-			17:["Tailoring_Tier3_Cloth_Armor_Set_1","Tailoring_Tier3_Cloth_Pants2","Tailoring_Tier3_Cloth_Shirt2","Tailoring_Tier3_Cloth_Helm_Set_1","Tailoring_Tier3_Cloth_Pants"],
-			18:["Tailoring_Tier3_Cloth_Armor_Set_1","Tailoring_Tier3_Cloth_Pants2","Tailoring_Tier3_Cloth_Shirt2","Tailoring_Tier3_Cloth_Helm_Set_1","Tailoring_Tier3_Cloth_Pants"],
-			19:["Tailoring_Tier3_Cloth_Armor_Set_1","Tailoring_Tier3_Cloth_Pants2","Tailoring_Tier3_Cloth_Shirt2","Tailoring_Tier3_Cloth_Helm_Set_1","Tailoring_Tier3_Cloth_Pants"],
-			20:["Tailoring_Tier2_Refine_Basic"],
-			//19:["Cloth Robes +4","Fancy Cloth Pants","Fancy Cloth Shirt","Cloth Cap +4","Ornate Cloth Pants","Upgrade Outfitter","Upgrade Weaver","Hire an additional Weaver"],
-			//20:["Weave Cotton Cloth"],
+		{
+			taskName:"Leatherworking",
+			level: {
+				0:["Leatherworking_Tier0_Intro_1"],
+				1:["Leatherworking_Tier1_Leather_Boots_1","Leatherworking_Tier1_Leather_Shirt_1"],
+				2:["Leatherworking_Tier1_Leather_Armor_1","Leatherworking_Tier1_Leather_Pants_1"],
+				3:["Leatherworking_Tier1_Leather_Armor_1","Leatherworking_Tier1_Leather_Boots_Set_1"],
+				4:["Leatherworking_Tier1_Leather_Armor_1","Leatherworking_Tier1_Leather_Boots_Set_1"],
+				5:["Leatherworking_Tier1_Leather_Armor_Set_1","Leatherworking_Tier1_Leather_Boots_Set_1"],
+				6:["Leatherworking_Tier1_Leather_Armor_Set_1","Leatherworking_Tier1_Leather_Boots_Set_1"],
+				7:["Leatherworking_Tier1_Leather_Armor_Set_1","Leatherworking_Tier2_Leather_Boots_Set_1","Leatherworking_Tier2_Leather_Shirt"],
+				8:["Leatherworking_Tier2_Leather_Armor_Set_1","Leatherworking_Tier2_Leather_Pants_1","Leatherworking_Tier2_Leather_Boots_Set_1","Leatherworking_Tier2_Leather_Shirt"],
+				9:["Leatherworking_Tier2_Leather_Armor_Set_1","Leatherworking_Tier2_Leather_Pants_1","Leatherworking_Tier2_Leather_Boots_Set_1","Leatherworking_Tier2_Leather_Shirt"],
+				10:["Leatherworking_Tier2_Leather_Armor_Set_1","Leatherworking_Tier2_Leather_Pants_1","Leatherworking_Tier2_Leather_Boots_Set_1","Leatherworking_Tier2_Leather_Shirt_2"],
+				11:["Leatherworking_Tier2_Leather_Armor_Set_1","Leatherworking_Tier2_Leather_Pants_2","Leatherworking_Tier2_Leather_Boots_Set_1","Leatherworking_Tier2_Leather_Shirt_2","Leatherworking_Tier2_Leather_Pants_1"],
+				12:["Leatherworking_Tier2_Leather_Armor_Set_1","Leatherworking_Tier2_Leather_Pants_2","Leatherworking_Tier2_Leather_Boots_Set_1","Leatherworking_Tier2_Leather_Shirt_2","Leatherworking_Tier2_Leather_Pants_1"],
+				13:["Leatherworking_Tier2_Leather_Armor_Set_1","Leatherworking_Tier2_Leather_Pants_2","Leatherworking_Tier2_Leather_Boots_Set_1","Leatherworking_Tier2_Leather_Shirt_2","Leatherworking_Tier2_Leather_Pants_1"],
+				14:["Leatherworking_Tier2_Leather_Armor_Set_1","Leatherworking_Tier2_Leather_Pants_2","Ornate Leatherworking_Tier1_Leather_Shirt_1","Leatherworking_Tier3_Leather_Boots_Set_1"],
+				15:["Leatherworking_Tier3_Leather_Armor_Set_1","Leatherworking_Tier3_Leather_Pants","Leatherworking_Tier3_Leather_Shirt2","Leatherworking_Tier3_Leather_Boots_Set_1"],
+				16:["Leatherworking_Tier3_Leather_Armor_Set_1","Leatherworking_Tier3_Leather_Pants2","Leatherworking_Tier3_Leather_Shirt2","Leatherworking_Tier3_Leather_Helm_Set_1","Leatherworking_Tier3_Leather_Pants"],
+				17:["Leatherworking_Tier3_Leather_Armor_Set_1","Leatherworking_Tier3_Leather_Pants2","Leatherworking_Tier3_Leather_Shirt2","Leatherworking_Tier3_Leather_Helm_Set_1","Leatherworking_Tier3_Leather_Pants"],
+				18:["Leatherworking_Tier3_Leather_Armor_Set_1","Leatherworking_Tier3_Leather_Pants2","Leatherworking_Tier3_Leather_Shirt2","Leatherworking_Tier3_Leather_Helm_Set_1","Leatherworking_Tier3_Leather_Pants"],
+				19:["Leatherworking_Tier3_Leather_Armor_Set_1","Leatherworking_Tier3_Leather_Pants2","Leatherworking_Tier3_Leather_Shirt2","Leatherworking_Tier3_Leather_Helm_Set_1","Leatherworking_Tier3_Leather_Pants"],
+				20:["Leatherworking_Tier2_Refine_Basic"],
+				//19:["Leather Armor +4","Fancy Leather Pants","Fancy Leather Shirt","Leather Helm +4","Ornate Leather Pants","Upgrade Tanner","Upgrade Skinner","Hire an additional Skinner"],
+				//20:["Cure Tough Pelts"],
+			},
 		},
-	},
-	{
-		taskName:"Artificing",
-		level: {
-			0:["Artificing_Tier0_Intro_1"],
-			1:["Artificing_Tier1_Symbol_Virtuous_1","Artificing_Tier1_Pactblade_Convergence_1","Artificing_Tier1_Refine_Basic"],
-			2:["Artificing_Tier1_Icon_Virtuous_1","Artificing_Tier1_Pactblade_Convergence_1","Artificing_Tier1_Refine_Basic"],
-			3:["Artificing_Tier1_Icon_Virtuous_1","Artificing_Tier1_Pactblade_Convergence_1","Artificing_Tier1_Refine_Basic"],
-			4:["Artificing_Tier1_Icon_Virtuous_2","Artificing_Tier1_Pactblade_Convergence_1","Artificing_Tier1_Refine_Basic"],
-			5:["Artificing_Tier1_Icon_Virtuous_2","Artificing_Tier1_Pactblade_Convergence_1","Artificing_Tier1_Refine_Basic"],
-			6:["Artificing_Tier1_Icon_Virtuous_2","Artificing_Tier1_Pactblade_Convergence_1","Artificing_Tier1_Refine_Basic"],
-			7:["Artificing_Tier1_Icon_Virtuous_2","Artificing_Tier2_Pactblade_Temptation_2","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			8:["Artificing_Tier2_Icon_Virtuous_3","Artificing_Tier2_Pactblade_Temptation_3","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			9:["Artificing_Tier2_Icon_Virtuous_3","Artificing_Tier2_Pactblade_Temptation_3","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			10:["Artificing_Tier2_Icon_Virtuous_3","Artificing_Tier2_Pactblade_Temptation_3","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			11:["Artificing_Tier2_Icon_Virtuous_3","Artificing_Tier2_Pactblade_Temptation_3","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			12:["Artificing_Tier2_Icon_Virtuous_3","Artificing_Tier2_Pactblade_Temptation_3","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			13:["Artificing_Tier2_Icon_Virtuous_3","Artificing_Tier2_Pactblade_Temptation_3","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			14:["Artificing_Tier3_Icon_Virtuous_4","Artificing_Tier3_Pactblade_Temptation_4","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			15:["Artificing_Tier3_Icon_Virtuous_4","Artificing_Tier3_Pactblade_Temptation_4","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			16:["Artificing_Tier3_Icon_Virtuous_4","Artificing_Tier3_Pactblade_Temptation_4","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			17:["Artificing_Tier3_Icon_Virtuous_5","Artificing_Tier3_Pactblade_Temptation_5","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			18:["Artificing_Tier3_Icon_Virtuous_5","Artificing_Tier3_Pactblade_Temptation_5","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			19:["Artificing_Tier3_Icon_Virtuous_5","Artificing_Tier3_Pactblade_Temptation_5","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
-			20:["Artificing_Tier2_Refine_Basic"],
-			//19:["Virtuous Icon +5","Upgrade Engraver","Upgrade Carver","Hire an additional Carver"],
-			//20:["7:Craft Ornamental metal and Carved Wood"],
+		{
+			taskName:"Tailoring",
+			level: {
+				0:["Tailoring_Tier0_Intro"],
+				1:["Tailoring_Tier1_Cloth_Boots_1","Tailoring_Tier1_Cloth_Shirt_1"],
+				2:["Tailoring_Tier1_Cloth_Armor_1","Tailoring_Tier1_Cloth_Pants_1"],
+				3:["Tailoring_Tier1_Cloth_Armor_1","Tailoring_Tier1_Cloth_Boots_Set_1"],
+				4:["Tailoring_Tier1_Cloth_Armor_1","Tailoring_Tier1_Cloth_Boots_Set_1"],
+				5:["Tailoring_Tier1_Cloth_Armor_Set_1","Tailoring_Tier1_Cloth_Boots_Set_1"],
+				6:["Tailoring_Tier1_Cloth_Armor_Set_1","Tailoring_Tier1_Cloth_Boots_Set_1"],
+				7:["Tailoring_Tier1_Cloth_Armor_Set_1","Tailoring_Tier2_Cloth_Boots_Set_1","Tailoring_Tier2_Cloth_Shirt"],
+				8:["Tailoring_Tier2_Cloth_Armor_Set_1","Tailoring_Tier2_Cloth_Pants_1","Tailoring_Tier2_Cloth_Boots_Set_1","Tailoring_Tier2_Cloth_Shirt"],
+				9:["Tailoring_Tier2_Cloth_Armor_Set_1","Tailoring_Tier2_Cloth_Pants_1","Tailoring_Tier2_Cloth_Boots_Set_1","Tailoring_Tier2_Cloth_Shirt"],
+				10:["Tailoring_Tier2_Cloth_Armor_Set_1","Tailoring_Tier2_Cloth_Pants_1","Tailoring_Tier2_Cloth_Boots_Set_1","Tailoring_Tier2_Cloth_Shirt_2"],
+				11:["Tailoring_Tier2_Cloth_Armor_Set_1","Tailoring_Tier2_Cloth_Pants_2","Tailoring_Tier2_Cloth_Boots_Set_1","Tailoring_Tier2_Cloth_Shirt_2","Tailoring_Tier2_Cloth_Pants_1"],
+				12:["Tailoring_Tier2_Cloth_Armor_Set_1","Tailoring_Tier2_Cloth_Pants_2","Tailoring_Tier2_Cloth_Boots_Set_1","Tailoring_Tier2_Cloth_Shirt_2","Tailoring_Tier2_Cloth_Pants_1"],
+				13:["Tailoring_Tier2_Cloth_Armor_Set_1","Tailoring_Tier2_Cloth_Pants_2","Tailoring_Tier2_Cloth_Boots_Set_1","Tailoring_Tier2_Cloth_Shirt_2","Tailoring_Tier2_Cloth_Pants_1"],
+				14:["Tailoring_Tier2_Cloth_Armor_Set_1","Tailoring_Tier2_Cloth_Pants_2", "Tailoring_Tier3_Cloth_Shirt","Tailoring_Tier3_Cloth_Boots_Set_1"],
+				15:["Tailoring_Tier3_Cloth_Armor_Set_1","Tailoring_Tier3_Cloth_Pants","Tailoring_Tier3_Cloth_Shirt2","Tailoring_Tier3_Cloth_Boots_Set_1"],
+				16:["Tailoring_Tier3_Cloth_Armor_Set_1","Tailoring_Tier3_Cloth_Pants","Tailoring_Tier3_Cloth_Shirt2","Tailoring_Tier3_Cloth_Helm_Set_1"],
+				17:["Tailoring_Tier3_Cloth_Armor_Set_1","Tailoring_Tier3_Cloth_Pants2_Set2","Tailoring_Tier3_Cloth_Shirt2","Tailoring_Tier3_Cloth_Helm_Set_1"],
+				18:["Tailoring_Tier3_Cloth_Armor_Set_3","Tailoring_Tier3_Cloth_Armor_Set_2","Tailoring_Tier3_Cloth_Armor_Set_1","Tailoring_Tier3_Cloth_Pants2_Set2","Tailoring_Tier3_Cloth_Shirt2","Tailoring_Tier3_Cloth_Helm_Set_1","Tailoring_Tier3_Cloth_Pants"],
+				19:["Tailoring_Tier3_Cloth_Armor_Set_3","Tailoring_Tier3_Cloth_Armor_Set_2","Tailoring_Tier3_Cloth_Armor_Set_1","Tailoring_Tier3_Cloth_Pants2_Set2","Tailoring_Tier3_Cloth_Shirt2","Tailoring_Tier3_Cloth_Helm_Set_1","Tailoring_Tier3_Cloth_Pants"],
+				20:["Tailoring_Tier2_Refine_Basic"],
+				//19:["Cloth Robes +4","Fancy Cloth Pants","Fancy Cloth Shirt","Cloth Cap +4","Ornate Cloth Pants","Upgrade Outfitter","Upgrade Weaver","Hire an additional Weaver"],
+				//20:["Weave Cotton Cloth"],
+			},
 		},
-	},
-	{
-		taskName:"Weaponsmithing",
-		level: {
-			0:["Weaponsmithing_Tier0_Intro"],
-			1:["Weaponsmithing_Tier1_Dagger_1"],
-			2:["Weaponsmithing_Tier1_Dagger_1"],
-			3:["Weaponsmithing_Tier1_Dagger_1"],
-			4:["Weaponsmithing_Tier1_Dagger_2"],
-			5:["Weaponsmithing_Tier1_Dagger_2"],
-			6:["Weaponsmithing_Tier1_Dagger_2"],
-			7:["Weaponsmithing_Tier2_Dagger_3"],
-			8:["Weaponsmithing_Tier2_Dagger_3"],
-			9:["Weaponsmithing_Tier2_Dagger_3"],
-			10:["Weaponsmithing_Tier2_Dagger_3"],
-			11:["Weaponsmithing_Tier2_Dagger_3"],
-			12:["Weaponsmithing_Tier2_Dagger_3"],
-			13:["Weaponsmithing_Tier2_Dagger_3"],
-			14:["Weaponsmithing_Tier3_Dagger_4"],
-			15:["Weaponsmithing_Tier3_Dagger_4"],
-			16:["Weaponsmithing_Tier3_Dagger_4"],
-			17:["Weaponsmithing_Tier3_Dagger_4"],
-			18:["Weaponsmithing_Tier3_Dagger_4"],
-			19:["Weaponsmithing_Tier3_Dagger_4"],
-			20:["Weaponsmithing_Tier2_Refine_Basic"],
-			//19:["Dagger+4","Upgrade Grinder","Upgrade Smelter","Hire an additional Smelter"],
-			//20:["Craft Steel Blades and Barausk Hafts"],
+		{
+			taskName:"Artificing",
+			level: {
+				0:["Artificing_Tier0_Intro_1"],
+				1:["Artificing_Tier1_Pactblade_Convergence_1","Artificing_Tier1_Symbol_Virtuous_1","Artificing_Tier1_Refine_Basic"],
+				2:["Artificing_Tier1_Pactblade_Convergence_1","Artificing_Tier1_Icon_Virtuous_1","Artificing_Tier1_Refine_Basic"],
+				3:["Artificing_Tier1_Pactblade_Convergence_1","Artificing_Tier1_Icon_Virtuous_1","Artificing_Tier1_Refine_Basic"],
+				4:["Artificing_Tier1_Pactblade_Convergence_2","Artificing_Tier1_Icon_Virtuous_2","Artificing_Tier1_Refine_Basic"],
+				5:["Artificing_Tier1_Pactblade_Convergence_2","Artificing_Tier1_Icon_Virtuous_2","Artificing_Tier1_Refine_Basic"],
+				6:["Artificing_Tier1_Pactblade_Convergence_2","Artificing_Tier1_Icon_Virtuous_2","Artificing_Tier1_Refine_Basic"],
+				7:["Artificing_Tier2_Pactblade_Temptation_3","Artificing_Tier1_Icon_Virtuous_2","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+				8:["Artificing_Tier2_Pactblade_Temptation_3","Artificing_Tier1_Icon_Virtuous_2","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+				9:["Artificing_Tier2_Pactblade_Temptation_3","Artificing_Tier1_Icon_Virtuous_2","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+				10:["Artificing_Tier2_Pactblade_Temptation_3","Artificing_Tier1_Icon_Virtuous_2","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+				11:["Artificing_Tier2_Pactblade_Temptation_3","Artificing_Tier1_Icon_Virtuous_2","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+				12:["Artificing_Tier2_Pactblade_Temptation_3","Artificing_Tier1_Icon_Virtuous_2","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+				13:["Artificing_Tier2_Pactblade_Temptation_3","Artificing_Tier1_Icon_Virtuous_2","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+				14:["Artificing_Tier3_Pactblade_Temptation_4","Artificing_Tier3_Icon_Virtuous_4","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+				15:["Artificing_Tier3_Pactblade_Temptation_4","Artificing_Tier3_Icon_Virtuous_4","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+				16:["Artificing_Tier3_Pactblade_Temptation_4","Artificing_Tier3_Icon_Virtuous_4","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+				17:["Artificing_Tier3_Pactblade_Temptation_5","Artificing_Tier3_Icon_Virtuous_5","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+				18:["Artificing_Tier3_Pactblade_Temptation_5","Artificing_Tier3_Icon_Virtuous_5","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+				19:["Artificing_Tier3_Pactblade_Temptation_5","Artificing_Tier3_Icon_Virtuous_5","Artificing_Tier3_Refine_Basic","Artificing_Tier2_Refine_Basic","Artificing_Tier1_Refine_Basic"],
+				20:["Artificing_Tier2_Refine_Basic"],
+				//19:["Virtuous Icon +5","Upgrade Engraver","Upgrade Carver","Hire an additional Carver"],
+				//20:["7:Craft Ornamental metal and Carved Wood"],
+			},
 		},
-	},
-	{
-		taskName:"Alchemy",
-		level: {
-			0:["Alchemy_Tier0_Intro_1"],
-			1:["Alchemy_Tier1_Experiment_Rank2","Alchemy_Tier1_Experimentation_Rank1"],
-			2:["Alchemy_Tier1_Experiment_Rank3","Alchemy_Tier1_Experimentation_Rank2"],
-			3:["Alchemy_Tier1_Experiment_Rank4","Alchemy_Tier1_Experimentation_Rank3"],
-			4:["Alchemy_Tier1_Experiment_Rank5","Alchemy_Tier1_Experimentation_Rank4"],
-			5:["Alchemy_Tier1_Experiment_Rank6","Alchemy_Tier1_Experimentation_Rank5"],
-			6:["Alchemy_Tier1_Experiment_Rank7","Alchemy_Tier1_Experimentation_Rank6"],
-			7:["Alchemy_Tier2_Experiment_Rank08","Alchemy_Tier2_Experimentation_Rank07"],
-			8:["Alchemy_Tier2_Experiment_Rank09","Alchemy_Tier2_Experimentation_Rank08"],
-			9:["Alchemy_Tier2_Experiment_Rank10","Alchemy_Tier2_Experimentation_Rank09"],
-			10:["Alchemy_Tier2_Experiment_Rank11","Alchemy_Tier2_Experimentation_Rank10"],
-			11:["Alchemy_Tier2_Experiment_Rank12","Alchemy_Tier2_Experimentation_Rank11"],
-			12:["Alchemy_Tier2_Experiment_Rank13","Alchemy_Tier2_Experimentation_Rank12"],
-			13:["Alchemy_Tier2_Experiment_Rank14","Alchemy_Tier2_Experimentation_Rank13"],
-			14:["Alchemy_Tier3_Experiment_Rank15","Alchemy_Tier3_Experimentation_Rank14"],
-			15:["Alchemy_Tier3_Experiment_Rank16","Alchemy_Tier3_Experimentation_Rank15"],
-			16:["Alchemy_Tier3_Experiment_Rank17","Alchemy_Tier3_Experimentation_Rank16"],
-			17:["Alchemy_Tier3_Experiment_Rank18","Alchemy_Tier3_Experimentation_Rank17"],
-			18:["Alchemy_Tier3_Experiment_Rank19","Alchemy_Tier3_Experimentation_Rank18"],
-			19:["Alchemy_Tier3_Experiment_Rank20","Alchemy_Tier3_Experimentation_Rank19"],
-			//20:["Alchemy_Tier3_Experimentation_Rank20"],
-			//19:["Alchemical Research","Rank 20 Experimentation","Upgrade Mixologist","Upgrade Apothecary","Hire an additional Apothecary"],
-			//20:["Alchemy_Tier2_Aquavitae_2"],,"Alchemy_Tier3_Potency_Potion_Major"
-			20:["Alchemy_Tier3_Protection_Potion_Major","Alchemy_Tier2_Aquaregia","Alchemy_Tier3_Refine_Basic","Alchemy_Tier3_Gather_Components"],
+		{
+			taskName:"Weaponsmithing",
+			level: {
+				0:["Weaponsmithing_Tier0_Intro"],
+				1:["Weaponsmithing_Tier1_Dagger_1"],
+				2:["Weaponsmithing_Tier1_Dagger_1"],
+				3:["Weaponsmithing_Tier1_Dagger_1"],
+				4:["Weaponsmithing_Tier1_Dagger_2"],
+				5:["Weaponsmithing_Tier1_Dagger_2"],
+				6:["Weaponsmithing_Tier1_Dagger_2"],
+				7:["Weaponsmithing_Tier2_Dagger_3"],
+				8:["Weaponsmithing_Tier2_Dagger_3"],
+				9:["Weaponsmithing_Tier2_Dagger_3"],
+				10:["Weaponsmithing_Tier2_Dagger_3"],
+				11:["Weaponsmithing_Tier2_Dagger_3"],
+				12:["Weaponsmithing_Tier2_Dagger_3"],
+				13:["Weaponsmithing_Tier2_Dagger_3"],
+				14:["Weaponsmithing_Tier3_Dagger_4"],
+				15:["Weaponsmithing_Tier3_Dagger_4"],
+				16:["Weaponsmithing_Tier3_Dagger_4"],
+				17:["Weaponsmithing_Tier3_Dagger_4"],
+				18:["Weaponsmithing_Tier3_Dagger_4"],
+				19:["Weaponsmithing_Tier3_Dagger_4"],
+				20:["Weaponsmithing_Tier2_Refine_Basic"],
+				//19:["Dagger+4","Upgrade Grinder","Upgrade Smelter","Hire an additional Smelter"],
+				//20:["Craft Steel Blades and Barausk Hafts"],
+			},
 		},
-	},
-];
-	
+		{
+			taskName:"Alchemy",
+			level: {
+				0:["Alchemy_Tier0_Intro_1"],
+				1:["Alchemy_Tier1_Experiment_Rank2","Alchemy_Tier1_Experimentation_Rank1"],
+				2:["Alchemy_Tier1_Experiment_Rank3","Alchemy_Tier1_Experimentation_Rank2"],
+				3:["Alchemy_Tier1_Experiment_Rank4","Alchemy_Tier1_Experimentation_Rank3"],
+				4:["Alchemy_Tier1_Experiment_Rank5","Alchemy_Tier1_Experimentation_Rank4"],
+				5:["Alchemy_Tier1_Experiment_Rank6","Alchemy_Tier1_Experimentation_Rank5"],
+				6:["Alchemy_Tier1_Experiment_Rank7","Alchemy_Tier1_Experimentation_Rank6"],
+				7:["Alchemy_Tier2_Experiment_Rank08","Alchemy_Tier2_Experimentation_Rank07"],
+				8:["Alchemy_Tier2_Experiment_Rank09","Alchemy_Tier2_Experimentation_Rank08"],
+				9:["Alchemy_Tier2_Experiment_Rank10","Alchemy_Tier2_Experimentation_Rank09"],
+				10:["Alchemy_Tier2_Experiment_Rank11","Alchemy_Tier2_Experimentation_Rank10"],
+				11:["Alchemy_Tier2_Experiment_Rank12","Alchemy_Tier2_Experimentation_Rank11"],
+				12:["Alchemy_Tier2_Experiment_Rank13","Alchemy_Tier2_Experimentation_Rank12"],
+				13:["Alchemy_Tier2_Experiment_Rank14","Alchemy_Tier2_Experimentation_Rank13"],
+				14:["Alchemy_Tier3_Experiment_Rank15","Alchemy_Tier3_Experimentation_Rank14"],
+				15:["Alchemy_Tier3_Experiment_Rank16","Alchemy_Tier3_Experimentation_Rank15"],
+				16:["Alchemy_Tier3_Experiment_Rank17","Alchemy_Tier3_Experimentation_Rank16"],
+				17:["Alchemy_Tier3_Experiment_Rank18","Alchemy_Tier3_Experimentation_Rank17"],
+				18:["Alchemy_Tier3_Experiment_Rank19","Alchemy_Tier3_Experimentation_Rank18"],
+				19:["Alchemy_Tier3_Experiment_Rank20","Alchemy_Tier3_Experimentation_Rank19"],
+				//20:["Alchemy_Tier3_Experimentation_Rank20"],
+				//19:["Alchemical Research","Rank 20 Experimentation","Upgrade Mixologist","Upgrade Apothecary","Hire an additional Apothecary"],
+				//20:["Alchemy_Tier2_Aquavitae_2"],,"Alchemy_Tier3_Potency_Potion_Major"
+				20:["Alchemy_Tier3_Protection_Potion_Major","Alchemy_Tier2_Aquaregia","Alchemy_Tier3_Refine_Basic","Alchemy_Tier3_Gather_Components"],
+			},
+		},
+	];
+
 	// Load Settings
 	var settingnames = [
 	{name: 'paused',			  title: 'Pause Script',						 def: false, type:'checkbox', tooltip:'Disable All Automation'},
 	{name: 'debug',				  title: 'Enable Debug',						 def: false, type:'checkbox', tooltip:'Enable all debug output to console', onsave: function(newValue, oldValue) {console=newValue?unsafeWindow.console||fouxConsole:fouxConsole;}},
 	{name: 'optionals',			  title: 'Fill Optional Assets',				 def: true,	 type:'checkbox', tooltip:'Enable to include selecting the optional assets of tasks'},
-	{name: 'autopurchase',		  title: 'Auto Purchase Resources',				 def: true,	 type:'checkbox', tooltip:'Automatically purchase required resources from gateway shop (30 at a time)'},
+	{name: 'autopurchase',		  title: 'Auto Purchase Resources',				 def: true,	 type:'checkbox', tooltip:'Automatically purchase required resources from gateway shop (100 at a time)'},
 	{name: 'trainassets',		  title: 'Train Assets',						 def: true,	 type:'checkbox', tooltip:'Enable training/upgrading of asset worker resources'},
 	{name: 'refinead',			  title: 'Refine AD',							 def: true,	 type:'checkbox', tooltip:'Enable refining of AD on character switch'},
-	{name: 'openrewards',		  title: 'Open Reward Chests',					 def: false, type:'checkbox', tooltip:'Enable opening of leadership chests on character switch, recomended use with "Automatic Vendoring"'}, //MAC-NW edited by RottenMind
-	{name: 'limitskillkits',	  title: 'Automatic Vendoring',			 		 def: false, type:'checkbox', tooltip:'WARNING, Enable automatic sell items, check script description'}, //MAC-NW edited by RottenMind
-	{name: 'autoreload',		  title: 'Auto Reload',							 def: false, type:'checkbox', tooltip:'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)'},
+	{name: 'openrewards',		  title: 'Open Reward Chests',					 def: false,  type:'checkbox', tooltip:'Enable opeing of leadership chests on character switch'}, //MAC-NW
+	{name: 'autovendor_kits',	  title: 'Vendor/Maintain Node Kit Stacks', def: false,  type:'checkbox', tooltip:'Limit skill kits stacks to 50, vendor kits unusable by class, remove all if player has one bag or full bags'}, //MAC-NW
+	{name: 'autovendor_altars',	  title: 'Vendor/Maintain Portable Altars', def: false,  type:'checkbox', tooltip:'Limit portable altar stacks to 80'}, //MAC-NW
+    {name: 'autovendor_pots1',	  title: 'Auto Vendor minor potions (lvl 1)', def: false,  type:'checkbox', tooltip:'Vendor all minor potions (lvl 1) found in player bags'}, //MAC-NW
+	{name: 'autovendor_pots2',	  title: 'Auto Vendor lesser potions (lvl 15)', def: false,  type:'checkbox', tooltip:'Vendor all lesser potions (lvl 15) found in player bags'}, //MAC-NW
+	{name: 'autovendor_pots3',	  title: 'Auto Vendor potions (lvl 30)', def: false,  type:'checkbox', tooltip:'Vendor all potions (lvl 30) found in player bags'}, //MAC-NW
+	{name: 'autovendor_pots4',	  title: 'Auto Vendor greater potions (lvl 45)', def: false,  type:'checkbox', tooltip:'Vendor all greater potions (lvl 45) found in player bags'}, //MAC-NW
+	{name: 'autovendor_rank1',	  title: 'Auto Vendor enchants & runes Rank 1', def: false,  type:'checkbox', tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'}, //MAC-NW
+    {name: 'autovendor_rank2',	  title: 'Auto Vendor enchants & runes Rank 2', def: false,  type:'checkbox', tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'}, //MAC-NW
+    {name: 'autovendor_junk',	  title: 'Auto Vendor junk..', def: false,  type:'checkbox', tooltip:'Vendor all (currently) winterfest fireworks+lanterns'}, //MAC-NW
+    {name: 'autoreload',		  title: 'Auto Reload',							 def: false, type:'checkbox', tooltip:'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)'},
 	{name: 'autologin',			  title: 'Attempt to login automatically',		 def: false, type:'checkbox', tooltip:'Automatically attempt to login to the neverwinter gateway site'},
 	{name: 'nw_username',		  title: '	Neverwinter Username',				 def: '',	 type:'text',	  tooltip:''},
 	{name: 'nw_password',		  title: '	Neverwinter Password',				 def: '',	 type:'password', tooltip:''},
 	{name: 'charcount',			  title: '	Number of Characters',				 def: '2',	 type:'text',	  tooltip:'Enter number of characters to use (reload page to update settings form)'},
 	// MAC-NW AD Consolidation
-	{name: 'autoexchange',		  title: 'Consolidate AD via ZEX',				 def: false,	type:'checkbox',	tooltip:'Automatically attempt to post, cancel and withdraw AD via ZEX and consolidate to designated character'},
-	{name: 'bankchar',			  title: '	Character Name of Banker',			 def: '',		type:'text',		tooltip:'Enter name of the character to hold account AD'},
-	{name: 'banktransmin',		  title: '	Min AD for Transfer',				 def: '22000',	type:'text',		tooltip:'Enter minimum AD limit for it to be cosidered for transfer off a character'},
-	{name: 'bankcharmin',		  title: '	Min Character balance',				 def: '8000',	type:'text',		tooltip:'Enter the amount of AD to always keep available on characters'},
-	{name: 'banktransrate',		  title: '	AD per Zen Rate (in zen)',			 def: '300',	type:'text',		tooltip:'Enter default rate to use for transfering through ZEX'},
+	{name: 'autoexchange',		  title: 'Consolidate AD via ZEX',				 def: false, type:'checkbox', tooltip:'Automatically attempt to post, cancel and withdraw AD via ZEX and consolidate to designated character'},
+	{name: 'bankchar',			  title: '	Character Name of Banker',			 def: '',	type:'text',	  tooltip:'Enter name of the character to hold account AD'},
+	{name: 'banktransmin',		  title: '	Min AD for Transfer',				 def: '22000',	 type:'text', tooltip:'Enter minimum AD limit for it to be cosidered for transfer off a character'},
+	{name: 'bankcharmin',		  title: '	Min Character balance',				 def: '8000',	type:'text',  tooltip:'Enter the amount of AD to always keep available on characters'},
+	{name: 'banktransrate',		  title: '	AD per Zen Rate (in zen)',			 def: '300',   type:'text',	  tooltip:'Enter default rate to use for transfering through ZEX'},
 	// MAC-NW
 ];
-	
+
 	// Load local settings cache (unsecured)
 	var settings = {};
 	for (var i = 0; i < settingnames.length; i++) {
@@ -877,10 +889,10 @@ state_idle++;
 			settingnames[i].onsave(settings[settingnames[i].name], settings[settingnames[i].name]);
 		}
 	}
-	
+
 	if (settings["charcount"]<1) { settings["charcount"] = 1; }
 	if (settings["charcount"]>99) { settings["charcount"] = 99; }
-	
+
 	var charSettings = [];
 	for (var i = 0; i < settings["charcount"]; i++) {
 		charSettings.push({name: 'nw_charname'+i,		  title: 'Character',	   def: 'Character '+(i+1), type:'text',	 tooltip:'Characters Name'});
@@ -895,21 +907,21 @@ state_idle++;
 		charSettings.push({name: 'Artificing'+i,		  title: 'Artificing',	   def: '0',				type:'text',	 tooltip:'Number of slots to assign to Artificing'});
 		charSettings.push({name: 'Weaponsmithing'+i,	  title: 'Weaponsmithing', def: '0',				type:'text',	 tooltip:'Number of slots to assign to Weaponsmithing'});
 		charSettings.push({name: 'Alchemy'+i,			  title: 'Alchemy',		   def: '0',				type:'text',	 tooltip:'Number of slots to assign to Alchemy'});
-		
+
 		// task settings are slightly different
 		charSettings.push({name: 'tasklist'+i,			  title: 'Task List',	   def: '',					type:'void',	 tooltip:''});
 	}
-	
+
 	for (var i = 0; i < charSettings.length; i++) {
 		settings[charSettings[i].name] = GM_getValue(charSettings[i].name, charSettings[i].def);
 	}
-	
+
 	// Page Settings
 	var PAGES = Object.freeze({
 		LOGIN : { name: "Login", path: "div#login"},
 		GUARD : { name: "Account Guard", path: "div#page-accountguard"},
 	});
-	
+
 	/**
 * Uses the page settings to determine which page is currently displayed
 */
@@ -920,7 +932,7 @@ state_idle++;
 			}
 		}
 	}
-	
+
 	/**
 * Logs in to gateway
 * No client.dataModel exists at this stage
@@ -937,7 +949,7 @@ state_idle++;
 		//}
 		dfdNextRun.resolve(delay.LONG);
 	}
-	
+
 	/**
 * Action to perform on account guard page
 */
@@ -945,7 +957,7 @@ state_idle++;
 		// Do nothing on the guard screen
 		dfdNextRun.resolve(delay.LONG);
 	}
-	
+
 	/**
 * Collects rewards for tasks or starts new tasks
 * Function is called once per new task and returns true if an action is created
@@ -954,7 +966,7 @@ state_idle++;
 	function processCharacter() {
 		// Switch to professions page to show task progression
 		unsafeWindow.location.hash="#char("+encodeURI(unsafeWindow.client.getCurrentCharAtName())+")/professions";
-		
+
 		// Collect rewards for completed tasks and restart
 		if (unsafeWindow.client.dataModel.model.ent.main.itemassignments.complete) {
 			unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.forEach(function(entry) {
@@ -963,8 +975,8 @@ state_idle++;
 			dfdNextRun.resolve();
 			return true;
 		}
-		
-		
+
+
 		// Check for available slots and start new task
 		if (unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.filter(function(entry) { return (!entry.islockedslot && !entry.uassignmentid); }).length) {
 			// Go through the professions to assign tasks until specified slots filled
@@ -983,16 +995,16 @@ state_idle++;
 		else {
 			console.log("No available task slots");
 		}
-		
+
 		// TODO: Add code to get next task finish time
 		chartimers[charcurrent] = getNextFinishedTask();
-		
-		// Add diamond count
+
+		// Add diamond count	883			 // Add diamond count
 		chardiamonds[charcurrent] = unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds;
-		
+
 		return false;
 	}
-	
+
 	/**
 * Finds the task finishing next & returns the date or NULL otherwise
 *
@@ -1013,7 +1025,7 @@ state_idle++;
 		}
 		return next;
 	}
-	
+
 	/**
 * Iterative approach to finding the next task to assign to an open slot.
 *
@@ -1027,7 +1039,7 @@ state_idle++;
 			window.setTimeout(function() { createNextTask(prof, i); }, delay.SHORT);
 			return false;
 		}
-		
+
 		// Check level
 		var level = unsafeWindow.client.dataModel.model.ent.main.itemassignmentcategories.categories.filter(function(entry) { return entry.name == prof.taskName; })[0].currentrank;
 		var list = prof.level[level];
@@ -1038,13 +1050,13 @@ state_idle++;
 		}
 		console.log(prof.taskName, "is level", level);
 		console.log("createNextTask", list.length, i);
-		
+
 		var taskName = list[i];
 		console.log("Searching for task:", taskName);
-		
+
 		// Search for task to start
 		var task = searchForTask(taskName, prof.taskName);
-		
+
 		/** TODO: Use this	code once below can be replaced properly
 if (task === null) {
 console.log("Skipping task selection to purchase resources");
@@ -1059,8 +1071,8 @@ console.log('Finding next task');
 createNextTask(prof, i+1);
 }
 **/
-	
-	
+
+
 	// Finish createNextTask function
 	if (task === null) {
 		console.log("Skipping task selection to purchase resources");
@@ -1113,7 +1125,7 @@ createNextTask(prof, i+1);
 		createNextTask(prof, i+1);
 	}
 }
-	
+
 	/**
 * Checks task being started for requirements and initiates beginning task if found
 *
@@ -1126,31 +1138,31 @@ createNextTask(prof, i+1);
 		var thisTask = unsafeWindow.client.dataModel.model.craftinglist['craft_' + profname].entries.filter(function(entry) {
 			return entry.def && entry.def.name == taskname;
 		})[0];
-		
+
 		// If no task is returned we either have three of this task already, the task is a rare that doesn't exist currently, or we have the name wrong in tasklist
 		if (!thisTask) {
 			console.log('Could not find task for:', taskname);
 			return false;
 		}
-		
+
 		// start task if requirements are met
 		if (!thisTask.failedrequirementsreasons.length) {
 			return thisTask;
 		}
-		
+
 		// Too high level
 		if (thisTask.failslevelrequirements) {
 			console.log("Task level is too high:", taskname);
 			return false;
 		}
-		
+
 		var searchItem = null;
 		var searchAsset = false;
-		
+
 		// Missing assets or ingredients
 		if (thisTask.failsresourcesrequirements) {
 			var failedAssets = thisTask.required.filter(function(entry) { return !entry.fillsrequirements; });
-			
+
 			// Missing required assets
 			if (failedAssets.length) {
 				var failedCrafter = failedAssets.filter(function(entry) { return entry.categories.indexOf("Person") >= 0; });
@@ -1165,16 +1177,16 @@ createNextTask(prof, i+1);
 					return false;
 				}
 			}
-			
+
 			// Check for craftable or buyable ingredients
 			else {
 				var failedResources = thisTask.consumables.filter(function(entry) { return entry.required && !entry.fillsrequirements; });
-				
+
 				// Check first required ingredient only
 				// If it fails to buy or craft task cannot be completed anyway
 				// If it succeeds script will search for tasks anew
 				var itemName = failedResources[0].hdef.match(/\[(\w+)\]/)[1];
-				
+
 				// purchase buyable resources
 				if (itemName.match(/^Crafting_Resource_(Charcoal|Rocksalt|Spool_Thread|Porridge|Solvent|Brimstone|Coal|Moonseasalt|Quicksilver|Spool_Threadsilk)$/)) {
 					if (settings["autopurchase"]) {
@@ -1193,24 +1205,24 @@ createNextTask(prof, i+1);
 				}
 			}
 		}
-		
-		
+
+
 		// either no craftable items/assets found or other task requirements are not met
 		// Skip crafting ingredient tasks for Leadership
 		if (searchItem === null || !searchItem.length || (profname == 'Leadership' && !searchAsset && !searchItem.match(/Crafting_Asset_Craftsman/))) {
 			console.log("Failed to resolve item requirements for task:", taskname);
 			return false;
 		}
-		
+
 		// Generate list of available tasks to search ingredients/assets from
 		console.log("Searching ingredient tasks for:", profname);
 		var taskList = unsafeWindow.client.dataModel.model.craftinglist['craft_' + profname].entries.filter(function(entry) {
 			// remove header lines first to avoid null def
 			if (entry.isheader) { return false; }
-			
+
 			// Too high level
 			if (entry.failslevelrequirements) { return false; }
-			
+
 			// Rewards do not contain item we want to make
 			if (searchAsset) {
 				if (entry.def.icon != searchItem || !entry.def.name.match(/Recruit/) || entry.def.requiredrank > 14) { return false; }
@@ -1218,27 +1230,27 @@ createNextTask(prof, i+1);
 			else {
 				if (!(entry.rewards.some(function (itm) { try { return itm.hdef.match(/\[(\w+)\]/)[1] == searchItem; } catch(e) {} }))) { return false; }
 			}
-			
+
 			// Skip mass production tasks
 			if (entry.def.displayname.match(/^(Batch|Mass|Deep|Intensive) /)) { return false; }
-			
+
 			// Skip trading tasks
 			if (entry.def.displayname.match(/rading$/)) { return false; }
-			
+
 			// Skip looping Transmute tasks
 			if (entry.def.displayname.match(/^(Transmute|Create) /)) { return false; }
-			
+
 			return true;
 		});
-		
+
 		if (!taskList.length) {
 			console.log("No ingredient tasks found for:", taskname, searchItem);
 			return false;
 		}
-		
+
 		// Use more efficient Empowered task for Aqua Vitae if available.
 		if (searchItem == "Crafting_Resource_Aquavitae" && taskList.length > 1) { taskList.shift(); }
-		
+
 		// Should really only be one result now but lets iterate through anyway.
 		for (var i = 0; i < taskList.length; i++) {
 			console.log("Attempting search for ingredient task:", taskList[i].def.name);
@@ -1249,7 +1261,7 @@ createNextTask(prof, i+1);
 		}
 		return false;
 	}
-	
+
 	/** --------- MAC-NW : Unused old function
 * Fills resource slots and begins a profession task
 *
@@ -1262,7 +1274,7 @@ unsafeWindow.client.professionFetchTaskDetail(taskDetail.def.name);
 //client.dataModel.addDefaultResources();
 client.professionStartAssignment(taskDetail.def.name);
 }*/
-	
+
 	/**
 * Selects the highest level asset for the i'th button in the list. Uses an iterative approach
 * in order to apply a sufficient delay after the asset is assigned
@@ -1274,25 +1286,25 @@ client.professionStartAssignment(taskDetail.def.name);
 	function SelectItemFor(buttonListIn, i, def, prof) {
 		buttonListIn[i].click();
 		WaitForState("").done(function() {
-			
+
 			var $assets = $("div.modal-item-list a").has("img[src*='_Resource_'],img[src*='_Assets_']");
 			var $persons = $("div.modal-item-list a").has("img[src*='_Follower_']");
 			var quality = [".Special",".Gold",".Silver",".Bronze"];
 			var ic, $it;
-			
+
 			var clicked = false;
-			
+
 			// Try to avoid using up higher rank assets needlessly
 			if (prof.taskName === "Leadership") {
 				var mercenarys = $("div.modal-item-list a.Bronze:contains('Mercenary')");
 				var guards = $("div.modal-item-list a.Bronze:contains('Guard')");
 				var footmen = $("div.modal-item-list a.Bronze:contains('Footman')");
-				
+
 				if (mercenarys.length)	 { clicked = true; mercenarys[0].click(); }
 				else if (guards.length)	 { clicked = true; guards[0].click(); }
 					else if (footmen.length) { clicked = true; footmen[0].click(); }
 					}
-			
+
 			// check resources & assets for best quality, in descending order
 			for (ic in quality) {
 				$it = $assets.filter(quality[ic]);
@@ -1302,7 +1314,7 @@ client.professionStartAssignment(taskDetail.def.name);
 					break;
 				}
 			}
-			
+
 			// if no asset was selected, check for persons for best speed, in descending order
 			if (!clicked) {
 				for (ic in quality) {
@@ -1314,7 +1326,7 @@ client.professionStartAssignment(taskDetail.def.name);
 					}
 				}
 			}
-			
+
 			// if nothing was found at all, return immediately (skip other optional slots)
 			if (!clicked) {
 				$("button.close-button").click();
@@ -1324,7 +1336,7 @@ client.professionStartAssignment(taskDetail.def.name);
 					def.resolve();
 				});
 			}
-			
+
 			console.log("Clicked item");
 			WaitForState("").done(function() {
 				// Get the new set of select buttons created since the other ones are removed when the asset loads
@@ -1339,7 +1351,7 @@ client.professionStartAssignment(taskDetail.def.name);
 			});
 		});
 	}
-	
+
 	/* ################# original
 function SelectItemFor(buttonListIn, i, def, prof) {
 buttonListIn[i].click();
@@ -1386,7 +1398,7 @@ def.resolve();
 });
 }
 */
-	
+
 	/**
 * Will buy a given purchasable resource
 *
@@ -1394,7 +1406,7 @@ def.resolve();
 */
 	function buyResource(item) {
 		console.log("Purchasing resources:", item);
-		
+
 		var resourceID = {
 			Crafting_Resource_Charcoal			: 0,
 			Crafting_Resource_Rocksalt			: 1,
@@ -1407,16 +1419,16 @@ def.resolve();
 			Crafting_Resource_Quicksilver		: 8,
 			Crafting_Resource_Spool_Threadsilk	: 9,
 		};
-		
+
 		// Make purchase
 		unsafeWindow.client.sendCommand("GatewayVendor_PurchaseVendorItem",{vendor:'Nw_Gateway_Professions_Merchant',store:'Store_Crafting_Resources',idx:resourceID[item],count:50}); // MAC-NW: Purchase of prof resources lowred from 100 to 30
 		WaitForState("button.closeNotification").done(function() {
 			$("button.closeNotification").click();
 		});
 	}
-	
+
 	// MAC-NW -- AD Transfer through exchange functions (Consolidation)
-	
+
 	// Function used to check exchange data model and post calculated AD/Zen for transfer if all requirements are met
 	function postZexOffer() {
 		// Make sure the exchange data is loaded to model
@@ -1427,23 +1439,23 @@ def.resolve();
 				var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
 				var ZenRate = parseInt(settings["banktransrate"]);
 				var ZenQty = Math.floor( (charDiamonds - parseInt(settings["bankcharmin"])) / ZenRate);
-				
+
 				console.log("Posting Zex buy listing for " + ZenQty + " ZEN at the rate of " + ZenRate + " AD/ZEN. AD remainder: " + charDiamonds + " - " + (ZenRate*ZenQty) + " = " + (charDiamonds-(ZenRate*ZenQty)));
 				unsafeWindow.client.createBuyOrder(ZenQty, ZenRate);
-				
+
 			} else { console.log("Zen Max Listings Reached (5). Skipping Zex Posting.."); }
 		} else { console.log("Zen Exchange data did not load in time for transfer. Skipping Zex Posting.."); }
 	}
-	
+
 	// Function used to check exchange data model and withdraw listed orders that use the settings zen transfer rate
 	function withdrawZexOffer() {
 		// Make sure the exchange data is loaded to model
 		if (unsafeWindow.client.dataModel.model.exchangeaccountdata) {
 			if (unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length >= 1) {
-				
+
 				var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
 				var ZenRate = parseInt(settings["banktransrate"]);
-				
+
 				// cycle through the zex listings
 				unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.forEach(function(item){
 					// find any buy orders in the list with our set zen rate
@@ -1453,52 +1465,69 @@ def.resolve();
 						console.log("Withdrawing Zex listing for " + item.quantity + " ZEN at the rate of " + item.price + " . Total value in AD: " + item.totaltc);
 					}
 				});
-				
+
 			} else { console.log("No listings found on Zex. Skipping Zex Withrdaw.."); }
 		} else { console.log("Zen Exchange data did not load in time for transfer. Skipping Zex Withrdaw.."); }
 	}
-	
+
 	// MAC-NW
-	
+
 	function vendorItemsLimited(_items) {
         var _pbags = client.dataModel.model.ent.main.inventory.playerbags;
         var _delay = 400;
         var _sellCount = 0;
+        var _classType = unsafeWindow.client.dataModel.model.ent.main.classtype;
+        var _bagCount = unsafeWindow.client.dataModel.model.ent.main.inventory.playerbags.length;
+        var _bagSpace = 0;
+        var _tmpBag = [];
         $.each(_pbags, function( bi, bag ) {
             bag.slots.forEach(function( slot ) {
-                for (i = 0; i < _items.length; i++) {
-                    var _Limit = (parseInt(_items[i].limit) > 99) ? 99 : parseInt(_items[i].limit);
-                    var _Pattern = _items[i].pattern;
-                    //if (slot) console.log('Checking for',_Pattern,'slot name:',slot.name,'limit:',_Limit);
-                    if (slot && _Pattern.test(slot.name)) {
-                        if (slot.name == "Item_Consumable_Skill_Dungeoneering" && (unsafeWindow.client.dataModel.model.ent.main.classtype == "Player_Guardian" || unsafeWindow.client.dataModel.model.ent.main.classtype == "Player_Greatweapon"))
-                            _Limit=0;
-                        if (slot.name == "Item_Consumable_Skill_Religion" && unsafeWindow.client.dataModel.model.ent.main.classtype == "Player_Devoted")
-                            _Limit=0;
-                        if (slot.name == "Item_Consumable_Skill_Thievery" && unsafeWindow.client.dataModel.model.ent.main.classtype == "Player_Trickster")
-                            _Limit=0;
-                        if (slot.name == "Item_Consumable_Skill_Arcana" && (unsafeWindow.client.dataModel.model.ent.main.classtype == "Player_Controller" || unsafeWindow.client.dataModel.model.ent.main.classtype == "Player_Scourge"))
-                            _Limit=0;
-                        if (slot.name == "Item_Consumable_Skill_Nature" && unsafeWindow.client.dataModel.model.ent.main.classtype == "Player_Archer")
-                            _Limit=0;
-                        if (slot.count > _Limit) {
-                            _sellCount++;
-                            var vendor = {vendor:"Nw_Gateway_Professions_Merchant"};
-                            vendor.id = slot.uid;
-                            vendor.count = slot.count - _Limit;
-                            console.log('Selling',vendor.count,slot.name,'to vendor.');
-                            window.setTimeout(function () {client.sendCommand('GatewayVendor_SellItemToVendor', vendor);}, _delay);
-                            _delay = _delay + 100;
-                        }
-                    }
+                if (slot === null) {
+                    _bagSpace++;
+                }  else {
+                    _tmpBag[_tmpBag.length] = slot;
                 }
             });
         });
+
+        _tmpBag.forEach(function (slot) {
+            for (i = 0; i < _items.length; i++) {
+                var _Limit = (parseInt(_items[i].limit) > 99) ? 99 : parseInt(_items[i].limit);
+                var _Pattern = _items[i].pattern;
+                //if (slot) console.log('Checking for',_Pattern,'slot name:',slot.name,'limit:',_Limit);
+                if (slot && _Pattern.test(slot.name) && !slot.bound) {
+                    if (settings["autovendor_kits"] && slot.name == "Item_Consumable_Skill_Dungeoneering" && (_classType == "Player_Guardian" || _classType == "Player_Greatweapon" || _bagCount == 1 || _bagSpace === 0) )
+                        _Limit = 0;
+                    if (settings["autovendor_kits"] && slot.name == "Item_Consumable_Skill_Religion" && (_classType == "Player_Devoted" || _bagCount === 1 || _bagSpace ===  0) )
+                        _Limit = 0;
+                    if (settings["autovendor_kits"] && slot.name == "Item_Consumable_Skill_Thievery" && (_classType == "Player_Trickster" || _bagCount === 1 || _bagSpace === 0) )
+                        _Limit = 0;
+                    if (settings["autovendor_kits"] && slot.name == "Item_Consumable_Skill_Arcana" && (_classType == "Player_Controller" || _classType == "Player_Scourge" || _bagCount === 1 || _bagSpace === 0) )
+                        _Limit = 0;
+                    if (settings["autovendor_kits"] && slot.name == "Item_Consumable_Skill_Nature" && (_classType == "Player_Archer" || _bagCount === 1 || _bagSpace === 0) )
+                        _Limit = 0;
+                    if (slot.count > _Limit) {
+                        _sellCount++;
+                        var vendor = {
+                            vendor : "Nw_Gateway_Professions_Merchant"
+                        };
+                        vendor.id = slot.uid;
+                        vendor.count = slot.count - _Limit;
+                        console.log('Selling', vendor.count, slot.name, 'to vendor.');
+                        window.setTimeout(function () {
+                            client.sendCommand('GatewayVendor_SellItemToVendor', vendor);
+                        }, _delay);
+                        _delay = _delay + 100;
+                    }
+                }
+            }
+        });
+
         return _sellCount;
     }
-    
+
 	function switchChar() {
-        
+
 		if (settings["refinead"]) {
 			var _currencies = unsafeWindow.client.dataModel.model.ent.main.currencies;
 			if (_currencies.diamondsconvertleft && _currencies.roughdiamonds) {
@@ -1509,10 +1538,10 @@ def.resolve();
 				});
 			}
 		}
-		
+
 		// MAC-NW -- AD Consolidation
 		if (settings["autoexchange"]) {
-			
+
 			// Check that we dont take money from the character assigned as the banker // Zen Transfer / Listing
 			if (settings["bankchar"] != unsafeWindow.client.dataModel.model.ent.main.name) {
 				// Check the required min AD amount on character
@@ -1523,7 +1552,7 @@ def.resolve();
 					} else { console.log("Zen transfer rate does not meet the minimum (50) or maximum (500). Skipping Zex Posting.."); }
 				} else { console.log("Character does not have minimum AD balance to do funds transfer. Skipping Zex Posting.."); }
 			}
-			
+
 		} else { console.log("Zen Exchange AD transfer not enabled. Skipping Zex Posting.."); }
 
 		if (settings["openrewards"]) {
@@ -1543,32 +1572,13 @@ def.resolve();
 			});
 		}
 
-        if (settings["limitskillkits"]) {
-            var _vendorItems=[];
-            var _sellCount=0;
-            _vendorItems[_vendorItems.length] = {pattern:/Item_Consumable_Skill/,limit:50}
-            _vendorItems[_vendorItems.length] = {pattern:/Item_Portable_Altar/,limit:80}
-            _vendorItems[_vendorItems.length] = {pattern:/T1_Enchantment/,limit:0}
-            _vendorItems[_vendorItems.length] = {pattern:/T1_Runestone/,limit:0}
-            _vendorItems[_vendorItems.length] = {pattern:/T2_Enchantment/,limit:0}
-            _vendorItems[_vendorItems.length] = {pattern:/T2_Runestone/,limit:0}
-			_vendorItems[_vendorItems.length] = {pattern:/Potion_Healing_1/,limit:10}
-            _vendorItems[_vendorItems.length] = {pattern:/Potion_Healing_2/,limit:10}
-            _vendorItems[_vendorItems.length] = {pattern:/Potion_Healing_3/,limit:10}
-            //_vendorItems[_vendorItems.length] = {pattern:/Potion_Healing_4/,limit:0}
-			_sellCount = vendorItemsLimited(_vendorItems);
-            if (_sellCount > 0) {
-                var _sellWait = _sellCount * 500;
-                PauseSettings("pause");
-                window.setTimeout(function() {PauseSettings("unpause");}, _sellWait);
-            }
-        }
-        
-        
+		// Check Vendor Options & Vendor matched items
+        vendorJunk();
+
         // MAC-NW (endchanges)
-        
+
 		console.log("Switching Characters");
-		
+
 		var chardelay, chardate = null, nowdate = new Date();
 		nowdate = nowdate.getTime();
 		curdiamonds = 0;
@@ -1597,7 +1607,7 @@ def.resolve();
 		GM_setValue("charcurrent", charcurrent);
 		dfdNextRun.resolve(chardelay);
 	}
-	
+
 	/**
 * Waits for the loading symbol to be hidden.
 *
@@ -1642,10 +1652,10 @@ def.resolve();
 	function process() {
 		// Make sure the settings button exists
 		addSettings();
-		
+
 		// Enable/Disable the unconditional page reload depending on settings
 		loading_reset = settings["autoreload"];
-		
+
 		// Check if timer is paused
 		s_paused = settings["paused"]; // let the Page Reloading function know the pause state
 		if (settings["paused"]) {
@@ -1653,7 +1663,7 @@ def.resolve();
 			var timerHandle = window.setTimeout(function() {process();}, delay.DEFAULT);
 			return;
 		}
-		
+
 		// Check for Gateway down
 		if (window.location.href.indexOf("gatewaysitedown") > -1) {
 			// Do a long delay and then retry the site
@@ -1661,21 +1671,21 @@ def.resolve();
 			window.setTimeout(function() {unsafeWindow.location.href = "http://gateway.playneverwinter.com";}, delay.MINS);
 			return;
 		}
-		
+
 		// Check for login or account guard and process accordingly
 		var currentPage = GetCurrentPage();
 		if		(currentPage == PAGES.LOGIN)	   { page_LOGIN(); return; }
 		else if (currentPage == PAGES.GUARD)	   { page_GUARD(); return; }
-			
+
 			window.setTimeout(function() {loginProcess();}, delay.SHORT);
-		
+
 		// Continue again later
 		dfdNextRun.done(function(delayTimer) {
 			dfdNextRun = $.Deferred();
 			timerHandle = window.setTimeout(function() {process();}, typeof delayTimer!== 'undefined' ? delayTimer:delay.DEFAULT);
 		});
 	}
-	
+
 	function loginProcess() {
 		// Get logged on account details
 		var accountName;
@@ -1687,7 +1697,7 @@ def.resolve();
 			window.setTimeout(function() {loginProcess();}, delay.SHORT);
 			return;
 		}
-		
+
 		// Check if timer is paused again to avoid starting new task between timers
 		s_paused = settings["paused"]; // let the Page Reloading function know the pause state
 		if (settings["paused"]) {
@@ -1695,7 +1705,7 @@ def.resolve();
 			var timerHandle = window.setTimeout(function() {process();}, delay.DEFAULT);
 			return;
 		}
-		
+
 		if (accountName) {
 			// load current character position and values
 			charcurrent =  GM_getValue("charcurrent", 0);
@@ -1703,7 +1713,7 @@ def.resolve();
 				j = i + (charcurrent*charSettings.length/settings["charcount"]);
 				settings[charSettings[j].name.replace(new RegExp(charcurrent+"$"),'')] = settings[charSettings[j].name];
 			}
-			
+
 			// Load task list from settings if saved
 			if (settings["tasklist"].length) {
 				tasklist = JSON.parse(settings["tasklist"]);
@@ -1711,29 +1721,29 @@ def.resolve();
 			else {
 				tasklist = defaultTasklist;
 			}
-			
+
 			var charName = settings["nw_charname"];
 			var fullCharName = charName + '@' + accountName;
-			
+
 			if (unsafeWindow.client.getCurrentCharAtName() != fullCharName) {
 				loadCharacter(fullCharName);
 				return;
 			}
-			
+
 			// Try to start tasks
 			if (processCharacter()) { return; }
-			
+
 			// Switch characters as necessary
 			switchChar();
 		}
 	}
-	
+
 	function loadCharacter(charname) {
 		// Load character and restart next load loop
 		console.log("Loading gateway script for", charname);
 		unsafeWindow.client.dataModel.loadEntityByName(charname);
-		
-		// MAC-NW -- AD Consolidation -- Banker Withdraw Section
+
+		// MAC-NW -- AD Consolidation -- Banker Withdraw Secion
 		try {
 			var testChar = unsafeWindow.client.dataModel.model.ent.main.name;
             unsafeWindow.client.dataModel.fetchVendor('Nw_Gateway_Professions_Merchant');
@@ -1744,11 +1754,11 @@ def.resolve();
 			window.setTimeout(function() {loadCharacter(charname);}, delay.SHORT);
 			return;
 		}
-        
+
 		if (settings["autoexchange"]) {
-			
+
 			unsafeWindow.client.dataModel.fetchExchangeAccountData();
-			
+
 			try {
 				var testExData = unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders;
                 console.log("Loaded zen exchange data for", charname);
@@ -1758,7 +1768,7 @@ def.resolve();
 				window.setTimeout(function() {loadCharacter(charname);}, delay.SHORT);
 				return;
 			}
-			
+
 			// Check to see if this is the designated banker character
 			if (settings["bankchar"] == unsafeWindow.client.dataModel.model.ent.main.name) {
 				// This is the banker -- withdraw any buy listings that match the transfer rate set in panel
@@ -1773,20 +1783,20 @@ def.resolve();
 						client.sendCommand("GatewayExchange_ClaimMTC", client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
 						console.log("Attempting to withdraw exchange balancees... ClaimMT: " + client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
 					}
-					
+
 				}, delay.SHORT);
 			}
-			
+
 			WaitForState("button.closeNotification").done(function() {
 				$("button.closeNotification").click();
 			});
-			
+
 			unsafeWindow.client.dataModel.loadEntityByName(charname);
-			
+
 		} else { console.log("Zen Exchange AD transfer not enabled. Skipping Zex Posting.."); }
         // MAC-NW
-        
-        // MAC-NW -- Moved Profession Merchant loading here with testing/waiting to make sure it loads
+
+        // MAC-NW -- Moved Professoin Merchant loading here with testing/waiting to make sure it loads
 		try {
 			var testProfMerchant = client.dataModel.model.vendor.items;
             console.log("Loaded profession merchant for", charname);
@@ -1797,30 +1807,12 @@ def.resolve();
 			return;
 		}
 
-        if (settings["limitskillkits"]) {
-            var _vendorItems=[];
-            var _sellCount=0;
-            _vendorItems[_vendorItems.length] = {pattern:/Item_Consumable_Skill/,limit:50}
-            _vendorItems[_vendorItems.length] = {pattern:/Item_Portable_Altar/,limit:80}
-            _vendorItems[_vendorItems.length] = {pattern:/T1_Enchantment/,limit:0}
-            _vendorItems[_vendorItems.length] = {pattern:/T1_Runestone/,limit:0}
-			_vendorItems[_vendorItems.length] = {pattern:/T2_Enchantment/,limit:0}
-            _vendorItems[_vendorItems.length] = {pattern:/T2_Runestone/,limit:0}
-            _vendorItems[_vendorItems.length] = {pattern:/Potion_Healing_1/,limit:10}
-            _vendorItems[_vendorItems.length] = {pattern:/Potion_Healing_2/,limit:10}
-            _vendorItems[_vendorItems.length] = {pattern:/Potion_Healing_3/,limit:10}
-            //_vendorItems[_vendorItems.length] = {pattern:/Potion_Healing_4/,limit:0}
-			_sellCount = vendorItemsLimited(_vendorItems);
-            if (_sellCount > 0) {
-                var _sellWait = _sellCount * 500;
-                PauseSettings("pause");
-                window.setTimeout(function() {PauseSettings("unpause");}, _sellWait);
-            }
-        }
+		// Check Vendor Options & Vendor matched items
+        vendorJunk();
 
 		dfdNextRun.resolve();
 	}
-	
+
 	function addSettings() {
 		if ($("#settingsButton").length)
 			return;
@@ -1850,7 +1842,7 @@ def.resolve();
 #settingsPanel input[type='button'].button-yellow{background:#df7514; margin: 2px 2px 2px 2px;}\
 #settingsPanel input[type='button'].button-blue{background:#42b8dd; margin: 2px 2px 2px 2px;}\
 ");
-		
+
 		// Add settings panel to page body
 		$("body").append(
 			'<div id="settingsPanel">\
@@ -1865,15 +1857,13 @@ def.resolve();
 </form>\
 </div>'
 		);
-		
+
 		// Add each setting input
 		var settingsList = $("#settingsPanel form ul");
 		for (var i = 0; i < settingnames.length; i++) {
 			var id = 'settings_' + settingnames[i].name;
 			var indent = (countLeadingSpaces(settingnames[i].title) >= 1) ? 1 : 0;
-			if ( i > 0 && settingnames[i].type.toString().replace(/password/, "text")  != settingnames[i-1].type.toString().replace(/password/, "text") )  // MAC-NW -- AD Consolidation FIX: Remove even/odd test
-				settingsList.append('<li style="margin-left:0em; width: 48%; display: inline-block;"/>&nbsp;</li>')
-				
+			if ( id=='autoexchange' ) settingsList.append('<li style="margin-left:0em; width: 48%; display: inline-block;"/>&nbsp;</li>')
 				switch(settingnames[i].type) {
 					case "checkbox":
 						settingsList.append('<li title="'+settingnames[i].tooltip+'" style="padding-left:'+indent+'em; width: 48%; display: inline-block;"><input style="margin:4px" name="'+id+'" id="'+id+'" type="checkbox" /><label class="'+settingnames[i].class+'" for="'+id+'">'+settingnames[i].title+'</label></li>')
@@ -1903,7 +1893,7 @@ def.resolve();
 						break;
 				}
 		}
-		
+
 		// Add character settings for each char
 		var addText = '\
 <script type="text/javascript">\
@@ -1970,7 +1960,7 @@ document.getElementById("charContainer"+val).style.display="block";\
 				addText += '<li title="'+charSettings[k].tooltip+'"><input maxlength="2" size="1" style="margin:4px; padding: 2px;" name="'+id+'" id="'+id+'" type="text" /><label class="'+charSettings[k].class+'" for="'+id+'">'+charSettings[k].title+'</label></li>';
 			}
 			addText += '</ul>'
-			
+
 			// Add task list save buttons
 			addText += '\
 <input id="save_tasklist'+i+'" type="button" class="button-green pure-button" value="Save Tasks" title="Saves current task list in script to this character">\
@@ -1982,13 +1972,13 @@ document.getElementById("charContainer"+val).style.display="block";\
 </div>\
 ';
 		$("#settingsPanel form").append(addText);
-		
+
 		// Add values to character input fields
 		for (var i = 0; i < charSettings.length; i++) {
 			var id = 'settings_' + charSettings[i].name;
 			$('#'+id).val(settings[charSettings[i].name]);
 		}
-		
+
 		// Add code to tasklist buttons
 		for (var i = 0; i < settings["charcount"]; i++) {
 			$("#save_tasklist"+i).click(function() {
@@ -1996,30 +1986,30 @@ document.getElementById("charContainer"+val).style.display="block";\
 				charSettings["tasklist"+num] = tasklist;
 				setTimeout(function() { GM_setValue("tasklist"+num, JSON.stringify(defaultTasklist)); }, 0);
 			});
-			
+
 			$("#clear_tasklist"+i).click(function() {
 				var num = this.id.replace("clear_tasklist", "");
 				charSettings["tasklist"+num] = "";
 				setTimeout(function() { GM_setValue("tasklist"+num, ""); }, 0);
 			});
 		}
-		
+
 		// Add save/cancel buttons to panel
 		$("#settingsPanel form").append('\
 <div id="settingsPanelButtonContainer">\
 <input id="settings_save" class="button-blue pure-button" type="button" value="Save and Apply">\
 <input id="settings_close" class="button-yellow pure-button" type="button" value="Close">\
 </div>');
-		
+
 		// Add open settings button to page
 		$("body").append('<div id="settingsButton"><img src="'+image_prefs+'" title="Click to show preferences" style="cursor: pointer; display: block;"></div>');
-		
+
 		// Add pause button to page
 		$("body").append('<div id="pauseButton"><img src="'+(settings["paused"]?image_play:image_pause)+'" title="Click to '+(settings["paused"]?"resume":"pause")+' task script" style="cursor: pointer; display: block;"></div>');
-		
+
 		// Add info pane
 		$("body").append("<div id='prinfopane' class='header-newrelease'>");
-		
+
 		// Add the javascript
 		$("#settingsPanel").hide();
 		$("#settingsButton").click(function() {
@@ -2032,15 +2022,16 @@ document.getElementById("charContainer"+val).style.display="block";\
 			$("#pauseButton").show();
 			$("#settingsPanel").hide();
 		});
-		$("#pauseButton").click(PauseSettings);
-		
+        $("#pauseButton").click(PauseSettings);
+
 		// Use setTimeout to workaround permission issues when calling GM functions from main window
 		$("#settings_save").click(function() { setTimeout(function() { SaveSettings();}, 0)});
 		customRadio("radio_position");
 	}
-    
+
 	function PauseSettings(_action) {
-            _action = (typeof _action !== 'undefined') ? _action : "toggle";
+            if (_action != "pause" || _action != "unpause")
+                _action = "toggle";
 			if (_action == "toggle")
 				settings["paused"] = !settings["paused"];
 			if (_action == "pause")
@@ -2052,10 +2043,10 @@ document.getElementById("charContainer"+val).style.display="block";\
 			$("#pauseButton img").attr("src",(settings["paused"]?image_play:image_pause));
 			$("#pauseButton img").attr("title","Click to "+(settings["paused"]?"resume":"pause")+" task script");
 	}
-    
+
 	function SaveSettings() {
 		var charcount = settings["charcount"];
-		
+
 		// Get each value from the UI
 		for (var i = 0; i < settingnames.length; i++) {
 			var name = settingnames[i].name;
@@ -2084,7 +2075,7 @@ document.getElementById("charContainer"+val).style.display="block";\
 			if (settings[name] !== value) { settings[name] = value; } // Save to local cache
 			if (GM_getValue(name) !== value) { GM_setValue(name, value); } // Save to GM cache
 		}
-		
+
 		// Get character settings from UI
 		for (var i = 0; i < charSettings.length; i++) {
 			if (charSettings[i].type == 'void') { continue; }
@@ -2094,14 +2085,14 @@ document.getElementById("charContainer"+val).style.display="block";\
 			if (settings[name] !== value) { settings[name] = value; } // Save to local cache
 			if (GM_getValue(name) !== value) { GM_setValue(name, value); } // Save to GM cache
 		}
-		
+
 		// If character numbers have changed reload page
 		if (charcount != settings["charcount"]) {
-			console.log("Reloading Gateway to update character count");
+			console.log("Reloading gateway to update character count");
 			unsafeWindow.location.href = "http://gateway.playneverwinter.com";
 			return;
 		}
-		
+
 		// Delete all saved settings // MAC-NW: Not sure this could of worked before with how it was coded...
 		if (settingwipe) {
 			var keys = GM_listValues();
@@ -2110,7 +2101,7 @@ document.getElementById("charContainer"+val).style.display="block";\
 				GM_deleteValue(key);
 			}
 		}
-		
+
 		// Close the panel
 		$("#settingsButton").show();
 		$("#pauseButton img").attr("src",(settings["paused"]?image_play:image_pause));
@@ -2118,7 +2109,48 @@ document.getElementById("charContainer"+val).style.display="block";\
 		$("#pauseButton").show();
 		$("#settingsPanel").hide();
 	}
-	
+
+    function vendorJunk() {
+
+        var _vendorItems=[];
+        var _sellCount=0;
+
+        if (settings["autovendor_kits"])
+        	_vendorItems[_vendorItems.length] = {pattern:/Item_Consumable_Skill/,limit:50}
+        if (settings["autovendor_altars"])
+        	_vendorItems[_vendorItems.length] = {pattern:/Item_Portable_Altar/,limit:80}
+        if (settings["autovendor_rank1"]) {
+        	_vendorItems[_vendorItems.length] = {pattern:/T1_Enchantment/,limit:0}
+        	_vendorItems[_vendorItems.length] = {pattern:/T1_Runestone/,limit:0}
+        }
+        if (settings["autovendor_rank2"]) {
+        	_vendorItems[_vendorItems.length] = {pattern:/T2_Enchantment/,limit:0}
+        	_vendorItems[_vendorItems.length] = {pattern:/T2_Runestone/,limit:0}
+        }
+        if (settings["autovendor_pots1"])
+        	_vendorItems[_vendorItems.length] = {pattern:/Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy)_1/,limit:0}
+        if (settings["autovendor_pots2"])
+        	_vendorItems[_vendorItems.length] = {pattern:/Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy)_2/,limit:0}
+        if (settings["autovendor_pots3"])
+        	_vendorItems[_vendorItems.length] = {pattern:/Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy)_3/,limit:0}
+        if (settings["autovendor_pots4"])
+           	_vendorItems[_vendorItems.length] = {pattern:/Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy)_4/,limit:0}
+        if (settings["autovendor_junk"]) {
+     		_vendorItems[_vendorItems.length] = {pattern:/Item_Snowworks_/,limit:0} // Winter Festival fireworks small & large
+        	_vendorItems[_vendorItems.length] = {pattern:/Item_Skylantern/,limit:0} // Winter Festival skylantern
+    	}
+
+        if (_vendorItems.length > 0) {
+            console.log("Attempting to vendor selected items...");
+            _sellCount = vendorItemsLimited(_vendorItems);
+            if (_sellCount > 0) {
+                var _sellWait = _sellCount * 1000;
+                PauseSettings("pause");
+                window.setTimeout(function() {PauseSettings("unpause");}, _sellWait);
+            }
+        }
+    }
+
 	// Add the settings button and start a process timer
 	addSettings();
 	timerHandle = window.setTimeout(function() {process();}, delay.SHORT);
