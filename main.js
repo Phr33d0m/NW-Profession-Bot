@@ -999,7 +999,7 @@ state_idle++;
 		// TODO: Add code to get next task finish time
 		chartimers[charcurrent] = getNextFinishedTask();
 
-		// Add diamond count	883			 // Add diamond count
+		// Add diamond count
 		chardiamonds[charcurrent] = unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds;
 
 		return false;
@@ -1517,7 +1517,7 @@ def.resolve();
                         window.setTimeout(function () {
                             client.sendCommand('GatewayVendor_SellItemToVendor', vendor);
                         }, _delay);
-                        _delay = _delay + 100;
+                        _delay = _delay + 400;
                     }
                 }
             }
@@ -2027,6 +2027,13 @@ document.getElementById("charContainer"+val).style.display="block";\
 		// Use setTimeout to workaround permission issues when calling GM functions from main window
 		$("#settings_save").click(function() { setTimeout(function() { SaveSettings();}, 0)});
 		customRadio("radio_position");
+
+		$('#update-content-inventory-bags-0 .bag-header').waitUntilExists(function () {
+			if ($('#update-content-inventory-bags-0 .bag-header div').length && !$('#update-content-inventory-bags-0 .bag-header div.autovendor').length) {
+				$('#update-content-inventory-bags-0 .bag-header').append('<div class="input-field button light autovendor"><div class="input-bg-left"></div><div class="input-bg-mid"></div><div class="input-bg-right"></div><button id="nwprofs-autovendor">Auto Vendor</button></div>');
+				$("button#nwprofs-autovendor").on( "click", vendorJunk);
+			}
+		});
 	}
 
 	function PauseSettings(_action) {
@@ -2110,46 +2117,48 @@ document.getElementById("charContainer"+val).style.display="block";\
 		$("#settingsPanel").hide();
 	}
 
-    function vendorJunk() {
+	function vendorJunk(evnt) {
 
-        var _vendorItems=[];
-        var _sellCount=0;
+		var _vendorItems=[];
+		var _sellCount=0;
 
-        if (settings["autovendor_kits"])
-        	_vendorItems[_vendorItems.length] = {pattern:/Item_Consumable_Skill/,limit:50}
-        if (settings["autovendor_altars"])
-        	_vendorItems[_vendorItems.length] = {pattern:/Item_Portable_Altar/,limit:80}
-        if (settings["autovendor_rank1"]) {
-        	_vendorItems[_vendorItems.length] = {pattern:/T1_Enchantment/,limit:0}
-        	_vendorItems[_vendorItems.length] = {pattern:/T1_Runestone/,limit:0}
-        }
-        if (settings["autovendor_rank2"]) {
-        	_vendorItems[_vendorItems.length] = {pattern:/T2_Enchantment/,limit:0}
-        	_vendorItems[_vendorItems.length] = {pattern:/T2_Runestone/,limit:0}
-        }
-        if (settings["autovendor_pots1"])
-        	_vendorItems[_vendorItems.length] = {pattern:/Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy)_1/,limit:0}
-        if (settings["autovendor_pots2"])
-        	_vendorItems[_vendorItems.length] = {pattern:/Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy)_2/,limit:0}
-        if (settings["autovendor_pots3"])
-        	_vendorItems[_vendorItems.length] = {pattern:/Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy)_3/,limit:0}
-        if (settings["autovendor_pots4"])
-           	_vendorItems[_vendorItems.length] = {pattern:/Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy)_4/,limit:0}
-        if (settings["autovendor_junk"]) {
-     		_vendorItems[_vendorItems.length] = {pattern:/Item_Snowworks_/,limit:0} // Winter Festival fireworks small & large
-        	_vendorItems[_vendorItems.length] = {pattern:/Item_Skylantern/,limit:0} // Winter Festival skylantern
-    	}
+		if (settings["autovendor_kits"])
+			_vendorItems[_vendorItems.length] = {pattern:/^Item_Consumable_Skill/,limit:50}
+		if (settings["autovendor_altars"])
+			_vendorItems[_vendorItems.length] = {pattern:/^Item_Portable_Altar$/,limit:80}
+		if (settings["autovendor_rank1"]) {
+			_vendorItems[_vendorItems.length] = {pattern:/^T1_Enchantment/,limit:0}
+			_vendorItems[_vendorItems.length] = {pattern:/^T1_Runestone/,limit:0}
+		}
+		if (settings["autovendor_rank2"]) {
+			_vendorItems[_vendorItems.length] = {pattern:/^T2_Enchantment/,limit:0}
+			_vendorItems[_vendorItems.length] = {pattern:/^T2_Runestone/,limit:0}
+		}
+		if (settings["autovendor_pots1"])
+			_vendorItems[_vendorItems.length] = {pattern:/^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Potion_Rejuvenation)$/,limit:0}
+		if (settings["autovendor_pots2"])
+			_vendorItems[_vendorItems.length] = {pattern:/^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Potion_Rejuvenation)_2$/,limit:0}
+		if (settings["autovendor_pots3"])
+			_vendorItems[_vendorItems.length] = {pattern:/^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Potion_Rejuvenation)_3$/,limit:0}
+		if (settings["autovendor_pots4"])
+			_vendorItems[_vendorItems.length] = {pattern:/^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Potion_Rejuvenation)_4$/,limit:0}
+		if (settings["autovendor_junk"]) {
+			_vendorItems[_vendorItems.length] = {pattern:/^Item_Snowworks_/,limit:0} // Winter Festival fireworks small & large
+			_vendorItems[_vendorItems.length] = {pattern:/^Item_Skylantern$/,limit:0} // Winter Festival skylantern
+			_vendorItems[_vendorItems.length] = {pattern:/^Item_Partypopper_/,limit:0} // Party Poppers
+			_vendorItems[_vendorItems.length] = {pattern:/^Item_Fireworks_/,limit:0} // Fireworks
+		}
 
-        if (_vendorItems.length > 0) {
-            console.log("Attempting to vendor selected items...");
-            _sellCount = vendorItemsLimited(_vendorItems);
-            if (_sellCount > 0) {
-                var _sellWait = _sellCount * 1000;
-                PauseSettings("pause");
-                window.setTimeout(function() {PauseSettings("unpause");}, _sellWait);
-            }
-        }
-    }
+		if (_vendorItems.length > 0) {
+			console.log("Attempting to vendor selected items...");
+			_sellCount = vendorItemsLimited(_vendorItems);
+			if (_sellCount > 0 && !evnt) {
+				var _sellWait = _sellCount * 1000;
+				PauseSettings("pause");
+				window.setTimeout(function() {PauseSettings("unpause");}, _sellWait);
+			}
+		}
+	}
 
 	// Add the settings button and start a process timer
 	addSettings();
