@@ -31,7 +31,7 @@
  -----------------------------------
  Kakoura, Nametaken, rotten_mind, Frankescript, Brent
  */
-// @version 1.05.0.1l
+// @version 1.05.0.1k
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -40,11 +40,6 @@
 // ==/UserScript==
 
 /* RELEASE NOTES
- 1.05.0.1l
- - added support multi Url, Autoselect
- * Gatewaytest
- * Gateway
- * Gateway RU
  1.05.0.1k
  - RC2 for ver. 1.0.05.2
  - added Vendoring to UI
@@ -272,20 +267,20 @@ var s_paused = false;	   // extend the paused setting to the Page Reloading func
 function _select_Gateway() { // Check for Gateway used to
     if (window.location.href.indexOf("gatewaytest") > -1) { // detect gatewaytest Url
         console.log("Gatewaytest detected as start page, Happy testung");
-        return "http://gatewaytest.playneverwinter.com";
+        return "http://gatewaytest.playneverwinter.com"; 
     }
     else if (window.location.href.indexOf("nw.ru.perfectworld") > -1) { // detect RU GAteway... Сибирский NW, радости тестирования
         console.log("GatewayRU detected as start page, радости тестирования");
         return "http://gateway.nw.ru.perfectworld.eu";
     }
-    else { // must go somewhere
+    else { // Gateway default
         console.log("LIVE Gateway detected happy grinding");
         return "http://gateway.playneverwinter.com";
     }
 }
 // RottenMind (END)
 
-var current_Gateway = _select_Gateway(); // edited by RottenMind, selects where we go, testers knows it
+var current_Gateway = _select_Gateway(); // edited by RottenMind
 
 (function () {
     var $ = unsafeWindow.$;
@@ -888,8 +883,8 @@ var current_Gateway = _select_Gateway(); // edited by RottenMind, selects where 
         {name: 'trainassets', title: 'Train Assets', def: true, type: 'checkbox', tooltip: 'Enable training/upgrading of asset worker resources'},
         {name: 'refinead', title: 'Refine AD', def: true, type: 'checkbox', tooltip: 'Enable refining of AD on character switch'},
         {name: 'openrewards', title: 'Open Reward Chests', def: false, type: 'checkbox', tooltip: 'Enable opeing of leadership chests on character switch'}, //MAC-NW
-        {name: 'autovendor_kits', title: 'Vendor/Maintain Node Kit Stacks', def: false, type: 'checkbox', tooltip: 'Limit skill kits stacks to 50, vendor kits unusable by class, remove all if player has one bag or full bags'}, //MAC-NW
-        {name: 'autovendor_altars', title: 'Vendor/Maintain Portable Altars', def: false, type: 'checkbox', tooltip: 'Limit portable altar stacks to 80'}, //MAC-NW
+        {name: 'autovendor_kits', title: 'Vendor/Maintain Node Kit Stacks', def: false, type: 'checkbox', tooltip: 'Limit skill kits stacks to 50, vendor kits unusable by class, remove all if player has one bag or full bags'},
+        {name: 'autovendor_profresults', title: 'Vendor/Maintain Prof Crafted Levelup Items', def: false, type: 'checkbox', tooltip: 'Vendor off Tier 1 to 5 items produced and reused for leveling crafting professions.'},
         {name: 'autovendor_pots1', title: 'Auto Vendor minor potions (lvl 1)', def: false, type: 'checkbox', tooltip: 'Vendor all minor potions (lvl 1) found in player bags'}, //MAC-NW
         {name: 'autovendor_pots2', title: 'Auto Vendor lesser potions (lvl 15)', def: false, type: 'checkbox', tooltip: 'Vendor all lesser potions (lvl 15) found in player bags'}, //MAC-NW
         {name: 'autovendor_pots3', title: 'Auto Vendor potions (lvl 30)', def: false, type: 'checkbox', tooltip: 'Vendor all potions (lvl 30) found in player bags'}, //MAC-NW
@@ -897,7 +892,6 @@ var current_Gateway = _select_Gateway(); // edited by RottenMind, selects where 
         {name: 'autovendor_rank1', title: 'Auto Vendor enchants & runes Rank 1', def: false, type: 'checkbox', tooltip: 'Vendor all Rank 1 enchantments & runestones found in player bags'}, //MAC-NW
         {name: 'autovendor_rank2', title: 'Auto Vendor enchants & runes Rank 2', def: false, type: 'checkbox', tooltip: 'Vendor all Rank 2 enchantments & runestones found in player bags'}, //MAC-NW
         {name: 'autovendor_junk', title: 'Auto Vendor junk..', def: false, type: 'checkbox', tooltip: 'Vendor all (currently) winterfest fireworks+lanterns'}, //MAC-NW
-        {name: 'autovendor_junk_prof_T3', title: 'Auto Vendor Profession T3 crafted', def: false, type: 'checkbox', tooltip: 'Vendor all items used  Profession leveling, relies tasklist'}, //RottenMind
         {name: 'autoreload', title: 'Auto Reload', def: false, type: 'checkbox', tooltip: 'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)'},
         {name: 'autologin', title: 'Attempt to login automatically', def: false, type: 'checkbox', tooltip: 'Automatically attempt to login to the neverwinter gateway site'},
         {name: 'nw_username', title: '	Neverwinter Username', def: '', type: 'text', tooltip: ''},
@@ -1351,7 +1345,7 @@ var current_Gateway = _select_Gateway(); // edited by RottenMind, selects where 
 
      function startTask(taskDetail) {
 	 return;
-
+	 
 	 unsafeWindow.client.professionFetchTaskDetail(taskDetail.def.name);
 	 //client.dataModel.addDefaultResources();
 	 client.professionStartAssignment(taskDetail.def.name);
@@ -1577,34 +1571,103 @@ var current_Gateway = _select_Gateway(); // edited by RottenMind, selects where 
         var _sellCount = 0;
         var _classType = unsafeWindow.client.dataModel.model.ent.main.classtype;
         var _bagCount = unsafeWindow.client.dataModel.model.ent.main.inventory.playerbags.length;
-        var _bagSpace = 0;
+        var _bagUsed = 0;
+        var _bagUnused = 0;
         var _tmpBag = [];
+        var _profitems = [];
+
+        if (settings["autovendor_profresults"]) {
+            /** Profession leveling result item cleanup logic for T1-4 crafted results
+             * Created by RM on 14.1.2015.
+             * List contains crafted_items, based "Mustex/Bunta NW robot 1.05.0.1L crafting list, can be used making list for items what are "Auto_Vendored".
+             * Items on list must be checked and tested.
+             */
+            /*#1, Tier3, end list, sell allways all, "TierX" is here "TX" !!*/
+            _profitems[0] = {
+                pattern : /^Crafted_(Jewelcrafting_T3_Waist_Offense_3|Jewelcrafting_T3_Neck_Defense_3|Jewelcrafting_T3_Waist_Defense_3|Med_Armorsmithing_T3_Chain_Armor_Set_1|Med_Armorsmithing_T3_Chain_Pants2|Med_Armorsmithing_T3_Chain_Shirt2|Med_Armorsmithing_T3_Chain_Helm_Set_1|Med_Armorsmithing_T3_Chain_Pants|Med_Armorsmithing_T3_Chain_Boots_Set_1|Hvy_Armorsmithing_T3_Plate_Armor_Set_1|Hvy_Armorsmithing_T3_Plate_Pants2|Hvy_Armorsmithing_T3_Plate_Shirt2|Hvy_Armorsmithing_T3_Plate_Helm_Set_1|Hvy_Armorsmithing_T3_Plate_Boots_Set_1|Leatherworking_T3_Leather_Armor_Set_1|Leatherworking_T3_Leather_Pants2|Leatherworking_T3_Leather_Shirt2|Leatherworking_T3_Leather_Helm_Set_1|Leatherworking_T3_Leather_Boots_Set_1|Tailoring_T3_Cloth_Armor_Set_3|Tailoring_T3_Cloth_Armor_Set_2|Tailoring_T3_Cloth_Armor_Set_1|Tailoring_T3_Cloth_Pants2_Set2|Tailoring_T3_Cloth_Shirt2|Tailoring_T3_Cloth_Helm_Set_1|Artificing_T3_Pactblade_Temptation_5|Artificing_T3_Icon_Virtuous_5|Weaponsmithing_T3_Dagger_4)$/,
+                limit : 0,
+                count : 0
+            };
+            /*#2, Tier2 - tier3 mixed, upgrade, sell if inventory full, "TierX" is here "TX" */
+            _profitems[1] = {
+                pattern : /^Crafted_(Jewelcrafting_T2_Neck_Misc_2|Jewelcrafting_T2_Waist_Misc_2|Med_Armorsmithing_T3_Chain_Pants|Med_Armorsmithing_T3_Chain_Shirt|Hvy_Armorsmithing_T3_Plate_Pants|Hvy_Armorsmithing_T3_Plate_Shirt|Leatherworking_T3_Leather_Pants|Leatherworking_T3_Leather_Shirt|Tailoring_T3_Cloth_Shirt|Tailoring_T3_Cloth_Pants||Artificing_T3_Pactblade_Temptation_4|Artificing_T3_Icon_Virtuous_4|Weaponsmithing_T2_Dagger_3|Weaponsmithing_T2_Dagger_3)$/,
+                limit : 0,
+                count : 0
+            };
+            /*#3, Tier2, upgrade, sell if inventory full, "TierX" is here "TX" */
+            _profitems[2] = {
+                pattern : /^Crafted_(Jewelcrafting_T2_Neck_Offense_2|Jewelcrafting_T2_Waist_Offense_2|Med_Armorsmithing_T2_Chain_Armor_Set_1|Med_Armorsmithing_T2_Chain_Pants_2|Med_Armorsmithing_T2_Chain_Boots_Set_1|Med_Armorsmithing_T2_Chain_Shirt_2|Med_Armorsmithing_T2_Chain_Pants_1|Med_Armorsmithing_T2_Chain_Shirt|Hvy_Armorsmithing_T2_Plate_Armor_Set_1|Hvy_Armorsmithing_T2_Plate_Pants_2|Hvy_Armorsmithing_T2_Plate_Boots_Set_1|Hvy_Armorsmithing_T2_Plate_Shirt_2|Hvy_Armorsmithing_T2_Plate_Pants_1|Hvy_Armorsmithing_T2_Shield_Set_1|Hvy_Armorsmithing_T2_Plate_Shirt|Leatherworking_T2_Leather_Shirt|Leatherworking_T2_Leather_Boots_Set_1|Leatherworking_T2_Leather_Shirt_2|Leatherworking_T2_Leather_Pants_1|Leatherworking_T2_Leather_Armor_Set_1|Leatherworking_T2_Leather_Pants_2|Tailoring_T2_Cloth_Armor_Set_1|Tailoring_T2_Cloth_Pants_2|Tailoring_T2_Cloth_Boots_Set_1|Tailoring_T2_Cloth_Shirt_2|Tailoring_T2_Cloth_Pants_1|Artificing_T2_Pactblade_Temptation_3|Artificing_T1_Icon_Virtuous_2)$/,
+                limit : 0,
+                count : 0
+            };
+            /*#4, Tier1, upgrade, sell if inventory full, "TierX" is here "TX" */
+            _profitems[3] = {
+                pattern : /^Crafted_(Jewelcrafting_T1_Neck_Misc_1|Jewelcrafting_T1_Waist_Misc_1|Med_Armorsmithing_T1_Chain_Armor_Set_1|Med_Armorsmithing_T1_Chain_Boots_Set_1|Hvy_Armorsmithing_T1_Plate_Armor_Set_1|Hvy_Armorsmithing_T1_Plate_Boots_Set_1|Leatherworking_T1_Leather_Boots_Set_1|Leatherworking_T1_Leather_Boots_Set_1|Leatherworking_T1_Leather_Armor_Set_1|Tailoring_T1_Cloth_Armor_1|Tailoring_T1_Cloth_Pants_1|Tailoring_T1_Cloth_Boots_Set_1|Artificing_T1_Pactblade_Convergence_2|Artificing_T1_Icon_Virtuous_2|Weaponsmithing_T1_Dagger_2)$/,
+                limit : 0,
+                count : 0
+            };
+            /*#5, Tier0, upgrade, sell if inventory full, taskilist "Tier1" is here "empty" or "_" must replace (_T1_|_)*/
+            _profitems[4] = {
+                pattern : /^Crafted_(Jewelcrafting_Waist_Offense_1|Jewelcrafting_Neck_Offense_1|Med_Armorsmithing_Chain_Boots_1|Med_Armorsmithing_Chain_Shirt_1|Med_Armorsmithing_Chain_Armor_1|Med_Armorsmithing_Chain_Pants_1|Hvy_Armorsmithing_Plate_Boots_1|Hvy_Armorsmithing_Plate_Shirt_1|Hvy_Armorsmithing_Shield_1|Leatherworking_Tier0_Intro_1|Leatherworking_Leather_Boots_1|Leatherworking_Leather_Shirt_1|Leatherworking_Leather_Armor_1|Leatherworking_Leather_Pants_1|Tailoring_Cloth_Boots_1|Tailoring_Cloth_Shirt_1|Artificing_Pactblade_Convergence_1|Artificing_Icon_Virtuous_1|Artificing_Symbol_Virtuous_1|Weaponsmithing_Dagger_1)$/,
+                limit : 0,
+                count : 0
+            };
+        }
+
         $.each(_pbags, function (bi, bag) {
             bag.slots.forEach(function (slot) {
-                if (slot === null) {
-                    _bagSpace++;
+                if (slot === null || !slot || slot === undefined) {
+                    _bagUnused++;
                 } else {
+                    if (settings["autovendor_profresults"]) {
+                        for (i = 0; i < _profitems.length; i++) {
+                            if (_profitems[i].pattern.test(slot.name))
+                                _profitems[i].count++;
+                        }
+                    }
                     _tmpBag[_tmpBag.length] = slot;
+                    _bagUsed++;
                 }
             });
         });
 
+        if (settings["autovendor_profresults"]) {
+            _tmpBag.forEach(function (slot) {
+                for (i = 0; i < _profitems.length; i++) {
+                    if (slot && _profitems[i].pattern.test(slot.name) && !slot.bound && _profitems[i].count > 3) {
+                        var vendor = {
+                            vendor : "Nw_Gateway_Professions_Merchant"
+                        };
+                        vendor.id = slot.uid;
+                        vendor.count = 1;
+                        console.log('Selling', vendor.count, slot.name, 'to vendor.');
+                        window.setTimeout(function () {
+                            /* testing only client.sendCommand('GatewayVendor_SellItemToVendor', vendor); */
+                        }, _delay);
+                        _profitems[i].count--;
+                        break;
+                    }
+                }
+            });
+        }
+
         _tmpBag.forEach(function (slot) {
             for (i = 0; i < _items.length; i++) {
-                var _Limit = (parseInt(_items[i].limit) > 99) ? 99 : parseInt(_items[i].limit);
-                var _Pattern = _items[i].pattern;
-                //if (slot) console.log('Checking for',_Pattern,'slot name:',slot.name,'limit:',_Limit);
-                if (slot && _Pattern.test(slot.name) && !slot.bound) {
-                    if (settings["autovendor_kits"] && slot.name == "Item_Consumable_Skill_Dungeoneering" && (_classType == "Player_Guardian" || _classType == "Player_Greatweapon" || _bagCount == 1 || _bagSpace === 0))
-                        _Limit = 0;
-                    if (settings["autovendor_kits"] && slot.name == "Item_Consumable_Skill_Religion" && (_classType == "Player_Devoted" || _bagCount === 1 || _bagSpace === 0))
-                        _Limit = 0;
-                    if (settings["autovendor_kits"] && slot.name == "Item_Consumable_Skill_Thievery" && (_classType == "Player_Trickster" || _bagCount === 1 || _bagSpace === 0))
-                        _Limit = 0;
-                    if (settings["autovendor_kits"] && slot.name == "Item_Consumable_Skill_Arcana" && (_classType == "Player_Controller" || _classType == "Player_Scourge" || _bagCount === 1 || _bagSpace === 0))
-                        _Limit = 0;
-                    if (settings["autovendor_kits"] && slot.name == "Item_Consumable_Skill_Nature" && (_classType == "Player_Archer" || _bagCount === 1 || _bagSpace === 0))
-                        _Limit = 0;
+                var _Limit = (parseInt(_items[i].limit) > 99) ? 99 : _items[i].limit;
+                if (slot && _items[i].pattern.test(slot.name) && !slot.bound) {
+                    // Node Kits vendor logic for restricted bag space
+                    if (settings["autovendor_kits"]) {
+                        if ( _bagCount < 2 || _bagUnused < 6 ||
+                            (slot.name == "Item_Consumable_Skill_Dungeoneering" && (_classType == "Player_Guardian" || _classType == "Player_Greatweapon")) ||
+                            (slot.name == "Item_Consumable_Skill_Arcana" && (_classType == "Player_Controller" || _classType == "Player_Scourge")) ||
+                            (slot.name == "Item_Consumable_Skill_Religion" && _classType == "Player_Devoted") ||
+                            (slot.name == "Item_Consumable_Skill_Thievery" && _classType == "Player_Trickster") ||
+                            (slot.name == "Item_Consumable_Skill_Nature" && _classType == "Player_Archer")
+                        ) {
+                            _Limit = 0;
+                        }
+                    }
+                    // Sell Items
                     if (slot.count > _Limit) {
                         _sellCount++;
                         var vendor = {
@@ -1617,6 +1680,7 @@ var current_Gateway = _select_Gateway(); // edited by RottenMind, selects where 
                             client.sendCommand('GatewayVendor_SellItemToVendor', vendor);
                         }, _delay);
                         _delay = _delay + 400;
+                        break;
                     }
                 }
             }
@@ -2287,37 +2351,34 @@ document.getElementById("charContainer"+val).style.display="block";\
         var _sellCount = 0;
 
         if (settings["autovendor_kits"])
-            _vendorItems[_vendorItems.length] = {pattern: /^Item_Consumable_Skill/, limit: 50}
-        if (settings["autovendor_altars"])
-            _vendorItems[_vendorItems.length] = {pattern: /^Item_Portable_Altar$/, limit: 80}
+            _vendorItems[_vendorItems.length] = {pattern: /^Item_Consumable_Skill/, limit: 50};
+        /*if (settings["autovendor_altars"])
+         _vendorItems[_vendorItems.length] = {pattern: /^Item_Portable_Altar$/, limit: 80};*/ // removed for now
         if (settings["autovendor_rank1"]) {
-            _vendorItems[_vendorItems.length] = {pattern: /^T1_Enchantment/, limit: 0}
-            _vendorItems[_vendorItems.length] = {pattern: /^T1_Runestone/, limit: 0}
+            _vendorItems[_vendorItems.length] = {pattern: /^T1_Enchantment/, limit: 0};
+            _vendorItems[_vendorItems.length] = {pattern: /^T1_Runestone/, limit: 0};
         }
         if (settings["autovendor_rank2"]) {
-            _vendorItems[_vendorItems.length] = {pattern: /^T2_Enchantment/, limit: 0}
-            _vendorItems[_vendorItems.length] = {pattern: /^T2_Runestone/, limit: 0}
+            _vendorItems[_vendorItems.length] = {pattern: /^T2_Enchantment/, limit: 0};
+            _vendorItems[_vendorItems.length] = {pattern: /^T2_Runestone/, limit: 0};
         }
         if (settings["autovendor_pots1"])
-            _vendorItems[_vendorItems.length] = {pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)$/, limit: 0}
+            _vendorItems[_vendorItems.length] = {pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)$/, limit: 0};
         if (settings["autovendor_pots2"])
-            _vendorItems[_vendorItems.length] = {pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_2$/, limit: 0}
+            _vendorItems[_vendorItems.length] = {pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_2$/, limit: 0};
         if (settings["autovendor_pots3"])
-            _vendorItems[_vendorItems.length] = {pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_3$/, limit: 0}
+            _vendorItems[_vendorItems.length] = {pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_3$/, limit: 0};
         if (settings["autovendor_pots4"])
-            _vendorItems[_vendorItems.length] = {pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_4$/, limit: 0}
+            _vendorItems[_vendorItems.length] = {pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_4$/, limit: 0};
         if (settings["autovendor_junk"]) {
-            _vendorItems[_vendorItems.length] = {pattern: /^Item_Snowworks_/, limit: 0} // Winter Festival fireworks small & large
-            _vendorItems[_vendorItems.length] = {pattern: /^Item_Skylantern$/, limit: 0} // Winter Festival skylantern
-            _vendorItems[_vendorItems.length] = {pattern: /^Item_Partypopper_/, limit: 0} // Party Poppers
-            _vendorItems[_vendorItems.length] = {pattern: /^Item_Fireworks_/, limit: 0} // Fireworks
+            _vendorItems[_vendorItems.length] = {pattern: /^Item_Snowworks_/, limit: 0}; // Winter Festival fireworks small & large
+            _vendorItems[_vendorItems.length] = {pattern: /^Item_Skylantern/, limit: 0}; // Winter Festival skylantern
+            _vendorItems[_vendorItems.length] = {pattern: /^Item_Partypopper/, limit: 0}; // Party Poppers
+            _vendorItems[_vendorItems.length] = {pattern: /^Item_Fireworks/, limit: 0}; // Fireworks
+            _vendorItems[_vendorItems.length] = {pattern: /^Object_Plate_/, limit: 0};
+            _vendorItems[_vendorItems.length] = {pattern: /^Object_Decoration_/, limit: 0};
+            _vendorItems[_vendorItems.length] = {pattern: /_Green_T[1-5]_Unid$/, limit: 0}; // Unidentified Green Gear
         }
-        if (settings["autovendor_junk_prof_T3"]) { // list tries sell profession leveling stuff, only T3 and uses same items with current tasllist
-            _vendorItems[_vendorItems.length] = {
-            pattern: /^Crafted_(Jewelcrafting_(T3_Neck_Defense_3|Waist_Defense_3))|(Med_Armorsmithing_(T3_Chain_Armor_Set_1|T3_Chain_Pants2|T3_Chain_Shirt2|T3_Chain_Helm_Set_1|T3_Chain_Pants))|(Hvy_Armorsmithing_(T3_Plate_Armor_Set_1|T3_Plate_Pants2|T3_Plate_Shirt2|T3_Plate_Helm_Set_1|T3_Plate_Pants))|(Leatherworking_(T3_Leather_Armor_Set_1|T3_Leather_Pants2|T3_Leather_Shirt2|T3_Leather_Helm_Set_1|T3_Leather_Pants))|(^Tailoring_(T3_Cloth_Armor_Set_3|T3_Cloth_Armor_Set_2|T3_Cloth_Armor_Set_1|T3_Cloth_Pants2_Set2|T3_Cloth_Shirt2|T3_Cloth_Helm_Set_1|T3_Cloth_Pants))|(Artificing_(T3_Pactblade_Temptation_5|T3_Icon_Virtuous_5))|(Weaponsmithing_(T3_Dagger_4))$/  ,limit: 10
-            }
-        }
-
         if (_vendorItems.length > 0) {
             console.log("Attempting to vendor selected items...");
             _sellCount = vendorItemsLimited(_vendorItems);
@@ -2337,4 +2398,3 @@ document.getElementById("charContainer"+val).style.display="block";\
         process();
     }, delay.SHORT);
 })();
-
