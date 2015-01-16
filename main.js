@@ -1078,6 +1078,9 @@ var s_paused = false;	   // extend the paused setting to the Page Reloading func
 					if (_isLastChar) {
 					   PauseSettings("unpause");
 					} else {
+						window.setTimeout(function () {
+							processSwordCoastDailies(_charIndex + 1);
+						}, 3000);
 						processSwordCoastDailies(_charIndex + 1);
 					}
 	            });
@@ -1086,7 +1089,9 @@ var s_paused = false;	   // extend the paused setting to the Page Reloading func
 	            if (_isLastChar) {
 	               PauseSettings("unpause");
 				} else {
-					processSwordCoastDailies(_charIndex + 1);
+					window.setTimeout(function () {
+							processSwordCoastDailies(_charIndex + 1);
+					}, 1500);
 				}
 	            return;
 	        }
