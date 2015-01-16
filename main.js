@@ -604,6 +604,20 @@ var s_paused = false;	   // extend the paused setting to the Page Reloading func
 			},
 		},
 		{
+			taskName:"Event_Siege",
+			level: {
+			0:["Event_Siege_Tier0_Intro"], // Hire a Siege Master
+			//1:["Event_Siege_Tier1_Donate_Minorinjury"], // Create Defense Supplies from Minor Injury Kits
+			//1:["Event_Siege_Tier1_Donate_Injury"], // Create Defense Supplies from Injury Kits
+			//1:["Event_Siege_Tier1_Donate_Majorinjury"], // Create Defense Supplies from Major Injury Kits
+			//1:["Event_Siege_Tier1_Donate_Altar_10"], // Create Defense Supplies from 10 Portable Altars
+			//1:["Event_Siege_Tier1_Donate_Altar_50"], // Create Defense Supplies from 50 Portable Altars
+			//1:["Event_Siege_Tier1_Donate_Resources_T2"], // Create Defense Supplies from Tier 2 crafting resources
+			//1:["Event_Siege_Tier1_Donate_Resources_T3"], // Create Defense Supplies from Tier 3 crafting resources
+			1:["Event_Siege_Tier1_Donate_Resources_T2","Event_Siege_Tier1_Donate_Minorinjury","Event_Siege_Tier1_Donate_Injury","Event_Siege_Tier1_Donate_Majorinjury", "Event_Siege_Tier1_Donate_Altar_10"],
+			},
+		},
+		{
 			// Black Ice Shaping
 			taskName: "BlackIce",
 			level: {
@@ -904,7 +918,8 @@ var s_paused = false;	   // extend the paused setting to the Page Reloading func
 	var charSettings = [];
 	for (var i = 0; i < settings["charcount"]; i++) {
 		charSettings.push({name: 'nw_charname' + i, title: 'Character', def: 'Character ' + (i + 1), type: 'text', tooltip: 'Characters Name'});
-		charSettings.push({name: 'WinterEvent' + i, title: 'WinterEvent', def: '0', type: 'text', tooltip: 'Number of slots to assign to WinterEvent'});
+		//charSettings.push({name: 'WinterEvent' + i, title: 'WinterEvent', def: '0', type: 'text', tooltip: 'Number of slots to assign to WinterEvent'});
+		charSettings.push({name: 'Event_Siege' + i, title: 'Siege Event', def: '0', type: 'text', tooltip: 'Number of slots to assign to Siege Event'});
 		charSettings.push({name: 'Leadership' + i, title: 'Leadership', def: '9', type: 'text', tooltip: 'Number of slots to assign to Leadership'});
 		charSettings.push({name: 'BlackIce' + i, title: 'Black Ice Shaping', def: '0', type: 'text', tooltip: 'Number of slots to assign to BIS'});
 		charSettings.push({name: 'Jewelcrafting' + i, title: 'Jewelcrafting', def: '0', type: 'text', tooltip: 'Number of slots to assign to Jewelcrafting'});
@@ -1021,6 +1036,63 @@ var s_paused = false;	   // extend the paused setting to the Page Reloading func
 		return false;
 	}
 
+	/**
+	 * Switch to a character's swordcoast adventures and collect the daily reward
+	 */
+	function processSwordCoastDailies(_charStartIndex) {
+		var _accountName = unsafeWindow.client.dataModel.model.loginInfo.publicaccountname;
+	    var _charIndex = (!_charStartIndex || parseInt(_charStartIndex) > (charSettings.length + 1) || parseInt(_charStartIndex) < 0)
+	     ? 0 : parseInt(_charStartIndex);
+	    var _fullCharName = settings["nw_charname" + _charIndex] + '@' + _accountName;
+	    var _hasLoginDaily = 0;
+	    var _isLastChar = false;
+	    var _scaHashMatch = /\/adventures$/;
+	    if (!settings["paused"])
+	        PauseSettings("pause");
+
+	    // Switch to professions page to show task progression
+	    if (!_scaHashMatch.test(unsafeWindow.location.hash)) {
+	        return;
+	    } else if (unsafeWindow.location.hash != "#char(" + encodeURI(_fullCharName) + ")/adventures") {
+	        unsafeWindow.location.hash = "#char(" + encodeURI(_fullCharName) + ")/adventures";
+	    }
+
+	    if (settings["nw_charname" + (_charIndex+1)] === undefined)
+	        _isLastChar = true;
+
+	    WaitForState("").done(function () {
+	        try {
+	            _hasLoginDaily = client.dataModel.model.gatewaygamedata.dailies.left.logins;
+	        } catch (e) {
+	            // TODO: Use callback function
+	            window.setTimeout(function () {
+	                processSwordCoastDaily(_charIndex);
+	            }, delay.SHORT);
+	            return;
+	        }
+
+	        if (_hasLoginDaily > 0) {
+				console.log("Checking SCA Dialy for",_fullCharName,"... Dialy available... Collecting...");
+	            WaitForState("button.closeNotification").done(function () {
+	                $("button.closeNotification").click();
+					if (_isLastChar) {
+					   PauseSettings("unpause");
+					} else {
+						processSwordCoastDailies(_charIndex + 1);
+					}
+	            });
+	        } else {
+				console.log("Checking SCA Dialy for",_fullCharName,"... No Dialy available..");
+	            if (_isLastChar) {
+	               PauseSettings("unpause");
+				} else {
+					processSwordCoastDailies(_charIndex + 1);
+				}
+	            return;
+	        }
+	    });
+	}
+		
 	/**
 	 * Finds the task finishing next & returns the date or NULL otherwise
 	 *
@@ -2184,6 +2256,7 @@ document.getElementById("charContainer"+val).style.display="block";\
 <div id="settingsPanelButtonContainer">\
 <input id="settings_save" class="button-blue pure-button" type="button" value="Save and Apply">\
 <input id="settings_close" class="button-yellow pure-button" type="button" value="Close">\
+<input id="settings_sca" class="button-red pure-button" type="button" value="Cycle SCA">\
 </div>');
 
 		// Add open settings button to page
@@ -2214,6 +2287,11 @@ document.getElementById("charContainer"+val).style.display="block";\
 			setTimeout(function () {
 				SaveSettings();
 			}, 0)
+		});
+		$("#settings_sca").click(function () {
+			$("#settings_close").trigger("click");
+			unsafeWindow.location.hash = unsafeWindow.location.hash.replace(/\)\/.+/, ')' + "/adventures");
+			processSwordCoastDailies();
 		});
 		customRadio("radio_position");
 
