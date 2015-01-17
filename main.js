@@ -31,7 +31,7 @@
  -----------------------------------
  Kakoura, Nametaken, rotten_mind, Frankescript, Brent
  */
-// @version 1.05.0.1k
+// @version 1.10.0
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -40,14 +40,15 @@
 // ==/UserScript==
 
 /* RELEASE NOTES
+ 1.10.0 - Release Candidate
  - Vendor Exclude filter has now higher "Safeguards" (it still might need added some unbound items eg. Glyphs, potions etc.
  - added Vendor Safeguards
  - separated Autovendor and PRofession items Vendor
- - SCA prototype to do daily Dice rolls
+ - SCA daily reward collection  by cycling through all configured characters. Leaving SCA will cancel this process.
  - Multi Url support for testing
- * gatewaytest
- * RU gateway (gateway.nw.ru.perfectworld.eu)
- * Gateway
+	* gatewaytest
+	* RU gateway (gateway.nw.ru.perfectworld.eu)
+	* Gateway
  1.05.0.1k
  - RC2 for ver. 1.0.05.2
  - added Vendoring to UI
