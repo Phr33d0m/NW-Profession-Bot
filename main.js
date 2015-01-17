@@ -40,6 +40,14 @@
 // ==/UserScript==
 
 /* RELEASE NOTES
+ - Vendor Exclude filter has now higher "Safeguards" (it still might need added some unbound items eg. Glyphs, potions etc.
+ - added Vendor Safeguards
+ - separated Autovendor and PRofession items Vendor
+ - SCA prototype to do daily Dice rolls
+ - Multi Url support for testing
+ * gatewaytest
+ * RU gateway (gateway.nw.ru.perfectworld.eu)
+ * Gateway
  1.05.0.1k
  - RC2 for ver. 1.0.05.2
  - added Vendoring to UI
@@ -249,7 +257,7 @@
 if (window.self !== window.top) {
     throw "";
 }
-
+var current_Gateway = _select_Gateway(); // edited by RottenMind
 // Set global console variables
 var fouxConsole = {log: function () {
 }, info: function () {
@@ -263,24 +271,22 @@ var chardiamonds = {};
 var loading_reset = false; // Enables a periodic reload if this is toggled on by the Auto Reload check box on the settings panel
 var s_paused = false;	   // extend the paused setting to the Page Reloading function
 
-// RottenMind (start)
+// RottenMind (start), multi Url support
 function _select_Gateway() { // Check for Gateway used to
     if (window.location.href.indexOf("gatewaytest") > -1) { // detect gatewaytest Url
         console.log("Gatewaytest detected as start page, Happy testung");
-        return "http://gatewaytest.playneverwinter.com"; 
+        return "http://gatewaytest.playneverwinter.com";
     }
     else if (window.location.href.indexOf("nw.ru.perfectworld") > -1) { // detect RU GAteway... Сибирский NW, радости тестирования
         console.log("GatewayRU detected as start page, радости тестирования");
         return "http://gateway.nw.ru.perfectworld.eu";
     }
-    else { // Gateway default
+    else { // must go somewhere
         console.log("LIVE Gateway detected happy grinding");
         return "http://gateway.playneverwinter.com";
     }
 }
 // RottenMind (END)
-
-var current_Gateway = _select_Gateway(); // edited by RottenMind
 
 (function () {
     var $ = unsafeWindow.$;
@@ -348,7 +354,7 @@ var current_Gateway = _select_Gateway(); // edited by RottenMind
                 var loading_hour = Number(loading_date.getHours());
                 if (reload_hours.indexOf(loading_hour) >= 0 && loading_min == 29 && loading_sec < 2) {
                     console.log("Auto Reload");
-                    unsafeWindow.location.href = current_Gateway; // edited by RottenMind
+                    unsafeWindow.location.href = current_Gateway ; // edited by RottenMind
                     return;
                 }
             }
@@ -356,7 +362,7 @@ var current_Gateway = _select_Gateway(); // edited by RottenMind
             // check for errors
             if ($("title").text().match(/Error/) || $("div.modal-content h3").text().match(/Disconnected/)) {
                 console.log("Error detected - relogging");
-                unsafeWindow.location.href = current_Gateway; // edited by RottenMind
+                unsafeWindow.location.href = current_Gateway ; // edited by RottenMind
                 return;
             }
 
@@ -383,7 +389,7 @@ var current_Gateway = _select_Gateway(); // edited by RottenMind
              if (state_idle >= state_idle_time) {
              console.log("Page Idle too long");
              state_idle = 0;
-             unsafeWindow.location.href = current_Gateway; // edited by RottenMind
+             unsafeWindow.location.href = current_Gateway ; // edited by RottenMind
              }
              else {
              state_idle++;
@@ -628,6 +634,20 @@ var current_Gateway = _select_Gateway(); // edited by RottenMind
                 1: ["Event_Winter_Tier1_Rankup", /*"Event_Winter_Tier1_Shiny_Lure",*/"Event_Winter_Tier1_Refine", "Event_Winter_Tier1_Gather"],
                 2: ["Event_Winter_Tier1_Rankup_2", /*"Event_Winter_Tier1_Fishingpole_Blue","Event_Winter_Tier1_Shiny_Lure_Mass",*/"Event_Winter_Tier1_Refine_2", "Event_Winter_Tier1_Gather_2"],
                 3: [/*"Event_Winter_Tier1_Heros_Feast","Event_Winter_Tier1_Lightwine","Event_Winter_Tier1_Sparkliest_Gem","Event_Winter_Tier1_Mesmerizing_Lure",*/"Event_Winter_Tier1_Gather_3"],
+            },
+        },
+        {
+            taskName:"Event_Siege",
+            level: {
+                0:["Event_Siege_Tier0_Intro"], // Hire a Siege Master
+                //1:["Event_Siege_Tier1_Donate_Minorinjury"], // Create Defense Supplies from Minor Injury Kits
+                //1:["Event_Siege_Tier1_Donate_Injury"], // Create Defense Supplies from Injury Kits
+                //1:["Event_Siege_Tier1_Donate_Majorinjury"], // Create Defense Supplies from Major Injury Kits
+                //1:["Event_Siege_Tier1_Donate_Altar_10"], // Create Defense Supplies from 10 Portable Altars
+                //1:["Event_Siege_Tier1_Donate_Altar_50"], // Create Defense Supplies from 50 Portable Altars
+                //1:["Event_Siege_Tier1_Donate_Resources_T2"], // Create Defense Supplies from Tier 2 crafting resources
+                //1:["Event_Siege_Tier1_Donate_Resources_T3"], // Create Defense Supplies from Tier 3 crafting resources
+                1:["Event_Siege_Tier1_Donate_Resources_T2","Event_Siege_Tier1_Donate_Minorinjury","Event_Siege_Tier1_Donate_Injury","Event_Siege_Tier1_Donate_Majorinjury", "Event_Siege_Tier1_Donate_Altar_10"],
             },
         },
         {
@@ -931,7 +951,8 @@ var current_Gateway = _select_Gateway(); // edited by RottenMind
     var charSettings = [];
     for (var i = 0; i < settings["charcount"]; i++) {
         charSettings.push({name: 'nw_charname' + i, title: 'Character', def: 'Character ' + (i + 1), type: 'text', tooltip: 'Characters Name'});
-        charSettings.push({name: 'WinterEvent' + i, title: 'WinterEvent', def: '0', type: 'text', tooltip: 'Number of slots to assign to WinterEvent'});
+        //charSettings.push({name: 'WinterEvent' + i, title: 'WinterEvent', def: '0', type: 'text', tooltip: 'Number of slots to assign to WinterEvent'});
+        charSettings.push({name: 'Event_Siege' + i, title: 'Siege Event', def: '0', type: 'text', tooltip: 'Number of slots to assign to Siege Event'});
         charSettings.push({name: 'Leadership' + i, title: 'Leadership', def: '9', type: 'text', tooltip: 'Number of slots to assign to Leadership'});
         charSettings.push({name: 'BlackIce' + i, title: 'Black Ice Shaping', def: '0', type: 'text', tooltip: 'Number of slots to assign to BIS'});
         charSettings.push({name: 'Jewelcrafting' + i, title: 'Jewelcrafting', def: '0', type: 'text', tooltip: 'Number of slots to assign to Jewelcrafting'});
@@ -1046,6 +1067,67 @@ var current_Gateway = _select_Gateway(); // edited by RottenMind
         chardiamonds[charcurrent] = unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds;
 
         return false;
+    }
+
+    /**
+     * Switch to a character's swordcoast adventures and collect the daily reward
+     */
+    function processSwordCoastDailies(_charStartIndex) {
+        var _accountName = unsafeWindow.client.dataModel.model.loginInfo.publicaccountname;
+        var _charIndex = (!_charStartIndex || parseInt(_charStartIndex) > (charSettings.length + 1) || parseInt(_charStartIndex) < 0)
+            ? 0 : parseInt(_charStartIndex);
+        var _fullCharName = settings["nw_charname" + _charIndex] + '@' + _accountName;
+        var _hasLoginDaily = 0;
+        var _isLastChar = false;
+        var _scaHashMatch = /\/adventures$/;
+        if (!settings["paused"])
+            PauseSettings("pause");
+
+        // Switch to professions page to show task progression
+        if (!_scaHashMatch.test(unsafeWindow.location.hash)) {
+            return;
+        } else if (unsafeWindow.location.hash != "#char(" + encodeURI(_fullCharName) + ")/adventures") {
+            unsafeWindow.location.hash = "#char(" + encodeURI(_fullCharName) + ")/adventures";
+        }
+
+        if (settings["nw_charname" + (_charIndex+1)] === undefined)
+            _isLastChar = true;
+
+        WaitForState("").done(function () {
+            try {
+                _hasLoginDaily = client.dataModel.model.gatewaygamedata.dailies.left.logins;
+            } catch (e) {
+                // TODO: Use callback function
+                window.setTimeout(function () {
+                    processSwordCoastDaily(_charIndex);
+                }, delay.SHORT);
+                return;
+            }
+
+            if (_hasLoginDaily > 0) {
+                console.log("Checking SCA Dialy for",_fullCharName,"... Dialy available... Collecting...");
+                WaitForState("button.closeNotification").done(function () {
+                    $("button.closeNotification").click();
+                    if (_isLastChar) {
+                        PauseSettings("unpause");
+                    } else {
+                        window.setTimeout(function () {
+                            processSwordCoastDailies(_charIndex + 1);
+                        }, 3000);
+                    }
+                });
+            } else {
+                console.log("Checking SCA Dialy for",_fullCharName,"... No Dialy available..");
+                if (_isLastChar) {
+                    PauseSettings("unpause");
+                } else {
+                    window.setTimeout(function () {
+                        processSwordCoastDailies(_charIndex + 1);
+                    }, 1500);
+                }
+                return;
+            }
+        });
     }
 
     /**
@@ -1575,6 +1657,8 @@ var current_Gateway = _select_Gateway(); // edited by RottenMind
         var _bagUnused = 0;
         var _tmpBag = [];
         var _profitems = [];
+        // Pattern for items to leave out of auto vendoring (safeguard)
+        var _excludeItems =/(Gemfood|Gem_Upgrade_Resource|Artifact|Hoard|Coffer|Fuse|Ward|Preservation|Armor_Enhancement|Weapon_Enhancement|T[5-9]_Enchantment|T[5-9]_Runestones|T10_Enchantment|T10_Runestones|4c_Personal|Item_Potion_Companion_Xp|Gateway_Rewardpack|Consumable_Id_Scroll|Dungeon_Delve_Key)/; // edited by RottenMind 17.01.2015
 
         if (settings["autovendor_profresults"]) {
             /** Profession leveling result item cleanup logic for T1-4 crafted results
@@ -1584,31 +1668,31 @@ var current_Gateway = _select_Gateway(); // edited by RottenMind
              */
             /*#1, Tier3, end list, sell allways all, "TierX" is here "TX" !!*/
             _profitems[0] = {
-                pattern : /^Crafted_(Jewelcrafting_T3_Waist_Offense_3|Jewelcrafting_T3_Neck_Defense_3|Jewelcrafting_T3_Waist_Defense_3|Med_Armorsmithing_T3_Chain_Armor_Set_1|Med_Armorsmithing_T3_Chain_Pants2|Med_Armorsmithing_T3_Chain_Shirt2|Med_Armorsmithing_T3_Chain_Helm_Set_1|Med_Armorsmithing_T3_Chain_Pants|Med_Armorsmithing_T3_Chain_Boots_Set_1|Hvy_Armorsmithing_T3_Plate_Armor_Set_1|Hvy_Armorsmithing_T3_Plate_Pants2|Hvy_Armorsmithing_T3_Plate_Shirt2|Hvy_Armorsmithing_T3_Plate_Helm_Set_1|Hvy_Armorsmithing_T3_Plate_Boots_Set_1|Leatherworking_T3_Leather_Armor_Set_1|Leatherworking_T3_Leather_Pants2|Leatherworking_T3_Leather_Shirt2|Leatherworking_T3_Leather_Helm_Set_1|Leatherworking_T3_Leather_Boots_Set_1|Tailoring_T3_Cloth_Armor_Set_3|Tailoring_T3_Cloth_Armor_Set_2|Tailoring_T3_Cloth_Armor_Set_1|Tailoring_T3_Cloth_Pants2_Set2|Tailoring_T3_Cloth_Shirt2|Tailoring_T3_Cloth_Helm_Set_1|Artificing_T3_Pactblade_Temptation_5|Artificing_T3_Icon_Virtuous_5|Weaponsmithing_T3_Dagger_4)$/,
+                pattern : /^Crafted_(Jewelcrafting_Waist_Offense_3|Jewelcrafting_Neck_Defense_3|Jewelcrafting_Waist_Defense_3|Med_Armorsmithing_T3_Chain_Armor_Set_1|Med_Armorsmithing_T3_Chain_Pants2|Med_Armorsmithing_T3_Chain_Shirt2|Med_Armorsmithing_T3_Chain_Helm_Set_1|Med_Armorsmithing_T3_Chain_Pants|Med_Armorsmithing_T3_Chain_Boots_Set_1|Hvy_Armorsmithing_T3_Plate_Armor_Set_1|Hvy_Armorsmithing_T3_Plate_Pants2|Hvy_Armorsmithing_T3_Plate_Shirt2|Hvy_Armorsmithing_T3_Plate_Helm_Set_1|Hvy_Armorsmithing_T3_Plate_Boots_Set_1|Leatherworking_T3_Leather_Armor_Set_1|Leatherworking_T3_Leather_Pants2|Leatherworking_T3_Leather_Shirt2|Leatherworking_T3_Leather_Helm_Set_1|Leatherworking_T3_Leather_Boots_Set_1|Tailoring_T3_Cloth_Armor_Set_3|Tailoring_T3_Cloth_Armor_Set_2|Tailoring_T3_Cloth_Armor_Set_1|Tailoring_T3_Cloth_Pants2_Set2|Tailoring_T3_Cloth_Shirt2|Tailoring_T3_Cloth_Helm_Set_1|Artificing_T3_Pactblade_Temptation_5|Artificing_T3_Icon_Virtuous_5|Weaponsmithing_T3_Dagger_4)$/,
                 limit : 0,
                 count : 0
             };
             /*#2, Tier2 - tier3 mixed, upgrade, sell if inventory full, "TierX" is here "TX" */
             _profitems[1] = {
-                pattern : /^Crafted_(Jewelcrafting_T2_Neck_Misc_2|Jewelcrafting_T2_Waist_Misc_2|Med_Armorsmithing_T3_Chain_Pants|Med_Armorsmithing_T3_Chain_Shirt|Hvy_Armorsmithing_T3_Plate_Pants|Hvy_Armorsmithing_T3_Plate_Shirt|Leatherworking_T3_Leather_Pants|Leatherworking_T3_Leather_Shirt|Tailoring_T3_Cloth_Shirt|Tailoring_T3_Cloth_Pants||Artificing_T3_Pactblade_Temptation_4|Artificing_T3_Icon_Virtuous_4|Weaponsmithing_T2_Dagger_3|Weaponsmithing_T2_Dagger_3)$/,
+                pattern : /^Crafted_(Jewelcrafting_Neck_Misc_2|Jewelcrafting_Waist_Misc_2|Med_Armorsmithing_T3_Chain_Pants|Med_Armorsmithing_T3_Chain_Shirt|Hvy_Armorsmithing_T3_Plate_Pants|Hvy_Armorsmithing_T3_Plate_Shirt|Leatherworking_T3_Leather_Pants|Leatherworking_T3_Leather_Shirt|Tailoring_T3_Cloth_Shirt|Tailoring_T3_Cloth_Pants||Artificing_T3_Pactblade_Temptation_4|Artificing_T3_Icon_Virtuous_4|Weaponsmithing_T2_Dagger_3|Weaponsmithing_T2_Dagger_3)$/,
                 limit : 0,
                 count : 0
             };
             /*#3, Tier2, upgrade, sell if inventory full, "TierX" is here "TX" */
             _profitems[2] = {
-                pattern : /^Crafted_(Jewelcrafting_T2_Neck_Offense_2|Jewelcrafting_T2_Waist_Offense_2|Med_Armorsmithing_T2_Chain_Armor_Set_1|Med_Armorsmithing_T2_Chain_Pants_2|Med_Armorsmithing_T2_Chain_Boots_Set_1|Med_Armorsmithing_T2_Chain_Shirt_2|Med_Armorsmithing_T2_Chain_Pants_1|Med_Armorsmithing_T2_Chain_Shirt|Hvy_Armorsmithing_T2_Plate_Armor_Set_1|Hvy_Armorsmithing_T2_Plate_Pants_2|Hvy_Armorsmithing_T2_Plate_Boots_Set_1|Hvy_Armorsmithing_T2_Plate_Shirt_2|Hvy_Armorsmithing_T2_Plate_Pants_1|Hvy_Armorsmithing_T2_Shield_Set_1|Hvy_Armorsmithing_T2_Plate_Shirt|Leatherworking_T2_Leather_Shirt|Leatherworking_T2_Leather_Boots_Set_1|Leatherworking_T2_Leather_Shirt_2|Leatherworking_T2_Leather_Pants_1|Leatherworking_T2_Leather_Armor_Set_1|Leatherworking_T2_Leather_Pants_2|Tailoring_T2_Cloth_Armor_Set_1|Tailoring_T2_Cloth_Pants_2|Tailoring_T2_Cloth_Boots_Set_1|Tailoring_T2_Cloth_Shirt_2|Tailoring_T2_Cloth_Pants_1|Artificing_T2_Pactblade_Temptation_3|Artificing_T1_Icon_Virtuous_2)$/,
+                pattern : /^Crafted_(Jewelcrafting_Neck_Offense_2|Jewelcrafting_Waist_Offense_2|Med_Armorsmithing_T2_Chain_Armor_Set_1|Med_Armorsmithing_T2_Chain_Pants_2|Med_Armorsmithing_T2_Chain_Boots_Set_1|Med_Armorsmithing_T2_Chain_Shirt_2|Med_Armorsmithing_T2_Chain_Pants_1|Med_Armorsmithing_T2_Chain_Shirt|Hvy_Armorsmithing_T2_Plate_Armor_Set_1|Hvy_Armorsmithing_T2_Plate_Pants_2|Hvy_Armorsmithing_T2_Plate_Boots_Set_1|Hvy_Armorsmithing_T2_Plate_Shirt_2|Hvy_Armorsmithing_T2_Plate_Pants_1|Hvy_Armorsmithing_T2_Shield_Set_1|Hvy_Armorsmithing_T2_Plate_Shirt|Leatherworking_T2_Leather_Shirt|Leatherworking_T2_Leather_Boots_Set_1|Leatherworking_T2_Leather_Shirt_2|Leatherworking_T2_Leather_Pants_1|Leatherworking_T2_Leather_Armor_Set_1|Leatherworking_T2_Leather_Pants_2|Tailoring_T2_Cloth_Armor_Set_1|Tailoring_T2_Cloth_Pants_2|Tailoring_T2_Cloth_Boots_Set_1|Tailoring_T2_Cloth_Shirt_2|Tailoring_T2_Cloth_Pants_1|Artificing_T2_Pactblade_Temptation_3|Artificing_T1_Icon_Virtuous_2|Weaponsmithing_T2_Dagger_2)$/,
                 limit : 0,
                 count : 0
             };
             /*#4, Tier1, upgrade, sell if inventory full, "TierX" is here "TX" */
             _profitems[3] = {
-                pattern : /^Crafted_(Jewelcrafting_T1_Neck_Misc_1|Jewelcrafting_T1_Waist_Misc_1|Med_Armorsmithing_T1_Chain_Armor_Set_1|Med_Armorsmithing_T1_Chain_Boots_Set_1|Hvy_Armorsmithing_T1_Plate_Armor_Set_1|Hvy_Armorsmithing_T1_Plate_Boots_Set_1|Leatherworking_T1_Leather_Boots_Set_1|Leatherworking_T1_Leather_Boots_Set_1|Leatherworking_T1_Leather_Armor_Set_1|Tailoring_T1_Cloth_Armor_1|Tailoring_T1_Cloth_Pants_1|Tailoring_T1_Cloth_Boots_Set_1|Artificing_T1_Pactblade_Convergence_2|Artificing_T1_Icon_Virtuous_2|Weaponsmithing_T1_Dagger_2)$/,
+                pattern : /^Crafted_(Jewelcrafting_Neck_Misc_1|Jewelcrafting_Waist_Misc_1|Med_Armorsmithing_T1_Chain_Armor_Set_1|Med_Armorsmithing_T1_Chain_Boots_Set_1|Hvy_Armorsmithing_Plate_Armor_1|Hvy_Armorsmithing_T1_Plate_Armor_Set_1|Hvy_Armorsmithing_T1_Plate_Boots_Set_1|Leatherworking_T1_Leather_Boots_Set_1|Leatherworking_T1_Leather_Boots_Set_1|Leatherworking_T1_Leather_Armor_Set_1|Tailoring_T1_Cloth_Armor_1|Tailoring_T1_Cloth_Pants_1|Tailoring_T1_Cloth_Boots_Set_1|Artificing_T1_Pactblade_Convergence_2|Artificing_T1_Icon_Virtuous_2|Weaponsmithing_T1_Dagger_1)$/,
                 limit : 0,
                 count : 0
             };
             /*#5, Tier0, upgrade, sell if inventory full, taskilist "Tier1" is here "empty" or "_" must replace (_T1_|_)*/
             _profitems[4] = {
-                pattern : /^Crafted_(Jewelcrafting_Waist_Offense_1|Jewelcrafting_Neck_Offense_1|Med_Armorsmithing_Chain_Boots_1|Med_Armorsmithing_Chain_Shirt_1|Med_Armorsmithing_Chain_Armor_1|Med_Armorsmithing_Chain_Pants_1|Hvy_Armorsmithing_Plate_Boots_1|Hvy_Armorsmithing_Plate_Shirt_1|Hvy_Armorsmithing_Shield_1|Leatherworking_Tier0_Intro_1|Leatherworking_Leather_Boots_1|Leatherworking_Leather_Shirt_1|Leatherworking_Leather_Armor_1|Leatherworking_Leather_Pants_1|Tailoring_Cloth_Boots_1|Tailoring_Cloth_Shirt_1|Artificing_Pactblade_Convergence_1|Artificing_Icon_Virtuous_1|Artificing_Symbol_Virtuous_1|Weaponsmithing_Dagger_1)$/,
+                pattern : /^Crafted_(Jewelcrafting_Waist_Offense_1|Jewelcrafting_Neck_Offense_1|Med_Armorsmithing_Chain_Boots_1|Med_Armorsmithing_Chain_Shirt_1|Med_Armorsmithing_Chain_Armor_1|Med_Armorsmithing_Chain_Pants_1|Hvy_Armorsmithing_Plate_Boots_1|Hvy_Armorsmithing_Plate_Shirt_1|Hvy_Armorsmithing_Shield_1|Leatherworking_Tier0_Intro_1|Leatherworking_Leather_Boots_1|Leatherworking_Leather_Shirt_1|Leatherworking_Leather_Armor_1|Leatherworking_Leather_Pants_1|Tailoring_Cloth_Boots_1|Tailoring_Cloth_Shirt_1|Artificing_T1_Pactblade_Convergence_1|Artificing_Icon_Virtuous_1|Artificing_Symbol_Virtuous_1|Weaponsmithing_Dagger_1)$/,
                 limit : 0,
                 count : 0
             };
@@ -1616,9 +1700,16 @@ var current_Gateway = _select_Gateway(); // edited by RottenMind
 
         $.each(_pbags, function (bi, bag) {
             bag.slots.forEach(function (slot) {
+                // Match unused slots
                 if (slot === null || !slot || slot === undefined) {
                     _bagUnused++;
-                } else {
+                }
+                // Match items to exclude from auto vendoring, dont add to _tmpBag: Exclude pattern list - bound - Epic Quality - Blue Quality
+                else if ( _excludeItems.test(slot.name) || slot.bound || slot.rarity == "Special" || slot.rarity ==  "Gold") {
+                    _bagUsed++;
+                }
+                // Match everything else
+                else {
                     if (settings["autovendor_profresults"]) {
                         for (i = 0; i < _profitems.length; i++) {
                             if (_profitems[i].pattern.test(slot.name))
@@ -1848,7 +1939,7 @@ var current_Gateway = _select_Gateway(); // edited by RottenMind
             // Do a long delay and then retry the site
             console.log("Gateway down detected - relogging in " + (delay.MINS / 1000) + " seconds");
             window.setTimeout(function () {
-                unsafeWindow.location.href = current_Gateway; // edited by RottenMind
+                unsafeWindow.location.href = current_Gateway ; // edited by RottenMind
             }, delay.MINS);
             return;
         }
@@ -2211,6 +2302,7 @@ document.getElementById("charContainer"+val).style.display="block";\
 <div id="settingsPanelButtonContainer">\
 <input id="settings_save" class="button-blue pure-button" type="button" value="Save and Apply">\
 <input id="settings_close" class="button-yellow pure-button" type="button" value="Close">\
+<input id="settings_sca" class="button-red pure-button" type="button" value="Cycle SCA">\
 </div>');
 
         // Add open settings button to page
@@ -2241,6 +2333,11 @@ document.getElementById("charContainer"+val).style.display="block";\
             setTimeout(function () {
                 SaveSettings();
             }, 0)
+        });
+        $("#settings_sca").click(function () {
+            $("#settings_close").trigger("click");
+            unsafeWindow.location.hash = unsafeWindow.location.hash.replace(/\)\/.+/, ')' + "/adventures");
+            processSwordCoastDailies();
         });
         customRadio("radio_position");
 
@@ -2324,7 +2421,7 @@ document.getElementById("charContainer"+val).style.display="block";\
         // If character numbers have changed reload page
         if (charcount != settings["charcount"]) {
             console.log("Reloading gateway to update character count");
-            unsafeWindow.location.href = current_Gateway; // edited by RottenMind
+            unsafeWindow.location.href = current_Gateway ; // edited by RottenMind
             return;
         }
 
