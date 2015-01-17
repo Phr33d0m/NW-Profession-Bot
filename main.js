@@ -29,7 +29,7 @@
  -----------------------------------
  Kakoura, Nametaken, rotten_mind, Frankescript, Brent
  */
-// @version 1.10.0
+// @version 1.10.1
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -38,6 +38,8 @@
 // ==/UserScript==
 
 /* RELEASE NOTES
+ 1.10.1
+ - patern undefined BUGfix
  1.10.0 - Release Candidate
  - Vendor Exclude filter has now higher "Safeguards" (it still might need added some unbound items eg. Glyphs, potions etc.
  - added Vendor Safeguards
@@ -1706,7 +1708,7 @@ function _select_Gateway() { // Check for Gateway used to
                 // Match everything else
                 else {
                     if (settings["autovendor_profresults"]) {
-                        for (i = 0; i < _profitems.length; i++) {
+                        for (i = 1; i < _profitems.length; i++) {
                             if (_profitems[i].pattern.test(slot.name))
                                 _profitems[i].count++;
                         }
