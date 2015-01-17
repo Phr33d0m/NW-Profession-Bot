@@ -1733,7 +1733,7 @@ function _select_Gateway() { // Check for Gateway used to
                         vendor.count = 1;
                         console.log('Selling', vendor.count, slot.name, 'to vendor.');
                         window.setTimeout(function () {
-                            /* testing only client.sendCommand('GatewayVendor_SellItemToVendor', vendor); */
+							client.sendCommand('GatewayVendor_SellItemToVendor', vendor);
                         }, _delay);
                         _profitems[i].count--;
                         break;
