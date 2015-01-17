@@ -22,11 +22,9 @@
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
 /* NW Gateway Professions Bot Developers & Contributors
-
  NW Gateway Professions Bot Developers
  -----------------------------------
  Bluep, Numberb, mac-nw, Phr33d0m
-
  NW Gateway Professions Bot Contributors
  -----------------------------------
  Kakoura, Nametaken, rotten_mind, Frankescript, Brent
@@ -46,9 +44,9 @@
  - separated Autovendor and PRofession items Vendor
  - SCA daily reward collection  by cycling through all configured characters. Leaving SCA will cancel this process.
  - Multi Url support for testing
-	* gatewaytest
-	* RU gateway (gateway.nw.ru.perfectworld.eu)
-	* Gateway
+ * gatewaytest
+ * RU gateway (gateway.nw.ru.perfectworld.eu)
+ * Gateway
  1.05.0.1k
  - RC2 for ver. 1.0.05.2
  - added Vendoring to UI
@@ -83,7 +81,6 @@
  -
  1.05.0.1e
  - Info page updates for non-compatible browser/XXXmonkey
-
  1.05.0.1d
  - WinterEvent tasks added
  - Added AD transfer automation
@@ -244,11 +241,9 @@
  - Added lower level leadership tasks to grid
  - Added hiring tasks to leadership task
  - Uses saved values to determine which profession type to level (Defaults to Leadership, currently no way to change it)
-
  0.1.5
  - Is now able to recover from missing assets
  - Uses a configurable grid to determine what the next task is to complete
-
  0.1.0
  - Is now able to select some hard coded leadership tasks
  - Can now collect from any completed slot
@@ -336,7 +331,12 @@ function _select_Gateway() { // Check for Gateway used to
         if ($("div.notification div.messages li").length > 2)
             $("div.notification div.messages li").eq(0).remove();
     });
-
+	
+	// Always disable SCA tutorial if its active
+	$('#help-dimmer.help-cont.whenTutorialActive').waitUntilExists(function () {
+		client.toggleHelp();
+    });
+	
     //MAC-NW
 
     var state_loading = 0;	  // If "Page Loading" takes longer than 30 seconds, reload page (maybe a javascript error)
@@ -1100,33 +1100,33 @@ function _select_Gateway() { // Check for Gateway used to
             } catch (e) {
                 // TODO: Use callback function
                 window.setTimeout(function () {
-                    processSwordCoastDaily(_charIndex);
+                    processSwordCoastDailies(_charIndex);
                 }, delay.SHORT);
                 return;
             }
 
             console.log("Checking SCA Dialy for", _fullCharName, "...");
-			
-			// Do SCA daily dice roll if the button comes up
+
+            // Do SCA daily dice roll if the button comes up
             WaitForState(".daily-dice-intro").done(function () {
                 $(".daily-dice-intro button").trigger('click');
-				WaitForState(".daily-awards-button").done(function () {
-					$(".daily-awards-button button").trigger('click');
-				});
-			});
-			
-			// If Dice roll dialog is non existant
-			WaitForNotState(".modal-window.daily-dice").done(function () {
-				if (_isLastChar) {
-					window.setTimeout(function () {
-						PauseSettings("unpause");
-					}, 3000);
-				} else {
-					window.setTimeout(function () {
-						processSwordCoastDailies(_charIndex + 1);
-					}, 3000);
-				}
-			});
+                WaitForState(".daily-awards-button").done(function () {
+                    $(".daily-awards-button button").trigger('click');
+                });
+            });
+
+            // If Dice roll dialog is non existant
+            WaitForNotState(".modal-window.daily-dice").done(function () {
+                if (_isLastChar) {
+                    window.setTimeout(function () {
+                        PauseSettings("unpause");
+                    }, 3000);
+                } else {
+                    window.setTimeout(function () {
+                        processSwordCoastDailies(_charIndex + 1);
+                    }, 3000);
+                }
+            });
         });
     }
 
@@ -1424,7 +1424,6 @@ function _select_Gateway() { // Check for Gateway used to
      * Fills resource slots and begins a profession task
      *
      * @param {string} taskDetail The craftindetail object for the task to be started
-
      function startTask(taskDetail) {
 	 return;
 	 
@@ -1528,19 +1527,16 @@ function _select_Gateway() { // Check for Gateway used to
      var silverItems = $("div.modal-item-list a.Silver");
      var bronzeItems = $("div.modal-item-list a.Bronze");
      var clicked = false;
-
      // Try to avoid using up higher rank assets needlessly
      if (prof.taskName === "Leadership") {
      var mercenarys = $("div.modal-item-list a.Bronze:contains('Mercenary')");
      var guards = $("div.modal-item-list a.Bronze:contains('Guard')");
      var footmen = $("div.modal-item-list a.Bronze:contains('Footman')");
-
      if (mercenarys.length)	 { clicked = true; mercenarys[0].click(); }
      else if (guards.length)	 { clicked = true; guards[0].click(); }
      else if (footmen.length) { clicked = true; footmen[0].click(); }
      }
      // TODO: add remaining professions in the same way for bronze tier assets.
-
      if (!clicked) {
      // Click the highest slot
      if (specialItems.length)	 { specialItems[0].click(); }
@@ -1549,7 +1545,6 @@ function _select_Gateway() { // Check for Gateway used to
      else if (bronzeItems.length) { bronzeItems[0].click(); }
      else { $("button.close-button").click(); }
      }
-
      console.log("Clicked item");
      WaitForState("").done(function() {
      // Get the new set of select buttons created since the other ones are removed when the asset loads
@@ -1667,11 +1662,11 @@ function _select_Gateway() { // Check for Gateway used to
              * Items on list must be checked and tested.
              */
             /*#1, Tier3, end list, sell allways all, "TierX" is here "TX" !!*/
-            _profitems[0] = {
+            /*_profitems[0] = {
                 pattern : /^Crafted_(Jewelcrafting_Waist_Offense_3|Jewelcrafting_Neck_Defense_3|Jewelcrafting_Waist_Defense_3|Med_Armorsmithing_T3_Chain_Armor_Set_1|Med_Armorsmithing_T3_Chain_Pants2|Med_Armorsmithing_T3_Chain_Shirt2|Med_Armorsmithing_T3_Chain_Helm_Set_1|Med_Armorsmithing_T3_Chain_Pants|Med_Armorsmithing_T3_Chain_Boots_Set_1|Hvy_Armorsmithing_T3_Plate_Armor_Set_1|Hvy_Armorsmithing_T3_Plate_Pants2|Hvy_Armorsmithing_T3_Plate_Shirt2|Hvy_Armorsmithing_T3_Plate_Helm_Set_1|Hvy_Armorsmithing_T3_Plate_Boots_Set_1|Leatherworking_T3_Leather_Armor_Set_1|Leatherworking_T3_Leather_Pants2|Leatherworking_T3_Leather_Shirt2|Leatherworking_T3_Leather_Helm_Set_1|Leatherworking_T3_Leather_Boots_Set_1|Tailoring_T3_Cloth_Armor_Set_3|Tailoring_T3_Cloth_Armor_Set_2|Tailoring_T3_Cloth_Armor_Set_1|Tailoring_T3_Cloth_Pants2_Set2|Tailoring_T3_Cloth_Shirt2|Tailoring_T3_Cloth_Helm_Set_1|Artificing_T3_Pactblade_Temptation_5|Artificing_T3_Icon_Virtuous_5|Weaponsmithing_T3_Dagger_4)$/,
                 limit : 0,
                 count : 0
-            };
+            };*/ // moved to selljunk filter, RottenMind
             /*#2, Tier2 - tier3 mixed, upgrade, sell if inventory full, "TierX" is here "TX" */
             _profitems[1] = {
                 pattern : /^Crafted_(Jewelcrafting_Neck_Misc_2|Jewelcrafting_Waist_Misc_2|Med_Armorsmithing_T3_Chain_Pants|Med_Armorsmithing_T3_Chain_Shirt|Hvy_Armorsmithing_T3_Plate_Pants|Hvy_Armorsmithing_T3_Plate_Shirt|Leatherworking_T3_Leather_Pants|Leatherworking_T3_Leather_Shirt|Tailoring_T3_Cloth_Shirt|Tailoring_T3_Cloth_Pants||Artificing_T3_Pactblade_Temptation_4|Artificing_T3_Icon_Virtuous_4|Weaponsmithing_T2_Dagger_3|Weaponsmithing_T2_Dagger_3)$/,
@@ -1724,8 +1719,8 @@ function _select_Gateway() { // Check for Gateway used to
 
         if (settings["autovendor_profresults"]) {
             _tmpBag.forEach(function (slot) {
-                for (i = 0; i < _profitems.length; i++) {
-                    if (slot && _profitems[i].pattern.test(slot.name) && !slot.bound && _profitems[i].count > 3) {
+                for (i = 1; i < _profitems.length; i++) { // edited by RottenMind
+                    if (slot && _profitems[i].pattern.test(slot.name) && !slot.bound && _profitems[i].count > 3 && Inventory_bagspace() <= 7 ) { // edited by RottenMind
                         var vendor = {
                             vendor : "Nw_Gateway_Professions_Merchant"
                         };
@@ -1733,7 +1728,7 @@ function _select_Gateway() { // Check for Gateway used to
                         vendor.count = 1;
                         console.log('Selling', vendor.count, slot.name, 'to vendor.');
                         window.setTimeout(function () {
-							client.sendCommand('GatewayVendor_SellItemToVendor', vendor);
+                            client.sendCommand('GatewayVendor_SellItemToVendor', vendor);
                         }, _delay);
                         _profitems[i].count--;
                         break;
@@ -1743,7 +1738,7 @@ function _select_Gateway() { // Check for Gateway used to
         }
 
         _tmpBag.forEach(function (slot) {
-            for (i = 0; i < _items.length; i++) {
+            for (i = 1; i < _items.length; i++) { // edited by RottenMind
                 var _Limit = (parseInt(_items[i].limit) > 99) ? 99 : _items[i].limit;
                 if (slot && _items[i].pattern.test(slot.name) && !slot.bound) {
                     // Node Kits vendor logic for restricted bag space
@@ -1917,7 +1912,7 @@ function _select_Gateway() { // Check for Gateway used to
             }, delay.SHORT); // Try again in a little bit
         }
     }
-	/* Opposite of AttemptResolve, will try to resolve query until it doesn't resolve. */
+    /* Opposite of AttemptResolve, will try to resolve query until it doesn't resolve. */
     function AttemptNotResolve(query, dfd) {
         if (!$(query).length && $("div.loading-image:visible").length === 0) {
             dfd.resolve();
@@ -2465,8 +2460,9 @@ document.getElementById("charContainer"+val).style.display="block";\
         var _vendorItems = [];
         var _sellCount = 0;
 
-        if (settings["autovendor_kits"])
+        if (settings["autovendor_kits"]) {
             _vendorItems[_vendorItems.length] = {pattern: /^Item_Consumable_Skill/, limit: 50};
+        }
         /*if (settings["autovendor_altars"])
          _vendorItems[_vendorItems.length] = {pattern: /^Item_Portable_Altar$/, limit: 80};*/ // removed for now
         if (settings["autovendor_rank1"]) {
@@ -2477,14 +2473,29 @@ document.getElementById("charContainer"+val).style.display="block";\
             _vendorItems[_vendorItems.length] = {pattern: /^T2_Enchantment/, limit: 0};
             _vendorItems[_vendorItems.length] = {pattern: /^T2_Runestone/, limit: 0};
         }
-        if (settings["autovendor_pots1"])
-            _vendorItems[_vendorItems.length] = {pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)$/, limit: 0};
-        if (settings["autovendor_pots2"])
-            _vendorItems[_vendorItems.length] = {pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_2$/, limit: 0};
-        if (settings["autovendor_pots3"])
-            _vendorItems[_vendorItems.length] = {pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_3$/, limit: 0};
-        if (settings["autovendor_pots4"])
-            _vendorItems[_vendorItems.length] = {pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_4$/, limit: 0};
+        if (settings["autovendor_pots1"]) {
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)$/, limit: 0
+            };
+        }
+        if (settings["autovendor_pots2"]) {
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_2$/,
+                limit: 0
+            };
+        }
+        if (settings["autovendor_pots3"]) {
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_3$/,
+                limit: 0
+            };
+        }
+        if (settings["autovendor_pots4"]) {
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_4$/,
+                limit: 0
+            };
+        }
         if (settings["autovendor_junk"]) {
             _vendorItems[_vendorItems.length] = {pattern: /^Item_Snowworks_/, limit: 0}; // Winter Festival fireworks small & large
             _vendorItems[_vendorItems.length] = {pattern: /^Item_Skylantern/, limit: 0}; // Winter Festival skylantern
@@ -2494,6 +2505,12 @@ document.getElementById("charContainer"+val).style.display="block";\
             _vendorItems[_vendorItems.length] = {pattern: /^Object_Decoration_/, limit: 0};
             _vendorItems[_vendorItems.length] = {pattern: /_Green_T[1-5]_Unid$/, limit: 0}; // Unidentified Green Gear
         }
+        // edited by RottenMind
+        if (settings["autovendor_profresults"]) { 
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Crafted_(Jewelcrafting_Waist_Offense_3|Jewelcrafting_Neck_Defense_3|Jewelcrafting_Waist_Defense_3|Med_Armorsmithing_T3_Chain_Armor_Set_1|Med_Armorsmithing_T3_Chain_Pants2|Med_Armorsmithing_T3_Chain_Shirt2|Med_Armorsmithing_T3_Chain_Helm_Set_1|Med_Armorsmithing_T3_Chain_Pants|Med_Armorsmithing_T3_Chain_Boots_Set_1|Hvy_Armorsmithing_T3_Plate_Armor_Set_1|Hvy_Armorsmithing_T3_Plate_Pants2|Hvy_Armorsmithing_T3_Plate_Shirt2|Hvy_Armorsmithing_T3_Plate_Helm_Set_1|Hvy_Armorsmithing_T3_Plate_Boots_Set_1|Leatherworking_T3_Leather_Armor_Set_1|Leatherworking_T3_Leather_Pants2|Leatherworking_T3_Leather_Shirt2|Leatherworking_T3_Leather_Helm_Set_1|Leatherworking_T3_Leather_Boots_Set_1|Tailoring_T3_Cloth_Armor_Set_3|Tailoring_T3_Cloth_Armor_Set_2|Tailoring_T3_Cloth_Armor_Set_1|Tailoring_T3_Cloth_Pants2_Set2|Tailoring_T3_Cloth_Shirt2|Tailoring_T3_Cloth_Helm_Set_1|Artificing_T3_Pactblade_Temptation_5|Artificing_T3_Icon_Virtuous_5|Weaponsmithing_T3_Dagger_4)$/, limit: 0 };
+        }
+        // edited by RottenMind
         if (_vendorItems.length > 0) {
             console.log("Attempting to vendor selected items...");
             _sellCount = vendorItemsLimited(_vendorItems);
@@ -2507,7 +2524,28 @@ document.getElementById("charContainer"+val).style.display="block";\
         }
     }
 
-    // Add the settings button and start a process timer
+    /** Start, Helpers added by users.
+     * Adds fetures, options to base script and can be easily removed if needed
+     * Add description so anyone can see if they can use Function somewhere
+     * Use "brackets" around function start and end //yourname
+     */
+//RottenMind, returns inventory space, use Inventory_bagspace(); gives current free bags slots, from MAC-NW function
+    function Inventory_bagspace() {
+        var _pbags = client.dataModel.model.ent.main.inventory.playerbags;
+        var _bagUnused = 0;
+        $.each(_pbags, function (bi, bag) {
+            bag.slots.forEach(function (slot) {
+                if (slot === null || !slot || slot === undefined) {
+                    _bagUnused++;
+                }
+            });
+        });
+        return _bagUnused;
+    }
+//RottenMind
+    /** End, Helpers added by users.*/
+
+        // Add the settings button and start a process timer
     addSettings();
     timerHandle = window.setTimeout(function () {
         process();
