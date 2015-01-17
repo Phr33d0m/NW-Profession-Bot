@@ -331,7 +331,12 @@ function _select_Gateway() { // Check for Gateway used to
         if ($("div.notification div.messages li").length > 2)
             $("div.notification div.messages li").eq(0).remove();
     });
-
+	
+	// Always disable SCA tutorial if its active
+	$('#help-dimmer.help-cont.whenTutorialActive').waitUntilExists(function () {
+		client.toggleHelp();
+    });
+	
     //MAC-NW
 
     var state_loading = 0;	  // If "Page Loading" takes longer than 30 seconds, reload page (maybe a javascript error)
@@ -1095,7 +1100,7 @@ function _select_Gateway() { // Check for Gateway used to
             } catch (e) {
                 // TODO: Use callback function
                 window.setTimeout(function () {
-                    processSwordCoastDaily(_charIndex);
+                    processSwordCoastDailies(_charIndex);
                 }, delay.SHORT);
                 return;
             }
