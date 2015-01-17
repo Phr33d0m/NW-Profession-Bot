@@ -1624,6 +1624,8 @@ var s_paused = false;	   // extend the paused setting to the Page Reloading func
 		var _bagUnused = 0;
 		var _tmpBag = [];
 		var _profitems = [];
+		// Pattern for items to leave out of auto vendoring (safeguard)
+		var _excludeItems =/(Gemfood|Gem_Upgrade_Resource|Artifact|Hoard|Coffer|Fuse|Ward|Preservation|Armor_Enhancement|Weapon_Enhancement|T[5-9]_Enchantment|T[5-9]_Runestones|T10_Enchantment|T10_Runestones|4c_Personal)/;
 		
 		if (settings["autovendor_profresults"]) {
 		    /** Profession leveling result item cleanup logic for T1-4 crafted results
@@ -1665,10 +1667,17 @@ var s_paused = false;	   // extend the paused setting to the Page Reloading func
 		
 		$.each(_pbags, function (bi, bag) {
 		    bag.slots.forEach(function (slot) {
+				// Match unused slots
 		        if (slot === null || !slot || slot === undefined) {
 		            _bagUnused++;
-		        } else {
-		            if (settings["autovendor_profresults"]) {
+		        } 
+				// Match items to exclude from auto vendoring, dont add to _tmpBag: Exclude pattern list - bound - Epic Quality - Blue Quality
+				else if ( _excludeItems.test(slot.name) || slot.bound || slot.rarity == "Special" || slot.rarity ==  "Gold") {
+					_bagUsed++;
+				} 
+				// Match everything else 
+				else {
+					if (settings["autovendor_profresults"]) {
 		                for (i = 0; i < _profitems.length; i++) {
 		                    if (_profitems[i].pattern.test(slot.name))
 		                        _profitems[i].count++;
