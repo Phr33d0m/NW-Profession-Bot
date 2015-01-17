@@ -1104,29 +1104,28 @@ function _select_Gateway() { // Check for Gateway used to
                 return;
             }
 
-            if (_hasLoginDaily > 0) {
-                console.log("Checking SCA Dialy for",_fullCharName,"... Dialy available... Collecting...");
-                WaitForState("button.closeNotification").done(function () {
-                    $("button.closeNotification").click();
-                    if (_isLastChar) {
-                        PauseSettings("unpause");
-                    } else {
-                        window.setTimeout(function () {
-                            processSwordCoastDailies(_charIndex + 1);
-                        }, 3000);
-                    }
-                });
-            } else {
-                console.log("Checking SCA Dialy for",_fullCharName,"... No Dialy available..");
-                if (_isLastChar) {
-                    PauseSettings("unpause");
-                } else {
-                    window.setTimeout(function () {
-                        processSwordCoastDailies(_charIndex + 1);
-                    }, 1500);
-                }
-                return;
-            }
+            console.log("Checking SCA Dialy for", _fullCharName, "...");
+			
+			// Do SCA daily dice roll if the button comes up
+            WaitForState(".daily-dice-intro").done(function () {
+                $(".daily-dice-intro button").trigger('click');
+				WaitForState(".daily-awards-button").done(function () {
+					$(".daily-awards-button button").trigger('click');
+				});
+			});
+			
+			// If Dice roll dialog is non existant
+			WaitForNotState(".modal-window.daily-dice").done(function () {
+				if (_isLastChar) {
+					window.setTimeout(function () {
+						PauseSettings("unpause");
+					}, 3000);
+				} else {
+					window.setTimeout(function () {
+						processSwordCoastDailies(_charIndex + 1);
+					}, 3000);
+				}
+			});
         });
     }
 
@@ -1893,6 +1892,13 @@ function _select_Gateway() { // Check for Gateway used to
         }, delay.SHORT); // Doesn't work without a short delay
         return dfd;
     }
+    function WaitForNotState(query) {
+        var dfd = $.Deferred();
+        window.setTimeout(function () {
+            AttemptNotResolve(query, dfd);
+        }, delay.SHORT); // Doesn't work without a short delay
+        return dfd;
+    }
     /**
      * Will continually test for the given query state and resolve the given deferred object when the state is reached
      * and the loading symbol is not visible
@@ -1907,6 +1913,17 @@ function _select_Gateway() { // Check for Gateway used to
         else {
             window.setTimeout(function () {
                 AttemptResolve(query, dfd);
+            }, delay.SHORT); // Try again in a little bit
+        }
+    }
+	/* Opposite of AttemptResolve, will try to resolve query until it doesn't resolve. */
+    function AttemptNotResolve(query, dfd) {
+        if (!$(query).length && $("div.loading-image:visible").length === 0) {
+            dfd.resolve();
+        }
+        else {
+            window.setTimeout(function () {
+                AttemptNotResolve(query, dfd);
             }, delay.SHORT); // Try again in a little bit
         }
     }
