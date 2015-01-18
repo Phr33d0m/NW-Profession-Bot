@@ -264,6 +264,7 @@ var fouxConsole = {log: function () {
 }};
 var console = unsafeWindow.console || fouxConsole;
 var chardiamonds = {};
+var definedTask = {};
 // Page Reloading function
 // Every second the page is idle or loading is tracked
 var loading_reset = false; // Enables a periodic reload if this is toggled on by the Auto Reload check box on the settings panel
@@ -596,8 +597,6 @@ function _select_Gateway() { // Check for Gateway used to
      * Some names above do not match, use below code to check:
      * var tasks = client.dataModel.model.craftinglist['craft_' + profname].entries.filter(function(entry) { return entry.def && entry.def.displayname == taskname; }); tasks[0].def.name;
      */
-
-	var definedTask = {};
 	
 	definedTask["Leadership"] = {
             // modded to prioritize RAD production, added low level task for speeding up levelling up
