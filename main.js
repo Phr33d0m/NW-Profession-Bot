@@ -923,8 +923,8 @@ function _select_Gateway() { // Check for Gateway used to
         {name: 'autoexchange', title: 'Consolidate AD via ZEX', def: false, type: 'checkbox', tooltip: 'Automatically attempt to post, cancel and withdraw AD via ZEX and consolidate to designated character'},
         {name: 'bankchar', title: '	Character Name of Banker', def: '', type: 'text', tooltip: 'Enter name of the character to hold account AD'},
         {name: 'banktransmin', title: '	Min AD for Transfer', def: '22000', type: 'text', tooltip: 'Enter minimum AD limit for it to be cosidered for transfer off a character'},
-        {name: 'bankcharmin', title: '	Min Character balance', def: '0', type: 'text', tooltip: 'Enter the amount of AD to always keep available on characters'},
-        {name: 'banktransrate', title: '	AD per Zen Rate (in zen)', def: '50', type: 'text', tooltip: 'Enter default rate to use for transfering through ZEX'},
+        {name: 'bankcharmin', title: '	Min Character balance', def: '8000', type: 'text', tooltip: 'Enter the amount of AD to always keep available on characters'},
+        {name: 'banktransrate', title: '	AD per Zen Rate (in zen)', def: '300', type: 'text', tooltip: 'Enter default rate to use for transfering through ZEX'},
         // MAC-NW
     ];
 
