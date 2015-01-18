@@ -600,7 +600,7 @@ function _select_Gateway() { // Check for Gateway used to
     var defaultTasklist = [
         {
             // modded to prioritize RAD production, added low level task for speeding up levelling up
-            taskListName: "Leadership",
+			taskListName: "Leadership",
             taskName: "Leadership",
             level: {
                 0: ["Leadership_Tier0_Intro_1"],
@@ -659,7 +659,7 @@ function _select_Gateway() { // Check for Gateway used to
 		},
         {
             //WinterEvent
-            taskListName: "WinterEvent",
+			taskListName: "WinterEvent",
             taskName: "WinterEvent",
             level: {
                 0: ["Event_Winter_Tier0_Intro"],
@@ -669,7 +669,7 @@ function _select_Gateway() { // Check for Gateway used to
             },
         },
         {
-        	taskListName: "Event_Siege",
+			taskListName: "Event_Siege",
             taskName:"Event_Siege",
             level: {
                 0:["Event_Siege_Tier0_Intro"], // Hire a Siege Master
@@ -685,7 +685,7 @@ function _select_Gateway() { // Check for Gateway used to
         },
         {
             // Black Ice Shaping
-            taskListName: "BlackIce",
+			taskListName: "BlackIce",
             taskName: "BlackIce",
             level: {
                 1: ["Blackice_Tier1_Process_Blackice"],
@@ -700,7 +700,7 @@ function _select_Gateway() { // Check for Gateway used to
         },
         {
             // Jewelcrafting
-            taskListName: "Jewelcrafting",
+			taskListName: "Jewelcrafting",
             taskName: "Jewelcrafting",
             level: {
                 0: ["Jewelcrafting_Tier0_Intro"],
@@ -728,7 +728,7 @@ function _select_Gateway() { // Check for Gateway used to
         },
         {
             // Mailsmithing
-            taskListName: "Mailsmithing",
+			taskListName: "Mailsmithing",
             taskName: "Armorsmithing_Med",
             level: {
                 0: ["Med_Armorsmithing_Tier0_Intro"],
@@ -758,7 +758,7 @@ function _select_Gateway() { // Check for Gateway used to
         },
         {
             // Platesmithing
-            taskListName: "Platesmithing",
+			taskListName: "Platesmithing",
             taskName: "Armorsmithing_Heavy",
             level: {
                 0: ["Hvy_Armorsmithing_Tier0_Intro"],
@@ -787,7 +787,7 @@ function _select_Gateway() { // Check for Gateway used to
             },
         },
         {
-        	taskListName: "Leatherworking",
+			taskListName: "Leatherworking",
             taskName: "Leatherworking",
             level: {
                 0: ["Leatherworking_Tier0_Intro_1"],
@@ -816,7 +816,7 @@ function _select_Gateway() { // Check for Gateway used to
             },
         },
         {
-        	taskListName: "Tailoring",
+			taskListName: "Tailoring",
             taskName: "Tailoring",
             level: {
                 0: ["Tailoring_Tier0_Intro"],
@@ -845,7 +845,7 @@ function _select_Gateway() { // Check for Gateway used to
             },
         },
         {
-        	taskListName: "Artificing",
+			taskListName: "Artificing",
             taskName: "Artificing",
             level: {
                 0: ["Artificing_Tier0_Intro_1"],
@@ -874,7 +874,7 @@ function _select_Gateway() { // Check for Gateway used to
             },
         },
         {
-        	taskListName: "Weaponsmithing",
+			taskListName: "Weaponsmithing",
             taskName: "Weaponsmithing",
             level: {
                 0: ["Weaponsmithing_Tier0_Intro"],
@@ -903,7 +903,7 @@ function _select_Gateway() { // Check for Gateway used to
             },
         },
         {
-        	taskListName: "Alchemy",
+    		taskListName: "Alchemy",
             taskName: "Alchemy",
             level: {
                 0: ["Alchemy_Tier0_Intro_1"],
@@ -992,23 +992,23 @@ function _select_Gateway() { // Check for Gateway used to
 
     var charSettings = [];
     for (var i = 0; i < settings["charcount"]; i++) {
-        charSettings.push({name: 'nw_charname' + i, title: 'Character', def: 'Character ' + (i + 1), type: 'text', tooltip: 'Characters Name'});
-        //charSettings.push({name: 'WinterEvent' + i, title: 'WinterEvent', def: '0', type: 'text', tooltip: 'Number of slots to assign to WinterEvent'});
-        charSettings.push({name: 'Event_Siege' + i, title: 'Siege Event', def: '0', type: 'text', tooltip: 'Number of slots to assign to Siege Event'});
-        charSettings.push({name: 'Leadership' + i, title: 'Leadership', def: '9', type: 'text', tooltip: 'Number of slots to assign to Leadership'});
-        charSettings.push({name: 'BlackIce' + i, title: 'Black Ice Shaping', def: '0', type: 'text', tooltip: 'Number of slots to assign to BIS'});
-        charSettings.push({name: 'Jewelcrafting' + i, title: 'Jewelcrafting', def: '0', type: 'text', tooltip: 'Number of slots to assign to Jewelcrafting'});
+	    charSettings.push({name: 'nw_charname' + i, title: 'Character', def: 'Character ' + (i + 1), type: 'text', tooltip: 'Characters Name'});
+	    //charSettings.push({name: 'WinterEvent' + i, title: 'WinterEvent', def: '0', type: 'text', tooltip: 'Number of slots to assign to WinterEvent'});
+	    charSettings.push({name: 'Event_Siege' + i, title: 'Siege Event', def: '0', type: 'text', tooltip: 'Number of slots to assign to Siege Event'});
+	    charSettings.push({name: 'Leadership' + i, title: 'Leadership', def: '9', type: 'text', tooltip: 'Number of slots to assign to Leadership'});
+	    charSettings.push({name: 'BlackIce' + i, title: 'Black Ice Shaping', def: '0', type: 'text', tooltip: 'Number of slots to assign to BIS'});
+	    charSettings.push({name: 'Jewelcrafting' + i, title: 'Jewelcrafting', def: '0', type: 'text', tooltip: 'Number of slots to assign to Jewelcrafting'});
 		charSettings.push({name: 'Mailsmithing' + i, title: 'Mailsmithing', def: '0', type: 'text', tooltip: 'Number of slots to assign to Mailsmithing'});
 		charSettings.push({name: 'Platesmithing' + i, title: 'Platesmithing', def: '0', type: 'text', tooltip: 'Number of slots to assign to Platesmithing'});
-        charSettings.push({name: 'Leatherworking' + i, title: 'Leatherworking', def: '0', type: 'text', tooltip: 'Number of slots to assign to Leatherworking'});
-        charSettings.push({name: 'Tailoring' + i, title: 'Tailoring', def: '0', type: 'text', tooltip: 'Number of slots to assign to Tailoring'});
-        charSettings.push({name: 'Artificing' + i, title: 'Artificing', def: '0', type: 'text', tooltip: 'Number of slots to assign to Artificing'});
-        charSettings.push({name: 'Weaponsmithing' + i, title: 'Weaponsmithing', def: '0', type: 'text', tooltip: 'Number of slots to assign to Weaponsmithing'});
-        charSettings.push({name: 'Alchemy' + i, title: 'Alchemy', def: '0', type: 'text', tooltip: 'Number of slots to assign to Alchemy'});
+	    charSettings.push({name: 'Leatherworking' + i, title: 'Leatherworking', def: '0', type: 'text', tooltip: 'Number of slots to assign to Leatherworking'});
+	    charSettings.push({name: 'Tailoring' + i, title: 'Tailoring', def: '0', type: 'text', tooltip: 'Number of slots to assign to Tailoring'});
+	    charSettings.push({name: 'Artificing' + i, title: 'Artificing', def: '0', type: 'text', tooltip: 'Number of slots to assign to Artificing'});
+	    charSettings.push({name: 'Weaponsmithing' + i, title: 'Weaponsmithing', def: '0', type: 'text', tooltip: 'Number of slots to assign to Weaponsmithing'});
+	    charSettings.push({name: 'Alchemy' + i, title: 'Alchemy', def: '0', type: 'text', tooltip: 'Number of slots to assign to Alchemy'});
 		charSettings.push({name: 'Leadership_XP' + i, title: 'Leadership XP', def: '0', type: 'text', tooltip: 'Number of slots to assign to Leadership focused on XP'});
-
-        // task settings are slightly different
-        charSettings.push({name: 'tasklist' + i, title: 'Task List', def: '', type: 'void', tooltip: ''});
+	
+	    // task settings are slightly different
+	    charSettings.push({name: 'tasklist' + i, title: 'Task List', def: '', type: 'void', tooltip: ''});
     }
 
     for (var i = 0; i < charSettings.length; i++) {
