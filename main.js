@@ -996,24 +996,24 @@ function _select_Gateway() { // Check for Gateway used to
         settings["charcount"] = 99;
     }
 
-    var tasklist;
+	var tasklist;
 	// Profession priority list by order
-    var defaultTasklist = [
-        definedTask["Winter Event"],
-        definedTask["Siege Event"],
-        definedTask["Black Ice Shaping"],
-        definedTask["Alchemy"],
-        definedTask["Weaponsmithing"],
-        definedTask["Artificing"],
-        definedTask["Jewelcrafting"],
-        definedTask["Mailsmithing"],
-        definedTask["Platesmithing"],
-        definedTask["Leatherworking"],
-        definedTask["Tailoring"],
-        definedTask["Leadership"],
+	var defaultTasklist = [
+		definedTask["Winter Event"],
+		definedTask["Siege Event"],
+		definedTask["Black Ice Shaping"],
+		definedTask["Alchemy"],
+		definedTask["Weaponsmithing"],
+		definedTask["Artificing"],
+		definedTask["Jewelcrafting"],
+		definedTask["Mailsmithing"],
+		definedTask["Platesmithing"],
+		definedTask["Leatherworking"],
+		definedTask["Tailoring"],
+		definedTask["Leadership"],
 		//definedTask["Leadership XP"],
-    ];
-	
+	];
+
     var charSettings = [];
     for (var i = 0; i < settings["charcount"]; i++) {
         charSettings.push({name: 'nw_charname' + i, title: 'Character', def: 'Character ' + (i + 1), type: 'text', tooltip: 'Characters Name'});
