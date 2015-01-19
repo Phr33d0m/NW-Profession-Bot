@@ -1873,7 +1873,7 @@ function _select_Gateway() { // Check for Gateway used to
                 var _Limit = (parseInt(_items[i].limit) > 99) ? 99 : _items[i].limit;
                 if (slot && _items[i].pattern.test(slot.name) && !slot.bound) {
                     // Node Kits vendor logic for restricted bag space
-                    if (settings["autovendor_kits_altars_limit"]) {
+                    if (settings["autovendor_kits_altars_limit"] && /^Item_Consumable_Skill/.test(slot.name)) {
                         if ( _bagCount < 2 || _bagUnused < 6 ||
                             (slot.name == "Item_Consumable_Skill_Dungeoneering" && (_classType == "Player_Guardian" || _classType == "Player_Greatweapon")) ||
                             (slot.name == "Item_Consumable_Skill_Arcana" && (_classType == "Player_Controller" || _classType == "Player_Scourge")) ||
