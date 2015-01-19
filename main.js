@@ -264,6 +264,7 @@ var fouxConsole = {log: function () {
 }};
 var console = unsafeWindow.console || fouxConsole;
 var chardiamonds = {};
+var definedTask = {};
 // Page Reloading function
 // Every second the page is idle or loading is tracked
 var loading_reset = false; // Enables a periodic reload if this is toggled on by the Auto Reload check box on the settings panel
@@ -595,10 +596,10 @@ function _select_Gateway() { // Check for Gateway used to
      * Some names above do not match, use below code to check:
      * var tasks = client.dataModel.model.craftinglist['craft_' + profname].entries.filter(function(entry) { return entry.def && entry.def.displayname == taskname; }); tasks[0].def.name;
      */
-    var tasklist;
-    var defaultTasklist = [
-        {
+	
+	definedTask["Leadership"] = {
             // modded to prioritize RAD production, added low level task for speeding up levelling up
+		taskListName: "Leadership",
             taskName: "Leadership",
             level: {
                 0: ["Leadership_Tier0_Intro_1"],
@@ -627,9 +628,38 @@ function _select_Gateway() { // Check for Gateway used to
                 // 20
                 20: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier3_20_Destroy", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_12_Taxes", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
             },
+	};
+	
+	definedTask["Leadership XP"] = {
+		taskListName: "Leadership_XP",
+		taskName: "Leadership",
+		level: {
+			0: ["Leadership_Tier0_Intro_1"],
+			1: ["Leadership_Tier0_Intro_5", "Leadership_Tier0_Intro_4", "Leadership_Tier0_Intro_3", "Leadership_Tier0_Intro_2"],
+			2: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
+			3: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
+			4: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
+			5: ["Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
+			6: ["Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
+			7: ["Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
+			8: ["Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
+			9: ["Leadership_Tier1_5_Explore", "Leadership_Tier2_9_Chart", "Leadership_Tier1_4_Protect"],
+			10: ["Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
+			11: ["Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
+			12: ["Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
+			13: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+			14: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+			15: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+			16: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+			17: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+			18: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+			19: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+			20: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier3_20_Destroy", "Leadership_Tier2_12_Taxes","Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol"],
         },
-        {
-            //WinterEvent
+	};
+	
+	definedTask["Winter Event"] = {
+		taskListName: "WinterEvent",
             taskName: "WinterEvent",
             level: {
                 0: ["Event_Winter_Tier0_Intro"],
@@ -637,8 +667,10 @@ function _select_Gateway() { // Check for Gateway used to
                 2: ["Event_Winter_Tier1_Rankup_2", /*"Event_Winter_Tier1_Fishingpole_Blue","Event_Winter_Tier1_Shiny_Lure_Mass",*/"Event_Winter_Tier1_Refine_2", "Event_Winter_Tier1_Gather_2"],
                 3: [/*"Event_Winter_Tier1_Heros_Feast","Event_Winter_Tier1_Lightwine","Event_Winter_Tier1_Sparkliest_Gem","Event_Winter_Tier1_Mesmerizing_Lure",*/"Event_Winter_Tier1_Gather_3"],
             },
-        },
-        {
+	};
+	
+	definedTask["Siege Event"] = {
+		taskListName: "Event_Siege",
             taskName:"Event_Siege",
             level: {
                 0:["Event_Siege_Tier0_Intro"], // Hire a Siege Master
@@ -651,9 +683,10 @@ function _select_Gateway() { // Check for Gateway used to
                 //1:["Event_Siege_Tier1_Donate_Resources_T3"], // Create Defense Supplies from Tier 3 crafting resources
                 1:["Event_Siege_Tier1_Donate_Resources_T2","Event_Siege_Tier1_Donate_Minorinjury","Event_Siege_Tier1_Donate_Injury","Event_Siege_Tier1_Donate_Majorinjury", "Event_Siege_Tier1_Donate_Altar_10"],
             },
-        },
-        {
-            // Black Ice Shaping
+	};
+	
+	definedTask["Black Ice Shaping"] = {
+		taskListName: "BlackIce",
             taskName: "BlackIce",
             level: {
                 1: ["Blackice_Tier1_Process_Blackice"],
@@ -665,9 +698,10 @@ function _select_Gateway() { // Check for Gateway used to
                  3:["Forge Hammerstone Pick","Gather Raw Black Ice","Truesilver Pick Grip","Process Raw Black Ice","Upgrade Chillwright","Hire an additional Chillwright"],
                  */
             },
-        },
-        {
-            // Jewelcrafting
+	};
+	
+	definedTask["Jewelcrafting"] = {
+		taskListName: "Jewelcrafting",
             taskName: "Jewelcrafting",
             level: {
                 0: ["Jewelcrafting_Tier0_Intro"],
@@ -692,9 +726,10 @@ function _select_Gateway() { // Check for Gateway used to
                 19: ["Jewelcrafting_Tier3_Neck_Defense_3", "Jewelcrafting_Tier3_Waist_Defense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
                 20: ["Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier1_Refine_Basic"],
             },
-        },
-        {
-            // Mailsmithing
+	};
+	
+	definedTask["Mailsmithing"] = {
+		taskListName: "Mailsmithing",
             taskName: "Armorsmithing_Med",
             level: {
                 0: ["Med_Armorsmithing_Tier0_Intro"],
@@ -721,9 +756,10 @@ function _select_Gateway() { // Check for Gateway used to
                 //19:["Chain Armor +4","Fancy Chain Pants","Fancy Chain Shirt","Chain Helm +4","Ornate Chain Pants","Upgrade Blacksmith","Upgrade Prospector","Hire an additional Prospector"],
                 //20:["Forge Steel Rings and Scales"],
             },
-        },
-        {
-            // Platesmithing
+	};
+	
+	definedTask["Platesmithing"] = {
+		taskListName: "Platesmithing",
             taskName: "Armorsmithing_Heavy",
             level: {
                 0: ["Hvy_Armorsmithing_Tier0_Intro"],
@@ -750,8 +786,10 @@ function _select_Gateway() { // Check for Gateway used to
                 //19:["Plate Armor +4","Fancy Plate Pants","Fancy Plate Shirt","Plate Helm +4","Ornate Plate Pants","Upgrade Armorer","Upgrade Miner","Hire an additional Miner"],
                 //20:["Forge Steel Plates"],
             },
-        },
-        {
+	};
+	
+	definedTask["Leatherworking"] = {
+		taskListName: "Leatherworking",
             taskName: "Leatherworking",
             level: {
                 0: ["Leatherworking_Tier0_Intro_1"],
@@ -778,8 +816,10 @@ function _select_Gateway() { // Check for Gateway used to
                 //19:["Leather Armor +4","Fancy Leather Pants","Fancy Leather Shirt","Leather Helm +4","Ornate Leather Pants","Upgrade Tanner","Upgrade Skinner","Hire an additional Skinner"],
                 //20:["Cure Tough Pelts"],
             },
-        },
-        {
+	};
+	
+	definedTask["Tailoring"] = {
+		taskListName: "Tailoring",
             taskName: "Tailoring",
             level: {
                 0: ["Tailoring_Tier0_Intro"],
@@ -806,8 +846,10 @@ function _select_Gateway() { // Check for Gateway used to
                 //19:["Cloth Robes +4","Fancy Cloth Pants","Fancy Cloth Shirt","Cloth Cap +4","Ornate Cloth Pants","Upgrade Outfitter","Upgrade Weaver","Hire an additional Weaver"],
                 //20:["Weave Cotton Cloth"],
             },
-        },
-        {
+	};
+	
+	definedTask["Artificing"] = {
+		taskListName: "Artificing",
             taskName: "Artificing",
             level: {
                 0: ["Artificing_Tier0_Intro_1"],
@@ -834,8 +876,10 @@ function _select_Gateway() { // Check for Gateway used to
                 //19:["Virtuous Icon +5","Upgrade Engraver","Upgrade Carver","Hire an additional Carver"],
                 //20:["7:Craft Ornamental metal and Carved Wood"],
             },
-        },
-        {
+	};
+	
+	definedTask["Weaponsmithing"] = {
+		taskListName: "Weaponsmithing",
             taskName: "Weaponsmithing",
             level: {
                 0: ["Weaponsmithing_Tier0_Intro"],
@@ -862,8 +906,10 @@ function _select_Gateway() { // Check for Gateway used to
                 //19:["Dagger+4","Upgrade Grinder","Upgrade Smelter","Hire an additional Smelter"],
                 //20:["Craft Steel Blades and Barausk Hafts"],
             },
-        },
-        {
+	};
+	
+	definedTask["Alchemy"] = {
+		taskListName: "Alchemy",
             taskName: "Alchemy",
             level: {
                 0: ["Alchemy_Tier0_Intro_1"],
@@ -891,8 +937,7 @@ function _select_Gateway() { // Check for Gateway used to
                 //20:["Alchemy_Tier2_Aquavitae_2"],,"Alchemy_Tier3_Potency_Potion_Major"
                 20: ["Alchemy_Tier3_Protection_Potion_Major", "Alchemy_Tier2_Aquaregia", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
             },
-        },
-    ];
+	};
 
     // Load Settings
     var settingnames = [
@@ -949,6 +994,24 @@ function _select_Gateway() { // Check for Gateway used to
     if (settings["charcount"] > 99) {
         settings["charcount"] = 99;
     }
+
+	var tasklist;
+	// Profession priority list by order
+	var defaultTasklist = [
+		definedTask["Winter Event"],
+		definedTask["Siege Event"],
+		definedTask["Black Ice Shaping"],
+		definedTask["Alchemy"],
+		definedTask["Weaponsmithing"],
+		definedTask["Artificing"],
+		definedTask["Jewelcrafting"],
+		definedTask["Mailsmithing"],
+		definedTask["Platesmithing"],
+		definedTask["Leatherworking"],
+		definedTask["Tailoring"],
+		definedTask["Leadership"],
+		//definedTask["Leadership XP"],
+	];
 
     var charSettings = [];
     for (var i = 0; i < settings["charcount"]; i++) {
