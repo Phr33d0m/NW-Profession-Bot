@@ -965,7 +965,8 @@ function _select_Gateway() { // Check for Gateway used to
         {name: 'autovendor_pots2', title: 'Auto Vendor lesser potions (lvl 15)', def: false, type: 'checkbox', tooltip: 'Vendor all lesser potions (lvl 15) found in player bags'}, //MAC-NW
         {name: 'autovendor_pots3', title: 'Auto Vendor potions (lvl 30)', def: false, type: 'checkbox', tooltip: 'Vendor all potions (lvl 30) found in player bags'}, //MAC-NW
         {name: 'autovendor_pots4', title: 'Auto Vendor greater potions (lvl 45)', def: false, type: 'checkbox', tooltip: 'Vendor all greater potions (lvl 45) found in player bags'}, //MAC-NW
-        {name: 'autovendor_rank1_2', title: 'Auto Vendor enchants & runes Rank 1 &2', def: false, type: 'checkbox', tooltip: 'Vendor all Rank 1 & 2 enchantments & runestones found in player bags'}, //MAC-NW, edited by RottenMind
+        {name: 'autovendor_rank1', title: 'Auto Vendor enchants & runes Rank 1', def: false, type: 'checkbox', tooltip: 'Vendor all Rank 1 enchantments & runestones found in player bags'}, //MAC-NW, edited by RottenMind
+        {name: 'autovendor_rank2', title: 'Auto Vendor enchants & runes Rank 2', def: false, type: 'checkbox', tooltip: 'Vendor all Rank 2 enchantments & runestones found in player bags'}, // edited by RottenMind
         {name: 'autovendor_rank3', title: 'Auto Vendor enchants & runes Rank 3', def: false, type: 'checkbox', tooltip: 'Vendor all Rank 3 enchantments & runestones found in player bags'}, // edited by RottenMind
         {name: 'autovendor_junk', title: 'Auto Vendor junk..', def: false, type: 'checkbox', tooltip: 'Vendor all (currently) winterfest fireworks+lanterns'}, //MAC-NW
         {name: 'autoreload', title: 'Auto Reload', def: false, type: 'checkbox', tooltip: 'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)'},
@@ -2585,7 +2586,7 @@ document.getElementById("charContainer"+val).style.display="block";\
             _vendorItems[_vendorItems.length] = {pattern: /^Item_Portable_Altar$/, limit: 0};
             _vendorItems[_vendorItems.length] = {pattern: /^Item_Consumable_Skill/, limit: 0};
         }
-        if (settings["autovendor_rank1_2"]) {
+        if (settings["autovendor_rank1"]) {
             _vendorItems[_vendorItems.length] = {pattern: /^T1_Enchantment/, limit: 0};
             _vendorItems[_vendorItems.length] = {pattern: /^T1_Runestone/, limit: 0};
         }
