@@ -38,6 +38,14 @@
 // ==/UserScript==
 
 /* RELEASE NOTES
+ -
+ - added Leadership asset auto buy
+ - improvments for AD transfer and reports to console log
+ - added "Leadership XP" use second tasklist
+ - added "Gateway_Reward"
+ - added Rank3 ench.Runes to UI
+ - added "Vendor all Altar Node skill kits" to UI
+ - edited Vendor rank1/rank2 enchants
  1.10.1
  - patern undefined BUGfix
  1.10.0 - Release Candidate
@@ -681,7 +689,7 @@ function _select_Gateway() { // Check for Gateway used to
                 //1:["Event_Siege_Tier1_Donate_Altar_50"], // Create Defense Supplies from 50 Portable Altars
                 //1:["Event_Siege_Tier1_Donate_Resources_T2"], // Create Defense Supplies from Tier 2 crafting resources
                 //1:["Event_Siege_Tier1_Donate_Resources_T3"], // Create Defense Supplies from Tier 3 crafting resources
-                1:["Event_Siege_Tier1_Donate_Resources_T2","Event_Siege_Tier1_Donate_Minorinjury","Event_Siege_Tier1_Donate_Injury","Event_Siege_Tier1_Donate_Majorinjury", "Event_Siege_Tier1_Donate_Altar_10"],
+                1:["Event_Siege_Tier1_Donate_Resources_T3","Event_Siege_Tier1_Donate_Resources_T2","Event_Siege_Tier1_Donate_Minorinjury","Event_Siege_Tier1_Donate_Injury","Event_Siege_Tier1_Donate_Majorinjury", "Event_Siege_Tier1_Donate_Altar_10"],
             },
 	};
 	
@@ -950,14 +958,16 @@ function _select_Gateway() { // Check for Gateway used to
         {name: 'trainassets', title: 'Train Assets', def: true, type: 'checkbox', tooltip: 'Enable training/upgrading of asset worker resources'},
         {name: 'refinead', title: 'Refine AD', def: true, type: 'checkbox', tooltip: 'Enable refining of AD on character switch'},
         {name: 'openrewards', title: 'Open Reward Chests', def: false, type: 'checkbox', tooltip: 'Enable opeing of leadership chests on character switch'}, //MAC-NW
-        {name: 'autovendor_kits', title: 'Vendor/Maintain Node Kit Stacks', def: false, type: 'checkbox', tooltip: 'Limit skill kits stacks to 50, vendor kits unusable by class, remove all if player has one bag or full bags'},
+        {name: 'autovendor_kits_altars_limit', title: 'Vendor/Maintain Altar Node Kit Stacks', def: false, type: 'checkbox', tooltip: 'Limit skill kits stacks to 50/Altars80, vendor kits unusable by class, remove all if player has one bag or full bags'}, // edited by RottenMind
+        {name: 'autovendor_kits_altars_all', title: 'Vendor All Altar Node Kit Stacks', def: false, type: 'checkbox', tooltip: 'Sell ALL skill kits  Altars.'}, // RottenMind
         {name: 'autovendor_profresults', title: 'Vendor/Maintain Prof Crafted Levelup Items', def: false, type: 'checkbox', tooltip: 'Vendor off Tier 1 to 5 items produced and reused for leveling crafting professions.'},
         {name: 'autovendor_pots1', title: 'Auto Vendor minor potions (lvl 1)', def: false, type: 'checkbox', tooltip: 'Vendor all minor potions (lvl 1) found in player bags'}, //MAC-NW
         {name: 'autovendor_pots2', title: 'Auto Vendor lesser potions (lvl 15)', def: false, type: 'checkbox', tooltip: 'Vendor all lesser potions (lvl 15) found in player bags'}, //MAC-NW
         {name: 'autovendor_pots3', title: 'Auto Vendor potions (lvl 30)', def: false, type: 'checkbox', tooltip: 'Vendor all potions (lvl 30) found in player bags'}, //MAC-NW
         {name: 'autovendor_pots4', title: 'Auto Vendor greater potions (lvl 45)', def: false, type: 'checkbox', tooltip: 'Vendor all greater potions (lvl 45) found in player bags'}, //MAC-NW
-        {name: 'autovendor_rank1', title: 'Auto Vendor enchants & runes Rank 1', def: false, type: 'checkbox', tooltip: 'Vendor all Rank 1 enchantments & runestones found in player bags'}, //MAC-NW
-        {name: 'autovendor_rank2', title: 'Auto Vendor enchants & runes Rank 2', def: false, type: 'checkbox', tooltip: 'Vendor all Rank 2 enchantments & runestones found in player bags'}, //MAC-NW
+        {name: 'autovendor_rank1', title: 'Auto Vendor enchants & runes Rank 1', def: false, type: 'checkbox', tooltip: 'Vendor all Rank 1 enchantments & runestones found in player bags'}, //MAC-NW, edited by RottenMind
+        {name: 'autovendor_rank2', title: 'Auto Vendor enchants & runes Rank 2', def: false, type: 'checkbox', tooltip: 'Vendor all Rank 2 enchantments & runestones found in player bags'}, // edited by RottenMind
+        {name: 'autovendor_rank3', title: 'Auto Vendor enchants & runes Rank 3', def: false, type: 'checkbox', tooltip: 'Vendor all Rank 3 enchantments & runestones found in player bags'}, // edited by RottenMind
         {name: 'autovendor_junk', title: 'Auto Vendor junk..', def: false, type: 'checkbox', tooltip: 'Vendor all (currently) winterfest fireworks+lanterns'}, //MAC-NW
         {name: 'autoreload', title: 'Auto Reload', def: false, type: 'checkbox', tooltip: 'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)'},
         {name: 'autologin', title: 'Attempt to login automatically', def: false, type: 'checkbox', tooltip: 'Automatically attempt to login to the neverwinter gateway site'},
@@ -1941,7 +1951,7 @@ function _select_Gateway() { // Check for Gateway used to
 
         if (settings["openrewards"]) {
             var _pbags = unsafeWindow.client.dataModel.model.ent.main.inventory.playerbags;
-            var _cRewardPat = /Reward_Item_Chest/;
+            var _cRewardPat = /Reward_Item_Chest|Gateway_Rewardpack/;
             console.log("Opening Rewards");
             $.each(_pbags, function (bi, bag) {
                 bag.slots.forEach(function (slot) {
@@ -2590,12 +2600,15 @@ document.getElementById("charContainer"+val).style.display="block";\
 
         var _vendorItems = [];
         var _sellCount = 0;
-
-        if (settings["autovendor_kits"]) {
+		// edited by RottenMind
+        if (settings["autovendor_kits_altars_limit"]) {
             _vendorItems[_vendorItems.length] = {pattern: /^Item_Consumable_Skill/, limit: 50};
+            _vendorItems[_vendorItems.length] = {pattern: /^Item_Portable_Altar$/, limit: 80};
         }
-        /*if (settings["autovendor_altars"])
-         _vendorItems[_vendorItems.length] = {pattern: /^Item_Portable_Altar$/, limit: 80};*/ // removed for now
+        if (settings["autovendor_kits_altars_all"]) {
+            _vendorItems[_vendorItems.length] = {pattern: /^Item_Portable_Altar$/, limit: 0};
+            _vendorItems[_vendorItems.length] = {pattern: /^Item_Consumable_Skill/, limit: 0};
+        }
         if (settings["autovendor_rank1"]) {
             _vendorItems[_vendorItems.length] = {pattern: /^T1_Enchantment/, limit: 0};
             _vendorItems[_vendorItems.length] = {pattern: /^T1_Runestone/, limit: 0};
@@ -2604,6 +2617,11 @@ document.getElementById("charContainer"+val).style.display="block";\
             _vendorItems[_vendorItems.length] = {pattern: /^T2_Enchantment/, limit: 0};
             _vendorItems[_vendorItems.length] = {pattern: /^T2_Runestone/, limit: 0};
         }
+        if (settings["autovendor_rank3"]) {
+            _vendorItems[_vendorItems.length] = {pattern: /^T3_Enchantment/, limit: 0};
+ 		 	_vendorItems[_vendorItems.length] = {pattern: /^T3_Runestone/, limit: 0};
+        }
+        // edited by RottenMind
         if (settings["autovendor_pots1"]) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)$/, limit: 0
