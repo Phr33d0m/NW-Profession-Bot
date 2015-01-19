@@ -38,6 +38,14 @@
 // ==/UserScript==
 
 /* RELEASE NOTES
+ -
+ - added Leadership asset auto buy
+ - improvments for AD transfer and reports to console log
+ - added "Leadership XP" use second tasklist
+ - added "Gateway_Reward"
+ - added Rank3 ench.Runes to UI
+ - added "Vendor all Altar Node skill kits" to UI
+ - edited Vendor rank1/rank2 enchants
  1.10.1
  - patern undefined BUGfix
  1.10.0 - Release Candidate
@@ -681,7 +689,7 @@ function _select_Gateway() { // Check for Gateway used to
                 //1:["Event_Siege_Tier1_Donate_Altar_50"], // Create Defense Supplies from 50 Portable Altars
                 //1:["Event_Siege_Tier1_Donate_Resources_T2"], // Create Defense Supplies from Tier 2 crafting resources
                 //1:["Event_Siege_Tier1_Donate_Resources_T3"], // Create Defense Supplies from Tier 3 crafting resources
-                1:["Event_Siege_Tier1_Donate_Resources_T2","Event_Siege_Tier1_Donate_Minorinjury","Event_Siege_Tier1_Donate_Injury","Event_Siege_Tier1_Donate_Majorinjury", "Event_Siege_Tier1_Donate_Altar_10"],
+                1:["Event_Siege_Tier1_Donate_Resources_T3","Event_Siege_Tier1_Donate_Resources_T2","Event_Siege_Tier1_Donate_Minorinjury","Event_Siege_Tier1_Donate_Injury","Event_Siege_Tier1_Donate_Majorinjury", "Event_Siege_Tier1_Donate_Altar_10"],
             },
 	};
 	
@@ -950,26 +958,28 @@ function _select_Gateway() { // Check for Gateway used to
         {name: 'trainassets', title: 'Train Assets', def: true, type: 'checkbox', tooltip: 'Enable training/upgrading of asset worker resources'},
         {name: 'refinead', title: 'Refine AD', def: true, type: 'checkbox', tooltip: 'Enable refining of AD on character switch'},
         {name: 'openrewards', title: 'Open Reward Chests', def: false, type: 'checkbox', tooltip: 'Enable opeing of leadership chests on character switch'}, //MAC-NW
-        {name: 'autovendor_kits', title: 'Vendor/Maintain Node Kit Stacks', def: false, type: 'checkbox', tooltip: 'Limit skill kits stacks to 50, vendor kits unusable by class, remove all if player has one bag or full bags'},
+		{name: 'autoreload', title: 'Auto Reload', def: false, type: 'checkbox', tooltip: 'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)'},
+		{name: 'autovendor_junk', title: 'Auto Vendor junk..', def: false, type: 'checkbox', tooltip: 'Vendor all (currently) winterfest fireworks+lanterns'}, //MAC-NW
+		{name: 'autovendor_kits_altars_limit', title: 'Vendor/Maintain Altar Node Kit Stacks', def: false, type: 'checkbox', tooltip: 'Limit skill kits stacks to 50/Altars80, vendor kits unusable by class, remove all if player has one bag or full bags'}, // edited by RottenMind
+        {name: 'autovendor_kits_altars_all', title: 'Vendor All Altar Node Kit Stacks', def: false, type: 'checkbox', tooltip: 'Sell ALL skill kits  Altars.'}, // RottenMind
         {name: 'autovendor_profresults', title: 'Vendor/Maintain Prof Crafted Levelup Items', def: false, type: 'checkbox', tooltip: 'Vendor off Tier 1 to 5 items produced and reused for leveling crafting professions.'},
         {name: 'autovendor_pots1', title: 'Auto Vendor minor potions (lvl 1)', def: false, type: 'checkbox', tooltip: 'Vendor all minor potions (lvl 1) found in player bags'}, //MAC-NW
         {name: 'autovendor_pots2', title: 'Auto Vendor lesser potions (lvl 15)', def: false, type: 'checkbox', tooltip: 'Vendor all lesser potions (lvl 15) found in player bags'}, //MAC-NW
         {name: 'autovendor_pots3', title: 'Auto Vendor potions (lvl 30)', def: false, type: 'checkbox', tooltip: 'Vendor all potions (lvl 30) found in player bags'}, //MAC-NW
         {name: 'autovendor_pots4', title: 'Auto Vendor greater potions (lvl 45)', def: false, type: 'checkbox', tooltip: 'Vendor all greater potions (lvl 45) found in player bags'}, //MAC-NW
-        {name: 'autovendor_rank1', title: 'Auto Vendor enchants & runes Rank 1', def: false, type: 'checkbox', tooltip: 'Vendor all Rank 1 enchantments & runestones found in player bags'}, //MAC-NW
+		{name: 'autovendor_rank1', title: 'Auto Vendor enchants & runes Rank 1', def: false, type: 'checkbox', tooltip: 'Vendor all Rank 1 enchantments & runestones found in player bags'}, //MAC-NW
         {name: 'autovendor_rank2', title: 'Auto Vendor enchants & runes Rank 2', def: false, type: 'checkbox', tooltip: 'Vendor all Rank 2 enchantments & runestones found in player bags'}, //MAC-NW
-        {name: 'autovendor_junk', title: 'Auto Vendor junk..', def: false, type: 'checkbox', tooltip: 'Vendor all (currently) winterfest fireworks+lanterns'}, //MAC-NW
-        {name: 'autoreload', title: 'Auto Reload', def: false, type: 'checkbox', tooltip: 'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)'},
-        {name: 'autologin', title: 'Attempt to login automatically', def: false, type: 'checkbox', tooltip: 'Automatically attempt to login to the neverwinter gateway site'},
+        {name: 'autovendor_rank3', title: 'Auto Vendor enchants & runes Rank 3', def: false, type: 'checkbox', tooltip: 'Vendor all Rank 3 enchantments & runestones found in player bags'}, // edited by RottenMind
+        {name: 'autologin', title: 'Attempt to login automatically', def: false, type: 'checkbox', tooltip: 'Automatically attempt to login to the neverwinter gateway site', border: true},
         {name: 'nw_username', title: '	Neverwinter Username', def: '', type: 'text', tooltip: ''},
         {name: 'nw_password', title: '	Neverwinter Password', def: '', type: 'password', tooltip: ''},
-        {name: 'charcount', title: '	Number of Characters', def: '2', type: 'text', tooltip: 'Enter number of characters to use (reload page to update settings form)'},
         // MAC-NW AD Consolidation
-        {name: 'autoexchange', title: 'Consolidate AD via ZEX', def: false, type: 'checkbox', tooltip: 'Automatically attempt to post, cancel and withdraw AD via ZEX and consolidate to designated character'},
+        {name: 'autoexchange', title: 'Consolidate AD via ZEX', def: false, type: 'checkbox', tooltip: 'Automatically attempt to post, cancel and withdraw AD via ZEX and consolidate to designated character', border: true},
         {name: 'bankchar', title: '	Character Name of Banker', def: '', type: 'text', tooltip: 'Enter name of the character to hold account AD'},
         {name: 'banktransmin', title: '	Min AD for Transfer', def: '22000', type: 'text', tooltip: 'Enter minimum AD limit for it to be cosidered for transfer off a character'},
         {name: 'bankcharmin', title: '	Min Character balance', def: '8000', type: 'text', tooltip: 'Enter the amount of AD to always keep available on characters'},
         {name: 'banktransrate', title: '	AD per Zen Rate (in zen)', def: '300', type: 'text', tooltip: 'Enter default rate to use for transfering through ZEX'},
+		{name: 'charcount', title: ' Enter number of characters to use (Save and Apply to update settings form)', def: '2', type: 'text', tooltip: 'Enter number of characters to use (Save and Apply to update settings form)', border: true},
         // MAC-NW
     ];
 
@@ -1863,7 +1873,7 @@ function _select_Gateway() { // Check for Gateway used to
                 var _Limit = (parseInt(_items[i].limit) > 99) ? 99 : _items[i].limit;
                 if (slot && _items[i].pattern.test(slot.name) && !slot.bound) {
                     // Node Kits vendor logic for restricted bag space
-                    if (settings["autovendor_kits"]) {
+                    if (settings["autovendor_kits_altars_limit"]) {
                         if ( _bagCount < 2 || _bagUnused < 6 ||
                             (slot.name == "Item_Consumable_Skill_Dungeoneering" && (_classType == "Player_Guardian" || _classType == "Player_Greatweapon")) ||
                             (slot.name == "Item_Consumable_Skill_Arcana" && (_classType == "Player_Controller" || _classType == "Player_Scourge")) ||
@@ -1941,7 +1951,7 @@ function _select_Gateway() { // Check for Gateway used to
 
         if (settings["openrewards"]) {
             var _pbags = unsafeWindow.client.dataModel.model.ent.main.inventory.playerbags;
-            var _cRewardPat = /Reward_Item_Chest/;
+            var _cRewardPat = /Reward_Item_Chest|Gateway_Rewardpack/;
             console.log("Opening Rewards");
             $.each(_pbags, function (bi, bag) {
                 bag.slots.forEach(function (slot) {
@@ -2303,23 +2313,35 @@ function _select_Gateway() { // Check for Gateway used to
         for (var i = 0; i < settingnames.length; i++) {
             var id = 'settings_' + settingnames[i].name;
             var indent = (countLeadingSpaces(settingnames[i].title) >= 1) ? 1 : 0;
-            if (id == 'autoexchange')
-                settingsList.append('<li style="margin-left:0em; width: 48%; display: inline-block;"/>&nbsp;</li>')
+            /*if ((settingnames[i].type == 'text' && settingnames[i-1].type == 'checkbox') || (settingnames[i-1] && settingnames[i].type == 'checkbox' && settingnames[i-1].type == 'text'))
+                settingsList.append('<li style="margin-left:0em; width: 48%; display: inline-block;"/>&nbsp;</li>')*/
+			var border = "";
+			if (settingnames[i].border)
+				border = "border-top: #000 solid 1px;"
             switch (settingnames[i].type) {
                 case "checkbox":
-                    settingsList.append('<li title="' + settingnames[i].tooltip + '" style="padding-left:' + indent + 'em; width: 48%; display: inline-block;"><input style="margin:4px" name="' + id + '" id="' + id + '" type="checkbox" /><label class="' + settingnames[i].class + '" for="' + id + '">' + settingnames[i].title + '</label></li>')
+					var _checkWidth="48%";
+					if (i < 9)
+						_checkWidth="31%";
+					if (settingnames[i].border)
+						_checkWidth="98%";
+                    settingsList.append('<li title="' + settingnames[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; width: ' + _checkWidth +'; display: inline-block;"><input style="margin:4px" name="' + id + '" id="' + id + '" type="checkbox" /><label class="' + settingnames[i].class + '" for="' + id + '">' + settingnames[i].title + '</label></li>')
                     $('#' + id).prop('checked', settings[settingnames[i].name]);
                     break;
                 case "text":
-                    settingsList.append('<li title="' + settingnames[i].tooltip + '" style="padding-left:' + indent + 'em; margin-top:1em; width: 46%; display: inline-block;"<label class="' + settingnames[i].class + '" for="' + id + '">' + settingnames[i].title + '</label><input style="margin:4px; padding: 2px; min-width: 80%;" name="' + id + '" id="' + id + '" type="text" /></li>')
+					if (settingnames[i].border)
+						_inputkWidth="95%; padding: 10px";
+					else
+						_inputkWidth="46%";
+                    settingsList.append('<li title="' + settingnames[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; margin-top:1em; width: ' + _inputkWidth + '; display: inline-block;"<label class="' + settingnames[i].class + '" for="' + id + '">' + settingnames[i].title + '</label><input style="margin:4px; padding: 2px; min-width: 80%;" name="' + id + '" id="' + id + '" type="text" /></li>')
                     $('#' + id).val(settings[settingnames[i].name]);
                     break;
                 case "password":
-                    settingsList.append('<li title="' + settingnames[i].tooltip + '" style="padding-left:' + indent + 'em; margin-top:1em; width: 46%; display: inline-block;"' + settingnames[i].class + '" for="' + id + '">' + settingnames[i].title + '</label><input style="margin:4px; padding: 2px; min-width: 80%;" name="' + id + '" id="' + id + '" type="password" /></li>')
+                    settingsList.append('<li title="' + settingnames[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; margin-top:1em; width: 46%; display: inline-block;"' + settingnames[i].class + '" for="' + id + '">' + settingnames[i].title + '</label><input style="margin:4px; padding: 2px; min-width: 80%;" name="' + id + '" id="' + id + '" type="password" /></li>')
                     $('#' + id).val(settings[settingnames[i].name]);
                     break;
                 case "select":
-                    settingsList.append('<li title="' + settingnames[i].tooltip + '" style="padding-left:' + indent + 'em; width: 48%; display: inline-block;"' + settingnames[i].class + '" style="padding-left:4px" for="' + id + '">' + settingnames[i].title + '</label><select style="margin:4px" name="' + id + '" id="' + id + '" /></li>')
+                    settingsList.append('<li title="' + settingnames[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; width: 48%; display: inline-block;"' + settingnames[i].class + '" style="padding-left:4px" for="' + id + '">' + settingnames[i].title + '</label><select style="margin:4px" name="' + id + '" id="' + id + '" /></li>')
                     var options = settingnames[i].opts;
                     var select = $('#' + id);
                     for (var j = 0; j < options.length; j++) {
@@ -2330,7 +2352,7 @@ function _select_Gateway() { // Check for Gateway used to
                     }
                     break;
                 case "label":
-                    settingsList.append('<li title="' + settingnames[i].tooltip + '" style="margin-left:' + indent + 'em;><label class="' + settingnames[i].class + '">' + settingnames[i].title + '</label></li>')
+                    settingsList.append('<li title="' + settingnames[i].tooltip + '" style="' + border + 'margin-left:' + indent + 'em;><label class="' + settingnames[i].class + '">' + settingnames[i].title + '</label></li>')
                     break;
             }
         }
@@ -2587,15 +2609,16 @@ document.getElementById("charContainer"+val).style.display="block";\
     }
 
     function vendorJunk(evnt) {
-
         var _vendorItems = [];
         var _sellCount = 0;
-
-        if (settings["autovendor_kits"]) {
+        if (settings["autovendor_kits_altars_limit"]) {
             _vendorItems[_vendorItems.length] = {pattern: /^Item_Consumable_Skill/, limit: 50};
+            _vendorItems[_vendorItems.length] = {pattern: /^Item_Portable_Altar$/, limit: 80};
         }
-        /*if (settings["autovendor_altars"])
-         _vendorItems[_vendorItems.length] = {pattern: /^Item_Portable_Altar$/, limit: 80};*/ // removed for now
+        if (settings["autovendor_kits_altars_all"]) {
+            _vendorItems[_vendorItems.length] = {pattern: /^Item_Portable_Altar$/, limit: 0};
+            _vendorItems[_vendorItems.length] = {pattern: /^Item_Consumable_Skill/, limit: 0};
+        }
         if (settings["autovendor_rank1"]) {
             _vendorItems[_vendorItems.length] = {pattern: /^T1_Enchantment/, limit: 0};
             _vendorItems[_vendorItems.length] = {pattern: /^T1_Runestone/, limit: 0};
@@ -2603,6 +2626,10 @@ document.getElementById("charContainer"+val).style.display="block";\
         if (settings["autovendor_rank2"]) {
             _vendorItems[_vendorItems.length] = {pattern: /^T2_Enchantment/, limit: 0};
             _vendorItems[_vendorItems.length] = {pattern: /^T2_Runestone/, limit: 0};
+        }
+        if (settings["autovendor_rank3"]) {
+            _vendorItems[_vendorItems.length] = {pattern: /^T3_Enchantment/, limit: 0};
+ 		 	_vendorItems[_vendorItems.length] = {pattern: /^T3_Runestone/, limit: 0};
         }
         if (settings["autovendor_pots1"]) {
             _vendorItems[_vendorItems.length] = {
