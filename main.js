@@ -599,6 +599,7 @@ function _select_Gateway() { // Check for Gateway used to
     var defaultTasklist = [
         {
             // modded to prioritize RAD production, added low level task for speeding up levelling up
+			taskListName: "Leadership",
             taskName: "Leadership",
             level: {
                 0: ["Leadership_Tier0_Intro_1"],
@@ -628,8 +629,36 @@ function _select_Gateway() { // Check for Gateway used to
                 20: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier3_20_Destroy", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_12_Taxes", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
             },
         },
+		{
+			taskListName: "Leadership_XP",
+			taskName: "Leadership",
+			level: {
+				0: ["Leadership_Tier0_Intro_1"],
+				1: ["Leadership_Tier0_Intro_5", "Leadership_Tier0_Intro_4", "Leadership_Tier0_Intro_3", "Leadership_Tier0_Intro_2"],
+				2: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
+				3: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
+				4: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
+				5: ["Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
+				6: ["Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
+				7: ["Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
+				8: ["Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
+				9: ["Leadership_Tier1_5_Explore", "Leadership_Tier2_9_Chart", "Leadership_Tier1_4_Protect"],
+				10: ["Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
+				11: ["Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
+				12: ["Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
+				13: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+				14: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+				15: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+				16: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+				17: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+				18: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+				19: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+				20: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier3_20_Destroy", "Leadership_Tier2_12_Taxes","Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol"],
+			},
+		},
         {
             //WinterEvent
+			taskListName: "WinterEvent",
             taskName: "WinterEvent",
             level: {
                 0: ["Event_Winter_Tier0_Intro"],
@@ -639,6 +668,7 @@ function _select_Gateway() { // Check for Gateway used to
             },
         },
         {
+			taskListName: "Event_Siege",
             taskName:"Event_Siege",
             level: {
                 0:["Event_Siege_Tier0_Intro"], // Hire a Siege Master
@@ -654,6 +684,7 @@ function _select_Gateway() { // Check for Gateway used to
         },
         {
             // Black Ice Shaping
+			taskListName: "BlackIce",
             taskName: "BlackIce",
             level: {
                 1: ["Blackice_Tier1_Process_Blackice"],
@@ -668,6 +699,7 @@ function _select_Gateway() { // Check for Gateway used to
         },
         {
             // Jewelcrafting
+			taskListName: "Jewelcrafting",
             taskName: "Jewelcrafting",
             level: {
                 0: ["Jewelcrafting_Tier0_Intro"],
@@ -695,6 +727,7 @@ function _select_Gateway() { // Check for Gateway used to
         },
         {
             // Mailsmithing
+			taskListName: "Mailsmithing",
             taskName: "Armorsmithing_Med",
             level: {
                 0: ["Med_Armorsmithing_Tier0_Intro"],
@@ -724,6 +757,7 @@ function _select_Gateway() { // Check for Gateway used to
         },
         {
             // Platesmithing
+			taskListName: "Platesmithing",
             taskName: "Armorsmithing_Heavy",
             level: {
                 0: ["Hvy_Armorsmithing_Tier0_Intro"],
@@ -752,6 +786,7 @@ function _select_Gateway() { // Check for Gateway used to
             },
         },
         {
+			taskListName: "Leatherworking",
             taskName: "Leatherworking",
             level: {
                 0: ["Leatherworking_Tier0_Intro_1"],
@@ -780,6 +815,7 @@ function _select_Gateway() { // Check for Gateway used to
             },
         },
         {
+			taskListName: "Tailoring",
             taskName: "Tailoring",
             level: {
                 0: ["Tailoring_Tier0_Intro"],
@@ -808,6 +844,7 @@ function _select_Gateway() { // Check for Gateway used to
             },
         },
         {
+			taskListName: "Artificing",
             taskName: "Artificing",
             level: {
                 0: ["Artificing_Tier0_Intro_1"],
@@ -836,6 +873,7 @@ function _select_Gateway() { // Check for Gateway used to
             },
         },
         {
+			taskListName: "Weaponsmithing",
             taskName: "Weaponsmithing",
             level: {
                 0: ["Weaponsmithing_Tier0_Intro"],
@@ -864,6 +902,7 @@ function _select_Gateway() { // Check for Gateway used to
             },
         },
         {
+    		taskListName: "Alchemy",
             taskName: "Alchemy",
             level: {
                 0: ["Alchemy_Tier0_Intro_1"],
@@ -952,22 +991,23 @@ function _select_Gateway() { // Check for Gateway used to
 
     var charSettings = [];
     for (var i = 0; i < settings["charcount"]; i++) {
-        charSettings.push({name: 'nw_charname' + i, title: 'Character', def: 'Character ' + (i + 1), type: 'text', tooltip: 'Characters Name'});
-        //charSettings.push({name: 'WinterEvent' + i, title: 'WinterEvent', def: '0', type: 'text', tooltip: 'Number of slots to assign to WinterEvent'});
-        charSettings.push({name: 'Event_Siege' + i, title: 'Siege Event', def: '0', type: 'text', tooltip: 'Number of slots to assign to Siege Event'});
-        charSettings.push({name: 'Leadership' + i, title: 'Leadership', def: '9', type: 'text', tooltip: 'Number of slots to assign to Leadership'});
-        charSettings.push({name: 'BlackIce' + i, title: 'Black Ice Shaping', def: '0', type: 'text', tooltip: 'Number of slots to assign to BIS'});
-        charSettings.push({name: 'Jewelcrafting' + i, title: 'Jewelcrafting', def: '0', type: 'text', tooltip: 'Number of slots to assign to Jewelcrafting'});
-        charSettings.push({name: 'Armorsmithing_Med' + i, title: 'Mailsmithing', def: '0', type: 'text', tooltip: 'Number of slots to assign to Mailsmithing'});
-        charSettings.push({name: 'Armorsmithing_Heavy' + i, title: 'Platesmithing', def: '0', type: 'text', tooltip: 'Number of slots to assign to Platesmithing'});
-        charSettings.push({name: 'Leatherworking' + i, title: 'Leatherworking', def: '0', type: 'text', tooltip: 'Number of slots to assign to Leatherworking'});
-        charSettings.push({name: 'Tailoring' + i, title: 'Tailoring', def: '0', type: 'text', tooltip: 'Number of slots to assign to Tailoring'});
-        charSettings.push({name: 'Artificing' + i, title: 'Artificing', def: '0', type: 'text', tooltip: 'Number of slots to assign to Artificing'});
-        charSettings.push({name: 'Weaponsmithing' + i, title: 'Weaponsmithing', def: '0', type: 'text', tooltip: 'Number of slots to assign to Weaponsmithing'});
-        charSettings.push({name: 'Alchemy' + i, title: 'Alchemy', def: '0', type: 'text', tooltip: 'Number of slots to assign to Alchemy'});
-
-        // task settings are slightly different
-        charSettings.push({name: 'tasklist' + i, title: 'Task List', def: '', type: 'void', tooltip: ''});
+	    charSettings.push({name: 'nw_charname' + i, title: 'Character', def: 'Character ' + (i + 1), type: 'text', tooltip: 'Characters Name'});
+	    //charSettings.push({name: 'WinterEvent' + i, title: 'WinterEvent', def: '0', type: 'text', tooltip: 'Number of slots to assign to WinterEvent'});
+	    charSettings.push({name: 'Event_Siege' + i, title: 'Siege Event', def: '0', type: 'text', tooltip: 'Number of slots to assign to Siege Event'});
+	    charSettings.push({name: 'Leadership' + i, title: 'Leadership', def: '9', type: 'text', tooltip: 'Number of slots to assign to Leadership'});
+	    charSettings.push({name: 'BlackIce' + i, title: 'Black Ice Shaping', def: '0', type: 'text', tooltip: 'Number of slots to assign to BIS'});
+	    charSettings.push({name: 'Jewelcrafting' + i, title: 'Jewelcrafting', def: '0', type: 'text', tooltip: 'Number of slots to assign to Jewelcrafting'});
+		charSettings.push({name: 'Mailsmithing' + i, title: 'Mailsmithing', def: '0', type: 'text', tooltip: 'Number of slots to assign to Mailsmithing'});
+		charSettings.push({name: 'Platesmithing' + i, title: 'Platesmithing', def: '0', type: 'text', tooltip: 'Number of slots to assign to Platesmithing'});
+	    charSettings.push({name: 'Leatherworking' + i, title: 'Leatherworking', def: '0', type: 'text', tooltip: 'Number of slots to assign to Leatherworking'});
+	    charSettings.push({name: 'Tailoring' + i, title: 'Tailoring', def: '0', type: 'text', tooltip: 'Number of slots to assign to Tailoring'});
+	    charSettings.push({name: 'Artificing' + i, title: 'Artificing', def: '0', type: 'text', tooltip: 'Number of slots to assign to Artificing'});
+	    charSettings.push({name: 'Weaponsmithing' + i, title: 'Weaponsmithing', def: '0', type: 'text', tooltip: 'Number of slots to assign to Weaponsmithing'});
+	    charSettings.push({name: 'Alchemy' + i, title: 'Alchemy', def: '0', type: 'text', tooltip: 'Number of slots to assign to Alchemy'});
+		charSettings.push({name: 'Leadership_XP' + i, title: 'Leadership XP', def: '0', type: 'text', tooltip: 'Number of slots to assign to Leadership focused on XP'});
+	
+	    // task settings are slightly different
+	    charSettings.push({name: 'tasklist' + i, title: 'Task List', def: '', type: 'void', tooltip: ''});
     }
 
     for (var i = 0; i < charSettings.length; i++) {
@@ -1043,11 +1083,11 @@ function _select_Gateway() { // Check for Gateway used to
             }).length) {
             // Go through the professions to assign tasks until specified slots filled
             for (var i = 0; i < tasklist.length; i++) {
-                if (settings[tasklist[i].taskName] > 0) { //MAC-NW
+                if (settings[tasklist[i].taskListName] > 0) { //MAC-NW
                     var currentTasks = unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.filter(function (entry) {
                         return entry.category == tasklist[i].taskName;
                     });
-                    if (currentTasks.length < settings[tasklist[i].taskName]) {
+                    if (currentTasks.length < settings[tasklist[i].taskListName]) {
                         unsafeWindow.client.professionFetchTaskList('craft_' + tasklist[i].taskName);
                         window.setTimeout(function () {
                             createNextTask(tasklist[i], 0);
