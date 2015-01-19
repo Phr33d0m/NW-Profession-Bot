@@ -343,7 +343,6 @@ function _select_Gateway() { // Check for Gateway used to
 
     var state_loading = 0;	  // If "Page Loading" takes longer than 30 seconds, reload page (maybe a javascript error)
     var state_loading_time = 30;  // default of 30 seconds
-    var chardiamonds = {};
     var state_idle = 0;	  // If the page is idle for longer than 60 seconds, reload page (maybe a javascript error)
     var state_idle_time = 120; // default of 120 seconds
     var reload_hours = [2, 5, 8, 11, 14, 17, 20, 23]; // logout and reload every three hours - 2:29 - 5:29 - 8:29 - 11:29 - 14:29 - 17:29 - 20:29 - 23:29
@@ -1068,7 +1067,7 @@ function _select_Gateway() { // Check for Gateway used to
 
         // Add diamond count
         chardiamonds[charcurrent] = unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds;
-
+		console.log(settings["nw_charname"+charcurrent] + "'s", "Astral Diamonds:", chardiamonds[charcurrent]);
         return false;
     }
 
@@ -1782,7 +1781,15 @@ function _select_Gateway() { // Check for Gateway used to
         if (settings["refinead"]) {
             var _currencies = unsafeWindow.client.dataModel.model.ent.main.currencies;
             if (_currencies.diamondsconvertleft && _currencies.roughdiamonds) {
-                console.log("Refining AD");
+				var refined_diamonds;
+				if (_currencies.diamondsconvertleft < _currencies.roughdiamonds) {
+					refined_diamonds = _currencies.diamondsconvertleft
+				} else {
+					refined_diamonds = _currencies.roughdiamonds
+				}
+				chardiamonds[charcurrent] += refined_diamonds
+				console.log("Refining AD for", settings["nw_charname"+charcurrent] + ":", refined_diamonds);
+				console.log(settings["nw_charname"+charcurrent] + "'s", "Astral Diamonds:", chardiamonds[charcurrent]);
                 unsafeWindow.client.sendCommand('Gateway_ConvertNumeric', 'Astral_Diamonds');
                 WaitForState("button.closeNotification").done(function () {
                     $("button.closeNotification").click();
@@ -1859,8 +1866,10 @@ function _select_Gateway() { // Check for Gateway used to
                 console.log("No date found for " + settings["nw_charname" + cc] + ", switching now.");
                 break;
             }
+        }
+		for (var cc = 0; cc < settings["charcount"]; cc++) {
             if (chardiamonds[cc] != null) {
-                curdiamonds += chardiamonds[cc];
+				curdiamonds += Math.floor(chardiamonds[cc] / 50) * 50;
             }
         }
         console.log("Next run for " + settings["nw_charname" + charcurrent] + " in " + parseInt(chardelay / 1000) + " seconds.");
