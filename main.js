@@ -1366,7 +1366,19 @@ function _select_Gateway() { // Check for Gateway used to
                 var failedCrafter = failedAssets.filter(function (entry) {
                     return entry.categories.indexOf("Person") >= 0;
                 });
-                if (failedCrafter.length && settings["trainassets"]) {
+				var failedArmor = failedAssets.filter(function (entry) {
+						return entry.categories.indexOf("Armor") >= 0;
+				});
+				var failedWeapon = failedAssets.filter(function (entry) {
+						return entry.categories.indexOf("Weapon") >= 0;
+				});
+				// Buy Leadership Armor Asset
+				if (failedArmor.length && settings["autopurchase"]) {
+					return buyTaskAsset(18);
+				// Buy Leadership Infantry Weapon Asset
+				} else if(failedWeapon.length && settings["autopurchase"]) {
+					return buyTaskAsset(4);
+				} else if (failedCrafter.length && settings["trainassets"]) {
                     console.log("Found required asset:", failedCrafter[0].icon);
                     searchItem = failedCrafter[0].icon;
                     searchAsset = true;
@@ -1376,8 +1388,7 @@ function _select_Gateway() { // Check for Gateway used to
                     console.log("Not enough assets for task:", taskname);
                     return false;
                 }
-            }
-
+            }					
             // Check for craftable or buyable ingredients
             else {
                 var failedResources = thisTask.consumables.filter(function (entry) {
@@ -1654,7 +1665,29 @@ function _select_Gateway() { // Check for Gateway used to
         });
     }
 
-    // MAC-NW -- AD Transfer through exchange functions (Consolidation)
+	/** DRAFT
+     * Will buy a missing leadership assets
+     *
+     * @param {String} item reference from assetID
+     */
+    function buyTaskAsset(_itemNo) {
+		var _returnHast = unsafeWindow.location.hash;
+		unsafeWindow.location.hash = unsafeWindow.location.hash.replace(/\)\/.+/, ')/professions/vendor');
+		WaitForState("").done(function () {
+			if ($('span.alert-red button[data-url-silent="/professions/vendor/Store_Crafting_Assets/'+_itemNo+'"]').length) {
+				return false;
+			} else if($('button[data-url-silent="/professions/vendor/Store_Crafting_Assets/'+_itemNo+'"]').length)
+			{
+				$('button[data-url-silent="/professions/vendor/Store_Crafting_Assets/'+_itemNo+'"]').trigger('click');
+				WaitForState(".modal-confirm button").done(function () {
+					$('.modal-confirm button').eq(1).trigger('click');
+					unsafeWindow.location.hash = _returnHast;
+					return null;
+				});
+			}
+		});
+    }
+
 
     // Function used to check exchange data model and post calculated AD/Zen for transfer if all requirements are met
     function postZexOffer() {
