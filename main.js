@@ -1365,13 +1365,13 @@ function _select_Gateway() { // Check for Gateway used to
 				var _buyResult = false;
                 // Buy Leadership Armor Asset
 				if (failedArmor.length) {
-					console.log("Buying leadership asset:", failedArmor.icon);
+					console.log("Buying leadership asset:", failedArmor[0].icon);
 					_buyResult = buyTaskAsset(18);
 					unsafeWindow.client.professionFetchTaskList("craft_Leadership");
 				}
                 // Buy Leadership Infantry Weapon Asset
 				if (failedWeapon.length) {
-					console.log("Buying leadership asset:", failedWeapon.icon);
+					console.log("Buying leadership asset:", failedWeapon[0].icon);
 					_buyResult = buyTaskAsset(4);
 					unsafeWindow.client.professionFetchTaskList("craft_Leadership");
 				}
