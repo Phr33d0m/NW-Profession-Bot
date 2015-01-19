@@ -1355,6 +1355,34 @@ function _select_Gateway() { // Check for Gateway used to
         var searchItem = null;
         var searchAsset = false;
 
+		// Check for and buy missing armor & weapon leadership assets
+        if (thisTask.failsresourcesrequirements && profname == "Leadership" && settings["autopurchase"]) {
+        	var failedAssets = thisTask.required.filter(function(entry) { return !entry.fillsrequirements; });
+            
+            if (failedAssets.length) {
+                var failedArmor = failedAssets.filter(function(entry) { return entry.categories.indexOf("Armor") >= 0; });
+                var failedWeapon = failedAssets.filter(function(entry) { return entry.categories.indexOf("Weapon") >= 0; });
+				var _buyResult = false;
+                // Buy Leadership Armor Asset
+				if (failedArmor.length) {
+					console.log("Buying leadership asset:", failedArmor.icon);
+					_buyResult = buyTaskAsset(18);
+					unsafeWindow.client.professionFetchTaskList("craft_Leadership");
+				}
+                // Buy Leadership Infantry Weapon Asset
+				if (failedWeapon.length) {
+					console.log("Buying leadership asset:", failedWeapon.icon);
+					_buyResult = buyTaskAsset(4);
+					unsafeWindow.client.professionFetchTaskList("craft_Leadership");
+				}
+                if (_buyResult === false)
+					return false;
+				else
+					return null;
+            } 
+            
+        }
+		
         // Missing assets or ingredients
         if (thisTask.failsresourcesrequirements) {
             var failedAssets = thisTask.required.filter(function (entry) {
@@ -1372,13 +1400,8 @@ function _select_Gateway() { // Check for Gateway used to
 				var failedWeapon = failedAssets.filter(function (entry) {
 						return entry.categories.indexOf("Weapon") >= 0;
 				});
-				// Buy Leadership Armor Asset
-				if (failedArmor.length && settings["autopurchase"]) {
-					return buyTaskAsset(18);
-				// Buy Leadership Infantry Weapon Asset
-				} else if(failedWeapon.length && settings["autopurchase"]) {
-					return buyTaskAsset(4);
-				} else if (failedCrafter.length && settings["trainassets"]) {
+				// Train Assets
+				if (failedCrafter.length && settings["trainassets"]) {
                     console.log("Found required asset:", failedCrafter[0].icon);
                     searchItem = failedCrafter[0].icon;
                     searchAsset = true;
