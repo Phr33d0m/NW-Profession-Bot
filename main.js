@@ -2,33 +2,21 @@
 // @name Neverwinter gateway - Professions Robot
 // @description Automatically selects professions for empty slots
 // @namespace https://greasyfork.org/scripts/7061-neverwinter-gateway-professions-robot/
-// @include https://gateway.nw.ru.perfectworld.eu/
-// @include https://gateway.nw.ru.perfectworld.eu/*
-// @include http://gateway.nw.ru.perfectworld.eu/
-// @include http://gateway.nw.ru.perfectworld.eu/*
-// @include https://gateway.playneverwinter.com
-// @include https://gateway.playneverwinter.com/*
-// @include https://gatewaytest.playneverwinter.com
-// @include https://gatewaytest.playneverwinter.com/*
-// @include https://gatewaysitedown.playneverwinter.com
-// @include https://gatewaysitedown.playneverwinter.com/*
-// @include http://gateway.playneverwinter.com
-// @include http://gateway.playneverwinter.com/*
-// @include http://gatewaytest.playneverwinter.com
-// @include http://gatewaytest.playneverwinter.com/*
-// @include http://gatewaysitedown.playneverwinter.com
-// @include http://gatewaysitedown.playneverwinter.com/*
+// @include http://gateway*.playneverwinter.com/*
+// @include https://gateway*.playneverwinter.com/*
+// @include http://gateway.*.perfectworld.eu/*
+// @include https://gateway.*.perfectworld.eu/*
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-/* NW Gateway Professions Bot Developers & Contributors
- NW Gateway Professions Bot Developers
- -----------------------------------
- Bluep, Numberb, mac-nw, Phr33d0m
- NW Gateway Professions Bot Contributors
- -----------------------------------
- Kakoura, Nametaken, rotten_mind, Frankescript, Brent
+/*
+=== NW Gateway Professions Bot Developers
+    - Bluep, Numberb, mac-nw, Phr33d0m
+ 
+=== NW Gateway Professions Bot Contributors
+    - Kakoura, Nametaken, rotten_mind, Frankescript, Brent
  */
+ 
 // @version 1.10.1
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
