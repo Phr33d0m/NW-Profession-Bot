@@ -13,13 +13,13 @@ Automatically selects professions for empty slots
 
 Website, https://greasyfork.org/scripts/7061-neverwinter-gateway-professions-robot/
 
-### Script has been tested with
-+ Portable Chrome + Tampermonkey (updated versions)
+### Works on
++ Google Chrome / Chromium + Tampermonkey (updated versions)
 + Opera + Tampermonkey (updated versions)
 
-If you find the script works with some other browser + xxxMonkey feel free to make us know.
+*If you find the script works with some other browser + xxxMonkey combinations feel free to make us know.*
 
-### Reported and known non-working combinations
+### Doesn't work on
 + Firefox + GreaseMonkey (failure after GreaseMonkey 2.xx update and reported failures after Firefox update)
 + Opera + VioletMonkey 
 
