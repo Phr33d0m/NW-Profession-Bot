@@ -1984,20 +1984,20 @@ function _select_Gateway() { // Check for Gateway used to
                 break;
             }
         }
-		
-		// Count AD
-		curdiamonds = 0;
-		var rate = Math.max(settings["banktransrate"], 50);
-		for (var cc = 0; cc < settings["charcount"]; cc++) {
-			if (chardiamonds[cc] != null) {
-				if (settings["bankchar"] == settings["nw_charname" + cc]) {
-					curdiamonds += chardiamonds[cc];
-				} else {
-					curdiamonds += Math.floor(chardiamonds[cc] / rate) * rate;
-				}
-			}
-		}
-		
+        
+        // Count AD
+        curdiamonds = 0;
+        var rate = Math.max(settings["banktransrate"], 50);
+        for (var cc = 0; cc < settings["charcount"]; cc++) {
+            if (chardiamonds[cc] != null) {
+                if (settings["bankchar"] == settings["nw_charname" + cc]) {
+                    curdiamonds += chardiamonds[cc];
+                } else {
+                    curdiamonds += Math.floor(chardiamonds[cc] / rate) * rate;
+                }
+            }
+        }
+        
         console.log("Next run for " + settings["nw_charname" + charcurrent] + " in " + parseInt(chardelay / 1000) + " seconds.");
         $("#prinfopane").empty().append("<h3 class='promo-image copy-top prh3'>Professions Robot<br />Next task for " + settings["nw_charname" + charcurrent] + "<br /><span data-timer='" + chardate + "' data-timer-length='2'></span><br />Diamonds: " + curdiamonds.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</h3>");
         GM_setValue("charcurrent", charcurrent);
