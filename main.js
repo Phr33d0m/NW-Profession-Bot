@@ -1732,7 +1732,7 @@ function _select_Gateway() { // Check for Gateway used to
                 var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
                 var ZenRate = parseInt(settings["banktransrate"]);
                 var ZenQty = Math.floor((charDiamonds - parseInt(settings["bankcharmin"])) / ZenRate);
-
+				ZenQty = (ZenQty > 5000) ? 5000 : ZenQty;
                 console.log("Posting Zex buy listing for " + ZenQty + " ZEN at the rate of " + ZenRate + " AD/ZEN. AD remainder: " + charDiamonds + " - " + (ZenRate * ZenQty) + " = " + (charDiamonds - (ZenRate * ZenQty)));
                 unsafeWindow.client.createBuyOrder(ZenQty, ZenRate);
 
