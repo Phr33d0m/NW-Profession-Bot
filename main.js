@@ -272,15 +272,15 @@ var s_paused = false;	   // extend the paused setting to the Page Reloading func
 // RottenMind (start), multi Url support
 function _select_Gateway() { // Check for Gateway used to
     if (window.location.href.indexOf("gatewaytest") > -1) { // detect gatewaytest Url
-        console.log("Gatewaytest detected as start page, Happy testung");
+        console.log("Gatewaytest detected");
         return "http://gatewaytest.playneverwinter.com";
     }
     else if (window.location.href.indexOf("nw.ru.perfectworld") > -1) { // detect RU GAteway... Сибирский NW, радости тестирования
-        console.log("GatewayRU detected as start page, радости тестирования");
+        console.log("GatewayRU detected");
         return "http://gateway.nw.ru.perfectworld.eu";
     }
     else { // must go somewhere
-        console.log("LIVE Gateway detected happy grinding");
+        console.log("Gateway detected");
         return "http://gateway.playneverwinter.com";
     }
 }
@@ -917,15 +917,15 @@ function _select_Gateway() { // Check for Gateway used to
         {name: 'autovendor_junk', title: 'Auto Vendor junk..', def: false, type: 'checkbox', tooltip: 'Vendor all (currently) winterfest fireworks+lanterns'}, //MAC-NW
         {name: 'autoreload', title: 'Auto Reload', def: false, type: 'checkbox', tooltip: 'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)'},
         {name: 'autologin', title: 'Attempt to login automatically', def: false, type: 'checkbox', tooltip: 'Automatically attempt to login to the neverwinter gateway site'},
-        {name: 'nw_username', title: '	Neverwinter Username', def: '', type: 'text', tooltip: ''},
-        {name: 'nw_password', title: '	Neverwinter Password', def: '', type: 'password', tooltip: ''},
-        {name: 'charcount', title: '	Number of Characters', def: '2', type: 'text', tooltip: 'Enter number of characters to use (reload page to update settings form)'},
+        {name: 'nw_username', title: 'Neverwinter Username', def: '', type: 'text', tooltip: ''},
+        {name: 'nw_password', title: 'Neverwinter Password', def: '', type: 'password', tooltip: ''},
+        {name: 'charcount', title: 'Number of Characters', def: '2', type: 'text', tooltip: 'Enter number of characters to use (reload page to update settings form)'},
         // MAC-NW AD Consolidation
         {name: 'autoexchange', title: 'Consolidate AD via ZEX', def: false, type: 'checkbox', tooltip: 'Automatically attempt to post, cancel and withdraw AD via ZEX and consolidate to designated character'},
-        {name: 'bankchar', title: '	Character Name of Banker', def: '', type: 'text', tooltip: 'Enter name of the character to hold account AD'},
-        {name: 'banktransmin', title: '	Min AD for Transfer', def: '22000', type: 'text', tooltip: 'Enter minimum AD limit for it to be cosidered for transfer off a character'},
-        {name: 'bankcharmin', title: '	Min Character balance', def: '8000', type: 'text', tooltip: 'Enter the amount of AD to always keep available on characters'},
-        {name: 'banktransrate', title: '	AD per Zen Rate (in zen)', def: '300', type: 'text', tooltip: 'Enter default rate to use for transfering through ZEX'},
+        {name: 'bankchar', title: 'Character Name of Banker', def: '', type: 'text', tooltip: 'Enter name of the character to hold account AD'},
+        {name: 'banktransmin', title: 'Min AD for Transfer', def: '22000', type: 'text', tooltip: 'Enter minimum AD limit for it to be cosidered for transfer off a character'},
+        {name: 'bankcharmin', title: 'Min Character balance', def: '8000', type: 'text', tooltip: 'Enter the amount of AD to always keep available on characters'},
+        {name: 'banktransrate', title: 'AD per Zen Rate (in zen)', def: '300', type: 'text', tooltip: 'Enter default rate to use for transfering through ZEX'},
         // MAC-NW
     ];
 
