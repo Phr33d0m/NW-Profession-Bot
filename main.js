@@ -1924,20 +1924,20 @@ function _select_Gateway() { // Check for Gateway used to
         // MAC-NW -- AD Consolidation
         if (settings["autoexchange"]) {
 
-            // Check that we dont take money from the character assigned as the banker // Zen Transfer / Listing
-            if (settings["bankchar"] != unsafeWindow.client.dataModel.model.ent.main.name) {
-                // Check the required min AD amount on character
-                if (settings["banktransmin"] && settings["bankcharmin"] && parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds) >= (parseInt(settings["banktransmin"]) + parseInt(settings["bankcharmin"]))) {
-                    // Check that the rate is not less than the min & max
-                    if (settings["banktransrate"] && parseInt(settings["banktransrate"]) >= 50 && parseInt(settings["banktransrate"]) <= 500) {
-                        window.setTimeout(postZexOffer, delay.SHORT);
-                    } else {
-                        console.log("Zen transfer rate does not meet the minimum (50) or maximum (500). Skipping Zex Posting..");
-                    }
+        // Check that we dont take money from the character assigned as the banker // Zen Transfer / Listing
+        if (settings["bankchar"] != unsafeWindow.client.dataModel.model.ent.main.name) {
+            // Check the required min AD amount on character
+            if (settings["banktransmin"] && settings["bankcharmin"] && parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds) >= (parseInt(settings["banktransmin"]) + parseInt(settings["bankcharmin"]))) {
+                // Check that the rate is not less than the min & max
+                if (settings["banktransrate"] && parseInt(settings["banktransrate"]) >= 50 && parseInt(settings["banktransrate"]) <= 500) {
+                    window.setTimeout(postZexOffer, delay.SHORT);
                 } else {
-                    console.log("Character does not have minimum AD balance to do funds transfer. Skipping Zex Posting..");
+                    console.log("Zen transfer rate does not meet the minimum (50) or maximum (500). Skipping Zex Posting..");
                 }
+            } else {
+                console.log("Character does not have minimum AD balance to do funds transfer. Skipping Zex Posting..");
             }
+        }
 
         } else {
             console.log("Zen Exchange AD transfer not enabled. Skipping Zex Posting..");
