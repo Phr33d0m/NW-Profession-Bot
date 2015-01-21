@@ -2,29 +2,28 @@
 Automatically selects professions for empty slots
 
 + Fills professions slots
++ Per-character professions configuration
 + Levels up professions
 + Refines RAD
 + Transfers AD to one chracter (account)
 + Open rewardchest(99) per session
 + Sell/limit items from inventory, UI controlled
-  * sell, Rank1 - 2 enchants/runestones (all)
-  * limits T1 - 3 healing potions to 10, skillkits to 50, Portable altars 80
 + etc...
 
 Website, https://greasyfork.org/scripts/7061-neverwinter-gateway-professions-robot/
 
-### Works on
-+ Google Chrome / Chromium + Tampermonkey (updated versions)
-+ Opera + Tampermonkey (updated versions)
+Works on | Doesn't work on
+---------|----------------
+Google Chrome / Chromium + Tampermonkey (updated versions) | Firefox + GreaseMonkey
+Opera + Tampermonkey (updated versions) | Opera + VioletMonkey 
 
-*If you find the script works with some other browser + xxxMonkey combinations feel free to make us know.*
-
-### Doesn't work on
-+ Firefox + GreaseMonkey (failure after GreaseMonkey 2.xx update and reported failures after Firefox update)
-+ Opera + VioletMonkey 
 
 ### Contributing
 Everyone is welcomed to contribute code to the project through pull-requests. Please use 4-spaces indentation.
+
+### TODO
++ Replace any string-based jquery selectors in favor of making the bot work with any language (not only english) (see [issue #21](https://github.com/Phr33d0m/NW-Profession-Bot/issues/21))
+
 
 * * *
 
