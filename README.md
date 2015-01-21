@@ -23,6 +23,9 @@ Website, https://greasyfork.org/scripts/7061-neverwinter-gateway-professions-rob
 + Firefox + GreaseMonkey (failure after GreaseMonkey 2.xx update and reported failures after Firefox update)
 + Opera + VioletMonkey 
 
+### Contributing
+Everyone is welcomed to contribute code to the project through pull-requests. Please use 4-spaces indentation.
+
 * * *
 
 License http://creativecommons.org/licenses/by-nc-sa/3.0/us/
