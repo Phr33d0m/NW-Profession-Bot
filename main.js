@@ -2000,8 +2000,8 @@ function _select_Gateway() { // Check for Gateway used to
                     curdiamonds += chardiamonds[cc];
                 } else {
                     curdiamonds += Math.floor(chardiamonds[cc] / rate) * rate;
-                }
             }
+        }
         }
         
         console.log("Next run for " + settings["nw_charname" + charcurrent] + " in " + parseInt(chardelay / 1000) + " seconds.");
