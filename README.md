@@ -23,7 +23,7 @@ Everyone is welcomed to contribute code to the project through pull-requests. Pl
 
 ### TODO
 + Replace any string-based jquery selectors in favor of making the bot work with any language (not only english) (see [issue #21](https://github.com/Phr33d0m/NW-Profession-Bot/issues/21))
-
++ GreaseMonkey support, Investigate rework effort and changes needed, low priority
 
 * * *
 
