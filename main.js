@@ -1993,13 +1993,12 @@ function _select_Gateway() { // Check for Gateway used to
         
         // Count AD
         curdiamonds = 0;
-        var rate = Math.max(settings["banktransrate"], 50);
         for (var cc = 0; cc < settings["charcount"]; cc++) {
             if (chardiamonds[cc] != null) {
                 if (settings["bankchar"] == settings["nw_charname" + cc]) {
                     curdiamonds += chardiamonds[cc];
                 } else {
-                    curdiamonds += Math.floor(chardiamonds[cc] / rate) * rate;
+                    curdiamonds += Math.floor(chardiamonds[cc] / 50) * 50;
                 }
             }
         }
