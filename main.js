@@ -1990,7 +1990,7 @@ function _select_Gateway() { // Check for Gateway used to
                 break;
             }
         }
-        
+
         // Count AD
         curdiamonds = 0;
         for (var cc = 0; cc < settings["charcount"]; cc++) {
@@ -1998,7 +1998,7 @@ function _select_Gateway() { // Check for Gateway used to
                 curdiamonds += Math.floor(chardiamonds[cc] / 50) * 50;
             }
         }
-        
+
         console.log("Next run for " + settings["nw_charname" + charcurrent] + " in " + parseInt(chardelay / 1000) + " seconds.");
         $("#prinfopane").empty().append("<h3 class='promo-image copy-top prh3'>Professions Robot<br />Next task for " + settings["nw_charname" + charcurrent] + "<br /><span data-timer='" + chardate + "' data-timer-length='2'></span><br />Diamonds: " + curdiamonds.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</h3>");
         GM_setValue("charcurrent", charcurrent);
