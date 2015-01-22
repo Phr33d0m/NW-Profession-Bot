@@ -1971,7 +1971,6 @@ function _select_Gateway() { // Check for Gateway used to
 
         var chardelay, chardate = null, nowdate = new Date();
         nowdate = nowdate.getTime();
-        curdiamonds = 0;
         for (var cc = 0; cc < settings["charcount"]; cc++) {
             if (chartimers[cc] != null) {
                 console.log("Date found for " + settings["nw_charname" + cc]);
@@ -1991,11 +1990,15 @@ function _select_Gateway() { // Check for Gateway used to
                 break;
             }
         }
+
+        // Count AD
+        curdiamonds = 0;
         for (var cc = 0; cc < settings["charcount"]; cc++) {
             if (chardiamonds[cc] != null) {
                 curdiamonds += Math.floor(chardiamonds[cc] / 50) * 50;
             }
         }
+
         console.log("Next run for " + settings["nw_charname" + charcurrent] + " in " + parseInt(chardelay / 1000) + " seconds.");
         $("#prinfopane").empty().append("<h3 class='promo-image copy-top prh3'>Professions Robot<br />Next task for " + settings["nw_charname" + charcurrent] + "<br /><span data-timer='" + chardate + "' data-timer-length='2'></span><br />Diamonds: " + curdiamonds.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</h3>");
         GM_setValue("charcurrent", charcurrent);
