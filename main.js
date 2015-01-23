@@ -2437,17 +2437,11 @@ document.getElementById("charContainer"+val).style.display="block";\
             $("#save_tasklist" + i).click(function () {
                 var num = this.id.replace("save_tasklist", "");
                 charSettings["tasklist" + num] = tasklist;
-                setTimeout(function () {
-                    GM_setValue("tasklist" + num, JSON.stringify(tasklist));
-                }, 0);
             });
 
             $("#clear_tasklist" + i).click(function () {
                 var num = this.id.replace("clear_tasklist", "");
                 charSettings["tasklist" + num] = "";
-                setTimeout(function () {
-                    GM_setValue("tasklist" + num, "");
-                }, 0);
             });
         }
 
