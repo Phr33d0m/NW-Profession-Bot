@@ -993,9 +993,8 @@ function _select_Gateway() { // Check for Gateway used to
         settings["charcount"] = 99;
     }
 
-    var tasklist;
     // Profession priority list by order
-    var defaultTasklist = [
+    var tasklist = [
         definedTask["Winter Event"],
         definedTask["Siege Event"],
         definedTask["Black Ice Shaping"],
@@ -2151,14 +2150,6 @@ function _select_Gateway() { // Check for Gateway used to
                 settings[charSettings[j].name.replace(new RegExp(charcurrent + "$"), '')] = settings[charSettings[j].name];
             }
 
-            // Load task list from settings if saved
-            if (settings["tasklist"].length) {
-                tasklist = JSON.parse(settings["tasklist"]);
-            }
-            else {
-                tasklist = defaultTasklist;
-            }
-
             var charName = settings["nw_charname"];
             var fullCharName = charName + '@' + accountName;
 
@@ -2447,7 +2438,7 @@ document.getElementById("charContainer"+val).style.display="block";\
                 var num = this.id.replace("save_tasklist", "");
                 charSettings["tasklist" + num] = tasklist;
                 setTimeout(function () {
-                    GM_setValue("tasklist" + num, JSON.stringify(defaultTasklist));
+                    GM_setValue("tasklist" + num, JSON.stringify(tasklist));
                 }, 0);
             });
 
