@@ -1992,7 +1992,7 @@ function _select_Gateway() { // Check for Gateway used to
         }
 
         // Count AD
-        curdiamonds = 0;
+        var curdiamonds = 0;
         for (var cc = 0; cc < settings["charcount"]; cc++) {
             if (chardiamonds[cc] != null) {
                 curdiamonds += Math.floor(chardiamonds[cc] / 50) * 50;
