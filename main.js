@@ -2409,10 +2409,7 @@ document.getElementById("charContainer"+val).style.display="block";\
                 id = 'settings_' + charSettings[k].name;
                 addText += '<li title="' + charSettings[k].tooltip + '"><input maxlength="2" size="1" style="margin:4px; padding: 2px;" name="' + id + '" id="' + id + '" type="text" /><label class="' + charSettings[k].class + '" for="' + id + '">' + charSettings[k].title + '</label></li>';
             }
-            addText += '</ul>'
-
-            // Add task list save buttons
-            addText += '\
+            addText += '</ul>\
 </div>';
         }
         addText += '\
