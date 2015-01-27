@@ -1409,7 +1409,7 @@ function _select_Gateway() { // Check for Gateway used to
                     return false;
                 }
             }
-            // Check for craftable or buyable ingredients
+            // Check for craftable ingredients items and purchasable profession resources (from vendor)
             else {
                 var failedResources = thisTask.consumables.filter(function (entry) {
                     return entry.required && !entry.fillsrequirements;
@@ -1420,18 +1420,17 @@ function _select_Gateway() { // Check for Gateway used to
                 // If it succeeds script will search for tasks anew
                 var itemName = failedResources[0].hdef.match(/\[(\w+)\]/)[1];
 
-                // purchase buyable resources
-                if (itemName.match(/^Crafting_Resource_(Charcoal|Rocksalt|Spool_Thread|Porridge|Solvent|Brimstone|Coal|Moonseasalt|Quicksilver|Spool_Threadsilk)$/)) {
-                    if (settings["autopurchase"]) {
-                        buyResource(itemName);
-                        return null;
-                    }
-                    else {
-                        console.log("Buyable resource required for:", taskname);
-                        return false;
-                    }
+                // Buy purchasable resources if auto-purchase setting is enabled
+                if (settings["autopurchase"] && itemName.match(/^Crafting_Resource_(Charcoal|Rocksalt|Spool_Thread|Porridge|Solvent|Brimstone|Coal|Moonseasalt|Quicksilver|Spool_Threadsilk)$/)) {
+                    // returns null if successful (task will try again) and false if unsuccessful (task will be skipped)
+                    return buyResource(itemName);
+                } 
+                // Matched profession auto-purchase item found but auto-purchase is not enabled
+                else if (!settings["autopurchase"] && itemName.match(/^Crafting_Resource_(Charcoal|Rocksalt|Spool_Thread|Porridge|Solvent|Brimstone|Coal|Moonseasalt|Quicksilver|Spool_Threadsilk)$/)) {
+                    console.log("Purchasable resource required:",itemName,"for task:", taskname,". Recommend enabling Auto Purchase Resources.");
+                    return false;
                 }
-                // craft ingredient items
+                // craftable ingredient set to search for
                 else {
                     console.log("Found required ingredient:", itemName);
                     searchItem = itemName;
@@ -1663,9 +1662,7 @@ function _select_Gateway() { // Check for Gateway used to
      * @param {String} item The data-tt-item id of the Resource to purchase
      */
     function buyResource(item) {
-        console.log("Purchasing resources:", item);
-
-        var resourceID = {
+        var _resourceID = {
             Crafting_Resource_Charcoal: 0,
             Crafting_Resource_Rocksalt: 1,
             Crafting_Resource_Spool_Thread: 2,
@@ -1677,12 +1674,39 @@ function _select_Gateway() { // Check for Gateway used to
             Crafting_Resource_Quicksilver: 8,
             Crafting_Resource_Spool_Threadsilk: 9,
         };
-
-        // Make purchase
-        unsafeWindow.client.sendCommand("GatewayVendor_PurchaseVendorItem", {vendor: 'Nw_Gateway_Professions_Merchant', store: 'Store_Crafting_Resources', idx: resourceID[item], count: 50}); // MAC-NW: Purchase of prof resources lowred from 100 to 30
-        WaitForState("button.closeNotification").done(function () {
-            $("button.closeNotification").click();
-        });
+        var _resourceCost = {
+            Crafting_Resource_Charcoal: 30,
+            Crafting_Resource_Rocksalt: 30,
+            Crafting_Resource_Spool_Thread: 30,
+            Crafting_Resource_Porridge: 30,
+            Crafting_Resource_Solvent: 20,
+            Crafting_Resource_Brimstone: 100,
+            Crafting_Resource_Coal: 500,
+            Crafting_Resource_Moonseasalt: 500,
+            Crafting_Resource_Quicksilver: 500,
+            Crafting_Resource_Spool_Threadsilk: 500,
+        };
+        var _charGold = unsafeWindow.client.dataModel.model.ent.main.currencies.gold;
+        var _charSilver = unsafeWindow.client.dataModel.model.ent.main.currencies.silver;
+        var _charCopper = unsafeWindow.client.dataModel.model.ent.main.currencies.copper;
+        var _charCopperTotal = _charCopper + (_charSilver*100) + (_charGold*10000);
+        var _resourcePurchasable = Math.floor(_charCopperTotal/_resourceCost[item]);
+        // Limit resource purchase to 50 quantity
+        var _purchaseCount = (_resourcePurchasable >= 50) ? 50 : _resourcePurchasable;
+        
+        if (_purchaseCount < 1) {
+            // Not enough gold for 1 resource
+            console.log("Purchasing profession resources failed for:",item);
+            return false;
+        } else {
+            // Make purchase
+            console.log("Purchasing profession resources:", _purchaseCount + "x",item, ". Total copper available:",_charCopperTotal,". Spending ",(_purchaseCount*_resourceCost[item]),"copper.");
+            unsafeWindow.client.sendCommand("GatewayVendor_PurchaseVendorItem", {vendor: 'Nw_Gateway_Professions_Merchant', store: 'Store_Crafting_Resources', idx: _resourceID[item], count: _purchaseCount});
+            WaitForState("button.closeNotification").done(function () {
+                $("button.closeNotification").trigger('click');
+            });
+            return null;
+        }
     }
 
     /** DRAFT
