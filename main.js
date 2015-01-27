@@ -26,12 +26,18 @@
 // ==/UserScript==
 
 /* RELEASE NOTES
+ 1.10.2RC1 for Greasyfork
+ - UI improvement
+ - removed "Save Task" & "Clear Task" buttons, on current build they do nothing
+ - replaced JAVA string search(partially) for better multilingual support(tooltip translation not included)
+ - reverted tasklist order to old(cosmetic change)
  - Replaced defaultTasklist with tasklist
  - Clear saved settings before re-saving
  - Added leadership asset auto buy
  - Improvements for AD transfer and reports to console log
+ - added missing asset names
  - Added "Leadership XP" use second tasklist
- - Added "Gateway_Reward"
+ - Added "Gateway_Reward" collection
  - Added vendoring Rank 3 enchantments and runestones to UI
  - Added "Vendor all Altar Node skill kits" to UI
  - Edited vendoring rank 1 and rank 2 enchantments
@@ -1011,8 +1017,9 @@ function _select_Gateway() { // Check for Gateway used to
     var charSettings = [];
     for (var i = 0; i < settings["charcount"]; i++) {
         charSettings.push({name: 'nw_charname' + i, title: 'Character', def: 'Character ' + (i + 1), type: 'text', tooltip: 'Characters Name'});
-        //charSettings.push({name: 'WinterEvent' + i, title: 'WinterEvent', def: '0', type: 'text', tooltip: 'Number of slots to assign to WinterEvent'});
-        charSettings.push({name: 'Event_Siege' + i, title: 'Siege Event', def: '0', type: 'text', tooltip: 'Number of slots to assign to Siege Event'});
+        charSettings.push({name: 'WinterEvent' + i, title: 'WinterEvent', def: '0', type: 'text', tooltip: 'Number of slots to assign to WinterEvent'});
+        charSettings.push({name: 'Leadership' + i, title: 'Leadership', def: '9', type: 'text', tooltip: 'Number of slots to assign to Leadership'});
+		charSettings.push({name: 'Event_Siege' + i, title: 'Siege Event', def: '0', type: 'text', tooltip: 'Number of slots to assign to Siege Event'});
         charSettings.push({name: 'BlackIce' + i, title: 'Black Ice Shaping', def: '0', type: 'text', tooltip: 'Number of slots to assign to BIS'});
         charSettings.push({name: 'Alchemy' + i, title: 'Alchemy', def: '0', type: 'text', tooltip: 'Number of slots to assign to Alchemy'});
         charSettings.push({name: 'Weaponsmithing' + i, title: 'Weaponsmithing', def: '0', type: 'text', tooltip: 'Number of slots to assign to Weaponsmithing'});
@@ -1022,7 +1029,6 @@ function _select_Gateway() { // Check for Gateway used to
         charSettings.push({name: 'Platesmithing' + i, title: 'Platesmithing', def: '0', type: 'text', tooltip: 'Number of slots to assign to Platesmithing'});
         charSettings.push({name: 'Leatherworking' + i, title: 'Leatherworking', def: '0', type: 'text', tooltip: 'Number of slots to assign to Leatherworking'});
         charSettings.push({name: 'Tailoring' + i, title: 'Tailoring', def: '0', type: 'text', tooltip: 'Number of slots to assign to Tailoring'});
-        charSettings.push({name: 'Leadership' + i, title: 'Leadership', def: '9', type: 'text', tooltip: 'Number of slots to assign to Leadership'});
         charSettings.push({name: 'Leadership_XP' + i, title: 'Leadership XP', def: '0', type: 'text', tooltip: 'Number of slots to assign to Leadership focused on XP'});
     }
 
@@ -1541,7 +1547,7 @@ function _select_Gateway() { // Check for Gateway used to
         buttonListIn[i].click();
         WaitForState("").done(function () {
 
-            var $assets = $("div.modal-item-list a").has("img[src*='_Resource_'],img[src*='_Assets_'],img[src*='_Tools_'],img[src*='_Tool_']"); // edited by RottenMind
+            var $assets = $("div.modal-item-list a").has("img[src*='_Resource_'],img[src*='_Assets_'],img[src*='_Tools_'],img[src*='_Tool_'],img[src*='_Jewelersloupe_'],img[src*='_Bezelpusher_']"); //edited by RottenMind
             var $persons = $("div.modal-item-list a").has("img[src*='_Follower_']");
             var quality = [".Special", ".Gold", ".Silver", ".Bronze"];
             var ic, $it;
@@ -1839,7 +1845,7 @@ function _select_Gateway() { // Check for Gateway used to
         if (settings["autovendor_profresults"]) {
             _tmpBag.forEach(function (slot) {
                 for (i = 0; i < _profitems.length; i++) { // edited by RottenMind
-                    if (slot && _profitems[i].pattern.test(slot.name) && !slot.bound && _profitems[i].count > 3 && Inventory_bagspace() <= 7) { // edited by RottenMind
+                    if (slot && _profitems[i].pattern.test(slot.name) && Inventory_bagspace() <= 7) { // !slot.bound && _profitems[i].count > 3 &&, edited by RottenMind
                         var vendor = {
                             vendor: "Nw_Gateway_Professions_Merchant"
                         };
