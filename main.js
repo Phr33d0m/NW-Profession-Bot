@@ -1366,14 +1366,19 @@ function _select_Gateway() { // Check for Gateway used to
             });
             if (failedArmor.length || failedWeapon.length) {
                 var _buyResult = false;
+                var _charGold = unsafeWindow.client.dataModel.model.ent.main.currencies.gold;
+                var _charSilver = unsafeWindow.client.dataModel.model.ent.main.currencies.silver;
+                var _charCopper = unsafeWindow.client.dataModel.model.ent.main.currencies.copper;
+                var _charCopperTotal = _charCopper + (_charSilver*100) + (_charGold*10000);
+                
                 // Buy Leadership Armor Asset
-                if (failedArmor.length) {
+                if (failedArmor.length && _charCopperTotal >= 10000) {
                     console.log("Buying leadership asset:", failedArmor[0].icon);
                     _buyResult = buyTaskAsset(18);
                     unsafeWindow.client.professionFetchTaskList("craft_Leadership");
                 }
                 // Buy Leadership Infantry Weapon Asset
-                else if (failedWeapon.length) {
+                else if (failedWeapon.length && _charCopperTotal >= 5000) {
                     console.log("Buying leadership asset:", failedWeapon[0].icon);
                     _buyResult = buyTaskAsset(4);
                     unsafeWindow.client.professionFetchTaskList("craft_Leadership");
