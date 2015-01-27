@@ -1274,7 +1274,7 @@ function _select_Gateway() { // Check for Gateway used to
             WaitForState("div.page-professions-taskdetails").done(function () {
                 // Click all buttons and select an item to use in the slot
                 var def = $.Deferred();
-                var buttonList = $("h3:contains('Optional Assets:')").closest("div").find("button");
+                var buttonList = $('.taskdetails-assets:eq(1)').find("button");
                 if (buttonList.length && settings["optionals"]) {
                     SelectItemFor(buttonList, 0, def, prof);
                 }
@@ -1286,10 +1286,10 @@ function _select_Gateway() { // Check for Gateway used to
                     console.log("Items Populated");
                     // Click the Start Task Button
                     //Get the start task button if it is enabled
-                    var enabledButton = $("div.footer-body > div.input-field.button:not('.disabled') > button:contains('Start Task')");
+                    var enabledButton = $(".footer-professions-taskdetails .button.epic:not('.disabled') button");
                     if (enabledButton.length) {
                         console.log("Clicking Start Task Button");
-                        enabledButton.click();
+                        enabledButton.trigger('click');
                         WaitForState("").done(function () {
                             // Done
                             dfdNextRun.resolve(delay.SHORT);
@@ -1298,7 +1298,7 @@ function _select_Gateway() { // Check for Gateway used to
                     }
                     else { // Button not enabled, something required was probably missing
                         // Go back
-                        $("div.footer-body > div.input-field.button > button:contains('Back')").click();
+                        $(".footer-professions-taskdetails .button button.resetWindow").trigger('click');
                         WaitForState("").done(function () {
                             // continue with the next one
                             console.log('Finding next task');
@@ -1550,9 +1550,9 @@ function _select_Gateway() { // Check for Gateway used to
 
             // Try to avoid using up higher rank assets needlessly
             if (prof.taskName === "Leadership") {
-                var mercenarys = $("div.modal-item-list a.Bronze:contains('Mercenary')");
-                var guards = $("div.modal-item-list a.Bronze:contains('Guard')");
-                var footmen = $("div.modal-item-list a.Bronze:contains('Footman')");
+                var mercenarys = $('div.modal-item-list a.Bronze img[src*="Crafting_Follower_Leader_Generic_T1_01"]').parent().parent();
+                var guards = $('div.modal-item-list a.Bronze img[src*="Crafting_Follower_Leader_Guard_T2_01"]').parent().parent();
+                var footmen = $('div.modal-item-list a.Bronze img[src*="Crafting_Follower_Leader_Private_T2_01"]').parent().parent();
 
                 if (mercenarys.length) {
                     clicked = true;
@@ -1592,7 +1592,7 @@ function _select_Gateway() { // Check for Gateway used to
 
             // if nothing was found at all, return immediately (skip other optional slots)
             if (!clicked) {
-                $("button.close-button").click();
+                $("button.close-button").trigger('click');
                 console.log("Nothing more to click..");
                 WaitForState("").done(function () {
                     // Let main loop continue
@@ -1603,7 +1603,7 @@ function _select_Gateway() { // Check for Gateway used to
             console.log("Clicked item");
             WaitForState("").done(function () {
                 // Get the new set of select buttons created since the other ones are removed when the asset loads
-                var buttonList = $("h3:contains('Optional Assets:')").closest("div").find("button");
+                var buttonList = $('.taskdetails-assets:eq(1)').find("button");
                 if (i < buttonList.length - 1) {
                     SelectItemFor(buttonList, i + 1, def, prof);
                 }
