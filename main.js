@@ -572,7 +572,6 @@ function _select_Gateway() { // Check for Gateway used to
     var dfdNextRun = $.Deferred();
     var charcurrent = 0; // current character counter
     var chartimers = {};
-    var settingwipe = false; // Use to wipe stored settings
     var delay = {
         SHORT: 1000,
         MEDIUM: 5000,
