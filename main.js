@@ -1358,14 +1358,13 @@ function _select_Gateway() { // Check for Gateway used to
             var failedAssets = thisTask.required.filter(function (entry) {
                 return !entry.fillsrequirements;
             });
-
-            if (failedAssets.length) {
-                var failedArmor = failedAssets.filter(function (entry) {
-                    return entry.categories.indexOf("Armor") >= 0;
-                });
-                var failedWeapon = failedAssets.filter(function (entry) {
-                    return entry.categories.indexOf("Weapon") >= 0;
-                });
+            var failedArmor = failedAssets.filter(function (entry) {
+                return entry.categories.indexOf("Armor") >= 0;
+            });
+            var failedWeapon = failedAssets.filter(function (entry) {
+                return entry.categories.indexOf("Weapon") >= 0;
+            });
+            if (failedArmor.length || failedWeapon.length) {
                 var _buyResult = false;
                 // Buy Leadership Armor Asset
                 if (failedArmor.length) {
@@ -1374,7 +1373,7 @@ function _select_Gateway() { // Check for Gateway used to
                     unsafeWindow.client.professionFetchTaskList("craft_Leadership");
                 }
                 // Buy Leadership Infantry Weapon Asset
-                if (failedWeapon.length) {
+                else if (failedWeapon.length) {
                     console.log("Buying leadership asset:", failedWeapon[0].icon);
                     _buyResult = buyTaskAsset(4);
                     unsafeWindow.client.professionFetchTaskList("craft_Leadership");
@@ -1384,7 +1383,6 @@ function _select_Gateway() { // Check for Gateway used to
                 else
                     return null;
             }
-
         }
 
         // Missing assets or ingredients
@@ -1398,12 +1396,7 @@ function _select_Gateway() { // Check for Gateway used to
                 var failedCrafter = failedAssets.filter(function (entry) {
                     return entry.categories.indexOf("Person") >= 0;
                 });
-                var failedArmor = failedAssets.filter(function (entry) {
-                    return entry.categories.indexOf("Armor") >= 0;
-                });
-                var failedWeapon = failedAssets.filter(function (entry) {
-                    return entry.categories.indexOf("Weapon") >= 0;
-                });
+
                 // Train Assets
                 if (failedCrafter.length && settings["trainassets"]) {
                     console.log("Found required asset:", failedCrafter[0].icon);
