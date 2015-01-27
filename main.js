@@ -2532,6 +2532,13 @@ document.getElementById("charContainer"+val).style.display="block";\
     function SaveSettings() {
         var charcount = settings["charcount"];
 
+        // Delete all saved settings
+        var keys = GM_listValues();
+        for (i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            GM_deleteValue(key);
+        }
+			
         // Get each value from the UI
         for (var i = 0; i < settingnames.length; i++) {
             var name = settingnames[i].name;
@@ -2557,12 +2564,12 @@ document.getElementById("charContainer"+val).style.display="block";\
                 console.log("Calling 'onsave' for", name);
                 settingnames[i].onsave(value, settings[name]);
             }
+            // Save to local cache
             if (settings[name] !== value) {
                 settings[name] = value;
-            } // Save to local cache
-            if (GM_getValue(name) !== value) {
-                GM_setValue(name, value);
-            } // Save to GM cache
+            }
+            // Save to GM cache
+            GM_setValue(name, value);
         }
 
         // Get character settings from UI
@@ -2573,12 +2580,12 @@ document.getElementById("charContainer"+val).style.display="block";\
             var name = charSettings[i].name;
             var el = $('#settings_' + name);
             var value = el.val();
+            // Save to local cache
             if (settings[name] !== value) {
                 settings[name] = value;
-            } // Save to local cache
-            if (GM_getValue(name) !== value) {
-                GM_setValue(name, value);
-            } // Save to GM cache
+            }
+            // Save to GM cache
+            GM_setValue(name, value);
         }
 
         // If character numbers have changed reload page
@@ -2586,15 +2593,6 @@ document.getElementById("charContainer"+val).style.display="block";\
             console.log("Reloading gateway to update character count");
             unsafeWindow.location.href = current_Gateway; // edited by RottenMind
             return;
-        }
-
-        // Delete all saved settings // MAC-NW: Not sure this could of worked before with how it was coded...
-        if (settingwipe) {
-            var keys = GM_listValues();
-            for (i = 0; i < keys.length; i++) {
-                var key = keys[i];
-                GM_deleteValue(key);
-            }
         }
 
         // Close the panel
