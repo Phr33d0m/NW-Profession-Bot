@@ -11,10 +11,10 @@
 
 /*
  === NW Gateway Professions Bot Developers
- - Bluep, Numberb, mac-nw, Phr33d0m
+ - Bluep, Numberb, mac-nw, Phr33d0m, BigRedBrent
  
  === NW Gateway Professions Bot Contributors
- - Kakoura, Nametaken, rotten_mind, Frankescript, Brent
+ - Kakoura, Nametaken, rotten_mind, Frankescript
  */
 
 // @version 1.10.1
@@ -26,56 +26,55 @@
 // ==/UserScript==
 
 /* RELEASE NOTES
- -
- - added Leadership asset auto buy
- - improvments for AD transfer and reports to console log
- - added "Leadership XP" use second tasklist
- - added "Gateway_Reward"
- - added Rank3 ench.Runes to UI
- - added "Vendor all Altar Node skill kits" to UI
- - edited Vendor rank1/rank2 enchants
+ - Replaced defaultTasklist with tasklist
+ - Clear saved settings before re-saving
+ - Added leadership asset auto buy
+ - Improvements for AD transfer and reports to console log
+ - Added "Leadership XP" use second tasklist
+ - Added "Gateway_Reward"
+ - Added vendoring Rank 3 enchantments and runestones to UI
+ - Added "Vendor all Altar Node skill kits" to UI
+ - Edited vendoring rank 1 and rank 2 enchantments
  1.10.1
- - patern undefined BUGfix
+ - Patern undefined bug fix
  1.10.0 - Release Candidate
- - Vendor Exclude filter has now higher "Safeguards" (it still might need added some unbound items eg. Glyphs, potions etc.
- - added Vendor Safeguards
- - separated Autovendor and PRofession items Vendor
- - SCA daily reward collection  by cycling through all configured characters. Leaving SCA will cancel this process.
- - Multi Url support for testing
- * gatewaytest
- * RU gateway (gateway.nw.ru.perfectworld.eu)
- * Gateway
+ - Vendor exclude filter has now higher "Safeguards" (it still might need added some unbound items eg. Glyphs, potions, etc)
+ - Added vendor safeguards
+ - Separated autovendor and profession items vendor
+ - SCA daily reward collection  by cycling through all configured characters (leaving SCA page will cancel the collection)
+ - Multi URL support for testing
+ - Support for gatewaytest, RU gateway (gateway.nw.ru.perfectworld.eu) and regular gateway
  1.05.0.1k
  - RC2 for ver. 1.0.05.2
- - added Vendoring to UI
- - added Vendoring "safety" setting what check item is "unbound"
- - code clearing
+ - Added vendoring to UI
+ - Added vendoring "safety" setting what check item is "unbound"
+ - Code clearing
  1.05.0.1j
  - RC1 for ver. 1.05.0.2
- - rebuild sell items selection method, now more comprehensive
- * vendoring function now use array to vendor item objects
- - Vendoring list, current version
- * sell all Runes/Enchants rank 1 - 2
- * limit, altars 80, skill kits 50, healing potions T 1 - 3 10
- - re-edited warning "Tooltip"- selecting "what skill kit character not need" when selling
- - merged back the split of the pause function
- - added a parameter to specify pause/unpause/toggle (defaults to toggle as in original behavior)
- - tasklist updates
+ - Rebuild sell items selection method making it more comprehensive
+ - Vendoring function now use array to vendor item objects
+ - Updated vendoring list
+ - Sell all runestones and enchantments rank 1 & rank 2
+ - Limit, altars 80, skill kits 50, healing potions T 1 - 3 10
+ - Re-edited warning "Tooltip"- selecting "what skill kit character not need" when selling
+ - Merged back the split of the pause function
+ - Added a parameter to specify pause/unpause/toggle (defaults to toggle as in original behavior)
+ - Tasklist updates
  BETA 1.05.0.1i
- - edited "sell items" list
- - edited/added WARNING´s on tooltip
+ - Edited "sell items" list
+ - Edited/added WARNING´s on tooltip
  BETA 1.05.0.1h
- - added "sell skill kits", works same as "open_rewards" (experimental, inventory cleaning needs more specific "sell filter" and event what trigger "sell"  )
- - changed switching character and completing character task logic, trying prevent wrong task execution after  switch
- - refined "save settings" function
+ - Added "sell skill kits", works same as "open_rewards" (experimental, inventory cleaning needs more specific "sell filter" and event what trigger "sell")
+ - Changed switching character and completing character task logic, trying prevent wrong task execution after  switch
+ - Refined "save settings" function
  - WinterEvent tasklist got new additions
  1.05.01G
  - Github release
  1.05.0.1f
- - minor tasklist updates
- - added button "open all(99)", opens rewardchest
- - fixed "open rewardchest" disconnect issues(need furter testing, RM)
- - fixed unnecessary ZEX visit´s
+ - Minor tasklist updates
+ - Added button "open all(99)", opens rewardchest
+ - Fixed "open rewardchest" disconnect issues(need furter testing, RM)
+ - Fixed unnecessary ZEX visit´s
  -
  1.05.0.1e
  - Info page updates for non-compatible browser/XXXmonkey
