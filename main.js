@@ -993,9 +993,8 @@ function _select_Gateway() { // Check for Gateway used to
         settings["charcount"] = 99;
     }
 
-    var tasklist;
     // Profession priority list by order
-    var defaultTasklist = [
+    var tasklist = [
         definedTask["Winter Event"],
         definedTask["Siege Event"],
         definedTask["Black Ice Shaping"],
@@ -1027,9 +1026,6 @@ function _select_Gateway() { // Check for Gateway used to
         charSettings.push({name: 'Tailoring' + i, title: 'Tailoring', def: '0', type: 'text', tooltip: 'Number of slots to assign to Tailoring'});
         charSettings.push({name: 'Leadership' + i, title: 'Leadership', def: '9', type: 'text', tooltip: 'Number of slots to assign to Leadership'});
         charSettings.push({name: 'Leadership_XP' + i, title: 'Leadership XP', def: '0', type: 'text', tooltip: 'Number of slots to assign to Leadership focused on XP'});
-
-        // task settings are slightly different
-        charSettings.push({name: 'tasklist' + i, title: 'Task List', def: '', type: 'void', tooltip: ''});
     }
 
     for (var i = 0; i < charSettings.length; i++) {
@@ -2151,14 +2147,6 @@ function _select_Gateway() { // Check for Gateway used to
                 settings[charSettings[j].name.replace(new RegExp(charcurrent + "$"), '')] = settings[charSettings[j].name];
             }
 
-            // Load task list from settings if saved
-            if (settings["tasklist"].length) {
-                tasklist = JSON.parse(settings["tasklist"]);
-            }
-            else {
-                tasklist = defaultTasklist;
-            }
-
             var charName = settings["nw_charname"];
             var fullCharName = charName + '@' + accountName;
 
@@ -2421,12 +2409,7 @@ document.getElementById("charContainer"+val).style.display="block";\
                 id = 'settings_' + charSettings[k].name;
                 addText += '<li title="' + charSettings[k].tooltip + '"><input maxlength="2" size="1" style="margin:4px; padding: 2px;" name="' + id + '" id="' + id + '" type="text" /><label class="' + charSettings[k].class + '" for="' + id + '">' + charSettings[k].title + '</label></li>';
             }
-            addText += '</ul>'
-
-            // Add task list save buttons
-            addText += '\
-<input id="save_tasklist' + i + '" type="button" class="button-green pure-button" value="Save Tasks" title="Saves current task list in script to this character">\
-<input id="clear_tasklist' + i + '" type="button" class="button-red pure-button" value="Clear Tasks" title="Clears the saved task list for this character to use defaults">\
+            addText += '</ul>\
 </div>';
         }
         addText += '\
@@ -2439,25 +2422,6 @@ document.getElementById("charContainer"+val).style.display="block";\
         for (var i = 0; i < charSettings.length; i++) {
             var id = 'settings_' + charSettings[i].name;
             $('#' + id).val(settings[charSettings[i].name]);
-        }
-
-        // Add code to tasklist buttons
-        for (var i = 0; i < settings["charcount"]; i++) {
-            $("#save_tasklist" + i).click(function () {
-                var num = this.id.replace("save_tasklist", "");
-                charSettings["tasklist" + num] = tasklist;
-                setTimeout(function () {
-                    GM_setValue("tasklist" + num, JSON.stringify(defaultTasklist));
-                }, 0);
-            });
-
-            $("#clear_tasklist" + i).click(function () {
-                var num = this.id.replace("clear_tasklist", "");
-                charSettings["tasklist" + num] = "";
-                setTimeout(function () {
-                    GM_setValue("tasklist" + num, "");
-                }, 0);
-            });
         }
 
         // Add save/cancel buttons to panel
