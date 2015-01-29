@@ -7,7 +7,8 @@
 // @include http://gateway.*.perfectworld.eu/*
 // @include https://gateway.*.perfectworld.eu/*
 // @require http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js
-// @resource jqUI_CSS http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/dark-hive/jquery-ui.css
+// @resource jqUI_CSS http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/cupertino/jquery-ui.css
+// /*@resource jqUI_CSS http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/dark-hive/jquery-ui.css*/
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
@@ -277,7 +278,8 @@ var s_paused = false;	   // extend the paused setting to the Page Reloading func
 
 // Include JqueryUI CSS
 var jqUI_CssSrc = GM_getResourceText ("jqUI_CSS");
-jqUI_CssSrc = jqUI_CssSrc.replace (/url\(images\//g, "url(http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/dark-hive/images/");
+/*jqUI_CssSrc = jqUI_CssSrc.replace (/url\(images\//g, "url(http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/dark-hive/images/");*/
+jqUI_CssSrc = jqUI_CssSrc.replace (/url\(images\//g, "url(http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/cupertino/images/");
 jqUI_CssSrc = jqUI_CssSrc.replace (/font-size: 1\.1em/g, "font-size: 0.9em");
 GM_addStyle (jqUI_CssSrc);
 
@@ -1104,18 +1106,19 @@ function _select_Gateway() { // Check for Gateway used to
 
     // Profession priority list by order
     var tasklist = [
-        definedTask["Winter Event"],
-        definedTask["Siege Event"],
-        definedTask["Black Ice Shaping"],
+        definedTask["Leadership"],
+        definedTask["Jewelcrafting"],
         definedTask["Alchemy"],
         definedTask["Weaponsmithing"],
         definedTask["Artificing"],
-        definedTask["Jewelcrafting"],
         definedTask["Mailsmithing"],
         definedTask["Platesmithing"],
         definedTask["Leatherworking"],
         definedTask["Tailoring"],
-        definedTask["Leadership"],
+        definedTask["Black Ice Shaping"],
+        definedTask["Winter Event"],
+        definedTask["Siege Event"],
+        
     ];
 
     var priorityOptions = [{name: 'high', value: 0},{name: 'medium', value: 1},{name: 'low', value: 2}];
@@ -1213,12 +1216,12 @@ function _select_Gateway() { // Check for Gateway used to
             
             for (var i = 0; i < charTaskList.length; i++) {
                 var currentTasks = unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.filter(function (entry) {
-                    return entry.category == tasklist[i].taskName;
+                    return entry.category == charTaskList[i].taskName;
                 });
-                if (currentTasks.length < settings[tasklist[i].taskListName]) {
-                    unsafeWindow.client.professionFetchTaskList('craft_' + tasklist[i].taskName);
+                if (currentTasks.length < settings[charTaskList[i].taskListName]) {
+                    unsafeWindow.client.professionFetchTaskList('craft_' + charTaskList[i].taskName);
                     window.setTimeout(function () {
-                        createNextTask(tasklist[i], 0);
+                        createNextTask(charTaskList[i], 0);
                     }, delay.SHORT);
                     return true;
                 }
@@ -1341,10 +1344,8 @@ function _select_Gateway() { // Check for Gateway used to
         var level = unsafeWindow.client.dataModel.model.ent.main.itemassignmentcategories.categories.filter(function (entry) {
             return entry.name == prof.taskName;
         })[0].currentrank;
-        console.log(settings[prof.taskName + charcurrent + '_profile']);
-        
-        var list = prof.profiles[settings[prof.taskName + charcurrent + '_profile']].level[level];
-        console.log(list);
+        var profile = prof.profiles.filter(function( profile ) { return profile.profileName == settings[prof.taskName + charcurrent + '_profile']; });
+        var list = profile[0].level[level];
         if (list.length <= i) {
             console.log("Nothing Found");
             switchChar();
