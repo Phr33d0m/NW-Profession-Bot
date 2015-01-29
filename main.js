@@ -2389,7 +2389,9 @@ function _select_Gateway() { // Check for Gateway used to
         AddCss("\
 #settingsButton{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); display: block; position: fixed; overflow: auto; right: 0px; top: 0px; padding: 3px; z-index: 1000;}\
 #pauseButton{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); display: block; position: fixed; overflow: auto; right: 23px; top: 0px; padding: 3px; z-index: 1000;}\
-/* MAC-NW -- Put Panel at a higher layer than status window */ #settingsPanel{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); color: rgb(0, 0, 0); position: fixed; overflow: auto; right: 0px; top: 0px; width: 550px;max-height:750px;font: 12px sans-serif; text-align: left; display: block; z-index: 1001;}\
+/* MAC-NW -- Put Panel at a higher layer than status window */ \
+/*#settingsPanel{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); color: rgb(0, 0, 0); position: fixed; overflow: auto; right: 0px; top: 0px; width: 550px;max-height:750px;font: 12px sans-serif; text-align: left; display: block; z-index: 1001;}*/\
+#settingsPanel{position: fixed; overflow: auto; right: 0px; top: 0px; width: 550px;max-height:750px;font: 12px sans-serif; text-align: left; display: block; z-index: 1001;}\
 #settings_title{font-weight: bolder; background: none repeat scroll 0% 0% rgb(204, 204, 204); border-bottom: 1px solid rgb(102, 102, 102); padding: 3px;}\
 #settingsPanelButtonContainer {background: none repeat scroll 0% 0% rgb(204, 204, 204); border-top: 1px solid rgb(102, 102, 102);padding: 3px;text-align:center} \
 #settingsPanel label.purple {font-weight:bold;color:#7C37F6}\
@@ -2416,7 +2418,7 @@ function _select_Gateway() { // Check for Gateway used to
 
         // Add settings panel to page body
         $("body").append(
-                '<div id="settingsPanel">\
+                '<div id="settingsPanel" class="ui-widget-content">\
 <div id="settings_title">\
 <img src=' + image_prefs + ' style="float: left; vertical-align: text-bottom;"\>\
 <img id="settings_close" src=' + image_close + ' title="Click to hide preferences" style="float: right; vertical-align: text-bottom; cursor: pointer; display: block;"\>\
