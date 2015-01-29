@@ -2499,8 +2499,6 @@ function _select_Gateway() { // Check for Gateway used to
             // tasks    
             setPerChar = (charSettings.length / settings["charcount"]);
             charTaskSettings = charSettings.slice(i*setPerChar, (i+1)*setPerChar -1).filter(function (element) { return element.pane == 'tasks'; });
-            //console.log(charTaskSettings);
-			console.log(settings);
             var k = 0;                
             while (k < (charTaskSettings.length)) {
                 if (charTaskSettings[k].type2 == 'task') {
@@ -2711,7 +2709,6 @@ function _select_Gateway() { // Check for Gateway used to
             var name = charSettings[i].name;
             var el = $('#settings_' + name);
             var value = el.val();
-            console.log(name + ' - ' + value);
             // Save to local cache
             if (settings[name] !== value) {
                 settings[name] = value;
