@@ -1118,7 +1118,7 @@ function _select_Gateway() { // Check for Gateway used to
         definedTask["Leadership"],
     ];
 
-    var priorityOptions = [{name: 'low', value: 0},{name: 'medium', value: 1},{name: 'high', value: 2}];
+    var priorityOptions = [{name: 'high', value: 0},{name: 'medium', value: 1},{name: 'low', value: 2}];
         
     var charSettings = [];
     for (var i = 0; i < settings["charcount"]; i++) {
@@ -1132,7 +1132,7 @@ function _select_Gateway() { // Check for Gateway used to
             charSettings.push({name: task.taskListName + i + '_priority', title: task.taskListName + '_priority', options: priorityOptions,  def: task.taskDefaultPriority , type: 'select',  type2: 'task-property', tooltip: '', pane: "tasks"});                               
 		});
         
-        charSettings.push({name: 'test' + i, title: 'Character', def: 'Character ' + (i + 1), type: 'text', tooltip: 'test', pane:"settings"});
+        charSettings.push({name: 'test' + i, title: 'test', def: 1, type: 'text', tooltip: 'test', pane:"settings"});
     }
 
     for (var i = 0; i < charSettings.length; i++) {
@@ -1207,19 +1207,21 @@ function _select_Gateway() { // Check for Gateway used to
             return (!entry.islockedslot && !entry.uassignmentid);
         }).length) {
             // Go through the professions to assign tasks until specified slots filled
-            for (var i = 0; i < tasklist.length; i++) {
-                if (settings[tasklist[i].taskListName] > 0) { //MAC-NW
-                    var currentTasks = unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.filter(function (entry) {
-                        return entry.category == tasklist[i].taskName;
-                    });
-                    if (currentTasks.length < settings[tasklist[i].taskListName]) {
-                        unsafeWindow.client.professionFetchTaskList('craft_' + tasklist[i].taskName);
-                        window.setTimeout(function () {
-                            createNextTask(tasklist[i], 0);
-                        }, delay.SHORT);
-                        return true;
-                    }
-                } //MAC-NW
+            var charTaskList = tasklist
+            	.filter(function (task) { return (settings[task.taskListName] > 0); })
+            	.sort(function (a,b) { return (settings[a.taskListName + '' + charcurrent + '_priority'] - settings[b.taskListName + charcurrent + '_priority']); });
+            
+            for (var i = 0; i < charTaskList.length; i++) {
+                var currentTasks = unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.filter(function (entry) {
+                    return entry.category == tasklist[i].taskName;
+                });
+                if (currentTasks.length < settings[tasklist[i].taskListName]) {
+                    unsafeWindow.client.professionFetchTaskList('craft_' + tasklist[i].taskName);
+                    window.setTimeout(function () {
+                        createNextTask(tasklist[i], 0);
+                    }, delay.SHORT);
+                    return true;
+                }
             }
             console.log("All task counts assigned");
         }
@@ -1339,7 +1341,10 @@ function _select_Gateway() { // Check for Gateway used to
         var level = unsafeWindow.client.dataModel.model.ent.main.itemassignmentcategories.categories.filter(function (entry) {
             return entry.name == prof.taskName;
         })[0].currentrank;
-        var list = prof.level[level];
+        console.log(settings[prof.taskName + charcurrent + '_profile']);
+        
+        var list = prof.profiles[settings[prof.taskName + charcurrent + '_profile']].level[level];
+        console.log(list);
         if (list.length <= i) {
             console.log("Nothing Found");
             switchChar();
@@ -2391,7 +2396,7 @@ function _select_Gateway() { // Check for Gateway used to
 #settingsPanel label.blue {font-weight:bold;color:#007EFF}\
 #settingsPanel label.green {font-weight:bold;color:#8AFF00}\
 #settingsPanel label.white {font-weight:bold;color:#FFFFFF}\
-#charPanel {width:98%;max-height:400px;overflow:auto;display:block;padding:3px;}\
+#charPanel {width:98%;max-height:550px;overflow:auto;display:block;padding:3px;}\
 #charPanel div div ul li { display: inline-block; width: 48%; }\
 .inventory-container {float: left; clear: none; width: 270px; margin-right: 20px;}\
 #prinfopane {position: fixed; top: 5px; left: 200px; display: block; z-index: 1000;}\
@@ -2405,6 +2410,8 @@ function _select_Gateway() { // Check for Gateway used to
 #settingsPanel input[type='button'].button-red{background:#ca3c3c; margin: 2px 2px 2px 2px;}\
 #settingsPanel input[type='button'].button-yellow{background:#df7514; margin: 2px 2px 2px 2px;}\
 #settingsPanel input[type='button'].button-blue{background:#42b8dd; margin: 2px 2px 2px 2px;}\
+.charSettingsTab { overflow: auto; }\
+.charSettingsTab div { overflow: auto; }\
 ");
 
         // Add settings panel to page body
@@ -2492,13 +2499,13 @@ function _select_Gateway() { // Check for Gateway used to
                     '<li><a href="#charSettingsTab-1-'+i+'">Tasks</a></li>',
                     '<li><a href="#charSettingsTab-2-'+i+'">Char Settings</a></li>',
                     '</ul>',
-                    '<div id="charSettingsTab-1-'+i+'">',
+                    '<div id="charSettingsTab-1-'+i+'" class="charSettingsTab">',
 		                '<table><thead><tr><th>Task name</th><th># of slots</th><th>profile</th><th>priority</th></tr></thead><tbody>'
                 ].join('');        
             
             // tasks    
             setPerChar = (charSettings.length / settings["charcount"]);
-            charTaskSettings = charSettings.slice(i*setPerChar, (i+1)*setPerChar -1).filter(function (element) { return element.pane == 'tasks'; });
+            charTaskSettings = charSettings.slice(i*setPerChar, (i+1)*setPerChar).filter(function (element) { return element.pane == 'tasks'; });
             var k = 0;                
             while (k < (charTaskSettings.length)) {
                 if (charTaskSettings[k].type2 == 'task') {
@@ -2518,7 +2525,6 @@ function _select_Gateway() { // Check for Gateway used to
                         case "select":
                             addText += '<td><select style="margin: 4px; padding: 2px;" name="' + id + '" id="' + id + '">';
                             charTaskSettings[k].options.forEach( function (option) { 
-                                console.log(charTaskSettings[k].name);
                             	addText += '<option value = "' + option.value + '" ' + ((settings[charTaskSettings[k].name] == option.value) ? ' selected="selected" ' : '') + '>' + option.name + '</option>';
                             });
                             addText += '</select></td>';
@@ -2538,10 +2544,9 @@ function _select_Gateway() { // Check for Gateway used to
 				</div>';
             
             // Settings Tab
-            addText += '<div id="charSettingsTab-2-'+i+'">';
+            addText += '<div id="charSettingsTab-2-'+i+'" class="charSettingsTab" >';
             setPerChar = (charSettings.length / settings["charcount"]);
-            charTaskSettings = charSettings.slice(i*setPerChar, (i+1)*setPerChar -1).filter(function (element) { return element.pane == 'settings'; });
-            //console.log(charTaskSettings);
+            charTaskSettings = charSettings.slice(i*setPerChar, (i+1)*setPerChar).filter(function (element) { return element.pane == 'settings'; });
 
             for (var k = 0; k < (charTaskSettings.length); k++) {
                 id = 'settings_' + charTaskSettings[k].name;
@@ -2594,7 +2599,11 @@ function _select_Gateway() { // Check for Gateway used to
 </div>');
 
         $(function() {
-			$( "#charSettingsAccordion" ).accordion();
+            $( "#charSettingsAccordion" ).accordion({
+            	heightStyle: "content",
+            	autoHeight: false,
+        		clearStyle: true,   
+        	});
             $( ".charSettingsTabs" ).tabs();
 		});
 
