@@ -612,7 +612,7 @@ function _select_Gateway() { // Check for Gateway used to
     definedTask["Leadership"] = {
         taskListName: "Leadership",			// Friendly name used at the UI
         taskName: "Leadership",				// String used at the gateway
-        taskDefaultPriority: 2,				// Priority to allocate free task slots: 0 - High, 1 - Medium, 2 - Low
+        taskDefaultPriority: 1,				// Priority to allocate free task slots: 0 - High, 1 - Medium, 2 - Low
         taskActive: true,					
         taskDescription: "",	
         profiles: [{
@@ -695,9 +695,9 @@ function _select_Gateway() { // Check for Gateway used to
     };
 
     definedTask["Siege Event"] = {
-        taskListName: "Siege Event",
+        taskListName: "SiegeEvent",
         taskName: "Event_Siege",
-        taskDefaultPriority: 2,			
+        taskDefaultPriority: 1,			
         taskDefaultSlotNum: 0,
         taskActive: true,					
         taskDescription: "",			
@@ -721,7 +721,7 @@ function _select_Gateway() { // Check for Gateway used to
     definedTask["Black Ice Shaping"] = {
         taskListName: "BlackIce",
         taskName: "BlackIce",
-        taskDefaultPriority: 2,			
+        taskDefaultPriority: 1,			
         taskDefaultSlotNum: 0,
         taskActive: true,					
         taskDescription: "",			
@@ -744,7 +744,7 @@ function _select_Gateway() { // Check for Gateway used to
     definedTask["Jewelcrafting"] = {
         taskListName: "Jewelcrafting",
         taskName: "Jewelcrafting",
-        taskDefaultPriority: 2,			
+        taskDefaultPriority: 1,			
         taskDefaultSlotNum: 0,
         taskActive: true,					
         taskDescription: "",			
@@ -780,7 +780,7 @@ function _select_Gateway() { // Check for Gateway used to
     definedTask["Mailsmithing"] = {
         taskListName: "Mailsmithing",
         taskName: "Armorsmithing_Med",
-        taskDefaultPriority: 2,			
+        taskDefaultPriority: 1,			
         taskDefaultSlotNum: 0,
         taskActive: true,					
         taskDescription: "",			
@@ -818,7 +818,7 @@ function _select_Gateway() { // Check for Gateway used to
     definedTask["Platesmithing"] = {
         taskListName: "Platesmithing",
         taskName: "Armorsmithing_Heavy",
-        taskDefaultPriority: 2,			
+        taskDefaultPriority: 1,			
         taskDefaultSlotNum: 0,
         taskActive: true,					
         taskDescription: "",			
@@ -856,7 +856,7 @@ function _select_Gateway() { // Check for Gateway used to
     definedTask["Leatherworking"] = {
         taskListName: "Leatherworking",
         taskName: "Leatherworking",
-        taskDefaultPriority: 2,			
+        taskDefaultPriority: 1,			
         taskDefaultSlotNum: 0,
         taskActive: true,					
         taskDescription: "",			
@@ -894,7 +894,7 @@ function _select_Gateway() { // Check for Gateway used to
     definedTask["Tailoring"] = {
         taskListName: "Tailoring",
         taskName: "Tailoring",
-        taskDefaultPriority: 2,			
+        taskDefaultPriority: 1,			
         taskDefaultSlotNum: 0,
         taskActive: true,					
         taskDescription: "",			
@@ -932,7 +932,7 @@ function _select_Gateway() { // Check for Gateway used to
     definedTask["Artificing"] = {
         taskListName: "Artificing",
         taskName: "Artificing",
-        taskDefaultPriority: 2,			
+        taskDefaultPriority: 1,			
         taskDefaultSlotNum: 0,
         taskActive: true,					
         taskDescription: "",			
@@ -970,7 +970,7 @@ function _select_Gateway() { // Check for Gateway used to
     definedTask["Weaponsmithing"] = {
         taskListName: "Weaponsmithing",
         taskName: "Weaponsmithing",
-        taskDefaultPriority: 2,			
+        taskDefaultPriority: 1,			
         taskDefaultSlotNum: 0,
         taskActive: true,					
         taskDescription: "",			
@@ -1008,7 +1008,7 @@ function _select_Gateway() { // Check for Gateway used to
     definedTask["Alchemy"] = {
         taskListName: "Alchemy",
         taskName: "Alchemy",
-        taskDefaultPriority: 2,			
+        taskDefaultPriority: 1,			
         taskDefaultSlotNum: 0,
         taskActive: true,					
         taskDescription: "",			
@@ -1126,16 +1126,14 @@ function _select_Gateway() { // Check for Gateway used to
         tasklist.forEach(function(task) {
             var profileNames = [];
             task.profiles.forEach( function(profile) { if (profile.isProfileActive) profileNames.push({name: profile.profileName, value: profile.profileName}); } ); 
-            //charSettings.push({name: task["taskListName"] + i, title: task["taskListName"], profileNames: profileNames,  def: task["taskListName"].taskDefaultSlotNum , type: 'text', tooltip: 'Number of slots to assign to ' + task["taskListName"]});
-            charSettings.push({name: task["taskListName"] + i, title: task["taskListName"], def: task["taskListName"].taskDefaultSlotNum , type: 'text', type2: 'task', tooltip: 'Number of slots to assign to ' + task["taskListName"], pane: "tasks"});
-            charSettings.push({name: task["taskListName"] + i + '_profile', title: task["taskListName"] + '_profile', options: profileNames,  def: profileNames[0].value, type: 'select',  type2: 'task-property', tooltip: '', pane: "tasks"});
-            charSettings.push({name: task["taskListName"] + i + '_priority', title: task["taskListName"] + '_priority', options: priorityOptions,  def: '1' , type: 'select',  type2: 'task-property', tooltip: '', pane: "tasks"});                               
+            //charSettings.push({name: task["taskListName"] + i, title: task["taskListName"], profileNames: profileNames,  def: task["taskDefaultSlotNum"] , type: 'text', tooltip: 'Number of slots to assign to ' + task["taskListName"]});
+            charSettings.push({name: task.taskListName + i, title: task.taskListName, def: task.taskDefaultSlotNum , type: 'text', type2: 'task', tooltip: 'Number of slots to assign to ' + task.taskListName, pane: "tasks"});
+            charSettings.push({name: task.taskListName + i + '_profile', title: task.taskListName + '_profile', options: profileNames,  def: profileNames[0].value, type: 'select',  type2: 'task-property', tooltip: '', pane: "tasks"});
+            charSettings.push({name: task.taskListName + i + '_priority', title: task.taskListName + '_priority', options: priorityOptions,  def: task.taskDefaultPriority , type: 'select',  type2: 'task-property', tooltip: '', pane: "tasks"});                               
 		});
         
         charSettings.push({name: 'test' + i, title: 'Character', def: 'Character ' + (i + 1), type: 'text', tooltip: 'test', pane:"settings"});
     }
-
-	
 
     for (var i = 0; i < charSettings.length; i++) {
         settings[charSettings[i].name] = GM_getValue(charSettings[i].name, charSettings[i].def);
@@ -2502,7 +2500,7 @@ function _select_Gateway() { // Check for Gateway used to
             setPerChar = (charSettings.length / settings["charcount"]);
             charTaskSettings = charSettings.slice(i*setPerChar, (i+1)*setPerChar -1).filter(function (element) { return element.pane == 'tasks'; });
             //console.log(charTaskSettings);
-			
+			console.log(settings);
             var k = 0;                
             while (k < (charTaskSettings.length)) {
                 if (charTaskSettings[k].type2 == 'task') {
@@ -2520,8 +2518,9 @@ function _select_Gateway() { // Check for Gateway used to
                             addText += '</td><td><input maxlength="2" size="1" style="margin: 4px; padding: 2px;" name="' + id + '" id="' + id + '" type="text" /></td>';
                             break;
                         case "select":
-                            addText += '<td><select style="margin: 4px; padding: 2px;" name="' + id + '_profile" id="' + id + '_profile">';
+                            addText += '<td><select style="margin: 4px; padding: 2px;" name="' + id + '" id="' + id + '">';
                             charTaskSettings[k].options.forEach( function (option) { 
+                                console.log(charTaskSettings[k].name);
                             	addText += '<option value = "' + option.value + '" ' + ((settings[charTaskSettings[k].name] == option.value) ? ' selected="selected" ' : '') + '>' + option.name + '</option>';
                             });
                             addText += '</select></td>';
@@ -2558,7 +2557,7 @@ function _select_Gateway() { // Check for Gateway used to
                         break;
                     case "select":
                         addText += '<li><label style=" overflow:hidden; min-width: 100px; display: inline-block; " class="' + charTaskSettings[k].class + '" for="' + id + '">' + charTaskSettings[k].title + '</label>';
-                        addText += '<select style="margin: 4px; padding: 2px;" name="' + id + '_profile" id="' + id + '_profile">';
+                        addText += '<select style="margin: 4px; padding: 2px;" name="' + id + '" id="' + id + '">';
                         charTaskSettings[k].options.forEach( function (option) { 
                             addText += '<option value = "' + option.value + '" ' + ((settings[charTaskSettings[k].name] == option.value) ? ' selected="selected" ' : '') + '>' + option.name + '</option>';
                         });
@@ -2694,7 +2693,6 @@ function _select_Gateway() { // Check for Gateway used to
                     continue;
             }
             if (typeof (settingnames[i].onsave) === "function") {
-                console.log("Calling 'onsave' for", name);
                 settingnames[i].onsave(value, settings[name]);
             }
             // Save to local cache
@@ -2713,6 +2711,7 @@ function _select_Gateway() { // Check for Gateway used to
             var name = charSettings[i].name;
             var el = $('#settings_' + name);
             var value = el.val();
+            console.log(name + ' - ' + value);
             // Save to local cache
             if (settings[name] !== value) {
                 settings[name] = value;
