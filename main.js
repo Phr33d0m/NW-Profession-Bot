@@ -265,6 +265,7 @@ var fouxConsole = {log: function () {
     }};
 var console = unsafeWindow.console || fouxConsole;
 var chardiamonds = {};
+var chargold = {};
 var definedTask = {};
 // Page Reloading function
 // Every second the page is idle or loading is tracked
@@ -1130,6 +1131,10 @@ function _select_Gateway() { // Check for Gateway used to
         // Add diamond count
         chardiamonds[charcurrent] = unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds;
         console.log(settings["nw_charname" + charcurrent] + "'s", "Astral Diamonds:", chardiamonds[charcurrent]);
+        
+        // Add gold count
+        chargold[charcurrent] = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.gold);
+        
         return false;
     }
 
@@ -2013,16 +2018,21 @@ function _select_Gateway() { // Check for Gateway used to
             }
         }
 
-        // Count AD
+        // Count AD & Gold
         var curdiamonds = 0;
+        var curgold = 0;
         for (var cc = 0; cc < settings["charcount"]; cc++) {
             if (chardiamonds[cc] != null) {
                 curdiamonds += Math.floor(chardiamonds[cc] / 50) * 50;
             }
+            
+            if(chargold[cc] != null) {
+            	curgold += chargold[cc];
+            }
         }
-
+        
         console.log("Next run for " + settings["nw_charname" + charcurrent] + " in " + parseInt(chardelay / 1000) + " seconds.");
-        $("#prinfopane").empty().append("<h3 class='promo-image copy-top prh3'>Professions Robot<br />Next task for " + settings["nw_charname" + charcurrent] + "<br /><span data-timer='" + chardate + "' data-timer-length='2'></span><br />Diamonds: " + curdiamonds.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "</h3>");
+        $("#prinfopane").empty().append("<h3 class='promo-image copy-top prh3'>Professions Robot<br />Next task for " + settings["nw_charname" + charcurrent] + "<br /><span data-timer='" + chardate + "' data-timer-length='2'></span><br />Diamonds: " + curdiamonds.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "<br />Gold: "+ curgold +"</h3>");
         GM_setValue("charcurrent", charcurrent);
         dfdNextRun.resolve(chardelay);
     }
