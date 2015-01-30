@@ -17,7 +17,7 @@
  - Kakoura, Nametaken, rotten_mind, Frankescript
  */
 
-// @version 1.10.1
+// @version 1.10.3
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -26,6 +26,11 @@
 // ==/UserScript==
 
 /* RELEASE NOTES
+ 1.10.3
+ - HOTFIX, setting save reverted to old to preven unwated settings wipe.
+ 1.10.2
+ - added "check currencies" for buy resources
+ - added "Gathering" task
  1.10.2RC1 for Greasyfork
  - UI improvement
  - removed "Save Task" & "Clear Task" buttons, on current build they do nothing
@@ -578,6 +583,7 @@ function _select_Gateway() { // Check for Gateway used to
     var dfdNextRun = $.Deferred();
     var charcurrent = 0; // current character counter
     var chartimers = {};
+    var settingwipe = false; // Use to wipe stored settings
     var delay = {
         SHORT: 1000,
         MEDIUM: 5000,
@@ -971,7 +977,7 @@ function _select_Gateway() { // Check for Gateway used to
         {name: 'banktransmin', title: 'Min AD for Transfer', def: '22000', type: 'text', tooltip: 'Enter minimum AD limit for it to be cosidered for transfer off a character'},
         {name: 'bankcharmin', title: 'Min Character balance', def: '8000', type: 'text', tooltip: 'Enter the amount of AD to always keep available on characters'},
         {name: 'banktransrate', title: 'AD per Zen Rate (in zen)', def: '300', type: 'text', tooltip: 'Enter default rate to use for transfering through ZEX'},
-        {name: 'charcount', title: 'Enter number of characters to use (Save and Apply to update settings form)', def: '2', type: 'text', tooltip: 'Enter number of characters to use (Save and Apply to update settings form)', border: true},
+        {name: 'charcount', title: 'Enter number of characters to use (Save and Apply to update settings form)', def: '1', type: 'text', tooltip: 'Enter number of characters to use (Save and Apply to update settings form)', border: true},
         // MAC-NW
     ];
 
@@ -2522,13 +2528,6 @@ document.getElementById("charContainer"+val).style.display="block";\
     function SaveSettings() {
         var charcount = settings["charcount"];
 
-        // Delete all saved settings
-        var keys = GM_listValues();
-        for (i = 0; i < keys.length; i++) {
-            var key = keys[i];
-            GM_deleteValue(key);
-        }
-			
         // Get each value from the UI
         for (var i = 0; i < settingnames.length; i++) {
             var name = settingnames[i].name;
@@ -2554,12 +2553,12 @@ document.getElementById("charContainer"+val).style.display="block";\
                 console.log("Calling 'onsave' for", name);
                 settingnames[i].onsave(value, settings[name]);
             }
-            // Save to local cache
             if (settings[name] !== value) {
                 settings[name] = value;
-            }
-            // Save to GM cache
-            GM_setValue(name, value);
+            } // Save to local cache
+            if (GM_getValue(name) !== value) {
+                GM_setValue(name, value);
+            } // Save to GM cache
         }
 
         // Get character settings from UI
