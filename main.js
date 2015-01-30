@@ -680,7 +680,7 @@ function _select_Gateway() { // Check for Gateway used to
     definedTask["Winter Event"] = {
         taskListName: "WinterEvent",
         taskName: "WinterEvent",
-        taskDefaultPriority: 2,			
+        taskDefaultPriority: 1,			
         taskDefaultSlotNum: 0,
         taskActive: true,					
         taskDescription: "",			
@@ -2605,7 +2605,9 @@ function _select_Gateway() { // Check for Gateway used to
             $( "#charSettingsAccordion" ).accordion({
             	heightStyle: "content",
             	autoHeight: false,
-        		clearStyle: true,   
+        		clearStyle: true,
+				active: false,
+  				collapsible: true,                
         	});
             $( ".charSettingsTabs" ).tabs();
 		});
