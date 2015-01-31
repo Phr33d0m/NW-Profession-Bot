@@ -2656,6 +2656,7 @@ document.getElementById("charContainer"+val).style.display="block";\
             _vendorItems[_vendorItems.length] = {pattern: /^Item_Fireworks/, limit: 0}; // Fireworks
             _vendorItems[_vendorItems.length] = {pattern: /^Object_Plate_/, limit: 0};
             _vendorItems[_vendorItems.length] = {pattern: /^Object_Decoration_/, limit: 0};
+            _vendorItems[_vendorItems.length] = {pattern: /^Object_Mug_/, limit: 0};
             _vendorItems[_vendorItems.length] = {pattern: /_Green_T[1-5]_Unid$/, limit: 0}; // Unidentified Green Gear
         }
         // edited by RottenMind
