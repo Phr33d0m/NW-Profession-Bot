@@ -616,7 +616,8 @@ function _select_Gateway() { // Check for Gateway used to
         taskListName: "Leadership",			// Friendly name used at the UI
         taskName: "Leadership",				// String used at the gateway
         taskDefaultPriority: 1,				// Priority to allocate free task slots: 0 - High, 1 - Medium, 2 - Low
-        taskActive: true,					
+        taskActive: true,		
+        taskDefaultSlotNum: 9,
         taskDescription: "",	
         profiles: [{
             profileName : "AD",
@@ -1225,14 +1226,17 @@ function _select_Gateway() { // Check for Gateway used to
 
 
         // Check for available slots and start new task
+        console.log("Looking for empty slots.");
         if (unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.filter(function (entry) {
             return (!entry.islockedslot && !entry.uassignmentid);
         }).length) {
             // Go through the professions to assign tasks until specified slots filled
+            console.log("Prioritizing task lists.");
             var charTaskList = tasklist
             	.filter(function (task) { return (settings[task.taskListName] > 0); })
             	.sort(function (a,b) { return (settings[a.taskListName + '' + charcurrent + '_priority'] - settings[b.taskListName + charcurrent + '_priority']); });
             
+            console.log("Attempting to fill the slot.");
             for (var i = 0; i < charTaskList.length; i++) {
                 var currentTasks = unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.filter(function (entry) {
                     return entry.category == charTaskList[i].taskName;
