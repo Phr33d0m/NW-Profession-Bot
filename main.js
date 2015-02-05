@@ -2318,6 +2318,7 @@ function _select_Gateway() { // Check for Gateway used to
             // to load char data (only for counters for now)
             tempList = {};
             client.dataModel.model.loginInfo.choices.forEach( function (char) {
+                if (char.name == "Author") return;
                 tempList[char.name] = (refineCounters[char.name]) ? (refineCounters[char.name]) : 0;
             });
             refineCounters = tempList;
