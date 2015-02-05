@@ -2461,7 +2461,7 @@ function _select_Gateway() { // Check for Gateway used to
                 );
 
         $("div#main_tabs").tabs();
-        var tabs = {main : 'General settings', vend: 'Vendor options' ,bank: 'AD Consolidation'};
+        var tabs = {main : 'General settings', prof: 'Professions', vend: 'Vendor options' ,bank: 'AD Consolidation'};
         for (var key in tabs) {
             var tabs_num = $("div#main_tabs > ul > li").length + 1;
 	        $("div#main_tabs > ul").append(
