@@ -1145,6 +1145,12 @@ function _select_Gateway() { // Check for Gateway used to
         settings[charSettings[i].name] = GM_getValue(charSettings[i].name, charSettings[i].def);
     }
 
+	var refineCounters = JSON.parse( GM_getValue("refineCounters", "{}") ); 
+	if(!refineCounters) {
+        console.log('refineCounters couldn\'t be retrieved, reseting.');
+        refineCounters = {};  
+    };
+	
     // Page Settings
     var PAGES = Object.freeze({
         LOGIN: {name: "Login", path: "div#login"},
@@ -2074,6 +2080,8 @@ function _select_Gateway() { // Check for Gateway used to
                 WaitForState("button.closeNotification").done(function () {
                     $("button.closeNotification").click();
                 });
+                refineCounters[settings["nw_charname" + charcurrent]] += refined_diamonds;
+                updateCounters(false);
             }
         }
 
@@ -2305,6 +2313,17 @@ function _select_Gateway() { // Check for Gateway used to
         }
 
         if (accountName) {
+            // Model should be available at this point, trying to use 
+            // console.log(client.dataModel.model.loginInfo.choices);
+            // to load char data (only for counters for now)
+            tempList = {};
+            client.dataModel.model.loginInfo.choices.forEach( function (char) {
+                tempList[char.name] = (refineCounters[char.name]) ? (refineCounters[char.name]) : 0;
+            });
+            refineCounters = tempList;
+            GM_setValue("refineCounters", JSON.stringify(refineCounters));
+            //console.log(refineCounters);
+            
             // load current character position and values
             charcurrent = GM_getValue("charcurrent", 0);
             for (var i = 0; i < (charSettings.length / settings["charcount"]); i++) {
@@ -2445,6 +2464,7 @@ function _select_Gateway() { // Check for Gateway used to
 #settingsPanel input[type='button'].button-blue{background:#42b8dd; margin: 2px 2px 2px 2px;}\
 .charSettingsTab { overflow: auto; }\
 .charSettingsTab div { overflow: auto; }\
+#rcounters ul li span { display: inline-block; min-width: 125px; }\
 ");
 
         // Add settings panel to page body
@@ -2529,6 +2549,13 @@ function _select_Gateway() { // Check for Gateway used to
             }
             $(tab).append(settingsList);
         };
+        
+        var tabs_num = $("div#main_tabs > ul > li").length + 1;
+        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Refine Counters</a></li>");
+        var tab = $("<div id='main_tab" + tabs_num + "'><div id='rcounters'></div></div>");
+        $("div#main_tabs").append(tab);
+                
+        
         $("div#main_tabs").tabs("refresh");
         $("div#main_tabs").tabs( "option", "active", 0 );
 
@@ -2663,6 +2690,7 @@ function _select_Gateway() { // Check for Gateway used to
             $( ".charSettingsTabs" ).tabs();
 		});
 
+        updateCounters(false);
         
         // Add open settings button to page
         $("body").append('<div id="settingsButton"><img src="' + image_prefs + '" title="Click to show preferences" style="cursor: pointer; display: block;"></div>');
@@ -2796,6 +2824,19 @@ function _select_Gateway() { // Check for Gateway used to
         $("#pauseButton img").attr("title", "Click to " + (settings["paused"] ? "resume" : "pause") + " task script");
         $("#pauseButton").show();
         $("#settingsPanel").hide();
+    }
+
+	function updateCounters(reset) {
+       	var html = '<ul>';
+        Object.keys(refineCounters).forEach(function (key) { 
+			if (reset) refineCounters[key] = 0;
+            html += '<li><span>' + key + '</span> - ' + refineCounters[key] + '</li>';   
+        });
+        html += "<button>Reset</button>";
+        $('#rcounters').html(html);
+        
+        $('#rcounters button').button();
+        $('#rcounters button').click( function() { updateCounters(true); }) ;
     }
 
     function vendorJunk(evnt) {
