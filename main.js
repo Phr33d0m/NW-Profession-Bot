@@ -2828,10 +2828,14 @@ function _select_Gateway() { // Check for Gateway used to
 
 	function updateCounters(reset) {
        	var html = '<ul>';
+        var total = 0;
         Object.keys(refineCounters).forEach(function (key) { 
 			if (reset) refineCounters[key] = 0;
             html += '<li><span>' + key + '</span> - ' + refineCounters[key] + '</li>';   
+            total += refineCounters[key];
         });
+        html += "</ul>"
+        html +="<div style='margin: 5px 0;'> Total: " + total + "</div>"; 
         html += "<button>Reset</button>";
         $('#rcounters').html(html);
         
