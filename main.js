@@ -343,7 +343,7 @@ function _select_Gateway() { // Check for Gateway used to
 
     $('.vendor-quantity-block span.attention').waitUntilExists(function () {
         if ($('.vendor-quantity-block span.attention span').length)
-            $('.vendor-quantity-block span.attention').replaceWith('<div class="input-field button"><div class="input-bg-left"></div><div class="input-bg-mid"></div><div class="input-bg-right"></div><button onclick="$(\'input[name=inventorySellQty]\').val(\'' + $(".vendor-quantity-block span.attention span").text() + '\');">All (' + $(".vendor-quantity-block span.attention span").text() + ')</button></div>');
+            $('.vendor-quantity-block span.attention').replaceWith('<div class="input-field button"><div class="input-bg-left"></div><div class="input-bg-mid"></div><div class="input-bg-right"></div><button onclick="$(\'.modal-confirm input\').val(\'' + $(".vendor-quantity-block span.attention span").text() + '\');">All (' + $(".vendor-quantity-block span.attention span").text() + ')</button></div>');
     });
 
     $('div.notification div.messages li').waitUntilExists(function () {
@@ -373,7 +373,7 @@ function _select_Gateway() { // Check for Gateway used to
                 var loading_hour = Number(loading_date.getHours());
                 if (reload_hours.indexOf(loading_hour) >= 0 && loading_min == 29 && loading_sec < 2) {
                     console.log("Auto Reload");
-                    unsafeWindow.location.href = current_Gateway; // edited by RottenMind
+                    unsafeWindow.location.href = current_Gateway; 
                     return;
                 }
             }
@@ -381,7 +381,7 @@ function _select_Gateway() { // Check for Gateway used to
             // check for errors
             if ($("title").text().match(/Error/) || $("div.modal-content h3").text().match(/Disconnected/)) {
                 console.log("Error detected - relogging");
-                unsafeWindow.location.href = current_Gateway; // edited by RottenMind
+                unsafeWindow.location.href = current_Gateway; 
                 return;
             }
 
@@ -1049,37 +1049,37 @@ function _select_Gateway() { // Check for Gateway used to
 
     // Load Settings
     var settingnames = [
-        {name: 'paused', title: 'Pause Script', def: false, type: 'checkbox', tooltip: 'Disable All Automation'},
-        {name: 'debug', title: 'Enable Debug', def: false, type: 'checkbox', tooltip: 'Enable all debug output to console', onsave: function (newValue, oldValue) {
+        {name: 'paused', title: 'Pause Script', def: false, type: 'checkbox', pane:'main', tooltip: 'Disable All Automation'},
+        {name: 'debug', title: 'Enable Debug', def: false, type: 'checkbox', pane:'main', tooltip: 'Enable all debug output to console', onsave: function (newValue, oldValue) {
                 console = newValue ? unsafeWindow.console || fouxConsole : fouxConsole;
             }},
-        {name: 'optionals', title: 'Fill Optional Assets', def: true, type: 'checkbox', tooltip: 'Enable to include selecting the optional assets of tasks'},
-        {name: 'autopurchase', title: 'Auto Purchase Resources', def: true, type: 'checkbox', tooltip: 'Automatically purchase required resources from gateway shop (100 at a time)'},
-        {name: 'trainassets', title: 'Train Assets', def: true, type: 'checkbox', tooltip: 'Enable training/upgrading of asset worker resources'},
-        {name: 'refinead', title: 'Refine AD', def: true, type: 'checkbox', tooltip: 'Enable refining of AD on character switch'},
-        {name: 'openrewards', title: 'Open Reward Chests', def: false, type: 'checkbox', tooltip: 'Enable opeing of leadership chests on character switch'}, //MAC-NW
-        {name: 'autoreload', title: 'Auto Reload', def: false, type: 'checkbox', tooltip: 'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)'},
-        {name: 'autovendor_junk', title: 'Auto Vendor junk..', def: false, type: 'checkbox', tooltip: 'Vendor all (currently) winterfest fireworks+lanterns'}, //MAC-NW
-        {name: 'autovendor_kits_altars_limit', title: 'Vendor/Maintain Altar Node Kit Stacks', def: false, type: 'checkbox', tooltip: 'Limit skill kits stacks to 50/Altars80, vendor kits unusable by class, remove all if player has one bag or full bags'}, // edited by RottenMind
-        {name: 'autovendor_kits_altars_all', title: 'Vendor All Altar Node Kit Stacks', def: false, type: 'checkbox', tooltip: 'Sell ALL skill kits  Altars.'}, // RottenMind
-        {name: 'autovendor_profresults', title: 'Vendor/Maintain Prof Crafted Levelup Items', def: false, type: 'checkbox', tooltip: 'Vendor off Tier 1 to 5 items produced and reused for leveling crafting professions.'},
-        {name: 'autovendor_pots1', title: 'Auto Vendor minor potions (lvl 1)', def: false, type: 'checkbox', tooltip: 'Vendor all minor potions (lvl 1) found in player bags'}, //MAC-NW
-        {name: 'autovendor_pots2', title: 'Auto Vendor lesser potions (lvl 15)', def: false, type: 'checkbox', tooltip: 'Vendor all lesser potions (lvl 15) found in player bags'}, //MAC-NW
-        {name: 'autovendor_pots3', title: 'Auto Vendor potions (lvl 30)', def: false, type: 'checkbox', tooltip: 'Vendor all potions (lvl 30) found in player bags'}, //MAC-NW
-        {name: 'autovendor_pots4', title: 'Auto Vendor greater potions (lvl 45)', def: false, type: 'checkbox', tooltip: 'Vendor all greater potions (lvl 45) found in player bags'}, //MAC-NW
-        {name: 'autovendor_rank1', title: 'Auto Vendor enchants & runes Rank 1', def: false, type: 'checkbox', tooltip: 'Vendor all Rank 1 enchantments & runestones found in player bags'}, //MAC-NW
-        {name: 'autovendor_rank2', title: 'Auto Vendor enchants & runes Rank 2', def: false, type: 'checkbox', tooltip: 'Vendor all Rank 2 enchantments & runestones found in player bags'}, //MAC-NW
-        {name: 'autovendor_rank3', title: 'Auto Vendor enchants & runes Rank 3', def: false, type: 'checkbox', tooltip: 'Vendor all Rank 3 enchantments & runestones found in player bags'}, // edited by RottenMind
-        {name: 'autologin', title: 'Attempt to login automatically', def: false, type: 'checkbox', tooltip: 'Automatically attempt to login to the neverwinter gateway site', border: true},
-        {name: 'nw_username', title: 'Neverwinter Username', def: '', type: 'text', tooltip: ''},
-        {name: 'nw_password', title: 'Neverwinter Password', def: '', type: 'password', tooltip: ''},
+        {name: 'optionals', title: 'Fill Optional Assets', def: true, type: 'checkbox', pane:'prof', tooltip: 'Enable to include selecting the optional assets of tasks'},
+        {name: 'autopurchase', title: 'Auto Purchase Resources', def: true, type: 'checkbox', pane:'prof', tooltip: 'Automatically purchase required resources from gateway shop (100 at a time)'},
+        {name: 'trainassets', title: 'Train Assets', def: true, type: 'checkbox', pane:'prof', tooltip: 'Enable training/upgrading of asset worker resources'},
+        {name: 'refinead', title: 'Refine AD', def: true, type: 'checkbox', pane:'main', tooltip: 'Enable refining of AD on character switch'},
+        {name: 'openrewards', title: 'Open Reward Chests', def: false, type: 'checkbox', pane:'main', tooltip: 'Enable opeing of leadership chests on character switch'}, //MAC-NW
+        {name: 'autoreload', title: 'Auto Reload', def: false, type: 'checkbox', pane:'main', tooltip: 'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)'},
+        {name: 'autovendor_junk', title: 'Auto Vendor junk..', def: false, type: 'checkbox', pane:'vend', tooltip: 'Vendor all (currently) winterfest fireworks+lanterns'}, //MAC-NW
+        {name: 'autovendor_kits_altars_limit', title: 'Vendor/Maintain Altar Node Kit Stacks', def: false, type: 'checkbox', pane:'vend', tooltip: 'Limit skill kits stacks to 50/Altars80, vendor kits unusable by class, remove all if player has one bag or full bags'}, // edited by RottenMind
+        {name: 'autovendor_kits_altars_all', title: 'Vendor All Altar Node Kit Stacks', def: false, type: 'checkbox', pane:'vend', tooltip: 'Sell ALL skill kits  Altars.'}, // RottenMind
+        {name: 'autovendor_profresults', title: 'Vendor/Maintain Prof Crafted Levelup Items', def: false, type: 'checkbox', pane:'vend', tooltip: 'Vendor off Tier 1 to 5 items produced and reused for leveling crafting professions.'},
+        {name: 'autovendor_pots1', title: 'Auto Vendor minor potions (lvl 1)', def: false, type: 'checkbox', pane:'vend', tooltip: 'Vendor all minor potions (lvl 1) found in player bags'}, //MAC-NW
+        {name: 'autovendor_pots2', title: 'Auto Vendor lesser potions (lvl 15)', def: false, type: 'checkbox', pane:'vend', tooltip: 'Vendor all lesser potions (lvl 15) found in player bags'}, //MAC-NW
+        {name: 'autovendor_pots3', title: 'Auto Vendor potions (lvl 30)', def: false, type: 'checkbox', pane:'vend', tooltip: 'Vendor all potions (lvl 30) found in player bags'}, //MAC-NW
+        {name: 'autovendor_pots4', title: 'Auto Vendor greater potions (lvl 45)', def: false, type: 'checkbox', pane:'vend', tooltip: 'Vendor all greater potions (lvl 45) found in player bags'}, //MAC-NW
+        {name: 'autovendor_rank1', title: 'Auto Vendor enchants & runes Rank 1', def: false, type: 'checkbox', pane:'vend', tooltip: 'Vendor all Rank 1 enchantments & runestones found in player bags'}, //MAC-NW
+        {name: 'autovendor_rank2', title: 'Auto Vendor enchants & runes Rank 2', def: false, type: 'checkbox', pane:'vend', tooltip: 'Vendor all Rank 2 enchantments & runestones found in player bags'}, //MAC-NW
+        {name: 'autovendor_rank3', title: 'Auto Vendor enchants & runes Rank 3', def: false, type: 'checkbox', pane:'vend', tooltip: 'Vendor all Rank 3 enchantments & runestones found in player bags'}, // edited by RottenMind
+        {name: 'autologin', title: 'Attempt to login automatically', def: false, type: 'checkbox', pane:'main', tooltip: 'Automatically attempt to login to the neverwinter gateway site', border: true},
+        {name: 'nw_username', title: 'Neverwinter Username', def: '', type: 'text', pane:'main', tooltip: ''},
+        {name: 'nw_password', title: 'Neverwinter Password', def: '', type: 'password', pane:'main', tooltip: ''},
         // MAC-NW AD Consolidation
-        {name: 'autoexchange', title: 'Consolidate AD via ZEX', def: false, type: 'checkbox', tooltip: 'Automatically attempt to post, cancel and withdraw AD via ZEX and consolidate to designated character', border: true},
-        {name: 'bankchar', title: 'Character Name of Banker', def: '', type: 'text', tooltip: 'Enter name of the character to hold account AD'},
-        {name: 'banktransmin', title: 'Min AD for Transfer', def: '22000', type: 'text', tooltip: 'Enter minimum AD limit for it to be cosidered for transfer off a character'},
-        {name: 'bankcharmin', title: 'Min Character balance', def: '8000', type: 'text', tooltip: 'Enter the amount of AD to always keep available on characters'},
-        {name: 'banktransrate', title: 'AD per Zen Rate (in zen)', def: '300', type: 'text', tooltip: 'Enter default rate to use for transfering through ZEX'},
-        {name: 'charcount', title: 'Enter number of characters to use (Save and Apply to update settings form)', def: '2', type: 'text', tooltip: 'Enter number of characters to use (Save and Apply to update settings form)', border: true},
+        {name: 'autoexchange', title: 'Consolidate AD via ZEX', def: false, type: 'checkbox', pane:'bank', tooltip: 'Automatically attempt to post, cancel and withdraw AD via ZEX and consolidate to designated character', border: true},
+        {name: 'bankchar', title: 'Character Name of Banker', def: '', type: 'text', pane:'bank', tooltip: 'Enter name of the character to hold account AD'},
+        {name: 'banktransmin', title: 'Min AD for Transfer', def: '22000', type: 'text', pane:'bank', tooltip: 'Enter minimum AD limit for it to be cosidered for transfer off a character'},
+        {name: 'bankcharmin', title: 'Min Character balance', def: '8000', type: 'text', pane:'bank', tooltip: 'Enter the amount of AD to always keep available on characters'},
+        {name: 'banktransrate', title: 'AD per Zen Rate (in zen)', def: '300', type: 'text', pane:'bank', tooltip: 'Enter default rate to use for transfering through ZEX'},
+        {name: 'charcount', title: 'Enter number of characters to use (Save and Apply to update settings form)', def: '2', type: 'text', pane:'main', tooltip: 'Enter number of characters to use (Save and Apply to update settings form)', border: true},
         // MAC-NW
     ];
 
@@ -1104,6 +1104,7 @@ function _select_Gateway() { // Check for Gateway used to
     if (settings["charcount"] > 99) {
         settings["charcount"] = 99;
     }
+
 
     // Profession priority list by order
     var tasklist = [
@@ -1184,6 +1185,23 @@ function _select_Gateway() { // Check for Gateway used to
         // Do nothing on the guard screen
         dfdNextRun.resolve(delay.LONG);
     }
+
+
+
+	/*  !!!test (on login)
+	characters = []
+	console.log(client.dataModel.model.loginInfo.choices);
+	var tempChars = JSON.parse( GM_getValue("characters", "{}") ); 
+	if(!tempChars) {
+      console.log('JSON.parse failed - The stored value for "characters" is likely to be corrupted.');
+    };
+	client.dataModel.model.loginInfo.choices.forEach( function (char) {
+    	console.log(char.name);
+    })
+    */
+
+
+
 
     /**
      * Collects rewards for tasks or starts new tasks
@@ -2434,60 +2452,81 @@ function _select_Gateway() { // Check for Gateway used to
 <span style="margin:3px">Settings</span>\
 </div>\
 <form style="margin: 0px; padding: 0px">\
-<ul style="list-style: none outside none; max-height: 500px; overflow: auto; margin: 3px; padding: 0px;">\
+<div id="main_tabs">\
+<ul>\
 </ul>\
+</div>\
 </form>\
 </div>'
                 );
 
-        // Add each setting input
-        var settingsList = $("#settingsPanel form ul");
-        for (var i = 0; i < settingnames.length; i++) {
-            var id = 'settings_' + settingnames[i].name;
-            var indent = (countLeadingSpaces(settingnames[i].title) >= 1) ? 1 : 0;
-            /*if ((settingnames[i].type == 'text' && settingnames[i-1].type == 'checkbox') || (settingnames[i-1] && settingnames[i].type == 'checkbox' && settingnames[i-1].type == 'text'))
-             settingsList.append('<li style="margin-left:0em; width: 48%; display: inline-block;"/>&nbsp;</li>')*/
-            var border = "";
-            if (settingnames[i].border)
-                border = "border-top: #000 solid 1px;"
-            switch (settingnames[i].type) {
-                case "checkbox":
-                    var _checkWidth = "48%";
-                    if (i < 9)
-                        _checkWidth = "31%";
-                    if (settingnames[i].border)
-                        _checkWidth = "98%";
-                    settingsList.append('<li title="' + settingnames[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; width: ' + _checkWidth + '; display: inline-block;"><input style="margin:4px" name="' + id + '" id="' + id + '" type="checkbox" /><label class="' + settingnames[i].class + '" for="' + id + '">' + settingnames[i].title + '</label></li>')
-                    $('#' + id).prop('checked', settings[settingnames[i].name]);
-                    break;
-                case "text":
-                    if (settingnames[i].border)
-                        _inputkWidth = "95%; padding: 10px";
-                    else
-                        _inputkWidth = "46%";
-                    settingsList.append('<li title="' + settingnames[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; margin-top:1em; width: ' + _inputkWidth + '; display: inline-block;"<label class="' + settingnames[i].class + '" for="' + id + '">' + settingnames[i].title + '</label><input style="margin:4px; padding: 2px; min-width: 80%;" name="' + id + '" id="' + id + '" type="text" /></li>')
-                    $('#' + id).val(settings[settingnames[i].name]);
-                    break;
-                case "password":
-                    settingsList.append('<li title="' + settingnames[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; margin-top:1em; width: 46%; display: inline-block;"' + settingnames[i].class + '" for="' + id + '">' + settingnames[i].title + '</label><input style="margin:4px; padding: 2px; min-width: 80%;" name="' + id + '" id="' + id + '" type="password" /></li>')
-                    $('#' + id).val(settings[settingnames[i].name]);
-                    break;
-                case "select":
-                    settingsList.append('<li title="' + settingnames[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; width: 48%; display: inline-block;"' + settingnames[i].class + '" style="padding-left:4px" for="' + id + '">' + settingnames[i].title + '</label><select style="margin:4px" name="' + id + '" id="' + id + '" /></li>')
-                    var options = settingnames[i].opts;
-                    var select = $('#' + id);
-                    for (var j = 0; j < options.length; j++) {
-                        if (settings[settingnames[i].name] == options[j].path)
-                            select.append('<option value="' + options[j].path + '" selected="selected">' + options[j].name + '</option>');
+        $("div#main_tabs").tabs();
+        var tabs = {main : 'General settings', vend: 'Vendor options' ,bank: 'AD Consolidation'};
+        for (var key in tabs) {
+            var tabs_num = $("div#main_tabs > ul > li").length + 1;
+	        $("div#main_tabs > ul").append(
+    	        "<li><a href='#main_tab" + tabs_num + "'>" + tabs[key] + "</a></li>"
+            );
+            
+            var tab = $("<div id='main_tab" + tabs_num + "'></div>");
+			$("div#main_tabs").append(tab);
+        
+            // Add each setting input
+            var settingsList = $('<ul style="list-style: none outside none; min-height: 300px; max-height: 500px; overflow: auto; margin: 3px; padding: 0px;"></ul>');
+            var settingListToAdd = settingnames.filter( function (element) { return (element.pane == key); });
+            
+            for (var i = 0; i < settingListToAdd.length; i++) {
+                var id = 'settings_' + settingListToAdd[i].name;
+                var indent = (countLeadingSpaces(settingListToAdd[i].title) >= 1) ? 1 : 0;
+                /*if ((settingnames[i].type == 'text' && settingnames[i-1].type == 'checkbox') || (settingnames[i-1] && settingnames[i].type == 'checkbox' && settingnames[i-1].type == 'text'))
+                 settingsList.append('<li style="margin-left:0em; width: 48%; display: inline-block;"/>&nbsp;</li>')*/
+                var border = "";
+                if (settingListToAdd[i].border)
+                    border = "border-top: #000 solid 1px;"
+                switch (settingListToAdd[i].type) {
+                    case "checkbox":
+                        var _checkWidth = "48%";
+                        /*
+                        if (i < 9)
+                            _checkWidth = "31%";
+                            */
+                        if (settingListToAdd[i].border)
+                            _checkWidth = "98%";
+                        settingsList.append('<li title="' + settingListToAdd[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; width: ' + _checkWidth + '; display: inline-block;"><input style="margin:4px" name="' + id + '" id="' + id + '" type="checkbox" /><label class="' + settingListToAdd[i].class + '" for="' + id + '">' + settingListToAdd[i].title + '</label></li>')
+                        settingsList.find('#' + id).prop('checked',settings[settingListToAdd[i].name]);
+                        break;
+                    case "text":
+                        if (settingListToAdd[i].border)
+                            _inputkWidth = "95%; padding: 10px";
                         else
-                            select.append('<option value="' + options[j].path + '">' + options[j].name + '</option>');
-                    }
-                    break;
-                case "label":
-                    settingsList.append('<li title="' + settingnames[i].tooltip + '" style="' + border + 'margin-left:' + indent + 'em;><label class="' + settingnames[i].class + '">' + settingnames[i].title + '</label></li>')
-                    break;
+                            _inputkWidth = "46%";
+                        settingsList.append('<li title="' + settingListToAdd[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; margin-top:1em; width: ' + _inputkWidth + '; display: inline-block;"<label class="' + settingListToAdd[i].class + '" for="' + id + '">' + settingListToAdd[i].title + '</label><input style="margin:4px; padding: 2px; min-width: 80%;" name="' + id + '" id="' + id + '" type="text" /></li>')
+                        settingsList.find('#' + id).val(settings[settingListToAdd[i].name]);
+                        break;
+                    case "password":
+                        settingsList.append('<li title="' + settingListToAdd[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; margin-top:1em; width: 46%; display: inline-block;"' + settingListToAdd[i].class + '" for="' + id + '">' + settingListToAdd[i].title + '</label><input style="margin:4px; padding: 2px; min-width: 80%;" name="' + id + '" id="' + id + '" type="password" /></li>')
+                        settingsList.find('#' + id).val(settings[settingListToAdd[i].name]);
+                        break;
+                    case "select":
+                        settingsList.append('<li title="' + settingListToAdd[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; width: 48%; display: inline-block;"' + settingListToAdd[i].class + '" style="padding-left:4px" for="' + id + '">' + settingListToAdd[i].title + '</label><select style="margin:4px" name="' + id + '" id="' + id + '" /></li>')
+                        var options = settingListToAdd[i].opts;
+                        var select = $('#' + id);
+                        for (var j = 0; j < options.length; j++) {
+                            if (settings[settingListToAdd[i].name] == options[j].path)
+                                select.append('<option value="' + options[j].path + '" selected="selected">' + options[j].name + '</option>');
+                            else
+                                select.append('<option value="' + options[j].path + '">' + options[j].name + '</option>');
+                        }
+                        break;
+                    case "label":
+                        settingsList.append('<li title="' + settingListToAdd[i].tooltip + '" style="' + border + 'margin-left:' + indent + 'em;><label class="' + settingListToAdd[i].class + '">' + settingListToAdd[i].title + '</label></li>')
+                        break;
+                }
             }
-        }
+            $(tab).append(settingsList);
+        };
+        $("div#main_tabs").tabs("refresh");
+        $("div#main_tabs").tabs( "option", "active", 0 );
 
         // Add character settings for each char
 
