@@ -1375,7 +1375,8 @@ function _select_Gateway() { // Check for Gateway used to
         var level = unsafeWindow.client.dataModel.model.ent.main.itemassignmentcategories.categories.filter(function (entry) {
             return entry.name == prof.taskName;
         })[0].currentrank;
-        var profile = prof.profiles.filter(function( profile ) { return profile.profileName == settings[prof.taskName + charcurrent + '_profile']; });
+        var profile = prof.profiles.filter(function( profile ) { return profile.profileName == settings[prof.taskListName + charcurrent + '_profile']; });
+        console.log('Selecting profile: ' + profile[0].profileName);
         var list = profile[0].level[level];
         if (list.length <= i) {
             console.log("Nothing Found");
