@@ -1047,7 +1047,7 @@ function _select_Gateway() { // Check for Gateway used to
             },
         }]
     };
-    
+
     // Load Settings
     var settingnames = [
         {name: 'paused', title: 'Pause Script', def: false, type: 'checkbox', pane:'main', tooltip: 'Disable All Automation'},
@@ -1107,7 +1107,7 @@ function _select_Gateway() { // Check for Gateway used to
     }
 
 
-    // Profession list by order
+    // Profession priority list by order
     var tasklist = [
         definedTask["Leadership"],
         definedTask["Jewelcrafting"],
@@ -1123,114 +1123,6 @@ function _select_Gateway() { // Check for Gateway used to
         definedTask["Siege Event"],
         
     ];
-
-	var globalSettings = {        
-        scriptPaused: false,
-        scriptDebugMode: false,
-        autoLogin: false,
-        autoLoginAccount: "",
-        autoLoginPassword: "",
-    };
-        
-    // Populated at login     
-    var accountSettings = {};
-    var charSettingsTest = {};         
-	var charNameList = [];
-
-    var defaultAccountSettings = {
-        statistics: {
-        	//totalAD: 0,
-        	//totalRAD: 0,
-        	//totalgold: 0,
-        },
-        SCA: {
-            lastCycle: 0,
-        },
-        vendorSettings: {
-            vendorJunk: false,
-            vendorKitsLimit: false,
-            vendorAltarsLimit: false,
-            vendorKitsAll: false,
-            vendorAltarsAll: false,
-            vendorProfResults: false,
-            vendorPots1: false,
-            vendorPots2: false,
-            vendorPots3: false,
-            vendorPots4: false,
-        	vendorEnchR1: false,
-            vendorEnchR2: false,
-            vendorEnchR3: false,
-        },
-        professionSettings: {
-            fillOptionals: false,
-            autoPurchaseRes: false,
-            trainAssets: false,
-        },
-        generalSettings: {
-            refineAD: false,
-            openRewards: false,
-        },
-        consolidationSettings: {
-        	bankName: "",
-        	transferRate: 100,
-        	consolidate: false,
-            minCharBalance: 10000,
-            minToTransfer: 50000,
-        },
-    };
-        
-    var defaultCharSettings = {
-        charName: "",
-        active: false,
-        overrideGlobalSettings: false,
-        statistics: {
-        	refineCounter: 0,
-        	refineCounterReset: Date.now(),
-        	astrals: 0,
-        	gold: 0,
-        	emptyBagSlots: 0,
-        },
-        vendorSettings: {
-            vendorJunk: false,
-            vendorKitsLimit: false,
-            vendorAltarsLimit: false,
-            vendorKitsAll: false,
-            vendorAltarsAll: false,
-            vendorProfResults: false,
-            vendorPots1: false,
-            vendorPots2: false,
-            vendorPots3: false,
-            vendorPots4: false,
-        	vendorEnchR1: false,
-            vendorEnchR2: false,
-            vendorEnchR3: false,
-        },
-        professionSettings: {
-            fillOptionals: false,
-            autoPurchaseRes: false,
-            trainAssets: false,
-        },
-        generalSettings: {
-            refineAD: false,
-            openRewards: false,
-        },
-        consolidationSettings: {
-            consolidate: false,
-            minCharBalance: 10000,
-            minToTransfer: 50000,
-        },
-        taskListSettigns: [],
-    };
-    //Adding taskList defaults, perhaps should be moved here permanantly from tasklist.
-    tasklist.forEach(function(task) {
-        var profileNames = [];
-        task.profiles.forEach( function(profile) { if (profile.isProfileActive) profileNames.push({name: profile.profileName, value: profile.profileName}); } ); 
-        defaultCharSettings.taskListSettigns[task.taskListName] = {};
-        defaultCharSettings.taskListSettigns[task.taskListName].taskSlots = task.taskDefaultSlotNum;
-        defaultCharSettings.taskListSettigns[task.taskListName].taskProfile =  profileNames[0].value;
-        defaultCharSettings.taskListSettigns[task.taskListName].taskPriority =  task.taskDefaultPriority;
-    });
-
 
     var priorityOptions = [{name: 'high', value: 0},{name: 'medium', value: 1},{name: 'low', value: 2}];
         
@@ -2432,34 +2324,7 @@ function _select_Gateway() { // Check for Gateway used to
             });
             refineCounters = tempList;
             GM_setValue("refineCounters", JSON.stringify(refineCounters));
-            
-            
-            
-			// Experimental
-           	var tempAccountSetting = JSON.parse( GM_getValue("account_settings_" + accountName, "{}") ); 
-            if(!tempAccountSetting) {
-                console.log('Account settings couldn\'t be retrieved, loading defaults.');
-                tempAccountSetting = {};  
-            };
-            accountSettings = $.extend(true, {}, defaultAccountSettings, tempAccountSetting );
-    		if (JSON.stringify(accountSettings) !== GM_getValue("account_settings_" + accountName)) GM_setValue("account_settings_" + accountName, JSON.stringify(accountSettings));
-            
-
-           	var tempCharsSetting = JSON.parse( GM_getValue("chars_settings_" + accountName, "{}") ); 
-            if(!tempCharsSetting) {
-                console.log('Character settings couldn\'t be retrieved, loading defaults.');
-                tempCharsSetting = {};  
-            };
-            
-            charNameList = [];
-            client.dataModel.model.loginInfo.choices.forEach( function (char) {
-                if (char.name == "Author") return;
-                charNameList.push(char.name);
-                charSettingsTest[char.name] = $.extend(true, {}, defaultCharSettings, tempCharsSetting );
-                charSettingsTest[char.name].charName = char.name;  // for competabilty if charSettingsTest changed to simple array
-            });
-            if (JSON.stringify(charSettingsTest) !== GM_getValue("chars_settings_" + accountName)) GM_setValue("chars_settings_" + accountName, JSON.stringify(charSettingsTest));
-            /************/
+            //console.log(refineCounters);
             
             // load current character position and values
             charcurrent = GM_getValue("charcurrent", 0);
