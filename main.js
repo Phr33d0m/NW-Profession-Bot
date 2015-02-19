@@ -12,12 +12,12 @@
 /*
  === NW Gateway Professions Bot Developers
  - Bluep, Numberb, mac-nw, Phr33d0m, BigRedBrent
- 
+
  === NW Gateway Professions Bot Contributors
  - Kakoura, Nametaken, rotten_mind, Frankescript
  */
 
-// @version 1.10.1
+// @version 1.11.0
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -267,10 +267,12 @@ var console = unsafeWindow.console || fouxConsole;
 var chardiamonds = {};
 var chargold = {};
 var definedTask = {};
+var deferredVendor = {};
+var deferredExchange = {};
 // Page Reloading function
 // Every second the page is idle or loading is tracked
 var loading_reset = false; // Enables a periodic reload if this is toggled on by the Auto Reload check box on the settings panel
-var s_paused = false;	   // extend the paused setting to the Page Reloading function
+var s_paused = false;      // extend the paused setting to the Page Reloading function
 
 // RottenMind (start), multi Url support
 function _select_Gateway() { // Check for Gateway used to
@@ -344,9 +346,9 @@ function _select_Gateway() { // Check for Gateway used to
 
     //MAC-NW
 
-    var state_loading = 0;	  // If "Page Loading" takes longer than 30 seconds, reload page (maybe a javascript error)
+    var state_loading = 0;    // If "Page Loading" takes longer than 30 seconds, reload page (maybe a javascript error)
     var state_loading_time = 30;  // default of 30 seconds
-    var state_idle = 0;	  // If the page is idle for longer than 60 seconds, reload page (maybe a javascript error)
+    var state_idle = 0;   // If the page is idle for longer than 60 seconds, reload page (maybe a javascript error)
     var state_idle_time = 120; // default of 120 seconds
     var reload_hours = [2, 5, 8, 11, 14, 17, 20, 23]; // logout and reload every three hours - 2:29 - 5:29 - 8:29 - 11:29 - 14:29 - 17:29 - 20:29 - 23:29
     var last_location = "";  // variable to track reference to page URL
@@ -1020,7 +1022,7 @@ function _select_Gateway() { // Check for Gateway used to
         charSettings.push({name: 'nw_charname' + i, title: 'Character', def: 'Character ' + (i + 1), type: 'text', tooltip: 'Characters Name'});
         charSettings.push({name: 'WinterEvent' + i, title: 'WinterEvent', def: '0', type: 'text', tooltip: 'Number of slots to assign to WinterEvent'});
         charSettings.push({name: 'Leadership' + i, title: 'Leadership', def: '9', type: 'text', tooltip: 'Number of slots to assign to Leadership'});
-		charSettings.push({name: 'Event_Siege' + i, title: 'Siege Event', def: '0', type: 'text', tooltip: 'Number of slots to assign to Siege Event'});
+        charSettings.push({name: 'Event_Siege' + i, title: 'Siege Event', def: '0', type: 'text', tooltip: 'Number of slots to assign to Siege Event'});
         charSettings.push({name: 'BlackIce' + i, title: 'Black Ice Shaping', def: '0', type: 'text', tooltip: 'Number of slots to assign to BIS'});
         charSettings.push({name: 'Alchemy' + i, title: 'Alchemy', def: '0', type: 'text', tooltip: 'Number of slots to assign to Alchemy'});
         charSettings.push({name: 'Weaponsmithing' + i, title: 'Weaponsmithing', def: '0', type: 'text', tooltip: 'Number of slots to assign to Weaponsmithing'});
@@ -1131,10 +1133,10 @@ function _select_Gateway() { // Check for Gateway used to
         // Add diamond count
         chardiamonds[charcurrent] = unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds;
         console.log(settings["nw_charname" + charcurrent] + "'s", "Astral Diamonds:", chardiamonds[charcurrent]);
-        
+
         // Add gold count
         chargold[charcurrent] = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.gold);
-        
+
         return false;
     }
 
@@ -1256,7 +1258,7 @@ function _select_Gateway() { // Check for Gateway used to
         // Search for task to start
         var task = searchForTask(taskName, prof.taskName);
 
-        /** TODO: Use this	code once below can be replaced properly
+        /** TODO: Use this  code once below can be replaced properly
          if (task === null) {
          console.log("Skipping task selection to purchase resources");
          dfdNextRun.resolve();
@@ -1375,7 +1377,7 @@ function _select_Gateway() { // Check for Gateway used to
                 var _charSilver = unsafeWindow.client.dataModel.model.ent.main.currencies.silver;
                 var _charCopper = unsafeWindow.client.dataModel.model.ent.main.currencies.copper;
                 var _charCopperTotal = _charCopper + (_charSilver*100) + (_charGold*10000);
-                
+
                 // Buy Leadership Armor Asset
                 if (failedArmor.length && _charCopperTotal >= 10000) {
                     console.log("Buying leadership asset:", failedArmor[0].icon);
@@ -1434,7 +1436,7 @@ function _select_Gateway() { // Check for Gateway used to
                 if (settings["autopurchase"] && itemName.match(/^Crafting_Resource_(Charcoal|Rocksalt|Spool_Thread|Porridge|Solvent|Brimstone|Coal|Moonseasalt|Quicksilver|Spool_Threadsilk)$/)) {
                     // returns null if successful (task will try again) and false if unsuccessful (task will be skipped)
                     return buyResource(itemName);
-                } 
+                }
                 // Matched profession auto-purchase item found but auto-purchase is not enabled
                 else if (!settings["autopurchase"] && itemName.match(/^Crafting_Resource_(Charcoal|Rocksalt|Spool_Thread|Porridge|Solvent|Brimstone|Coal|Moonseasalt|Quicksilver|Spool_Threadsilk)$/)) {
                     console.log("Purchasable resource required:",itemName,"for task:", taskname,". Recommend enabling Auto Purchase Resources.");
@@ -1531,7 +1533,7 @@ function _select_Gateway() { // Check for Gateway used to
      * @param {string} taskDetail The craftindetail object for the task to be started
      function startTask(taskDetail) {
      return;
-     
+
      unsafeWindow.client.professionFetchTaskDetail(taskDetail.def.name);
      //client.dataModel.addDefaultResources();
      client.professionStartAssignment(taskDetail.def.name);
@@ -1637,15 +1639,15 @@ function _select_Gateway() { // Check for Gateway used to
      var mercenarys = $("div.modal-item-list a.Bronze:contains('Mercenary')");
      var guards = $("div.modal-item-list a.Bronze:contains('Guard')");
      var footmen = $("div.modal-item-list a.Bronze:contains('Footman')");
-     if (mercenarys.length)	 { clicked = true; mercenarys[0].click(); }
-     else if (guards.length)	 { clicked = true; guards[0].click(); }
+     if (mercenarys.length)  { clicked = true; mercenarys[0].click(); }
+     else if (guards.length)     { clicked = true; guards[0].click(); }
      else if (footmen.length) { clicked = true; footmen[0].click(); }
      }
      // TODO: add remaining professions in the same way for bronze tier assets.
      if (!clicked) {
      // Click the highest slot
-     if (specialItems.length)	 { specialItems[0].click(); }
-     else if (goldItems.length)	 { goldItems[0].click(); }
+     if (specialItems.length)    { specialItems[0].click(); }
+     else if (goldItems.length)  { goldItems[0].click(); }
      else if (silverItems.length) { silverItems[0].click(); }
      else if (bronzeItems.length) { bronzeItems[0].click(); }
      else { $("button.close-button").click(); }
@@ -1703,7 +1705,7 @@ function _select_Gateway() { // Check for Gateway used to
         var _resourcePurchasable = Math.floor(_charCopperTotal/_resourceCost[item]);
         // Limit resource purchase to 50 quantity
         var _purchaseCount = (_resourcePurchasable >= 50) ? 50 : _resourcePurchasable;
-        
+
         if (_purchaseCount < 1) {
             // Not enough gold for 1 resource
             console.log("Purchasing profession resources failed for:",item);
@@ -1741,58 +1743,6 @@ function _select_Gateway() { // Check for Gateway used to
             }
         });
     }
-
-
-    // Function used to check exchange data model and post calculated AD/Zen for transfer if all requirements are met
-    function postZexOffer() {
-        // Make sure the exchange data is loaded to model
-        if (unsafeWindow.client.dataModel.model.exchangeaccountdata) {
-            // Check that there is atleast 1 free zex order slot
-            if (unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length < 5) {
-                // Place the order
-                var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
-                var ZenRate = parseInt(settings["banktransrate"]);
-                var ZenQty = Math.floor((charDiamonds - parseInt(settings["bankcharmin"])) / ZenRate);
-                ZenQty = (ZenQty > 5000) ? 5000 : ZenQty;
-                console.log("Posting Zex buy listing for " + ZenQty + " ZEN at the rate of " + ZenRate + " AD/ZEN. AD remainder: " + charDiamonds + " - " + (ZenRate * ZenQty) + " = " + (charDiamonds - (ZenRate * ZenQty)));
-                unsafeWindow.client.createBuyOrder(ZenQty, ZenRate);
-
-            } else {
-                console.log("Zen Max Listings Reached (5). Skipping Zex Posting..");
-            }
-        } else {
-            console.log("Zen Exchange data did not load in time for transfer. Skipping Zex Posting..");
-        }
-    }
-
-    // Function used to check exchange data model and withdraw listed orders that use the settings zen transfer rate
-    function withdrawZexOffer() {
-        // Make sure the exchange data is loaded to model
-        if (unsafeWindow.client.dataModel.model.exchangeaccountdata) {
-            if (unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length >= 1) {
-
-                var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
-                var ZenRate = parseInt(settings["banktransrate"]);
-
-                // cycle through the zex listings
-                unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.forEach(function (item) {
-                    // find any buy orders in the list with our set zen rate
-                    if (parseInt(item.price) == ZenRate && item.ordertype == "Buy") {
-                        // cancel/withdraw the order
-                        client.withdrawOrder(item.orderid);
-                        console.log("Withdrawing Zex listing for " + item.quantity + " ZEN at the rate of " + item.price + " . Total value in AD: " + item.totaltc);
-                    }
-                });
-
-            } else {
-                console.log("No listings found on Zex. Skipping Zex Withrdaw..");
-            }
-        } else {
-            console.log("Zen Exchange data did not load in time for transfer. Skipping Zex Withrdaw..");
-        }
-    }
-
-    // MAC-NW
 
     function vendorItemsLimited(_items) {
         var _pbags = client.dataModel.model.ent.main.inventory.playerbags;
@@ -1929,7 +1879,16 @@ function _select_Gateway() { // Check for Gateway used to
 
     function switchChar() {
 
-        if (settings["refinead"]) {
+        // Don't reprocess switchChar if waiting on vendoring and auto exchange
+        if ( (!jQuery.isEmptyObject(deferredVendor) && deferredVendor.state() == "pending")  || (!jQuery.isEmptyObject(deferredExchange) && deferredExchange.state() == "pending") ) {
+            if (!jQuery.isEmptyObject(deferredVendor) && deferredVendor.state() == "pending")
+                console.log("Waiting for vendor data model and code execution (",charname,")...");
+            if (!jQuery.isEmptyObject(deferredExchange) && deferredExchange.state() == "pending")
+                console.log("Waiting for exchange data model and code execution (",charname,")...");
+            return;
+        }
+
+        if (settings["refinead"] ) {
             var _currencies = unsafeWindow.client.dataModel.model.ent.main.currencies;
             if (_currencies.diamondsconvertleft && _currencies.roughdiamonds) {
                 var refined_diamonds;
@@ -1946,28 +1905,6 @@ function _select_Gateway() { // Check for Gateway used to
                     $("button.closeNotification").click();
                 });
             }
-        }
-
-        // MAC-NW -- AD Consolidation
-        if (settings["autoexchange"]) {
-
-            // Check that we dont take money from the character assigned as the banker // Zen Transfer / Listing
-            if (settings["bankchar"] != unsafeWindow.client.dataModel.model.ent.main.name) {
-                // Check the required min AD amount on character
-                if (settings["banktransmin"] && settings["bankcharmin"] && parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds) >= (parseInt(settings["banktransmin"]) + parseInt(settings["bankcharmin"]))) {
-                    // Check that the rate is not less than the min & max
-                    if (settings["banktransrate"] && parseInt(settings["banktransrate"]) >= 50 && parseInt(settings["banktransrate"]) <= 500) {
-                        window.setTimeout(postZexOffer, delay.SHORT);
-                    } else {
-                        console.log("Zen transfer rate does not meet the minimum (50) or maximum (500). Skipping Zex Posting..");
-                    }
-                } else {
-                    console.log("Character does not have minimum AD balance to do funds transfer. Skipping Zex Posting..");
-                }
-            }
-
-        } else {
-            console.log("Zen Exchange AD transfer not enabled. Skipping Zex Posting..");
         }
 
         if (settings["openrewards"]) {
@@ -1989,10 +1926,13 @@ function _select_Gateway() { // Check for Gateway used to
             });
         }
 
-        // Check Vendor Options & Vendor matched items
-        vendorJunk();
+        // deferredVendor is not a deferred object so run merchant/vendor code
+        if (jQuery.isEmptyObject(deferredVendor))
+            _loadMerchant('switchChar');
 
-        // MAC-NW (endchanges)
+        // deferredExchange is not a deferred object so run auto exchange code
+        if (jQuery.isEmptyObject(deferredExchange))
+            _loadExchange('switchChar');
 
         console.log("Switching Characters");
 
@@ -2025,16 +1965,29 @@ function _select_Gateway() { // Check for Gateway used to
             if (chardiamonds[cc] != null) {
                 curdiamonds += Math.floor(chardiamonds[cc] / 50) * 50;
             }
-            
+
             if(chargold[cc] != null) {
-            	curgold += chargold[cc];
+                curgold += chargold[cc];
             }
         }
-        
+
         console.log("Next run for " + settings["nw_charname" + charcurrent] + " in " + parseInt(chardelay / 1000) + " seconds.");
         $("#prinfopane").empty().append("<h3 class='promo-image copy-top prh3'>Professions Robot<br />Next task for " + settings["nw_charname" + charcurrent] + "<br /><span data-timer='" + chardate + "' data-timer-length='2'></span><br />Diamonds: " + curdiamonds.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "<br />Gold: "+ curgold +"</h3>");
         GM_setValue("charcurrent", charcurrent);
-        dfdNextRun.resolve(chardelay);
+
+
+        // Merchant and exchange model data loaded and ran callback code
+        if (deferredExchange.state() == "resolved" && deferredVendor.state() == "resolved" ) {
+            _resetAdditionalTasksTracking();
+            dfdNextRun.resolve(chardelay);
+        // Loop and wait for vendor and exchange deferred objects to resolve (models updated and callback code ran)
+        } else {
+            window.setTimeout(function () {
+                switchChar();
+            }, delay.SHORT * 2);
+        }
+
+        return;
     }
 
     /**
@@ -2097,8 +2050,8 @@ function _select_Gateway() { // Check for Gateway used to
      * The main process loop:
      * - Determine which page we are on and call the page specific logic
      * - When processing is complete, process again later
-     *	- Use a short timer when something changed last time through
-     *	- Use a longer timer when waiting for tasks to complete
+     *  - Use a short timer when something changed last time through
+     *  - Use a longer timer when waiting for tasks to complete
      */
     function process() {
         // Make sure the settings button exists
@@ -2139,6 +2092,7 @@ function _select_Gateway() { // Check for Gateway used to
         }
 
         window.setTimeout(function () {
+            _resetAdditionalTasksTracking();
             loginProcess();
         }, delay.SHORT);
 
@@ -2160,6 +2114,7 @@ function _select_Gateway() { // Check for Gateway used to
         catch (e) {
             // TODO: Use callback function
             window.setTimeout(function () {
+                _resetAdditionalTasksTracking();
                 loginProcess();
             }, delay.SHORT);
             return;
@@ -2187,6 +2142,7 @@ function _select_Gateway() { // Check for Gateway used to
             var fullCharName = charName + '@' + accountName;
 
             if (unsafeWindow.client.getCurrentCharAtName() != fullCharName) {
+                _resetAdditionalTasksTracking();
                 loadCharacter(fullCharName);
                 return;
             }
@@ -2202,14 +2158,22 @@ function _select_Gateway() { // Check for Gateway used to
     }
 
     function loadCharacter(charname) {
+
+        // Don't reprocess loadCharacter if waiting on vendoring and auto exchange
+        if ( (!jQuery.isEmptyObject(deferredVendor) && deferredVendor.state() == "pending")  || (!jQuery.isEmptyObject(deferredExchange) && deferredExchange.state() == "pending") ) {
+            if (!jQuery.isEmptyObject(deferredVendor) && deferredVendor.state() == "pending")
+                console.log("Waiting for vendor data model and code execution (",charname,")...");
+            if (!jQuery.isEmptyObject(deferredExchange) && deferredExchange.state() == "pending")
+                console.log("Waiting for exchange data model and code execution (",charname,")...");
+            return;
+        }
+
         // Load character and restart next load loop
         console.log("Loading gateway script for", charname);
         unsafeWindow.client.dataModel.loadEntityByName(charname);
 
-        // MAC-NW -- AD Consolidation -- Banker Withdraw Secion
         try {
             var testChar = unsafeWindow.client.dataModel.model.ent.main.name;
-            unsafeWindow.client.dataModel.fetchVendor('Nw_Gateway_Professions_Merchant');
             console.log("Loaded datamodel for", charname);
         }
         catch (e) {
@@ -2220,68 +2184,26 @@ function _select_Gateway() { // Check for Gateway used to
             return;
         }
 
-        if (settings["autoexchange"]) {
+        // deferredVendor is not a deferred object so run merchant/vendor code
+        if (jQuery.isEmptyObject(deferredVendor))
+            _loadMerchant('loadCharacter');
 
-            unsafeWindow.client.dataModel.fetchExchangeAccountData();
+        // deferredExchange is not a deferred object so run auto exchange code
+        if (jQuery.isEmptyObject(deferredExchange))
+            _loadExchange('loadCharacter');
 
-            try {
-                var testExData = unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders;
-                console.log("Loaded zen exchange data for", charname);
-            }
-            catch (e) {
-                // TODO: Use callback function
-                window.setTimeout(function () {
-                    loadCharacter(charname);
-                }, delay.SHORT);
-                return;
-            }
-
-            // Check to see if this is the designated banker character
-            if (settings["bankchar"] == unsafeWindow.client.dataModel.model.ent.main.name) {
-                // This is the banker -- withdraw any buy listings that match the transfer rate set in panel
-                window.setTimeout(withdrawZexOffer, delay.MEDIUM);
-                // withdraw the balance from exchange
-                window.setTimeout(function () {
-                    if (parseInt(client.dataModel.model.exchangeaccountdata.readytoclaimescrow) > 0) {
-                        client.sendCommand("GatewayExchange_ClaimTC", client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
-                        console.log("Attempting to withdraw exchange balancees... ClaimTC: " + client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
-                    }
-                    if (parseInt(client.dataModel.model.exchangeaccountdata.readytoclaimmtc) > 0) {
-                        client.sendCommand("GatewayExchange_ClaimMTC", client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
-                        console.log("Attempting to withdraw exchange balancees... ClaimMT: " + client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
-                    }
-
-                }, delay.SHORT);
-            }
-
-            WaitForState("button.closeNotification").done(function () {
-                $("button.closeNotification").click();
-            });
-
-            unsafeWindow.client.dataModel.loadEntityByName(charname);
-
+        // Merchant and exchange model data loaded and ran callback code
+        if (deferredExchange.state() == "resolved" && deferredVendor.state() == "resolved" ) {
+            _resetAdditionalTasksTracking();
+            dfdNextRun.resolve();
+        // Loop and wait for vendor and exchange deferred objects to resolve (models updated and callback code ran)
         } else {
-            console.log("Zen Exchange AD transfer not enabled. Skipping Zex Posting..");
-        }
-        // MAC-NW
-
-        // MAC-NW -- Moved Professoin Merchant loading here with testing/waiting to make sure it loads
-        try {
-            var testProfMerchant = client.dataModel.model.vendor.items;
-            console.log("Loaded profession merchant for", charname);
-        }
-        catch (e) {
-            // TODO: Use callback function
             window.setTimeout(function () {
                 loadCharacter(charname);
             }, delay.SHORT);
-            return;
         }
 
-        // Check Vendor Options & Vendor matched items
-        vendorJunk();
-
-        dfdNextRun.resolve();
+        return;
     }
 
     function addSettings() {
@@ -2538,7 +2460,7 @@ document.getElementById("charContainer"+val).style.display="block";\
             var key = keys[i];
             GM_deleteValue(key);
         }
-			
+
         // Get each value from the UI
         for (var i = 0; i < settingnames.length; i++) {
             var name = settingnames[i].name;
@@ -2697,10 +2619,203 @@ document.getElementById("charContainer"+val).style.display="block";\
         return _bagUnused;
     }
 //RottenMind
+
+    // Function used to check exchange data model and post calculated AD/Zen for transfer if all requirements are met
+    function postZexOffer() {
+        // Make sure the exchange data is loaded to model
+        if (unsafeWindow.client.dataModel.model.exchangeaccountdata) {
+            // Check that there is atleast 1 free zex order slot
+            if (unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length < 5) {
+                // Place the order
+                var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
+                var ZenRate = parseInt(settings["banktransrate"]);
+                var ZenQty = Math.floor((charDiamonds - parseInt(settings["bankcharmin"])) / ZenRate);
+                ZenQty = (ZenQty > 5000) ? 5000 : ZenQty;
+                console.log("Posting Zex buy listing for " + ZenQty + " ZEN at the rate of " + ZenRate + " AD/ZEN. AD remainder: " + charDiamonds + " - " + (ZenRate * ZenQty) + " = " + (charDiamonds - (ZenRate * ZenQty)));
+                unsafeWindow.client.createBuyOrder(ZenQty, ZenRate);
+
+            } else {
+                console.log("Zen Max Listings Reached (5). Skipping Zex Posting..");
+            }
+        } else {
+            console.log("Zen Exchange data did not load in time for transfer. Skipping Zex Posting..");
+        }
+    }
+
+    // Function used to check exchange data model and withdraw listed orders that use the settings zen transfer rate
+    function withdrawZexOffer() {
+        // Make sure the exchange data is loaded to model
+        if (unsafeWindow.client.dataModel.model.exchangeaccountdata) {
+            if (unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length >= 1) {
+
+                var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
+                var ZenRate = parseInt(settings["banktransrate"]);
+
+                // cycle through the zex listings
+                unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.forEach(function (item) {
+                    // find any buy orders in the list with our set zen rate
+                    if (parseInt(item.price) == ZenRate && item.ordertype == "Buy") {
+                        // cancel/withdraw the order
+                        client.withdrawOrder(item.orderid);
+                        console.log("Withdrawing Zex listing for " + item.quantity + " ZEN at the rate of " + item.price + " . Total value in AD: " + item.totaltc);
+                    }
+                });
+
+            } else {
+                console.log("No listings found on Zex. Skipping Zex Withrdaw..");
+            }
+        } else {
+            console.log("Zen Exchange data did not load in time for transfer. Skipping Zex Withrdaw..");
+        }
+    }
+
+    function _resetAdditionalTasksTracking() {
+        deferredVendor = {};
+        deferredExchange = {};
+    }
+
+    function _loadMerchant(callerName) {
+        // If deferredVendor is a deferred object (not a empty object) then it's still trying/retrying.
+       if (!jQuery.isEmptyObject(deferredVendor)) {
+            return;
+        }
+
+        console.log("Loading merchant", unsafeWindow.client.dataModel.model.ent.main.name);
+        deferredVendor = $.Deferred();
+
+        // Timeout vendoring deferred object resolution
+        var vendorTimeout = window.setTimeout(function () {
+           // Reject vendor deferred object if it's still pending after DEFAULT (10s)
+           if (!jQuery.isEmptyObject(deferredVendor) && deferredVendor.state() == "pending" ) {
+                deferredVendor.reject();
+            }
+        }, delay.DEFAULT);
+
+        // Once resolved execute vendorJunk (Model update hook on data model received new merchant model data since request at end of this function)
+        deferredVendor.done(function(entity) {
+            console.log("Loaded profession merchant for", unsafeWindow.client.dataModel.model.ent.main.name);
+            vendorJunk();
+            // Remove Timeout
+            window.clearTimeout(vendorTimeout);
+        // Our timeout triggered the diferred object to fail so recall _loadMerchant and retry
+        }).fail(function() {
+            var caller = callerName;
+            deferredVendor = {};
+            // Remove Timeout
+            window.clearTimeout(exchangeTimeout);
+            // Recall _loadExchange (try again)
+            window.setTimeout(function () {
+                _loadMerchant(caller);
+            }, delay.SHORT);
+        });
+
+        unsafeWindow.client.dataModel.fetchVendor('Nw_Gateway_Professions_Merchant');
+    }
+
+    function _loadExchange(callerName) {
+        // If deferredExchange is a deferred object (not a empty object) then it's still trying/retrying.
+        if (!jQuery.isEmptyObject(deferredExchange)) {
+            return;
+        }
+        console.log("Loading Exchange for", unsafeWindow.client.dataModel.model.ent.main.name);
+        deferredExchange = $.Deferred();
+
+        if (!settings["autoexchange"]) {
+            deferredExchange.resolve();
+            return;
+        }
+
+        // Timeout exchange deferred object resolution
+        var exchangeTimeout = window.setTimeout(function () {
+            // Reject exchange deferred object if it's still pending after DEFAULT (10s)
+           if (!jQuery.isEmptyObject(deferredExchange) && deferredExchange.state() == "pending" ) {
+                deferredExchange.reject();
+            }
+        }, delay.DEFAULT);
+
+        // Once resolved execute auto exchange code (Model update hook on data model received new exchange model data since request at end of this function)
+        deferredExchange.done(function(entity) {
+            console.log("Loaded Exchange for", unsafeWindow.client.dataModel.model.ent.main.name);
+            if (settings["autoexchange"]) {
+                // Check that we dont take money from the character assigned as the banker // Zen Transfer / Listing
+                if (settings["bankchar"] != unsafeWindow.client.dataModel.model.ent.main.name) {
+                    // Check the required min AD amount on character
+                    if (settings["banktransmin"] && settings["bankcharmin"] && parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds) >= (parseInt(settings["banktransmin"]) + parseInt(settings["bankcharmin"]))) {
+                        // Check that the rate is not less than the min & max
+                        if (settings["banktransrate"] && parseInt(settings["banktransrate"]) >= 50 && parseInt(settings["banktransrate"]) <= 500) {
+                            window.setTimeout(postZexOffer, delay.SHORT);
+                        } else {
+                            console.log("Zen transfer rate does not meet the minimum (50) or maximum (500). Skipping Zex Posting..");
+                        }
+                    } else {
+                        console.log("Character does not have minimum AD balance to do funds transfer. Skipping Zex Posting..");
+                    }
+                } else {
+                    if (settings["bankchar"] == unsafeWindow.client.dataModel.model.ent.main.name) {
+                        // This is the banker -- withdraw any buy listings that match the transfer rate set in panel
+                        window.setTimeout(withdrawZexOffer, delay.MEDIUM);
+                        // withdraw the balance from exchange
+                        window.setTimeout(function () {
+                            if (parseInt(client.dataModel.model.exchangeaccountdata.readytoclaimescrow) > 0) {
+                                client.sendCommand("GatewayExchange_ClaimTC", client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
+                                console.log("Attempting to withdraw exchange balancees... ClaimTC: " + client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
+                            }
+                            if (parseInt(client.dataModel.model.exchangeaccountdata.readytoclaimmtc) > 0) {
+                                client.sendCommand("GatewayExchange_ClaimMTC", client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
+                                console.log("Attempting to withdraw exchange balancees... ClaimMT: " + client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
+                            }
+
+                        }, delay.SHORT);
+                    }
+                }
+            } else {
+                console.log("Zen Exchange AD transfer not enabled. Skipping Zex Posting..");
+            }
+            // Remove Timeout
+            window.clearTimeout(exchangeTimeout);
+        // Our timeout triggered the diferred object to fail so recall _loadExchange and retry
+        }).fail(function() {
+            var caller = callerName;
+            deferredExchange = {};
+            // Remove Timeout
+            window.clearTimeout(exchangeTimeout);
+            // Recall _loadExchange (try again)
+            window.setTimeout(function () {
+                _loadExchange(caller);
+            }, delay.SHORT);
+        });
+
+        unsafeWindow.client.dataModel.fetchExchangeAccountData();
+    }
+
     /** End, Helpers added by users.*/
 
     // Add the settings button and start a process timer
     addSettings();
+
+    function onUpdate(a,b,c) {
+        var entity = {name: a, id: b, req: c};
+        // Data model update hook triggered with new vendor model data and there is a deferred vendor object currently pending.
+        // Resolve deferredVendor and send the new data with it. Not Recieving new model data will keep pending state.
+        if (entity.name == "Vendor" && !jQuery.isEmptyObject(deferredVendor) && deferredVendor.state() == "pending") {
+            console.log("Resolving ",entity.name,"with data:",entity);
+            deferredVendor.resolve( entity );
+            return;
+        }
+        // Data model update hook triggered with new exchange model data and there is a deferred exchange object currently pending.
+        // Resolve deferredExchange and send the new data with it. Not Recieving new model data will keep pending state.
+        if (entity.name == "Exchange" && !jQuery.isEmptyObject(deferredExchange) && deferredExchange.state() == "pending") {
+            console.log("Resolving ",entity.name,"with data:",entity);
+            deferredExchange.resolve( entity );
+            return;
+        }
+
+        console.log("Unhooked update of ",entity.name," data model.",entity);
+    }
+
+    // Setup the data model update callback
+    unsafeWindow.client.dataModel.cmgr.addListener("update",onUpdate);
+
     timerHandle = window.setTimeout(function () {
         process();
     }, delay.SHORT);
