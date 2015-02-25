@@ -972,8 +972,9 @@ function _select_Gateway() { // Check for Gateway used to
                 19: ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants2", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Helm_Set_1", "Leatherworking_Tier3_Leather_Pants","Leatherworking_Tier1_Gather_Basic"],
                 //purples  first. shirts > tunics > pants. 
                 20: ["Leatherworking_Tier3_Leather_Shirt_Special_2","Leatherworking_Tier3_Leather_Tunic_Special_2", 
-                      "Leatherworking_Tier3_Leather_Pants_Special_2", "Leatherworking_Tier3_Leather_Pants_Special_2", 
-                      "Leatherworking_Tier3_Leather_Shirt2_Set2", "Leatherworking_Tier3_Leather_Shirt2", 
+                      "Leatherworking_Tier3_Leather_Pants_Special_2", "Leatherworking_Tier3_Leather_Pants_Special_2",
+                      // Shirt                                 //Tunic                                      
+                      "Leatherworking_Tier3_Leather_Shirt2",     "Leatherworking_Tier3_Leather_Shirt2_Set2",
                       "Leatherworking_Tier3_Leather_Pants2_Set2", "Leatherworking_Tier3_Leather_Pants2",
                       "Leatherworking_Tier3_Refine_Basic", "Leatherworking_Tier3_Gather_Basic"]
             },
@@ -1005,7 +1006,7 @@ function _select_Gateway() { // Check for Gateway used to
                 20: ["Leatherworking_Tier3_Leather_Pants_Special_2", "Leatherworking_Tier3_Leather_Pants_Special_2", 
                       "Leatherworking_Tier3_Leather_Shirt_Special_2","Leatherworking_Tier3_Leather_Tunic_Special_2", 
                       "Leatherworking_Tier3_Leather_Pants2_Set2", "Leatherworking_Tier3_Leather_Pants2",
-                      "Leatherworking_Tier3_Leather_Shirt2_Set2", "Leatherworking_Tier3_Leather_Shirt2", 
+                      "Leatherworking_Tier3_Leather_Shirt2",     "Leatherworking_Tier3_Leather_Shirt2_Set2",
                       "Leatherworking_Tier3_Refine_Basic", "Leatherworking_Tier3_Gather_Basic"]
             },
         }]
