@@ -975,7 +975,7 @@ function _select_Gateway() { // Check for Gateway used to
                       "Leatherworking_Tier3_Leather_Pants_Special_2", "Leatherworking_Tier3_Leather_Pants_Special_2", 
                       "Leatherworking_Tier3_Leather_Shirt2_Set2", "Leatherworking_Tier3_Leather_Shirt2", 
                       "Leatherworking_Tier3_Leather_Pants2_Set2", "Leatherworking_Tier3_Leather_Pants2",
-                      "Leatherworking_Tier2_Refine_Basic"]
+                      "Leatherworking_Tier3_Refine_Basic", "Leatherworking_Tier3_Gather_Basic"]
             },
         },{
             profileName : "craft pants",
@@ -1006,7 +1006,7 @@ function _select_Gateway() { // Check for Gateway used to
                       "Leatherworking_Tier3_Leather_Shirt_Special_2","Leatherworking_Tier3_Leather_Tunic_Special_2", 
                       "Leatherworking_Tier3_Leather_Pants2_Set2", "Leatherworking_Tier3_Leather_Pants2",
                       "Leatherworking_Tier3_Leather_Shirt2_Set2", "Leatherworking_Tier3_Leather_Shirt2", 
-                      "Leatherworking_Tier2_Refine_Basic"]
+                      "Leatherworking_Tier3_Refine_Basic", "Leatherworking_Tier3_Gather_Basic"]
             },
         }]
     };
