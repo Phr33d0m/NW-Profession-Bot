@@ -2125,6 +2125,23 @@ function _select_Gateway() { // Check for Gateway used to
             createNextTask(prof, i + 1);
         }
     }
+    /** Count resouce in bags
+     * 
+     * @param {string} name The name of resource
+     */
+    function countResource(name) {
+        var count = 0;
+        var _bags = unsafeWindow.client.dataModel.model.ent.main.inventory.bags;
+        console.log("Checking bags for " + name);
+        $.each(_bags, function (bi, bag) {
+            bag.slots.forEach(function (slot) {
+                if (slot && slot.name === name) {
+                     count = count + slot.count;
+                }
+            });
+        });
+        return count;
+    }
 
     /**
      * Checks task being started for requirements and initiates beginning task if found
@@ -2135,6 +2152,12 @@ function _select_Gateway() { // Check for Gateway used to
      */
     function searchForTask(taskname, profname) {
         // Return first object that matches exact craft name
+        // edited by WloBeb - start Patrol the Mines task only if char has less than 10 Mining Claims
+        if (taskname == "Leadership_Tier3_13_Patrol" && countResource("Crafting_Resource_Mining_Claim") >= 10) {
+            console.log("Too many Mining Claims: skiping");
+            return false;
+        }
+
         var thisTask = unsafeWindow.client.dataModel.model.craftinglist['craft_' + profname].entries.filter(function (entry) {
                 return entry.def && entry.def.name == taskname;
             })[0];
