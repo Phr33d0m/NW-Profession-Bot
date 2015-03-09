@@ -1713,222 +1713,38 @@ function _select_Gateway() { // Check for Gateway used to
     };
 
     // Load Settings
-    var settingnames = [{
-            name : 'paused',
-            title : 'Pause Script',
-            def : false,
-            type : 'checkbox',
-            pane : 'main',
-            tooltip : 'Disable All Automation'
-        }, {
-            name : 'debug',
-            title : 'Enable Debug',
-            def : false,
-            type : 'checkbox',
-            pane : 'main',
-            tooltip : 'Enable all debug output to console',
-            onsave : function (newValue, oldValue) {
+    var settingnames = [
+        {name: 'paused', title: 'Pause Script', def: false, type: 'checkbox', pane:'main', tooltip: 'Disable All Automation'},
+        {name: 'debug', title: 'Enable Debug', def: false, type: 'checkbox', pane:'main', tooltip: 'Enable all debug output to console', onsave: function (newValue, oldValue) {
                 console = newValue ? unsafeWindow.console || fouxConsole : fouxConsole;
-            }
-        }, {
-            name : 'optionals',
-            title : 'Fill Optional Assets',
-            def : true,
-            type : 'checkbox',
-            pane : 'prof',
-            tooltip : 'Enable to include selecting the optional assets of tasks'
-        }, {
-            name : 'autopurchase',
-            title : 'Auto Purchase Resources',
-            def : true,
-            type : 'checkbox',
-            pane : 'prof',
-            tooltip : 'Automatically purchase required resources from gateway shop (100 at a time)'
-        }, {
-            name : 'trainassets',
-            title : 'Train Assets',
-            def : true,
-            type : 'checkbox',
-            pane : 'prof',
-            tooltip : 'Enable training/upgrading of asset worker resources'
-        }, {
-            name : 'refinead',
-            title : 'Refine AD',
-            def : true,
-            type : 'checkbox',
-            pane : 'main',
-            tooltip : 'Enable refining of AD on character switch'
-        }, {
-            name : 'openrewards',
-            title : 'Open Reward Chests',
-            def : false,
-            type : 'checkbox',
-            pane : 'main',
-            tooltip : 'Enable opeing of leadership chests on character switch'
-        }, //MAC-NW
-        {
-            name : 'autoreload',
-            title : 'Auto Reload',
-            def : false,
-            type : 'checkbox',
-            pane : 'main',
-            tooltip : 'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)'
-        }, {
-            name : 'autovendor_junk',
-            title : 'Auto Vendor junk..',
-            def : false,
-            type : 'checkbox',
-            pane : 'vend',
-            tooltip : 'Vendor all (currently) winterfest fireworks+lanterns'
-        }, //MAC-NW
-        {
-            name : 'autovendor_kits_altars_limit',
-            title : 'Vendor/Maintain Altar Node Kit Stacks',
-            def : false,
-            type : 'checkbox',
-            pane : 'vend',
-            tooltip : 'Limit skill kits stacks to 50/Altars80, vendor kits unusable by class, remove all if player has one bag or full bags'
-        }, // edited by RottenMind
-        {
-            name : 'autovendor_kits_altars_all',
-            title : 'Vendor All Altar Node Kit Stacks',
-            def : false,
-            type : 'checkbox',
-            pane : 'vend',
-            tooltip : 'Sell ALL skill kits  Altars.'
-        }, // RottenMind
-        {
-            name : 'autovendor_profresults',
-            title : 'Vendor/Maintain Prof Crafted Levelup Items',
-            def : false,
-            type : 'checkbox',
-            pane : 'vend',
-            tooltip : 'Vendor off Tier 1 to 5 items produced and reused for leveling crafting professions.'
-        }, {
-            name : 'autovendor_pots1',
-            title : 'Auto Vendor minor potions (lvl 1)',
-            def : false,
-            type : 'checkbox',
-            pane : 'vend',
-            tooltip : 'Vendor all minor potions (lvl 1) found in player bags'
-        }, //MAC-NW
-        {
-            name : 'autovendor_pots2',
-            title : 'Auto Vendor lesser potions (lvl 15)',
-            def : false,
-            type : 'checkbox',
-            pane : 'vend',
-            tooltip : 'Vendor all lesser potions (lvl 15) found in player bags'
-        }, //MAC-NW
-        {
-            name : 'autovendor_pots3',
-            title : 'Auto Vendor potions (lvl 30)',
-            def : false,
-            type : 'checkbox',
-            pane : 'vend',
-            tooltip : 'Vendor all potions (lvl 30) found in player bags'
-        }, //MAC-NW
-        {
-            name : 'autovendor_pots4',
-            title : 'Auto Vendor greater potions (lvl 45)',
-            def : false,
-            type : 'checkbox',
-            pane : 'vend',
-            tooltip : 'Vendor all greater potions (lvl 45) found in player bags'
-        }, //MAC-NW
-        {
-            name : 'autovendor_rank1',
-            title : 'Auto Vendor enchants & runes Rank 1',
-            def : false,
-            type : 'checkbox',
-            pane : 'vend',
-            tooltip : 'Vendor all Rank 1 enchantments & runestones found in player bags'
-        }, //MAC-NW
-        {
-            name : 'autovendor_rank2',
-            title : 'Auto Vendor enchants & runes Rank 2',
-            def : false,
-            type : 'checkbox',
-            pane : 'vend',
-            tooltip : 'Vendor all Rank 2 enchantments & runestones found in player bags'
-        }, //MAC-NW
-        {
-            name : 'autovendor_rank3',
-            title : 'Auto Vendor enchants & runes Rank 3',
-            def : false,
-            type : 'checkbox',
-            pane : 'vend',
-            tooltip : 'Vendor all Rank 3 enchantments & runestones found in player bags'
-        }, // edited by RottenMind
-        {
-            name : 'autologin',
-            title : 'Attempt to login automatically',
-            def : false,
-            type : 'checkbox',
-            pane : 'main',
-            tooltip : 'Automatically attempt to login to the neverwinter gateway site',
-            border : true
-        }, {
-            name : 'nw_username',
-            title : 'Neverwinter Username',
-            def : '',
-            type : 'text',
-            pane : 'main',
-            tooltip : ''
-        }, {
-            name : 'nw_password',
-            title : 'Neverwinter Password',
-            def : '',
-            type : 'password',
-            pane : 'main',
-            tooltip : ''
-        },
+            }},
+        {name: 'optionals', title: 'Fill Optional Assets', def: true, type: 'checkbox', pane:'prof', tooltip: 'Enable to include selecting the optional assets of tasks'},
+        {name: 'autopurchase', title: 'Auto Purchase Resources', def: true, type: 'checkbox', pane:'prof', tooltip: 'Automatically purchase required resources from gateway shop (100 at a time)'},
+        {name: 'trainassets', title: 'Train Assets', def: true, type: 'checkbox', pane:'prof', tooltip: 'Enable training/upgrading of asset worker resources'},
+        {name: 'refinead', title: 'Refine AD', def: true, type: 'checkbox', pane:'main', tooltip: 'Enable refining of AD on character switch'},
+        {name: 'openrewards', title: 'Open Reward Chests', def: false, type: 'checkbox', pane:'main', tooltip: 'Enable opeing of leadership chests on character switch'}, //MAC-NW
+        {name: 'autoreload', title: 'Auto Reload', def: false, type: 'checkbox', pane:'main', tooltip: 'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)'},
+        {name: 'autovendor_junk', title: 'Auto Vendor junk..', def: false, type: 'checkbox', pane:'vend', tooltip: 'Vendor all (currently) winterfest fireworks+lanterns'}, //MAC-NW
+        {name: 'autovendor_kits_altars_limit', title: 'Vendor/Maintain Altar Node Kit Stacks', def: false, type: 'checkbox', pane:'vend', tooltip: 'Limit skill kits stacks to 50/Altars80, vendor kits unusable by class, remove all if player has one bag or full bags'}, // edited by RottenMind
+        {name: 'autovendor_kits_altars_all', title: 'Vendor All Altar Node Kit Stacks', def: false, type: 'checkbox', pane:'vend', tooltip: 'Sell ALL skill kits  Altars.'}, // RottenMind
+        {name: 'autovendor_profresults', title: 'Vendor/Maintain Prof Crafted Levelup Items', def: false, type: 'checkbox', pane:'vend', tooltip: 'Vendor off Tier 1 to 5 items produced and reused for leveling crafting professions.'},
+        {name: 'autovendor_pots1', title: 'Auto Vendor minor potions (lvl 1)', def: false, type: 'checkbox', pane:'vend', tooltip: 'Vendor all minor potions (lvl 1) found in player bags'}, //MAC-NW
+        {name: 'autovendor_pots2', title: 'Auto Vendor lesser potions (lvl 15)', def: false, type: 'checkbox', pane:'vend', tooltip: 'Vendor all lesser potions (lvl 15) found in player bags'}, //MAC-NW
+        {name: 'autovendor_pots3', title: 'Auto Vendor potions (lvl 30)', def: false, type: 'checkbox', pane:'vend', tooltip: 'Vendor all potions (lvl 30) found in player bags'}, //MAC-NW
+        {name: 'autovendor_pots4', title: 'Auto Vendor greater potions (lvl 45)', def: false, type: 'checkbox', pane:'vend', tooltip: 'Vendor all greater potions (lvl 45) found in player bags'}, //MAC-NW
+        {name: 'autovendor_rank1', title: 'Auto Vendor enchants & runes Rank 1', def: false, type: 'checkbox', pane:'vend', tooltip: 'Vendor all Rank 1 enchantments & runestones found in player bags'}, //MAC-NW
+        {name: 'autovendor_rank2', title: 'Auto Vendor enchants & runes Rank 2', def: false, type: 'checkbox', pane:'vend', tooltip: 'Vendor all Rank 2 enchantments & runestones found in player bags'}, //MAC-NW
+        {name: 'autovendor_rank3', title: 'Auto Vendor enchants & runes Rank 3', def: false, type: 'checkbox', pane:'vend', tooltip: 'Vendor all Rank 3 enchantments & runestones found in player bags'}, // edited by RottenMind
+        {name: 'autologin', title: 'Attempt to login automatically', def: false, type: 'checkbox', pane:'main', tooltip: 'Automatically attempt to login to the neverwinter gateway site', border: true},
+        {name: 'nw_username', title: 'Neverwinter Username', def: '', type: 'text', pane:'main', tooltip: ''},
+        {name: 'nw_password', title: 'Neverwinter Password', def: '', type: 'password', pane:'main', tooltip: ''},
         // MAC-NW AD Consolidation
-        {
-            name : 'autoexchange',
-            title : 'Consolidate AD via ZEX',
-            def : false,
-            type : 'checkbox',
-            pane : 'bank',
-            tooltip : 'Automatically attempt to post, cancel and withdraw AD via ZEX and consolidate to designated character',
-            border : true
-        }, {
-            name : 'bankchar',
-            title : 'Character Name of Banker',
-            def : '',
-            type : 'text',
-            pane : 'bank',
-            tooltip : 'Enter name of the character to hold account AD'
-        }, {
-            name : 'banktransmin',
-            title : 'Min AD for Transfer',
-            def : '22000',
-            type : 'text',
-            pane : 'bank',
-            tooltip : 'Enter minimum AD limit for it to be cosidered for transfer off a character'
-        }, {
-            name : 'bankcharmin',
-            title : 'Min Character balance',
-            def : '8000',
-            type : 'text',
-            pane : 'bank',
-            tooltip : 'Enter the amount of AD to always keep available on characters'
-        }, {
-            name : 'banktransrate',
-            title : 'AD per Zen Rate (in zen)',
-            def : '300',
-            type : 'text',
-            pane : 'bank',
-            tooltip : 'Enter default rate to use for transfering through ZEX'
-        }, {
-            name : 'charcount',
-            title : 'Enter number of characters to use (Save and Apply to update settings form)',
-            def : '2',
-            type : 'text',
-            pane : 'main',
-            tooltip : 'Enter number of characters to use (Save and Apply to update settings form)',
-            border : true
-        },
+        {name: 'autoexchange', title: 'Consolidate AD via ZEX', def: false, type: 'checkbox', pane:'bank', tooltip: 'Automatically attempt to post, cancel and withdraw AD via ZEX and consolidate to designated character', border: true},
+        {name: 'bankchar', title: 'Character Name of Banker', def: '', type: 'text', pane:'bank', tooltip: 'Enter name of the character to hold account AD'},
+        {name: 'banktransmin', title: 'Min AD for Transfer', def: '22000', type: 'text', pane:'bank', tooltip: 'Enter minimum AD limit for it to be cosidered for transfer off a character'},
+        {name: 'bankcharmin', title: 'Min Character balance', def: '8000', type: 'text', pane:'bank', tooltip: 'Enter the amount of AD to always keep available on characters'},
+        {name: 'banktransrate', title: 'AD per Zen Rate (in zen)', def: '300', type: 'text', pane:'bank', tooltip: 'Enter default rate to use for transfering through ZEX'},
+        {name: 'charcount', title: 'Enter number of characters to use (Save and Apply to update settings form)', def: '2', type: 'text', pane:'main', tooltip: 'Enter number of characters to use (Save and Apply to update settings form)', border: true},
         // MAC-NW
     ];
 
@@ -1971,76 +1787,21 @@ function _select_Gateway() { // Check for Gateway used to
 
     ];
 
-    var priorityOptions = [{
-            name : 'high',
-            value : 0
-        }, {
-            name : 'medium',
-            value : 1
-        }, {
-            name : 'low',
-            value : 2
-        }
-    ];
-
+    var priorityOptions = [{name: 'high', value: 0},{name: 'medium', value: 1},{name: 'low', value: 2}];
+        
     var charSettings = [];
     for (var i = 0; i < settings["charcount"]; i++) {
-        charSettings.push({
-            name : 'nw_charname' + i,
-            title : 'Character',
-            def : 'Character ' + (i + 1),
-            type : 'text',
-            tooltip : 'Characters Name'
-        });
-        tasklist.forEach(function (task) {
+        charSettings.push({name: 'nw_charname' + i, title: 'Character', def: 'Character ' + (i + 1), type: 'text', tooltip: 'Characters Name'});
+        tasklist.forEach(function(task) {
             var profileNames = [];
-            task.profiles.forEach(function (profile) {
-                if (profile.isProfileActive)
-                    profileNames.push({
-                        name : profile.profileName,
-                        value : profile.profileName
-                    });
-            });
+            task.profiles.forEach( function(profile) { if (profile.isProfileActive) profileNames.push({name: profile.profileName, value: profile.profileName}); } ); 
             //charSettings.push({name: task["taskListName"] + i, title: task["taskListName"], profileNames: profileNames,  def: task["taskDefaultSlotNum"] , type: 'text', tooltip: 'Number of slots to assign to ' + task["taskListName"]});
-            charSettings.push({
-                name : task.taskListName + i,
-                title : task.taskListName,
-                def : task.taskDefaultSlotNum,
-                type : 'text',
-                type2 : 'task',
-                tooltip : 'Number of slots to assign to ' + task.taskListName,
-                pane : "tasks"
-            });
-            charSettings.push({
-                name : task.taskListName + i + '_profile',
-                title : task.taskListName + '_profile',
-                options : profileNames,
-                def : profileNames[0].value,
-                type : 'select',
-                type2 : 'task-property',
-                tooltip : '',
-                pane : "tasks"
-            });
-            charSettings.push({
-                name : task.taskListName + i + '_priority',
-                title : task.taskListName + '_priority',
-                options : priorityOptions,
-                def : task.taskDefaultPriority,
-                type : 'select',
-                type2 : 'task-property',
-                tooltip : '',
-                pane : "tasks"
-            });
-        });
-
-        charSettings.push({
-            name : 'test' + i,
-            title : 'test',
-            def : 1,
-            type : 'text',
-            tooltip : 'test',
-            pane : "settings"
-        });
+            charSettings.push({name: task.taskListName + i, title: task.taskListName, def: task.taskDefaultSlotNum , type: 'text', type2: 'task', tooltip: 'Number of slots to assign to ' + task.taskListName, pane: "tasks"});
+            charSettings.push({name: task.taskListName + i + '_profile', title: task.taskListName + '_profile', options: profileNames,  def: profileNames[0].value, type: 'select',  type2: 'task-property', tooltip: '', pane: "tasks"});
+            charSettings.push({name: task.taskListName + i + '_priority', title: task.taskListName + '_priority', options: priorityOptions,  def: task.taskDefaultPriority , type: 'select',  type2: 'task-property', tooltip: '', pane: "tasks"});                               
+		});
+        
+        charSettings.push({name: 'test' + i, title: 'test', def: 1, type: 'text', tooltip: 'test', pane:"settings"});
     }
 
     for (var i = 0; i < charSettings.length; i++) {
