@@ -2180,7 +2180,7 @@ function _select_Gateway() { // Check for Gateway used to
                         });
                         if (startedTask["lastTaskChar"] == startedTask["currTaskChar"] && startedTask["lastTaskName"] == startedTask["currTaskName"]) {
                             startedTask["lastTaskCount"]++;
-                            console.log("Task " + startedTask["lastTaskName"] + " started " + startedTask["lastTaskCount"] + " time");
+                            console.log(startedTask["lastTaskChar"] + " starts " + startedTask["lastTaskName"] + " " + startedTask["lastTaskCount"] + " time in row");
                         } else {
                             startedTask["lastTaskChar"] = startedTask["currTaskChar"];
                             startedTask["lastTaskName"] = startedTask["currTaskName"];
