@@ -3116,7 +3116,7 @@ function _select_Gateway() { // Check for Gateway used to
     function loadCharacter(charname) {
         // Load character and restart next load loop
         console.log("Loading gateway script for", charname);
-        startedTask["currTaskName"] = charname; 
+        startedTask["currTaskChar"] = charname; 
         unsafeWindow.client.dataModel.loadEntityByName(charname);
 
         // MAC-NW -- AD Consolidation -- Banker Withdraw Secion
