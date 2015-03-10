@@ -274,6 +274,10 @@ var console = unsafeWindow.console || fouxConsole;
 var chardiamonds = {};
 var chargold = {};
 var definedTask = {};
+var startedTask = {};  // stores information about previous (character, taskname, and counter) and currently started task 
+startedTask["lastTaskChar"] = "";
+startedTask["lastTaskName"] = "";
+startedTask["lastTaskCount"] = 0;
 // Page Reloading function
 // Every second the page is idle or loading is tracked
 var loading_reset = false; // Enables a periodic reload if this is toggled on by the Auto Reload check box on the settings panel
@@ -364,6 +368,10 @@ function _select_Gateway() { // Check for Gateway used to
     var last_location = ""; // variable to track reference to page URL
     var reload_timer = setInterval(function () {
             if (!s_paused) {
+                if (startedTask["lastTaskCount"] >= 10) {
+                    unsafeWindow.location.href = current_Gateway;
+                    return;
+                }
                 if (loading_reset) {
                     var loading_date = new Date();
                     var loading_sec = Number(loading_date.getSeconds());
@@ -2143,6 +2151,7 @@ function _select_Gateway() { // Check for Gateway used to
             return true;
         }
         if (task) {
+            startedTask["currTaskName"] = task.def.name;
             task = '/professions-tasks/' + prof.taskName + '/' + task.def.name;
             console.log('Task Found');
             unsafeWindow.location.hash = unsafeWindow.location.hash.replace(/\)\/.+/, ')' + task);
@@ -2168,6 +2177,17 @@ function _select_Gateway() { // Check for Gateway used to
                             // Done
                             dfdNextRun.resolve(delay.SHORT);
                         });
+                        if (startedTask["lastTaskChar"] == startedTask["currTaskChar"] && startedTask["lastTaskName"] == startedTask["currTaskName"]) {
+                            startedTask["lastTaskCount"]++;
+                            console.log("Task " + startedTask["lastTaskName"] + " started " + startedTask["lastTaskCount"] + " time");
+                        } else {
+                            startedTask["lastTaskChar"] = startedTask["currTaskChar"];
+                            startedTask["lastTaskName"] = startedTask["currTaskName"];
+                            startedTask["lastTaskCount"] = 1;
+                        }
+                        if (startedTask["lastTaskCount"] >= 10) {
+                            console.log("Restart needed");
+                        }
                         return true;
                     } else { // Button not enabled, something required was probably missing
                         // Go back
@@ -3096,6 +3116,7 @@ function _select_Gateway() { // Check for Gateway used to
     function loadCharacter(charname) {
         // Load character and restart next load loop
         console.log("Loading gateway script for", charname);
+        startedTask["currTaskName"] = charname; 
         unsafeWindow.client.dataModel.loadEntityByName(charname);
 
         // MAC-NW -- AD Consolidation -- Banker Withdraw Secion
