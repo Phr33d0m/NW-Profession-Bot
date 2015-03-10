@@ -1789,6 +1789,7 @@ function _select_Gateway() { // Check for Gateway used to
         {name: 'optionals', title: 'Fill Optional Assets', def: true, type: 'checkbox', pane:'prof', tooltip: 'Enable to include selecting the optional assets of tasks'},
         {name: 'autopurchase', title: 'Auto Purchase Resources', def: true, type: 'checkbox', pane:'prof', tooltip: 'Automatically purchase required resources from gateway shop (100 at a time)'},
         {name: 'trainassets', title: 'Train Assets', def: true, type: 'checkbox', pane:'prof', tooltip: 'Enable training/upgrading of asset worker resources'},
+        {name: 'skippatrol', title: 'Skip Patrol task if > 10 calims', def: true, type: 'checkbox', pane:'prof', tooltip: 'Skip "Patrol the Mines" leadership task if there are more than 10 mining claims in the inventory'},
         {name: 'refinead', title: 'Refine AD', def: true, type: 'checkbox', pane:'main', tooltip: 'Enable refining of AD on character switch'},
         {name: 'openrewards', title: 'Open Reward Chests', def: false, type: 'checkbox', pane:'main', tooltip: 'Enable opeing of leadership chests on character switch'}, //MAC-NW
         {name: 'autoreload', title: 'Auto Reload', def: false, type: 'checkbox', pane:'main', tooltip: 'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)'},
@@ -2233,7 +2234,7 @@ function _select_Gateway() { // Check for Gateway used to
     function searchForTask(taskname, profname) {
         // Return first object that matches exact craft name
         // edited by WloBeb - start Patrol the Mines task only if char has less than 10 Mining Claims
-        if (taskname == "Leadership_Tier3_13_Patrol" && countResource("Crafting_Resource_Mining_Claim") >= 10) {
+        if (settings["skippatrol"] && taskname == "Leadership_Tier3_13_Patrol" && countResource("Crafting_Resource_Mining_Claim") >= 10) {
             console.log("Too many Mining Claims: skiping");
             return false;
         }
