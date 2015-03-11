@@ -14,10 +14,10 @@
 
 /*
 === NW Gateway Professions Bot Developers
-- Bluep, Numberb, mac-nw, Phr33d0m, BigRedBrent
+- Bluep, Numberb, mac-nw, Phr33d0m, BigRedBrent, WloBeb 
 
 === NW Gateway Professions Bot Contributors
-- Kakoura, Nametaken, rotten_mind, Frankescript
+- Kakoura, Nametaken, rotten_mind, Frankescript, dlebedynskyi
  */
 
 // @version 1.10.1
@@ -31,6 +31,10 @@
 // ==/UserScript==
 
 /* RELEASE NOTES
+- Additional UI changes.
+- Added resetable counters for refined AD.
+- Added stuck task trap (repeatition trap and restart). Thanks WloBeb 
+- Added profession profiles by dlebedynskyi.
 1.10.2RC1 for Greasyfork
 - UI improvement
 - removed "Save Task" & "Clear Task" buttons, on current build they do nothing
