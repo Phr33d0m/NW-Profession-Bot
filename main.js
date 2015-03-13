@@ -8,19 +8,18 @@
 // @include https://gateway.*.perfectworld.eu/*
 // @require http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js
 // @resource jqUI_CSS http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/cupertino/jquery-ui.css
-// /*@resource jqUI_CSS http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/dark-hive/jquery-ui.css*/
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
 /*
 === NW Gateway Professions Bot Developers
-- Bluep, Numberb, mac-nw, Phr33d0m, BigRedBrent, WloBeb 
+- Bluep, Numberb, mac-nw, Phr33d0m, BigRedBrent, noonereally, WloBeb
 
 === NW Gateway Professions Bot Contributors
 - Kakoura, Nametaken, rotten_mind, Frankescript, dlebedynskyi
  */
 
-// @version 1.10.1
+// @version 2.0
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -31,6 +30,7 @@
 // ==/UserScript==
 
 /* RELEASE NOTES
+2.0
 - Additional UI changes.
 - Added resetable counters for refined AD.
 - Added stuck task trap (repeatition trap and restart). Thanks WloBeb 
@@ -2944,7 +2944,7 @@ function _select_Gateway() { // Check for Gateway used to
                 curgold += chargold[cc];
             }
         }
-
+        
         console.log("Next run for " + settings["nw_charname" + charcurrent] + " in " + parseInt(chardelay / 1000) + " seconds.");
         $("#prinfopane").empty().append("<h3 class='promo-image copy-top prh3'>Professions Robot<br />Next task for " + settings["nw_charname" + charcurrent] + "<br /><span data-timer='" + chardate + "' data-timer-length='2'></span><br />Diamonds: " + curdiamonds.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "<br />Gold: " + curgold + "</h3>");
         GM_setValue("charcurrent", charcurrent);
