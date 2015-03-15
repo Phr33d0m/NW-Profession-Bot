@@ -628,6 +628,7 @@ function _select_Gateway() { // Check for Gateway used to
         taskListName : "Leadership", // Friendly name used at the UI
         taskName : "Leadership", // String used at the gateway
         taskDefaultPriority : 2, // Priority to allocate free task slots: 0 - High, 1 - Medium, 2 - Low
+        taskDefaultUpgradeAssets : 0, // Do not upgrade assets by default
         taskActive : true,
         taskDefaultSlotNum : 9,
         taskDescription : "",
@@ -635,6 +636,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "AD",
                 isProfileActive : true,
                 level : {
+                    U : ["Leadership_Tier3_13_Recruit", "Leadership_Tier2_7_Recruit", "Leadership_Tier1_2_Recruit", "Leadership_Tier0_Intro_1"],
                     0 : ["Leadership_Tier0_Intro_1"],
                     1 : ["Leadership_Tier0_Intro_5", "Leadership_Tier0_Intro_4", "Leadership_Tier0_Intro_3", "Leadership_Tier0_Intro_2"],
                     2 : ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
@@ -665,6 +667,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "XP",
                 isProfileActive : true,
                 level : {
+                    U : ["Leadership_Tier3_13_Recruit", "Leadership_Tier2_7_Recruit", "Leadership_Tier1_2_Recruit", "Leadership_Tier0_Intro_1"],
                     0 : ["Leadership_Tier0_Intro_1"],
                     1 : ["Leadership_Tier0_Intro_5", "Leadership_Tier0_Intro_4", "Leadership_Tier0_Intro_3", "Leadership_Tier0_Intro_2"],
                     2 : ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
@@ -691,6 +694,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "Resource/AD",
                 isProfileActive : true,
                 level : {
+                    U : ["Leadership_Tier3_13_Recruit", "Leadership_Tier2_7_Recruit", "Leadership_Tier1_2_Recruit", "Leadership_Tier0_Intro_1"],
                     0 : ["Leadership_Tier0_Intro_1"],
                     1 : ["Leadership_Tier0_Intro_5", "Leadership_Tier0_Intro_4", "Leadership_Tier0_Intro_3", "Leadership_Tier0_Intro_2"],
                     2 : ["Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training", "Leadership_Tier1_Feedtheneedy"],
@@ -728,6 +732,7 @@ function _select_Gateway() { // Check for Gateway used to
         taskListName : "WinterEvent",
         taskName : "WinterEvent",
         taskDefaultPriority : 1,
+	taskDefaultUpgradeAssets : 0,
         taskDefaultSlotNum : 0,
         taskActive : true,
         taskDescription : "",
@@ -751,6 +756,7 @@ function _select_Gateway() { // Check for Gateway used to
         taskListName : "SiegeEvent",
         taskName : "Event_Siege",
         taskDefaultPriority : 1,
+	taskDefaultUpgradeAssets : 0,
         taskDefaultSlotNum : 0,
         taskActive : true,
         taskDescription : "",
@@ -776,6 +782,7 @@ function _select_Gateway() { // Check for Gateway used to
         taskListName : "BlackIce",
         taskName : "BlackIce",
         taskDefaultPriority : 1,
+	taskDefaultUpgradeAssets : 0,
         taskDefaultSlotNum : 0,
         taskActive : true,
         taskDescription : "",
@@ -800,6 +807,7 @@ function _select_Gateway() { // Check for Gateway used to
         taskListName : "Jewelcrafting",
         taskName : "Jewelcrafting",
         taskDefaultPriority : 1,
+	taskDefaultUpgradeAssets : 0,
         taskDefaultSlotNum : 0,
         taskActive : true,
         taskDescription : "",
@@ -807,6 +815,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "default",
                 isProfileActive : true,
                 level : {
+                    U : ["Jewelcrafting_Tier2_Recruit_Journeyman", "Jewelcrafting_Tier1_Recruit_Journeyman", "Jewelcrafting_Tier1_Recruit_Apprentice", "Jewelcrafting_Tier0_Intro"], 
                     0 : ["Jewelcrafting_Tier0_Intro"],
                     1 : ["Jewelcrafting_Tier1_Waist_Offense_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
                     2 : ["Jewelcrafting_Tier1_Waist_Offense_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
@@ -833,6 +842,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "craft neck",
                 isProfileActive : true,
                 level : {
+                    U : ["Jewelcrafting_Tier2_Recruit_Journeyman", "Jewelcrafting_Tier1_Recruit_Journeyman", "Jewelcrafting_Tier1_Recruit_Apprentice", "Jewelcrafting_Tier0_Intro"], 
                     0 : ["Jewelcrafting_Tier0_Intro"],
                     1 : ["Jewelcrafting_Tier1_Waist_Offense_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
                     2 : ["Jewelcrafting_Tier1_Waist_Offense_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
@@ -863,6 +873,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "craft rings",
                 isProfileActive : true,
                 level : {
+                    U : ["Jewelcrafting_Tier2_Recruit_Journeyman", "Jewelcrafting_Tier1_Recruit_Journeyman", "Jewelcrafting_Tier1_Recruit_Apprentice", "Jewelcrafting_Tier0_Intro"], 
                     0 : ["Jewelcrafting_Tier0_Intro"],
                     1 : ["Jewelcrafting_Tier1_Waist_Offense_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
                     2 : ["Jewelcrafting_Tier1_Waist_Offense_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
@@ -893,6 +904,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "craft purples only",
                 isProfileActive : true,
                 level : {
+                    U : ["Jewelcrafting_Tier2_Recruit_Journeyman", "Jewelcrafting_Tier1_Recruit_Journeyman", "Jewelcrafting_Tier1_Recruit_Apprentice", "Jewelcrafting_Tier0_Intro"], 
                     0 : ["Jewelcrafting_Tier0_Intro"],
                     1 : ["Jewelcrafting_Tier1_Waist_Offense_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
                     2 : ["Jewelcrafting_Tier1_Waist_Offense_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
@@ -927,6 +939,7 @@ function _select_Gateway() { // Check for Gateway used to
         taskListName : "Mailsmithing",
         taskName : "Armorsmithing_Med",
         taskDefaultPriority : 1,
+	taskDefaultUpgradeAssets : 0,
         taskDefaultSlotNum : 0,
         taskActive : true,
         taskDescription : "",
@@ -934,6 +947,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "default",
                 isProfileActive : true,
                 level : {
+                    U : ["Med_Armorsmithing_Tier3_Recruit_Master", "Med_Armorsmithing_Tier2_Recruit_Journeyman", "Med_Armorsmithing_Tier1_Recruit_Apprentice", "Med_Armorsmithing_Tier0_Intro"),
                     0 : ["Med_Armorsmithing_Tier0_Intro"],
                     1 : ["Med_Armorsmithing_Tier1_Gather_Basic"],
                     2 : ["Med_Armorsmithing_Tier1_Chain_Armor_1", "Med_Armorsmithing_Tier1_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
@@ -962,6 +976,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "craft Chain Gambeson",
                 isProfileActive : true,
                 level : {
+                    U : ["Med_Armorsmithing_Tier3_Recruit_Master", "Med_Armorsmithing_Tier2_Recruit_Journeyman", "Med_Armorsmithing_Tier1_Recruit_Apprentice", "Med_Armorsmithing_Tier0_Intro"),                    
                     0 : ["Med_Armorsmithing_Tier0_Intro"],
                     1 : ["Med_Armorsmithing_Tier1_Gather_Basic"],
                     2 : ["Med_Armorsmithing_Tier1_Chain_Armor_1", "Med_Armorsmithing_Tier1_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
@@ -1005,6 +1020,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "craft Chain Shirt",
                 isProfileActive : true,
                 level : {
+                    U : ["Med_Armorsmithing_Tier3_Recruit_Master", "Med_Armorsmithing_Tier2_Recruit_Journeyman", "Med_Armorsmithing_Tier1_Recruit_Apprentice", "Med_Armorsmithing_Tier0_Intro"),                    
                     0 : ["Med_Armorsmithing_Tier0_Intro"],
                     1 : ["Med_Armorsmithing_Tier1_Gather_Basic"],
                     2 : ["Med_Armorsmithing_Tier1_Chain_Armor_1", "Med_Armorsmithing_Tier1_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
@@ -1048,6 +1064,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "craft Chain Pants",
                 isProfileActive : true,
                 level : {
+                    U : ["Med_Armorsmithing_Tier3_Recruit_Master", "Med_Armorsmithing_Tier2_Recruit_Journeyman", "Med_Armorsmithing_Tier1_Recruit_Apprentice", "Med_Armorsmithing_Tier0_Intro"),                    
                     0 : ["Med_Armorsmithing_Tier0_Intro"],
                     1 : ["Med_Armorsmithing_Tier1_Gather_Basic"],
                     2 : ["Med_Armorsmithing_Tier1_Chain_Armor_1", "Med_Armorsmithing_Tier1_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
@@ -1089,6 +1106,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "craft Chain Trousers",
                 isProfileActive : true,
                 level : {
+                    U : ["Med_Armorsmithing_Tier3_Recruit_Master", "Med_Armorsmithing_Tier2_Recruit_Journeyman", "Med_Armorsmithing_Tier1_Recruit_Apprentice", "Med_Armorsmithing_Tier0_Intro"),                    
                     0 : ["Med_Armorsmithing_Tier0_Intro"],
                     1 : ["Med_Armorsmithing_Tier1_Gather_Basic"],
                     2 : ["Med_Armorsmithing_Tier1_Chain_Armor_1", "Med_Armorsmithing_Tier1_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
@@ -1130,6 +1148,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "craft Scale Gambeson",
                 isProfileActive : true,
                 level : {
+                    U : ["Med_Armorsmithing_Tier3_Recruit_Master", "Med_Armorsmithing_Tier2_Recruit_Journeyman", "Med_Armorsmithing_Tier1_Recruit_Apprentice", "Med_Armorsmithing_Tier0_Intro"),                    
                     0 : ["Med_Armorsmithing_Tier0_Intro"],
                     1 : ["Med_Armorsmithing_Tier1_Gather_Basic"],
                     2 : ["Med_Armorsmithing_Tier1_Chain_Armor_1", "Med_Armorsmithing_Tier1_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
@@ -1171,6 +1190,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "craft Scale Shirt",
                 isProfileActive : true,
                 level : {
+                    U : ["Med_Armorsmithing_Tier3_Recruit_Master", "Med_Armorsmithing_Tier2_Recruit_Journeyman", "Med_Armorsmithing_Tier1_Recruit_Apprentice", "Med_Armorsmithing_Tier0_Intro"),                    
                     0 : ["Med_Armorsmithing_Tier0_Intro"],
                     1 : ["Med_Armorsmithing_Tier1_Gather_Basic"],
                     2 : ["Med_Armorsmithing_Tier1_Chain_Armor_1", "Med_Armorsmithing_Tier1_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
@@ -1212,6 +1232,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "craft Scale Pants",
                 isProfileActive : true,
                 level : {
+                    U : ["Med_Armorsmithing_Tier3_Recruit_Master", "Med_Armorsmithing_Tier2_Recruit_Journeyman", "Med_Armorsmithing_Tier1_Recruit_Apprentice", "Med_Armorsmithing_Tier0_Intro"),                    
                     0 : ["Med_Armorsmithing_Tier0_Intro"],
                     1 : ["Med_Armorsmithing_Tier1_Gather_Basic"],
                     2 : ["Med_Armorsmithing_Tier1_Chain_Armor_1", "Med_Armorsmithing_Tier1_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
@@ -1253,6 +1274,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "craft Scale Trousers",
                 isProfileActive : true,
                 level : {
+                    U : ["Med_Armorsmithing_Tier3_Recruit_Master", "Med_Armorsmithing_Tier2_Recruit_Journeyman", "Med_Armorsmithing_Tier1_Recruit_Apprentice", "Med_Armorsmithing_Tier0_Intro"),                    
                     0 : ["Med_Armorsmithing_Tier0_Intro"],
                     1 : ["Med_Armorsmithing_Tier1_Gather_Basic"],
                     2 : ["Med_Armorsmithing_Tier1_Chain_Armor_1", "Med_Armorsmithing_Tier1_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
@@ -1294,6 +1316,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "craft purple only",
                 isProfileActive : true,
                 level : {
+                    U : ["Med_Armorsmithing_Tier3_Recruit_Master", "Med_Armorsmithing_Tier2_Recruit_Journeyman", "Med_Armorsmithing_Tier1_Recruit_Apprentice", "Med_Armorsmithing_Tier0_Intro"),                    
                     0 : ["Med_Armorsmithing_Tier0_Intro"],
                     1 : ["Med_Armorsmithing_Tier1_Gather_Basic"],
                     2 : ["Med_Armorsmithing_Tier1_Chain_Armor_1", "Med_Armorsmithing_Tier1_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
@@ -1338,6 +1361,7 @@ function _select_Gateway() { // Check for Gateway used to
         taskListName : "Platesmithing",
         taskName : "Armorsmithing_Heavy",
         taskDefaultPriority : 1,
+	taskDefaultUpgradeAssets : 0,
         taskDefaultSlotNum : 0,
         taskActive : true,
         taskDescription : "",
@@ -1345,6 +1369,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "default",
                 isProfileActive : true,
                 level : {
+                    U : ["Hvy_Armorsmithing_Tier3_Recruit_Master", "Hvy_Armorsmithing_Tier2_Recruit_Journeyman", "Hvy_Armorsmithing_Tier1_Recruit_Apprentice", "Hvy_Armorsmithing_Tier0_Intro"],
                     0 : ["Hvy_Armorsmithing_Tier0_Intro"],
                     1 : ["Hvy_Armorsmithing_Tier1_Plate_Boots_1", "Hvy_Armorsmithing_Tier1_Plate_Shirt_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
                     2 : ["Hvy_Armorsmithing_Tier1_Plate_Armor_1", "Hvy_Armorsmithing_Tier1_Plate_Pants_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
@@ -1377,6 +1402,7 @@ function _select_Gateway() { // Check for Gateway used to
         taskListName : "Leatherworking",
         taskName : "Leatherworking",
         taskDefaultPriority : 1,
+	taskDefaultUpgradeAssets : 0,
         taskDefaultSlotNum : 0,
         taskActive : true,
         taskDescription : "",
@@ -1384,6 +1410,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "default",
                 isProfileActive : true,
                 level : {
+                    U : ["Leatherworking_Tier3_Recruit_Master", "Leatherworking_Tier2_Recruit_Journeyman", "Leatherworking_Tier1_Recruit_Apprentice", "Leatherworking_Tier0_Intro_1"],
                     0 : ["Leatherworking_Tier0_Intro_1"],
                     1 : ["Leatherworking_Tier1_Leather_Boots_1", "Leatherworking_Tier1_Leather_Shirt_1", "Leatherworking_Tier1_Gather_Basic"],
                     2 : ["Leatherworking_Tier1_Leather_Armor_1", "Leatherworking_Tier1_Leather_Pants_1", "Leatherworking_Tier1_Gather_Basic"],
@@ -1412,6 +1439,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "craft purples only",
                 isProfileActive : true,
                 level : {
+                    U : ["Leatherworking_Tier3_Recruit_Master", "Leatherworking_Tier2_Recruit_Journeyman", "Leatherworking_Tier1_Recruit_Apprentice", "Leatherworking_Tier0_Intro_1"],
                     0 : ["Leatherworking_Tier0_Intro_1"],
                     1 : ["Leatherworking_Tier1_Leather_Boots_1", "Leatherworking_Tier1_Leather_Shirt_1", "Leatherworking_Tier1_Gather_Basic"],
                     2 : ["Leatherworking_Tier1_Leather_Armor_1", "Leatherworking_Tier1_Leather_Pants_1", "Leatherworking_Tier1_Gather_Basic"],
@@ -1442,6 +1470,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "craft Shirts",
                 isProfileActive : true,
                 level : {
+                    U : ["Leatherworking_Tier3_Recruit_Master", "Leatherworking_Tier2_Recruit_Journeyman", "Leatherworking_Tier1_Recruit_Apprentice", "Leatherworking_Tier0_Intro_1"],
                     0 : ["Leatherworking_Tier0_Intro_1"],
                     1 : ["Leatherworking_Tier1_Leather_Boots_1", "Leatherworking_Tier1_Leather_Shirt_1", "Leatherworking_Tier1_Gather_Basic"],
                     2 : ["Leatherworking_Tier1_Leather_Armor_1", "Leatherworking_Tier1_Leather_Pants_1", "Leatherworking_Tier1_Gather_Basic"],
@@ -1475,6 +1504,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "craft Tunic",
                 isProfileActive : true,
                 level : {
+                    U : ["Leatherworking_Tier3_Recruit_Master", "Leatherworking_Tier2_Recruit_Journeyman", "Leatherworking_Tier1_Recruit_Apprentice", "Leatherworking_Tier0_Intro_1"],
                     0 : ["Leatherworking_Tier0_Intro_1"],
                     1 : ["Leatherworking_Tier1_Leather_Boots_1", "Leatherworking_Tier1_Leather_Shirt_1", "Leatherworking_Tier1_Gather_Basic"],
                     2 : ["Leatherworking_Tier1_Leather_Armor_1", "Leatherworking_Tier1_Leather_Pants_1", "Leatherworking_Tier1_Gather_Basic"],
@@ -1508,6 +1538,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "craft Trousers",
                 isProfileActive : true,
                 level : {
+                    U : ["Leatherworking_Tier3_Recruit_Master", "Leatherworking_Tier2_Recruit_Journeyman", "Leatherworking_Tier1_Recruit_Apprentice", "Leatherworking_Tier0_Intro_1"],
                     0 : ["Leatherworking_Tier0_Intro_1"],
                     1 : ["Leatherworking_Tier1_Leather_Boots_1", "Leatherworking_Tier1_Leather_Shirt_1", "Leatherworking_Tier1_Gather_Basic"],
                     2 : ["Leatherworking_Tier1_Leather_Armor_1", "Leatherworking_Tier1_Leather_Pants_1", "Leatherworking_Tier1_Gather_Basic"],
@@ -1539,6 +1570,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "craft Pants",
                 isProfileActive : true,
                 level : {
+                    U : ["Leatherworking_Tier3_Recruit_Master", "Leatherworking_Tier2_Recruit_Journeyman", "Leatherworking_Tier1_Recruit_Apprentice", "Leatherworking_Tier0_Intro_1"],
                     0 : ["Leatherworking_Tier0_Intro_1"],
                     1 : ["Leatherworking_Tier1_Leather_Boots_1", "Leatherworking_Tier1_Leather_Shirt_1", "Leatherworking_Tier1_Gather_Basic"],
                     2 : ["Leatherworking_Tier1_Leather_Armor_1", "Leatherworking_Tier1_Leather_Pants_1", "Leatherworking_Tier1_Gather_Basic"],
@@ -1575,6 +1607,7 @@ function _select_Gateway() { // Check for Gateway used to
         taskListName : "Tailoring",
         taskName : "Tailoring",
         taskDefaultPriority : 1,
+	taskDefaultUpgradeAssets : 0,
         taskDefaultSlotNum : 0,
         taskActive : true,
         taskDescription : "",
@@ -1582,6 +1615,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "default",
                 isProfileActive : true,
                 level : {
+                    U : ["Tailoring_Tier3_Recruit_Master", "Tailoring_Tier2_Recruit_Journeyman", "Tailoring_Tier1_Recruit_Apprentice", "Tailoring_Tier0_Intro"],
                     0 : ["Tailoring_Tier0_Intro"],
                     1 : ["Tailoring_Tier1_Cloth_Boots_1", "Tailoring_Tier1_Cloth_Shirt_1", "Tailoring_Tier1_Gather_Basic"],
                     2 : ["Tailoring_Tier1_Cloth_Armor_1", "Tailoring_Tier1_Cloth_Pants_1", "Tailoring_Tier1_Gather_Basic"],
@@ -1614,6 +1648,7 @@ function _select_Gateway() { // Check for Gateway used to
         taskListName : "Artificing",
         taskName : "Artificing",
         taskDefaultPriority : 1,
+	taskDefaultUpgradeAssets : 0,
         taskDefaultSlotNum : 0,
         taskActive : true,
         taskDescription : "",
@@ -1621,6 +1656,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "default",
                 isProfileActive : true,
                 level : {
+                    U : ["Artificing_Tier2_Recruit_Master", "Artificing_Tier1_Recruit_Journeyman", "Artificing_Tier1_Recruit_Apprentice", "Artificing_Tier0_Intro_1"],
                     0 : ["Artificing_Tier0_Intro_1"],
                     1 : ["Artificing_Tier1_Pactblade_Convergence_1", "Artificing_Tier1_Symbol_Virtuous_1", "Artificing_Tier1_Gather_Basic"],
                     2 : ["Artificing_Tier1_Pactblade_Convergence_1", "Artificing_Tier1_Icon_Virtuous_1", "Artificing_Tier1_Gather_Basic"],
@@ -1653,6 +1689,7 @@ function _select_Gateway() { // Check for Gateway used to
         taskListName : "Weaponsmithing",
         taskName : "Weaponsmithing",
         taskDefaultPriority : 1,
+	taskDefaultUpgradeAssets : 0,
         taskDefaultSlotNum : 0,
         taskActive : true,
         taskDescription : "",
@@ -1660,6 +1697,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "default",
                 isProfileActive : true,
                 level : {
+                    U : ["Weaponsmithing_Tier3_Recruit_Master", "Weaponsmithing_Tier2_Recruit_Journeyman", "Weaponsmithing_Tier1_Recruit_Apprentice", "Weaponsmithing_Tier0_Intro"],
                     0 : ["Weaponsmithing_Tier0_Intro"],
                     1 : ["Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
                     2 : ["Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
@@ -1692,6 +1730,7 @@ function _select_Gateway() { // Check for Gateway used to
         taskListName : "Alchemy",
         taskName : "Alchemy",
         taskDefaultPriority : 1,
+	taskDefaultUpgradeAssets : 0,
         taskDefaultSlotNum : 0,
         taskActive : true,
         taskDescription : "",
@@ -1699,6 +1738,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "default",
                 isProfileActive : true,
                 level : {
+                    U : ["Alchemy_Tier2_Recruit_Master", "Alchemy_Tier1_Recruit_Journeyman", "Alchemy_Tier1_Recruit_Apprentice", "Alchemy_Tier0_Intro_1"],
                     0 : ["Alchemy_Tier0_Intro_1"],
                     1 : ["Alchemy_Tier1_Experiment_Rank2", "Alchemy_Tier1_Experimentation_Rank1", "Alchemy_Tier1_Refine_Special"],
                     2 : ["Alchemy_Tier1_Experiment_Rank3", "Alchemy_Tier1_Experimentation_Rank2", "Alchemy_Tier1_Refine_Special"],
@@ -1729,6 +1769,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "Protection",
                 isProfileActive: true,
                 level: {
+                    U : ["Alchemy_Tier2_Recruit_Master", "Alchemy_Tier1_Recruit_Journeyman", "Alchemy_Tier1_Recruit_Apprentice", "Alchemy_Tier0_Intro_1"],
                     0: ["Alchemy_Tier0_Intro_1"],
                     1: ["Alchemy_Tier1_Experiment_Rank2", "Alchemy_Tier1_Experimentation_Rank1"],
                     2: ["Alchemy_Tier1_Experiment_Rank3", "Alchemy_Tier1_Experimentation_Rank2"],
@@ -1759,6 +1800,7 @@ function _select_Gateway() { // Check for Gateway used to
                 profileName : "Potency",
                 isProfileActive: true,
                 level: {
+                    U : ["Alchemy_Tier2_Recruit_Master", "Alchemy_Tier1_Recruit_Journeyman", "Alchemy_Tier1_Recruit_Apprentice", "Alchemy_Tier0_Intro_1"],
                     0: ["Alchemy_Tier0_Intro_1"],
                     1: ["Alchemy_Tier1_Experiment_Rank2", "Alchemy_Tier1_Experimentation_Rank1"],
                     2: ["Alchemy_Tier1_Experiment_Rank3", "Alchemy_Tier1_Experimentation_Rank2"],
@@ -1865,7 +1907,8 @@ function _select_Gateway() { // Check for Gateway used to
     ];
 
     var priorityOptions = [{name: 'high', value: 0},{name: 'medium', value: 1},{name: 'low', value: 2}];
-        
+    var upgradeAssetsOptions = [{name: 'no', value: 0},{name: 'yes', value: 1}];    
+    
     var charSettings = [];
     for (var i = 0; i < settings["charcount"]; i++) {
         charSettings.push({name: 'nw_charname' + i, title: 'Character', def: 'Character ' + (i + 1), type: 'text', tooltip: 'Characters Name'});
@@ -1875,7 +1918,8 @@ function _select_Gateway() { // Check for Gateway used to
             //charSettings.push({name: task["taskListName"] + i, title: task["taskListName"], profileNames: profileNames,  def: task["taskDefaultSlotNum"] , type: 'text', tooltip: 'Number of slots to assign to ' + task["taskListName"]});
             charSettings.push({name: task.taskListName + i, title: task.taskListName, def: task.taskDefaultSlotNum , type: 'text', type2: 'task', tooltip: 'Number of slots to assign to ' + task.taskListName, pane: "tasks"});
             charSettings.push({name: task.taskListName + i + '_profile', title: task.taskListName + '_profile', options: profileNames,  def: profileNames[0].value, type: 'select',  type2: 'task-property', tooltip: '', pane: "tasks"});
-            charSettings.push({name: task.taskListName + i + '_priority', title: task.taskListName + '_priority', options: priorityOptions,  def: task.taskDefaultPriority , type: 'select',  type2: 'task-property', tooltip: '', pane: "tasks"});                               
+            charSettings.push({name: task.taskListName + i + '_priority', title: task.taskListName + '_priority', options: priorityOptions,  def: task.taskDefaultPriority , type: 'select',  type2: 'task-property', tooltip: '', pane: "tasks"});
+            charSettings.push({name: task.taskListName + i + '_upgradeAssets', title: task.taskListName + '_upgradeAssets', options: upgradeAssetsOptions,  def: task.taskDefaultUpgradeAssets , type: 'select',  type2: 'task-property', tooltip: '', pane: "tasks"});
 		});
         
         charSettings.push({name: 'test' + i, title: 'test', def: 1, type: 'text', tooltip: 'test', pane:"settings"});
@@ -2123,13 +2167,27 @@ function _select_Gateway() { // Check for Gateway used to
                 return profile.profileName == settings[prof.taskListName + charcurrent + '_profile'];
             });
         console.log('Selecting profile: ' + profile[0].profileName);
-        var list = profile[0].level[level];
+        
+        // If upgrade assets is selected as yes then modify the level to the asset upgrade line from the profile if it exists
+        var list = [];
+        if(typeof profile[0].level['U'] === 'undefined') {
+            console.log(prof.taskName, 'No AssetUpgrade in profile');
+        } else {
+            // Asset Upgrading does exist, check whether set in profile and add
+            if (settings[prof.taskListName + charcurrent + '_upgradeAssets'] == 1) {
+                console.log(prof.taskName, 'AssetUpgrade found in profile');
+                list = profile[0].level['U'];
+            }
+        }
+        list = list.concat(profile[0].level[level]);
+        
         if (list.length <= i) {
             console.log("Nothing Found");
             switchChar();
             return false;
         }
         console.log(prof.taskName, "is level", level);
+        console.log(prof.taskName, "upgradeAsset is", settings[prof.taskListName + charcurrent + '_upgradeAssets']);
         console.log("createNextTask", list.length, i);
 
         var taskName = list[i];
@@ -3356,7 +3414,7 @@ function _select_Gateway() { // Check for Gateway used to
                 '<li><a href="#charSettingsTab-2-' + i + '">Char Settings</a></li>',
                 '</ul>',
                 '<div id="charSettingsTab-1-' + i + '" class="charSettingsTab">',
-                '<table><thead><tr><th>Task name</th><th># of slots</th><th>profile</th><th>priority</th></tr></thead><tbody>'
+                '<table><thead><tr><th>Task name</th><th># of slots</th><th>profile</th><th>priority</th><th>Upgrade Assets?</th></tr></thead><tbody>'
             ].join('');
 
             // tasks
