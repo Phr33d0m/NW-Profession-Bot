@@ -1614,8 +1614,12 @@ Jewelcrafting : {
         LVL:20 ,name:"Personalized Archmage's Belt +6" taskname:"Jewelcrafting_Tier3_Waist_Offense_4_Purple_2".
         LVL:20 ,name:"Personalized Belt of Revitalization +6" taskname:"Jewelcrafting_Tier3_Waist_Misc_4_Purple_2".
         LVL:20 ,name:"Personalized Hero's Belt +6" taskname:"Jewelcrafting_Tier3_Waist_Defense_4_Purple_2".
+
         LVL:21 ,name:"Perfect Gem and Aberrant Leather Strip Crafting" taskname:"Jewelcrafting_Tier4_Refine_Basic".
         LVL:21 ,name:"Mass Gem and Leather Strip Crafting" taskname:"Jewelcrafting_Tier4_Refine_Basic_Mass".
+        LVL:21, name:"Gather Adamant Ore and Aberrant Pelts", taskname : "Jewelcrafting_Tier4_Gather_Basic"
+        LVL:21, name:"Mass Gem and Leather Strip Crafting", taskname : "Jewelcrafting_Tier4_Refine_Basic_Mass"
+        
         LVL:22 ,name:"Adamant Ore and Aberrant Pelt Trading" taskname:"Jewelcrafting_Tier4_Gather_Special".
         LVL:22 ,name:"Perfect Gem and Aberrant Leather Strip Trading" taskname:"Jewelcrafting_Tier4_Refine_Special".
         LVL:22 ,name:"Adamant Necklace" taskname:"Jewelcrafting_Tier4_Neck_Base_3".
@@ -1649,6 +1653,8 @@ Rares:
         LVL:25 ,name:"Superior Adamant Necklace of Recovery" taskname:"Jewelcrafting_Tier4_Neck_Misc_3_Blue".
         LVL:25 ,name:"Superior Adamant Ring of Recovery" taskname:"Jewelcrafting_Tier4_Ring_Misc_3_Blue".
         LVL:25 ,name:"Superior Aberrant Belt of Recovery" taskname:"Jewelcrafting_Tier4_Waist_Misc_3_Blue".
+        Jewelcrafting_Tier4_Neck_Defense_4_Purple : "Exquisite Adamant Necklace of Regeneration",//25
+        Jewelcrafting_Tier4_Ring_Defense_4_Purple  : "Exquisite Adamant Ring of Regeneration" //25
   },
 BlackIce : { // Black Ice Shaping
         LVL:1 ,name:"Upgrade Chillwright" taskname:"Blackice_Tier1_Recruit_Blackice_Smith".
