@@ -974,7 +974,7 @@ function _select_Gateway() { // Check for Gateway used to
                 "Med_Armorsmithing_Tier3_Chain_Pants_Special_2", "Med_Armorsmithing_Tier3_Chain_Trousers_Special_2",
                 //purple scale gwf
 
-                "Med_Armorsmithing_Tier3_Scale_Shirt_Special_2", "Med_Armorsmithing_Tier3_Scale_Gambeson_Special_2",
+                "Med_Armorsmithing_Tier3_Scale_Shirt_Special_2", "Med_Armorsmithing_Tier3_Scale_Shirt_Special_2_Set2", "Med_Armorsmithing_Tier3_Scale_Gambeson_Special_2",
                 "Med_Armorsmithing_Tier3_Scale_Trousers_Special_2", "Med_Armorsmithing_Tier3_Scale_Pants_Special_2",
                 //DC
 
@@ -999,7 +999,7 @@ function _select_Gateway() { // Check for Gateway used to
                 "Med_Armorsmithing_Tier3_Chain_Pants_Special_2", "Med_Armorsmithing_Tier3_Chain_Trousers_Special_2",
                 //purple scale gwf
 
-                "Med_Armorsmithing_Tier3_Scale_Shirt_Special_2", "Med_Armorsmithing_Tier3_Scale_Gambeson_Special_2",
+                "Med_Armorsmithing_Tier3_Scale_Shirt_Special_2", "Med_Armorsmithing_Tier3_Scale_Shirt_Special_2_Set2", "Med_Armorsmithing_Tier3_Scale_Gambeson_Special_2",
                 "Med_Armorsmithing_Tier3_Scale_Trousers_Special_2", "Med_Armorsmithing_Tier3_Scale_Pants_Special_2",
                 //DC
 
@@ -1024,7 +1024,7 @@ function _select_Gateway() { // Check for Gateway used to
                 "Med_Armorsmithing_Tier3_Chain_Shirt_Special_2", "Med_Armorsmithing_Tier3_Chain_Gambeson_Special_2",
                 //purple scale gwf
 
-                "Med_Armorsmithing_Tier3_Scale_Shirt_Special_2", "Med_Armorsmithing_Tier3_Scale_Gambeson_Special_2",
+                "Med_Armorsmithing_Tier3_Scale_Shirt_Special_2", "Med_Armorsmithing_Tier3_Scale_Shirt_Special_2_Set2", "Med_Armorsmithing_Tier3_Scale_Gambeson_Special_2",
                 "Med_Armorsmithing_Tier3_Scale_Trousers_Special_2", "Med_Armorsmithing_Tier3_Scale_Pants_Special_2",
                 //DC
 
@@ -1050,7 +1050,7 @@ function _select_Gateway() { // Check for Gateway used to
                 "Med_Armorsmithing_Tier3_Chain_Shirt_Special_2", "Med_Armorsmithing_Tier3_Chain_Gambeson_Special_2",
                 //purple scale gwf
 
-                "Med_Armorsmithing_Tier3_Scale_Shirt_Special_2", "Med_Armorsmithing_Tier3_Scale_Gambeson_Special_2",
+                "Med_Armorsmithing_Tier3_Scale_Shirt_Special_2", "Med_Armorsmithing_Tier3_Scale_Shirt_Special_2_Set2", "Med_Armorsmithing_Tier3_Scale_Gambeson_Special_2",
                 "Med_Armorsmithing_Tier3_Scale_Trousers_Special_2", "Med_Armorsmithing_Tier3_Scale_Pants_Special_2",
                 //DC
 
@@ -1071,7 +1071,7 @@ function _select_Gateway() { // Check for Gateway used to
             20 : [
                "Med_Armorsmithing_Tier3_Trade_Hammer_Purple", "Med_Armorsmithing_Tier3_Trade_Tongs_Purple", "Med_Armorsmithing_Tier3_Trade_Chisel_Purple",
                //purple scale gwf
-               "Med_Armorsmithing_Tier3_Scale_Gambeson_Special_2", "Med_Armorsmithing_Tier3_Scale_Shirt_Special_2", 
+               "Med_Armorsmithing_Tier3_Scale_Shirt_Special_2_Set2", "Med_Armorsmithing_Tier3_Scale_Gambeson_Special_2", "Med_Armorsmithing_Tier3_Scale_Shirt_Special_2", 
                "Med_Armorsmithing_Tier3_Scale_Trousers_Special_2", "Med_Armorsmithing_Tier3_Scale_Pants_Special_2",
                //purple chain DC
                "Med_Armorsmithing_Tier3_Chain_Shirt_Special_2", "Med_Armorsmithing_Tier3_Chain_Gambeson_Special_2",
@@ -1094,7 +1094,7 @@ function _select_Gateway() { // Check for Gateway used to
             20 : [
                "Med_Armorsmithing_Tier3_Trade_Hammer_Purple", "Med_Armorsmithing_Tier3_Trade_Tongs_Purple", "Med_Armorsmithing_Tier3_Trade_Chisel_Purple",
                //purple scale gwf
-               "Med_Armorsmithing_Tier3_Scale_Shirt_Special_2", "Med_Armorsmithing_Tier3_Scale_Gambeson_Special_2",
+               "Med_Armorsmithing_Tier3_Scale_Shirt_Special_2", "Med_Armorsmithing_Tier3_Scale_Shirt_Special_2_Set2", "Med_Armorsmithing_Tier3_Scale_Gambeson_Special_2",
                "Med_Armorsmithing_Tier3_Scale_Trousers_Special_2", "Med_Armorsmithing_Tier3_Scale_Pants_Special_2",
                //purple chain DC
                "Med_Armorsmithing_Tier3_Chain_Shirt_Special_2", "Med_Armorsmithing_Tier3_Chain_Gambeson_Special_2",
@@ -1118,7 +1118,7 @@ addProfileToDefined("Mailsmithing", {
            "Med_Armorsmithing_Tier3_Trade_Hammer_Purple", "Med_Armorsmithing_Tier3_Trade_Tongs_Purple", "Med_Armorsmithing_Tier3_Trade_Chisel_Purple",
            //purple scale gwf
            "Med_Armorsmithing_Tier3_Scale_Pants_Special_2", "Med_Armorsmithing_Tier3_Scale_Trousers_Special_2",
-           "Med_Armorsmithing_Tier3_Scale_Shirt_Special_2", "Med_Armorsmithing_Tier3_Scale_Gambeson_Special_2",
+           "Med_Armorsmithing_Tier3_Scale_Shirt_Special_2", "Med_Armorsmithing_Tier3_Scale_Shirt_Special_2_Set2", "Med_Armorsmithing_Tier3_Scale_Gambeson_Special_2",
            //purple chain DC
            "Med_Armorsmithing_Tier3_Chain_Shirt_Special_2", "Med_Armorsmithing_Tier3_Chain_Gambeson_Special_2",
            "Med_Armorsmithing_Tier3_Chain_Pants_Special_2", "Med_Armorsmithing_Tier3_Chain_Trousers_Special_2",
@@ -1140,7 +1140,7 @@ addProfileToDefined("Mailsmithing", {
         20 : [
            "Med_Armorsmithing_Tier3_Trade_Hammer_Purple", "Med_Armorsmithing_Tier3_Trade_Tongs_Purple", "Med_Armorsmithing_Tier3_Trade_Chisel_Purple",
            //purple chain DC
-           "Med_Armorsmithing_Tier3_Chain_Shirt_Special_2", "Med_Armorsmithing_Tier3_Chain_Gambeson_Special_2",
+           "Med_Armorsmithing_Tier3_Chain_Shirt_Special_2","Med_Armorsmithing_Tier3_Scale_Shirt_Special_2_Set2", "Med_Armorsmithing_Tier3_Chain_Gambeson_Special_2",
            "Med_Armorsmithing_Tier3_Chain_Pants_Special_2", "Med_Armorsmithing_Tier3_Chain_Trousers_Special_2",
            //purple scale gwf
            "Med_Armorsmithing_Tier3_Scale_Shirt_Special_2", "Med_Armorsmithing_Tier3_Scale_Gambeson_Special_2",
