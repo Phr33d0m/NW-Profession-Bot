@@ -1034,6 +1034,7 @@ Rares:
         Med_Armorsmithing_Tier3_Chain_Shirt_Special_2 : "Exquisite Chain Shirt",
         Med_Armorsmithing_Tier3_Chain_Trousers_Special_2 : "Exquisite Chain Trousers",
         Med_Armorsmithing_Tier3_Scale_Gambeson_Special_2 : "Exquisite Scale Gambeson",
+        Med_Armorsmithing_Tier3_Scale_Shirt_Special_2_Set2 : "Exquisite Scale Gambeson",
         Med_Armorsmithing_Tier3_Scale_Pants_Special_2 : "Exquisite Scale Pants",
         Med_Armorsmithing_Tier3_Scale_Shirt_Special_2 : "Exquisite Scale Shirt",
         Med_Armorsmithing_Tier3_Scale_Trousers_Special_2 : "Exquisite Scale Trousers",
