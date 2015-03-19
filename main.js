@@ -1166,8 +1166,8 @@ addProfileToDefined("Mailsmithing", {
            "Med_Armorsmithing_Tier3_Scale_Shirt_Special_2", "Med_Armorsmithing_Tier3_Scale_Gambeson_Special_2",
            "Med_Armorsmithing_Tier3_Scale_Trousers_Special_2", "Med_Armorsmithing_Tier3_Scale_Pants_Special_2",
            //basic chain DC
-           "Med_Armorsmithing_Tier3_Chain_Shirt_Special", "Med_Armorsmithing_Tier3_Chain_Gambeson_Special",
-           "Med_Armorsmithing_Tier3_Chain_Trousers_Special", "Med_Armorsmithing_Tier3_Chain_Pants_Special",
+           //"Med_Armorsmithing_Tier3_Chain_Shirt_Special", "Med_Armorsmithing_Tier3_Chain_Gambeson_Special",
+           //"Med_Armorsmithing_Tier3_Chain_Trousers_Special", "Med_Armorsmithing_Tier3_Chain_Pants_Special",
            //basic  scale GWF
            /*"Med_Armorsmithing_Tier3_Scale_Shirt_Special", "Med_Armorsmithing_Tier3_Scale_Trousers_Special",
            "Med_Armorsmithing_Tier3_Scale_Pants_Special", "Med_Armorsmithing_Tier3_Scale_Trousers_Special",*/
