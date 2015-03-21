@@ -13,10 +13,10 @@
 
 /*
 === NW Gateway Professions Bot Developers
-- Bluep, Numberb, mac-nw, Phr33d0m, BigRedBrent, noonereally, WloBeb
+- Bluep, Numberb, mac-nw, Phr33d0m, BigRedBrent, noonereally, WloBeb, dlebedynskyi
 
 === NW Gateway Professions Bot Contributors
-- Kakoura, Nametaken, rotten_mind, Frankescript, dlebedynskyi
+- Kakoura, Nametaken, rotten_mind, Frankescript
  */
 
 // @version 2.0
@@ -30,6 +30,10 @@
 // ==/UserScript==
 
 /* RELEASE NOTES
+-
+-- UI added for advanced slot task allocations
+-- Initial structures for JSON settings
+-- Simplification of profile registration and some profile upkeep, thanks dlebedynskyi.
 2.0
 - Additional UI changes.
 - Added resetable counters for refined AD.
