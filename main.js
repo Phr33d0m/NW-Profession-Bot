@@ -13,10 +13,10 @@
 
 /*
 === NW Gateway Professions Bot Developers
-- Bluep, Numberb, mac-nw, Phr33d0m, BigRedBrent, noonereally, WloBeb, dlebedynskyi
+- Bluep, Numberb, mac-nw, Phr33d0m, BigRedBrent, noonereally, WloBeb
 
 === NW Gateway Professions Bot Contributors
-- Kakoura, Nametaken, rotten_mind, Frankescript
+- Kakoura, Nametaken, rotten_mind, Frankescript, dlebedynskyi
  */
 
 // @version 2.0
@@ -30,10 +30,6 @@
 // ==/UserScript==
 
 /* RELEASE NOTES
-
-- UI added for advanced slot task allocations
-- Initial structures for JSON settings
-- Simplification of profile registration and some profile upkeep, thanks dlebedynskyi.
 2.0
 - Additional UI changes.
 - Added resetable counters for refined AD.
@@ -1458,8 +1454,8 @@ function _select_Gateway() { // Check for Gateway used to
 			20:["Alchemy_Tier2_Aquaregia", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
 		}
 	});
-	addProfileToDefined("Aqua Vitae", {
-		profileName : "Protection",
+	addProfileToDefined("Alchemy", {
+		profileName : "Aqua Vitae",
 		level: {
 			20:["Alchemy_Tier2_Aquavitae_2", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
 		}
