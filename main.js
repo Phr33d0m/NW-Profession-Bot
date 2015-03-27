@@ -1529,8 +1529,8 @@ function _select_Gateway() { // Check for Gateway used to
         },
 		workers: {
             "Leadership":       { used: [], unused: [] },
-            "Jewelcrafting":    { used: [], unused: [] },
             "Alchemy":          { used: [], unused: [] },
+            "Jewelcrafting":    { used: [], unused: [] },
             "Weaponsmithing":   { used: [], unused: [] },
             "Artificing":       { used: [], unused: [] },
             "Mailsmithing":     { used: [], unused: [] },
@@ -1569,10 +1569,10 @@ function _select_Gateway() { // Check for Gateway used to
     var workerList = {
             "Leadership":       ["Crafting_Asset_Craftsman_Leadership_T3_Epic", "Crafting_Asset_Craftsman_Leadership_T3_Rare", "Crafting_Asset_Craftsman_Leadership_T3_Uncommon", 
                                 "Crafting_Asset_Craftsman_Leadership_T3_Common", "Crafting_Asset_Craftsman_Leadership_T2_Common", "Crafting_Asset_Craftsman_Leadership_T1_Common_1"] ,
-            "Jewelcrafting":    ["Crafting_Asset_Craftsman_Jewelcrafter_T3_Epic","Crafting_Asset_Craftsman_Jewelcrafter_T3_Rare","Crafting_Asset_Craftsman_Jewelcrafter_T3_Uncommon",
-                                "Crafting_Asset_Craftsman_Jewelcrafter_T3_Common","Crafting_Asset_Craftsman_Jewelcrafter_T2_Common","Crafting_Asset_Craftsman_Jewelcrafter_T1_Common"],
             "Alchemy":          ["Asset_Craftsman_Alchemy_T3_Epic","Asset_Craftsman_Alchemy_T3_Rare","Asset_Craftsman_Alchemy_T3_Uncommon",
                                 "Asset_Craftsman_Alchemy_T3_Common","Asset_Craftsman_Alchemy_T2_Common","Asset_Craftsman_Alchemy_T1_Common"],
+            "Jewelcrafting":    ["Crafting_Asset_Craftsman_Jewelcrafter_T3_Epic","Crafting_Asset_Craftsman_Jewelcrafter_T3_Rare","Crafting_Asset_Craftsman_Jewelcrafter_T3_Uncommon",
+                                "Crafting_Asset_Craftsman_Jewelcrafter_T3_Common","Crafting_Asset_Craftsman_Jewelcrafter_T2_Common","Crafting_Asset_Craftsman_Jewelcrafter_T1_Common"],
             "Weaponsmithing":   ["Crafting_Asset_Craftsman_Weaponsmith_T3_Epic","Crafting_Asset_Craftsman_Weaponsmith_T3_Rare","Crafting_Asset_Craftsman_Weaponsmith_T3_Uncommon",
                                 "Crafting_Asset_Craftsman_Weaponsmith_T3_Common","Crafting_Asset_Craftsman_Weaponsmith_T2_Common","Crafting_Asset_Craftsman_Weaponsmith_T1_Common"],
             "Artificing":       ["Crafting_Asset_Craftsman_Artificing_T3_Epic","Crafting_Asset_Craftsman_Artificing_T3_Rare", "Crafting_Asset_Craftsman_Artificing_T3_Uncommon",
@@ -3259,7 +3259,9 @@ function _select_Gateway() { // Check for Gateway used to
             .charSettingsTab div { overflow: auto; }\
             #rcounters ul li span { display: inline-block; min-width: 125px; }\
             #settingsPanel table { width: 100%; }\
-            .epic { color: purple; } .rare { color: blue; } .uncommon { color: green } \
+            .ranked:nth-child(6n+2) { color: purple; } .ranked:nth-child(6n+3) { color: blue; } .ranked:nth-child(6n+4) { color: green } \
+            .ranked2:nth-child(6n+1) { color: purple; } .ranked2:nth-child(6n+2) { color: blue; } .ranked2:nth-child(6n+3) { color: green } \
+            table.profesionRanks {	border-collapse: collapse; } td.ranked2 { border-bottom: solid 1px #555; } td.ranked1 { border-top: solid 1px #555; } \
             ");
 
         // Add settings panel to page body
@@ -3766,7 +3768,7 @@ function _select_Gateway() { // Check for Gateway used to
         });
 
         // Worker tab update.
-        html = '<table>';
+        html = '<table class="profesionRanks">';
         var temp = "";
         html += "<tr><th>Char name</th>";
         var cnt = 0;
@@ -3783,12 +3785,10 @@ function _select_Gateway() { // Check for Gateway used to
             cnt = 0;
             $.each(charStatisticsList[charName].workers, function (pf, list) {
                 if (cnt++ > 3) return; // No room in the UI trimming for now
-                list.used.forEach( function(wc) {
-                    html += "<td>" + $.trim(wc) + "</td>";
-                });
-                list.unused.forEach( function(wc) {
-                    temp += "<td>" + $.trim(wc) + "</td>";
-                });
+                for (var ix = 0; ix < 6; ix++)  {
+                    html += "<td class='ranked'>" + $.trim(list.used[ix]) + "</td>";
+                    temp += "<td class='ranked2'>" + $.trim(list.unused[ix]) + "</td>";
+                };
             })
             html += "</tr><tr>" + temp + "</tr>"; 
         })       
