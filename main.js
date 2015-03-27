@@ -29,7 +29,7 @@ Developers & Contributors:
 
  */
 
-// @version 2.1
+// @version 2.2
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -40,6 +40,8 @@ Developers & Contributors:
 // ==/UserScript==
 
 /* RELEASE NOTES
+2.2-hotfix
+- Fix broken ZEX Domino effect logic
 2.1
 - Professions profiles related fixes by dlebedynskyi
 - Mailsmithing stuck fix by dlebedynskyi
