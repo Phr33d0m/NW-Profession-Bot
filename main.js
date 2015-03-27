@@ -1729,13 +1729,14 @@ function _select_Gateway() { // Check for Gateway used to
         {name: 'optionals', title: 'Fill Optional Assets', def: true, type: 'checkbox', pane:'prof', tooltip: 'Enable to include selecting the optional assets of tasks'},
         {name: 'autopurchase', title: 'Auto Purchase Resources', def: true, type: 'checkbox', pane:'prof', tooltip: 'Automatically purchase required resources from gateway shop (100 at a time)'},
         {name: 'trainassets', title: 'Train Assets', def: true, type: 'checkbox', pane:'prof', tooltip: 'Enable training/upgrading of asset worker resources'},
-        {name: 'skippatrol', title: 'Skip Patrol task if > 10 calims', def: false, type: 'checkbox', pane:'prof', tooltip: 'Skip "Patrol the Mines" leadership task if there are more than 10 mining claims in the inventory'},
+        {name: 'skippatrol', title: 'Skip Patrol task if > 10 claims', def: false, type: 'checkbox', pane:'prof', tooltip: 'Skip "Patrol the Mines" leadership task if there are more than 10 mining claims in the inventory'},
         {name: 'refinead', title: 'Refine AD', def: true, type: 'checkbox', pane:'main', tooltip: 'Enable refining of AD on character switch'},
         {name: 'openrewards', title: 'Open Reward Chests', def: false, type: 'checkbox', pane:'main', tooltip: 'Enable opeing of leadership chests on character switch'}, //MAC-NW
         {name: 'autoreload', title: 'Auto Reload', def: false, type: 'checkbox', pane:'main', tooltip: 'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)'},
         {name: 'autovendor_junk', title: 'Auto Vendor junk..', def: false, type: 'checkbox', pane:'vend', tooltip: 'Vendor all (currently) winterfest fireworks+lanterns'}, //MAC-NW
         {name: 'autovendor_kits_altars_limit', title: 'Vendor/Maintain Altar Node Kit Stacks', def: false, type: 'checkbox', pane:'vend', tooltip: 'Limit skill kits stacks to 50/Altars80, vendor kits unusable by class, remove all if player has one bag or full bags'}, // edited by RottenMind
-        {name: 'autovendor_kits_altars_all', title: 'Vendor All Altar Node Kit Stacks', def: false, type: 'checkbox', pane:'vend', tooltip: 'Sell ALL skill kits  Altars.'}, // RottenMind
+        {name: 'autovendor_kits_all', title: 'Vendor All Node Kits', def: false, type: 'checkbox', pane:'vend', tooltip: 'Sell ALL skill kits.'},
+        {name: 'autovendor_altars_all', title: 'Vendor All Altar', def: false, type: 'checkbox', pane:'vend', tooltip: 'Sell ALL Altars.'},
         {name: 'autovendor_profresults', title: 'Vendor/Maintain Prof Crafted Levelup Items', def: false, type: 'checkbox', pane:'vend', tooltip: 'Vendor off Tier 1 to 5 items produced and reused for leveling crafting professions.'},
         {name: 'autovendor_pots1', title: 'Auto Vendor minor potions (lvl 1)', def: false, type: 'checkbox', pane:'vend', tooltip: 'Vendor all minor potions (lvl 1) found in player bags'}, //MAC-NW
         {name: 'autovendor_pots2', title: 'Auto Vendor lesser potions (lvl 15)', def: false, type: 'checkbox', pane:'vend', tooltip: 'Vendor all lesser potions (lvl 15) found in player bags'}, //MAC-NW
@@ -3826,13 +3827,15 @@ function _select_Gateway() { // Check for Gateway used to
                 limit : 80
             };
         }
-        if (settings["autovendor_kits_altars_all"]) {
-            _vendorItems[_vendorItems.length] = {
-                pattern : /^Item_Portable_Altar$/,
-                limit : 0
-            };
+        if (settings["autovendor_kits_all"]) {
             _vendorItems[_vendorItems.length] = {
                 pattern : /^Item_Consumable_Skill/,
+                limit : 0
+            };
+        }
+        if (settings["autovendor_altars_all"]) {
+            _vendorItems[_vendorItems.length] = {
+                pattern : /^Item_Portable_Altar$/,
                 limit : 0
             };
         }
