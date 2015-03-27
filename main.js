@@ -2333,16 +2333,31 @@ function buyTaskAsset(_itemNo) {
 function postZexOffer() {
     // Make sure the exchange data is loaded to model
     if (unsafeWindow.client.dataModel.model.exchangeaccountdata) {
+        // First check if there's anything we have to withdraw and claim it
+        // Sometimes the system will literally overwrite canceled and unclaimed orders and return AD to that character
+        // Example: if you cancel 5 orders, don't claim them, then create another order and cancel it, that last order
+        //          will overwrite one of your previous orders and return the AD to that other character
+        var exchangeDiamonds = parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
+        if(exchangeDiamonds > 0)
+            window.setTimeout(claimZexOffer, delay.SHORT);
+        
+        
+        // Domino effect: first check if we're out of space for new offers
+        if (unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length == 5) {
+            // Domino effect: then withdraw as much offers as we can and claim the diamonds
+            window.setTimeout(withdrawZexOffer, delay.MEDIUM);
+        }
+        
         // Check that there is atleast 1 free zex order slot
         if (unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length < 5) {
             // Place the order
+            // Domino effect: this new order will post all the gathered diamonds until now
             var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
             var ZenRate = parseInt(settings["banktransrate"]);
             var ZenQty = Math.floor((charDiamonds - parseInt(settings["bankcharmin"])) / ZenRate);
             ZenQty = (ZenQty > 5000) ? 5000 : ZenQty;
             console.log("Posting Zex buy listing for " + ZenQty + " ZEN at the rate of " + ZenRate + " AD/ZEN. AD remainder: " + charDiamonds + " - " + (ZenRate * ZenQty) + " = " + (charDiamonds - (ZenRate * ZenQty)));
             unsafeWindow.client.createBuyOrder(ZenQty, ZenRate);
-
         } else {
             console.log("Zen Max Listings Reached (5). Skipping Zex Posting..");
         }
@@ -2369,6 +2384,9 @@ function withdrawZexOffer() {
                     console.log("Withdrawing Zex listing for " + item.quantity + " ZEN at the rate of " + item.price + " . Total value in AD: " + item.totaltc);
                 }
             });
+            
+            // Withdraw the balance from exchange
+            window.setTimeout(claimZexOffer, delay.SHORT);
 
         } else {
             console.log("No listings found on Zex. Skipping Zex Withrdaw..");
@@ -2376,6 +2394,20 @@ function withdrawZexOffer() {
     } else {
         console.log("Zen Exchange data did not load in time for transfer. Skipping Zex Withrdaw..");
     }
+}
+
+function claimZexOffer() {
+    window.setTimeout(function () {
+        if (parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow) > 0) {
+            client.sendCommand("GatewayExchange_ClaimTC", unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
+            console.log("Attempting to withdraw exchange balancees... ClaimTC: " + unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
+        }
+        if (parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc) > 0) {
+            client.sendCommand("GatewayExchange_ClaimMTC", unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
+            console.log("Attempting to withdraw exchange balancees... ClaimMT: " + unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
+        }
+
+    }, delay.SHORT);
 }
 
 // MAC-NW
@@ -2551,6 +2583,9 @@ function switchChar() {
             } else {
                 console.log("Character does not have minimum AD balance to do funds transfer. Skipping Zex Posting..");
             }
+        }
+        else {
+            window.setTimeout(withdrawZexOffer, delay.MEDIUM);
         }
 
     } else {
@@ -2835,18 +2870,6 @@ function loadCharacter(charname) {
         if (settings["bankchar"] == unsafeWindow.client.dataModel.model.ent.main.name) {
             // This is the banker -- withdraw any buy listings that match the transfer rate set in panel
             window.setTimeout(withdrawZexOffer, delay.MEDIUM);
-            // withdraw the balance from exchange
-            window.setTimeout(function () {
-                if (parseInt(client.dataModel.model.exchangeaccountdata.readytoclaimescrow) > 0) {
-                    client.sendCommand("GatewayExchange_ClaimTC", client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
-                    console.log("Attempting to withdraw exchange balancees... ClaimTC: " + client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
-                }
-                if (parseInt(client.dataModel.model.exchangeaccountdata.readytoclaimmtc) > 0) {
-                    client.sendCommand("GatewayExchange_ClaimMTC", client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
-                    console.log("Attempting to withdraw exchange balancees... ClaimMT: " + client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
-                }
-
-            }, delay.SHORT);
         }
 
         WaitForState("button.closeNotification").done(function () {
