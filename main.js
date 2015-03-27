@@ -1799,13 +1799,13 @@ function _select_Gateway() { // Check for Gateway used to
     for (var i = 0; i < charSettings.length; i++) {
         settings[charSettings[i].name] = GM_getValue(charSettings[i].name, charSettings[i].def);
     }
-
+/*
     var refineCounters = JSON.parse(GM_getValue("refineCounters", "{}"));
     if (!refineCounters) {
         console.log('refineCounters couldn\'t be retrieved, reseting.');
         refineCounters = {};
     };
-
+*/
     // Page Settings
     var PAGES = Object.freeze({
             LOGIN : {
@@ -2757,11 +2757,10 @@ function _select_Gateway() { // Check for Gateway used to
                 WaitForState("button.closeNotification").done(function () {
                     $("button.closeNotification").click();
                 });
-                refineCounters[settings["nw_charname" + charcurrent]] += refined_diamonds;
-                charStatisticsList[settings["nw_charname" + charcurrent]].refineCounter += refined_diamonds;
+                charStatisticsList[settings["nw_charname" + charcurrent]].general.refineCounter += refined_diamonds;
+                
             }
         }
-
         // MAC-NW -- AD Consolidation
         if (settings["autoexchange"]) {
 
@@ -2808,45 +2807,7 @@ function _select_Gateway() { // Check for Gateway used to
 
         // MAC-NW (endchanges)
 
-        console.log("Switching Characters");
-
-        var chardelay,
-        chardate = null,
-        nowdate = new Date();
-        nowdate = nowdate.getTime();
-        for (var cc = 0; cc < settings["charcount"]; cc++) {
-            if (chartimers[cc] != null) {
-                console.log("Date found for " + settings["nw_charname" + cc]);
-                if (!chardate || chartimers[cc] < chardate) {
-                    chardate = chartimers[cc];
-                    charcurrent = cc;
-                    chardelay = chardate.getTime() - nowdate - unsafeWindow.client.getServerOffsetSeconds() * 1000;
-                    if (chardelay < delay.SHORT) {
-                        chardelay = delay.SHORT;
-                    }
-                }
-            } else {
-                charcurrent = cc;
-                chardelay = delay.SHORT;
-                chardate = null;
-                console.log("No date found for " + settings["nw_charname" + cc] + ", switching now.");
-                break;
-            }
-        }
-
-        // Count AD & Gold
-        var curdiamonds = 0;
-        var curgold = 0;
-        for (var cc = 0; cc < settings["charcount"]; cc++) {
-            if (chardiamonds[cc] != null) {
-                curdiamonds += Math.floor(chardiamonds[cc] / 50) * 50;
-            }
-
-            if (chargold[cc] != null) {
-                curgold += chargold[cc];
-            }
-        }
-
+        
         // Updating statistics
         //console.log(unsafeWindow.client.dataModel.model.ent.main);
         var _curCharName = settings["nw_charname" + charcurrent];
@@ -2910,11 +2871,51 @@ function _select_Gateway() { // Check for Gateway used to
         //professions levels at:  unsafeWindow.client.dataModel.model.ent.main.itemassignmentcategories.categories[].  currentrank / displayname
         
         GM_setValue("chars__statistics__" + _curCharName,JSON.stringify(charStatisticsList[_curCharName]));
-        
         updateCounters(false);
         
-
         
+        
+        
+        
+        console.log("Switching Characters");
+
+        var chardelay,
+        chardate = null,
+        nowdate = new Date();
+        nowdate = nowdate.getTime();
+        for (var cc = 0; cc < settings["charcount"]; cc++) {
+            if (chartimers[cc] != null) {
+                console.log("Date found for " + settings["nw_charname" + cc]);
+                if (!chardate || chartimers[cc] < chardate) {
+                    chardate = chartimers[cc];
+                    charcurrent = cc;
+                    chardelay = chardate.getTime() - nowdate - unsafeWindow.client.getServerOffsetSeconds() * 1000;
+                    if (chardelay < delay.SHORT) {
+                        chardelay = delay.SHORT;
+                    }
+                }
+            } else {
+                charcurrent = cc;
+                chardelay = delay.SHORT;
+                chardate = null;
+                console.log("No date found for " + settings["nw_charname" + cc] + ", switching now.");
+                break;
+            }
+        }
+
+        // Count AD & Gold
+        var curdiamonds = 0;
+        var curgold = 0;
+        for (var cc = 0; cc < settings["charcount"]; cc++) {
+            if (chardiamonds[cc] != null) {
+                curdiamonds += Math.floor(chardiamonds[cc] / 50) * 50;
+            }
+
+            if (chargold[cc] != null) {
+                curgold += chargold[cc];
+            }
+        }
+
         console.log("Next run for " + settings["nw_charname" + charcurrent] + " in " + parseInt(chardelay / 1000) + " seconds.");
         $("#prinfopane").empty().append("<h3 class='promo-image copy-top prh3'>Professions Robot<br />Next task for " + settings["nw_charname" + charcurrent] + "<br /><span data-timer='" + chardate + "' data-timer-length='2'></span><br />Diamonds: " + curdiamonds.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "<br />Gold: " + curgold + "</h3>");
         GM_setValue("charcurrent", charcurrent);
@@ -3107,22 +3108,12 @@ function _select_Gateway() { // Check for Gateway used to
                         console.log('Character statistics couldn\'t be retrieved, loading defaults.');
                         tempCharsStatistics = {};
                     };
+                    console.log(tempCharsStatistics);
                     charStatisticsList[charName] = $.extend(true, {}, defaultCharStatistics, tempCharsStatistics );
                     
                 })                    
                 
                 updateCounters(false); // updating the UI from saved list
-                // TODO: should be moved into the statistics
-                tempList = {};
-                client.dataModel.model.loginInfo.choices.forEach(function (char) {
-                    if (char.name == "Author")
-                        return;
-                    tempList[char.name] = (refineCounters[char.name]) ? (refineCounters[char.name]) : 0;
-                });
-                refineCounters = tempList;
-                //GM_setValue("refineCounters", JSON.stringify(refineCounters));
-                
-                
                 //if (JSON.stringify(accountSettings) !== GM_getValue("account_settings_" + accountName)) GM_setValue("account_settings_" + accountName, JSON.stringify(accountSettings));
                 //if (JSON.stringify(charSettingsTest) !== GM_getValue("chars_settings_" + accountName)) GM_setValue("chars_settings_" + accountName, JSON.stringify(charSettingsTest));                
             }    
@@ -3240,7 +3231,7 @@ function _select_Gateway() { // Check for Gateway used to
             #settingsButton{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); display: block; position: fixed; overflow: auto; right: 0px; top: 0px; padding: 3px; z-index: 1000;}\
             #pauseButton{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); display: block; position: fixed; overflow: auto; right: 23px; top: 0px; padding: 3px; z-index: 1000;}\
             /* MAC-NW -- Put Panel at a higher layer than status window */ \
-            /*#settingsPanel{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); color: rgb(0, 0, 0); position: fixed; overflow: auto; right: 0px; top: 0px; width: 550px;max-height:750px;font: 12px sans-serif; text-align: left; display: block; z-index: 1001;}*/\
+            /*#settingsPanel{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); color: rgb(0, 0, 0); position: fixed; overflow: auto; right: 0px; top: 0px; width: 650px;max-height:750px;font: 12px sans-serif; text-align: left; display: block; z-index: 1001;}*/\
             #settingsPanel{position: fixed; overflow: auto; right: 0px; top: 0px; width: 550px;max-height:750px;font: 12px sans-serif; text-align: left; display: block; z-index: 1001;}\
             #settings_title{font-weight: bolder; background: none repeat scroll 0% 0% rgb(204, 204, 204); border-bottom: 1px solid rgb(102, 102, 102); padding: 3px;}\
             #settingsPanelButtonContainer {background: none repeat scroll 0% 0% rgb(204, 204, 204); border-top: 1px solid rgb(102, 102, 102);padding: 3px;text-align:center} \
@@ -3265,6 +3256,8 @@ function _select_Gateway() { // Check for Gateway used to
             .charSettingsTab { overflow: auto; }\
             .charSettingsTab div { overflow: auto; }\
             #rcounters ul li span { display: inline-block; min-width: 125px; }\
+            #settingsPanel table { width: 100%; }\
+            .epic { color: purple; } .rare { color: blue; } .uncommon { color: green } \
             ");
 
         // Add settings panel to page body
@@ -3383,17 +3376,17 @@ function _select_Gateway() { // Check for Gateway used to
         
         var tabs_num = $("div#main_tabs > ul > li").length + 1;
         $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Refine Counters</a></li>");
-        var tab = $("<div id='main_tab" + tabs_num + "'><div id='rcounters'></div></div>");
+        var tab = $("<div id='main_tab" + tabs_num + "'><div id='rcounters'>Loaded on login.</div></div>");
         $("div#main_tabs").append(tab);
 
         tabs_num = $("div#main_tabs > ul > li").length + 1;
         $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Worker overview</a></li>");
-        tab = $("<div id='main_tab" + tabs_num + "'><div id='worker_overview'></div></div>");
+        tab = $("<div id='main_tab" + tabs_num + "'><div id='worker_overview'>Loaded on login.</div></div>");
         $("div#main_tabs").append(tab);
 
         tabs_num = $("div#main_tabs > ul > li").length + 1;
         $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Tools overview</a></li>");
-        tab = $("<div id='main_tab" + tabs_num + "'><div id='tools_overview'></div></div>");
+        tab = $("<div id='main_tab" + tabs_num + "'><div id='tools_overview'>Loaded on login.</div></div>");
         $("div#main_tabs").append(tab);
         
         
@@ -3577,8 +3570,6 @@ function _select_Gateway() { // Check for Gateway used to
             $(".charSettingsTabs").tabs();
         });
 
-        updateCounters(false);
-
         // Add open settings button to page
         $("body").append('<div id="settingsButton"><img src="' + image_prefs + '" title="Click to show preferences" style="cursor: pointer; display: block;"></div>');
 
@@ -3730,8 +3721,8 @@ function _select_Gateway() { // Check for Gateway used to
 
         if (reset) {
             charNameList.forEach( function (charName) {
-                charStatisticsList[charName].general.refineCounter = 0;
-                charStatisticsList[charName].general.refineCounterReset = Date.now();
+                //charStatisticsList[charName].general.refineCounter = 0;
+                //charStatisticsList[charName].general.refineCounterReset = Date.now();
             });            
         };
 
@@ -3757,15 +3748,6 @@ function _select_Gateway() { // Check for Gateway used to
             html += "</tr>";
         });            
         html += "</table>";
-        /*
-        Object.keys(refineCounters).forEach(function (key) {
-            if (reset)
-                refineCounters[key] = 0;
-            html += '<li><span>' + key + '</span> - ' + refineCounters[key] + '</li>';
-            total += refineCounters[key];
-        });
-        html += "</ul>"
-        */
         html += "<div style='margin: 5px 0;'> Total refined: " + total + "</div>";
         html += "<button>Reset Refined Counter</button>";
         $('#rcounters').html(html);
@@ -3774,6 +3756,37 @@ function _select_Gateway() { // Check for Gateway used to
         $('#rcounters button').click(function () {
             updateCounters(true);
         });
+
+        // Worker tab update.
+        html = '<table>';
+        var temp = "";
+        html += "<tr><th>Char name</th>";
+        var cnt = 0;
+        $.each(charStatisticsList[charNameList[0]].workers, function (profession) {
+            if (cnt++ > 3) return; // No room in the UI trimming for now
+            html += "<th colspan=6>" + profession.substring(0,4) + "</th>";
+            temp += "<th>p</th><th>b</th><th>g</th><th>t3</th><th>t2</th><th>t1</th>";
+            
+        })
+        html += "</tr><tr><th></th>" + temp + "</tr>";
+        charNameList.forEach( function (charName) {
+            temp = "";
+            html += "<tr><td rowspan=2>" + charName + "</td>";
+            cnt = 0;
+            $.each(charStatisticsList[charName].workers, function (pf, list) {
+                if (cnt++ > 3) return; // No room in the UI trimming for now
+                list.used.forEach( function(wc) {
+                    html += "<td>" + $.trim(wc) + "</td>";
+                });
+                list.unused.forEach( function(wc) {
+                    temp += "<td>" + $.trim(wc) + "</td>";
+                });
+            })
+            html += "</tr><tr>" + temp + "</tr>"; 
+        })       
+        
+        html += "</table>";
+        $('#worker_overview').html(html);
     }
 
     function vendorJunk(evnt) {
