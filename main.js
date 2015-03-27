@@ -19,7 +19,7 @@
 - Kakoura, Nametaken, rotten_mind, Frankescript, dlebedynskyi
  */
 
-// @version 2.0
+// @version 2.1
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -30,6 +30,13 @@
 // ==/UserScript==
 
 /* RELEASE NOTES
+2.1
+- Professions profiles related fixes by dlebedynskyi
+- Mailsmithing stuck fix by dlebedynskyi
+- Create a claimZexOffer() function that withdraws already canceled orders
+- Now withdrawZexOffer() also calls claimZexOffer()
+- Implement ZEX "Domino effect" by Rotten_mind's idea (there's still room for improvement here)
+- Always withdrawZexOffer() before posting an offer
 2.0
 - Additional UI changes.
 - Added resetable counters for refined AD.
