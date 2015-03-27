@@ -12,11 +12,21 @@
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
 /*
-=== NW Gateway Professions Bot Developers
-- Bluep, Numberb, mac-nw, Phr33d0m, BigRedBrent, noonereally, WloBeb
 
-=== NW Gateway Professions Bot Contributors
-- Kakoura, Nametaken, rotten_mind, Frankescript, dlebedynskyi
+Developers & Contributors:
+- BigRedBrent
+- Bluep
+- dlebedynskyi
+- Frankescript
+- Kakoura
+- mac-nw
+- Nametaken
+- noonereally
+- Numberb
+- Phr33d0m
+- Rotten_mind
+- WloBeb
+
  */
 
 // @version 2.1
