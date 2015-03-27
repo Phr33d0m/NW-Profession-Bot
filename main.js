@@ -2922,7 +2922,7 @@ function addSettings() {
             <span style="margin:3px">Settings</span>\
             </div>\
             <form style="margin: 0px; padding: 0px">\
-            <div id="main_tabs">\
+            <div id="main_tabs" style="padding:0;">\
             <ul>\
             </ul>\
             </div>\
