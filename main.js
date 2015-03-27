@@ -296,6 +296,7 @@ var fouxConsole = {
 };
 var console = unsafeWindow.console || fouxConsole;
 var chardiamonds = {};
+var zexdiamonds = 0;
 var chargold = {};
 var definedTask = {};
 var antiInfLoopTrap = {     // without this script sometimes try to start the same task in infinite loop (lags?) 
@@ -624,6 +625,7 @@ function _select_Gateway() { // Check for Gateway used to
     var timerHandle = 0;
     var dfdNextRun = $.Deferred();
     var charcurrent = 0; // current character counter
+    var charlast = charcurrent;
     var chartimers = {};
     var delay = {
         SHORT : 1000,
@@ -2363,6 +2365,15 @@ function postZexOffer() {
             ZenQty = (ZenQty > 5000) ? 5000 : ZenQty;
             console.log("Posting Zex buy listing for " + ZenQty + " ZEN at the rate of " + ZenRate + " AD/ZEN. AD remainder: " + charDiamonds + " - " + (ZenRate * ZenQty) + " = " + (charDiamonds - (ZenRate * ZenQty)));
             unsafeWindow.client.createBuyOrder(ZenQty, ZenRate);
+            // set moved ad to the ad counter zex log
+            var ADTotal = ZenRate * ZenQty;
+            if (ADTotal > 0) {
+                console.log("AD moved to ZEX from", settings["nw_charname" + charlast] + ":", ADTotal);
+                chardiamonds[charlast] -= ADTotal;
+                console.log(settings["nw_charname" + charlast] + "'s", "Astral Diamonds:", chardiamonds[charlast]);
+                zexdiamonds += ADTotal;
+                console.log("Astral Diamonds on the ZEX:", zexdiamonds);
+            }
         } else {
             console.log("Zen Max Listings Reached (5). Skipping Zex Posting..");
         }
@@ -2407,12 +2418,14 @@ function claimZexOffer() {
         if (parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow) > 0) {
             unsafeWindow.client.sendCommand("GatewayExchange_ClaimTC", unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
             console.log("Attempting to withdraw exchange balancees... ClaimTC: " + unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
+            // clear the ad counter zex log
+            zexdiamonds = 0;
         }
         if (parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc) > 0) {
             unsafeWindow.client.sendCommand("GatewayExchange_ClaimMTC", unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
             console.log("Attempting to withdraw exchange balancees... ClaimMT: " + unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
         }
-    }
+}
     else {
         window.setTimeout(claimZexOffer, delay.SHORT);
     }
@@ -2577,7 +2590,7 @@ function switchChar() {
 
     // MAC-NW -- AD Consolidation
     if (settings["autoexchange"]) {
-        
+
         // Check that we dont take money from the character assigned as the banker // Zen Transfer / Listing
         if (settings["bankchar"] != unsafeWindow.client.dataModel.model.ent.main.name) {
             // Check the required min AD amount on character
@@ -2622,6 +2635,7 @@ function switchChar() {
     // MAC-NW (endchanges)
 
     console.log("Switching Characters");
+    charlast = charcurrent;
 
     var chardelay,
     chardate = null,
@@ -2648,7 +2662,7 @@ function switchChar() {
     }
 
     // Count AD & Gold
-    var curdiamonds = 0;
+    var curdiamonds = zexdiamonds;
     var curgold = 0;
     for (var cc = 0; cc < settings["charcount"]; cc++) {
         if (chardiamonds[cc] != null) {
@@ -2842,7 +2856,7 @@ function loadCharacter(charname) {
     // Load character and restart next load loop
     console.log("Loading gateway script for", charname);
     unsafeWindow.client.dataModel.loadEntityByName(charname);
- 
+
     try {
         var testChar = unsafeWindow.client.dataModel.model.ent.main.name;
         unsafeWindow.client.dataModel.fetchVendor('Nw_Gateway_Professions_Merchant');
