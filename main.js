@@ -3721,8 +3721,8 @@ function _select_Gateway() { // Check for Gateway used to
 
         if (reset) {
             charNameList.forEach( function (charName) {
-                //charStatisticsList[charName].general.refineCounter = 0;
-                //charStatisticsList[charName].general.refineCounterReset = Date.now();
+                charStatisticsList[charName].general.refineCounter = 0;
+                charStatisticsList[charName].general.refineCounterReset = Date.now();
             });            
         };
 
