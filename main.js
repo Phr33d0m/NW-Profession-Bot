@@ -1492,10 +1492,7 @@ function _select_Gateway() { // Check for Gateway used to
         definedTask["Black Ice Shaping"],
         definedTask["Winter Event"],
         definedTask["Siege Event"],
-
     ];
-	console.log(tasklist);
-	
 	
 	var globalSettings = {        
         scriptPaused: false,
@@ -1505,30 +1502,128 @@ function _select_Gateway() { // Check for Gateway used to
         autoLoginPassword: "",
     };
         
-    // Populated at login     
+            
+    // Populated at login   
+    var loggedAccount = null;
     var accountSettings = {};
     var charSettingsTest = {};         
 	var charNameList = [];
-	var accountStatistics = [];	// array of char names with the charStatistics for each char.
+	var charStatisticsList = [];	// array of char names with the charStatistics for each char.
 	
-	var charStatistics = {
+	var defaultCharStatistics = {
 		general: {
 			refineCounter: 0,
 			refineCounterReset: Date.now(),
 			diamonds: 0,
 			gold: 0,
 			rad: 0,
+            rBI: 0,
+            BI: 0,
+            refined: 0,
+            refineLimitLeft: 0,
 			emptyBagSlots: 0,
-			slots: 0,
+			activeSlots: 0,
 		},
-		Assets: {
-		
+        levels: {
+        
+        },
+		workers: {
+            "Leadership":       { used: [], unused: [] },
+            "Jewelcrafting":    { used: [], unused: [] },
+            "Alchemy":          { used: [], unused: [] },
+            "Weaponsmithing":   { used: [], unused: [] },
+            "Artificing":       { used: [], unused: [] },
+            "Mailsmithing":     { used: [], unused: [] },
+            "Platesmithing":    { used: [], unused: [] },
+            "Leatherworking":   { used: [], unused: [] },
+            "Tailoring":        { used: [], unused: [] },
+            "Black Ice Shaping": { used: [], unused: [] },
+            /*
+            "Winter Event":     { used: [], unused: [] },
+            "Siege Event":      { used: [], unused: [] },
+            */
 		},
-		Resources: {
-		
-		}
+        tools: {
+            "Awl":      { used: [], unused: [] },
+            "Shears":   { used: [], unused: [] },
+            "Hammer":   { used: [], unused: [] },
+            "Needle":   { used: [], unused: [] },
+            "Bellows":  { used: [], unused: [] },
+            "Bezelpusher":   { used: [], unused: [] },
+            "Mortar":   { used: [], unused: [] },
+            "Anvil":    { used: [], unused: [] },
+            "Grindstone":    { used: [], unused: [] },
+            "Philosophersstone":    { used: [], unused: [] },
+            "Loupe":    { used: [], unused: [] },
+            "Graver":   { used: [], unused: [] },
+            "Crucible": { used: [], unused: [] },
+            "Tongs":    { used: [], unused: [] },
+        },
+		trackedResources: [],
 	};
-
+    
+    /*  For searching unsafeWindow.client.dataModel.model.ent.main.inventory.assignedslots / unsafeWindow.client.dataModel.model.ent.main.inventory.notassignedslots  
+    This needs some design change. */
+    
+    // purple, blue, green, t3, t2, t1
+    var workerList = {
+            "Leadership":       ["Crafting_Asset_Craftsman_Leadership_T3_Epic", "Crafting_Asset_Craftsman_Leadership_T3_Rare", "Crafting_Asset_Craftsman_Leadership_T3_Uncommon", 
+                                "Crafting_Asset_Craftsman_Leadership_T3_Common", "Crafting_Asset_Craftsman_Leadership_T2_Common", "Crafting_Asset_Craftsman_Leadership_T1_Common_1"] ,
+            "Jewelcrafting":    ["Crafting_Asset_Craftsman_Jewelcrafter_T3_Epic","Crafting_Asset_Craftsman_Jewelcrafter_T3_Rare","Crafting_Asset_Craftsman_Jewelcrafter_T3_Uncommon",
+                                "Crafting_Asset_Craftsman_Jewelcrafter_T3_Common","Crafting_Asset_Craftsman_Jewelcrafter_T2_Common","Crafting_Asset_Craftsman_Jewelcrafter_T1_Common"],
+            "Alchemy":          ["Asset_Craftsman_Alchemy_T3_Epic","Asset_Craftsman_Alchemy_T3_Rare","Asset_Craftsman_Alchemy_T3_Uncommon",
+                                "Asset_Craftsman_Alchemy_T3_Common","Asset_Craftsman_Alchemy_T2_Common","Asset_Craftsman_Alchemy_T1_Common"],
+            "Weaponsmithing":   ["Crafting_Asset_Craftsman_Weaponsmith_T3_Epic","Crafting_Asset_Craftsman_Weaponsmith_T3_Rare","Crafting_Asset_Craftsman_Weaponsmith_T3_Uncommon",
+                                "Crafting_Asset_Craftsman_Weaponsmith_T3_Common","Crafting_Asset_Craftsman_Weaponsmith_T2_Common","Crafting_Asset_Craftsman_Weaponsmith_T1_Common"],
+            "Artificing":       ["Crafting_Asset_Craftsman_Artificing_T3_Epic","Crafting_Asset_Craftsman_Artificing_T3_Rare", "Crafting_Asset_Craftsman_Artificing_T3_Uncommon",
+                                "Crafting_Asset_Craftsman_Artificing_T3_Common","Crafting_Asset_Craftsman_Artificing_T2_Common","Crafting_Asset_Craftsman_Artificing_T1_Common"],
+            "Mailsmithing":     ["Crafting_Asset_Craftsman_Armorsmithing_Med_T3_Epic","Crafting_Asset_Craftsman_Armorsmithing_Med_T3_Rare","Crafting_Asset_Craftsman_Armorsmithing_Med_T3_Uncommon",
+                                "Crafting_Asset_Craftsman_Armorsmithing_Med_T3_Common","Crafting_Asset_Craftsman_Armorsmithing_Med_T2_Common","Crafting_Asset_Craftsman_Armorsmithing_Med_T1_Common"],
+            "Platesmithing":    ["Crafting_Asset_Craftsman_Armorsmithing_Hvy_T3_Epic","Crafting_Asset_Craftsman_Armorsmithing_Hvy_T3_Rare","Crafting_Asset_Craftsman_Armorsmithing_Hvy_T3_Uncommon", 
+                                "Crafting_Asset_Craftsman_Armorsmithing_Hvy_T3_Common","Crafting_Asset_Craftsman_Armorsmithing_Hvy_T2_Common","Crafting_Asset_Craftsman_Armorsmithing_Hvy_T1_Common"],
+            "Leatherworking":   ["Crafting_Asset_Craftsman_Leatherworking_T3_Epic","Crafting_Asset_Craftsman_Leatherworking_T3_Rare","Crafting_Asset_Craftsman_Leatherworking_T3_Uncommon",
+                                "Crafting_Asset_Craftsman_Leatherworking_T3_Common","Crafting_Asset_Craftsman_Leatherworking_T2_Common","Crafting_Asset_Craftsman_Leatherworking_T1_Common"],
+            "Tailoring":        ["Crafting_Asset_Craftsman_Tailoring_T3_Epic", "Crafting_Asset_Craftsman_Tailoring_T3_Rare","Crafting_Asset_Craftsman_Tailoring_T3_Uncommon",
+                                "Crafting_Asset_Craftsman_Tailoring_T3_Common","Crafting_Asset_Craftsman_Tailoring_T2_Common","Crafting_Asset_Craftsman_Tailoring_T1_Common"],
+            "Black Ice Shaping": ["Crafting_Asset_Craftsman_Blackice_T3_Epic","Crafting_Asset_Craftsman_Blackice_T3_Rare", "Crafting_Asset_Craftsman_Blackice_T3_Uncommon",
+                                "Crafting_Asset_Craftsman_Blackice_T3_Common"],
+            /*
+            "Winter Event":     ["Crafting_Asset_Craftsman_Winter_Event_T1_Common"],
+            "Siege Event":      [],
+            */
+    }
+    
+    var toolList = {
+            "Awl":      ["Crafting_Asset_Tool_Awl_Epic","Crafting_Asset_Tool_Awl_Rare", "Crafting_Asset_Tool_Awl_Uncommon", "Crafting_Asset_Tool_Awl_Common" ] ,
+            "Shears":   ["Crafting_Asset_Tool_Shears_Epic","Crafting_Asset_Tool_Shears_Rare","Crafting_Asset_Tool_Shears_Uncommon","Crafting_Asset_Tool_Shears_Common"],
+            "Hammer":   ["Crafting_Asset_Tool_Hammer_Epic","Crafting_Asset_Tool_Hammer_Rare","Crafting_Asset_Tool_Shears_Uncommon","Crafting_Asset_Tool_Hammer_Common",],
+            "Needle":   ["Crafting_Asset_Tool_Needle_Epic","Crafting_Asset_Tool_Needle_Rare","Crafting_Asset_Tool_Needle_Uncommon","Crafting_Asset_Tool_Needle_Common",],
+            "Bellows":  ["Crafting_Asset_Tool_Bellows_Epic","Crafting_Asset_Tool_Bellows_Rare","Crafting_Asset_Tool_Bellows_Uncommon","Crafting_Asset_Tool_Bellows_Common"],
+            "Bezelpusher":   ["Crafting_Asset_Tool_Bezelpusher_Epic","Crafting_Asset_Tool_Bezelpusher_Rare","Crafting_Asset_Tool_Bezelpusher_Uncommon","Crafting_Asset_Tool_Bezelpusher_Common"],
+            "Mortar":   ["Asset_Tool_Mortar_Epic","Asset_Tool_Mortar_Rare", "Asset_Tool_Mortar_Uncommon", "Asset_Tool_Mortar_Common" ] ,
+            "Anvil":    [ "Crafting_Asset_Tool_Anvil_Epic","Crafting_Asset_Tool_Anvil_Rare", "Crafting_Asset_Tool_Anvil_Uncommon","Crafting_Asset_Tool_Anvil_Common",] ,
+            "Grindstone":    ["Crafting_Asset_Tool_Grindstone_Epic","Crafting_Asset_Tool_Grindstone_Rare","Crafting_Asset_Tool_Grindstone_Uncommon","Crafting_Asset_Tool_Grindstone_Common", ] ,
+            "Philosophersstone":    ["Asset_Tool_Philosophersstone_Epic","Asset_Tool_Philosophersstone_Rare","Asset_Tool_Philosophersstone_Uncommon","Asset_Tool_Philosophersstone_Common"  ] ,
+            "Loupe":    ["Crafting_Asset_Tool_Loupe_Epic","Crafting_Asset_Tool_Loupe_Rare","Crafting_Asset_Tool_Loupe_Uncommon","Crafting_Asset_Tool_Loupe_Common",] ,
+            "Graver":   ["Crafting_Asset_Tool_Graver_Epic","Crafting_Asset_Tool_Graver_Rare","Crafting_Asset_Tool_Graver_Uncommon","Crafting_Asset_Tool_Graver_Common",] ,
+            "Crucible": ["Asset_Tool_Crucible_Epic", "Asset_Tool_Crucible_Rare", "Asset_Tool_Crucible_Uncommon","Asset_Tool_Crucible_Common",] ,
+            "Tongs":    ["Crafting_Asset_Tool_Tongs_Epic", "Crafting_Asset_Tool_Tongs_Rare", "Crafting_Asset_Tool_Tongs_Uncommon","Crafting_Asset_Tool_Tongs_Common",] ,
+    }
+    
+    /*
+    "Crafting_Asset_Tool_Leatherworking_T1_Epic",
+    "Crafting_Asset_Tool_Gauntlets_Common"
+    "Crafting_Asset_Tool_Leadership_T3_Common","Crafting_Asset_Tool_Leadership_T2_Common"
+    */
+    
+    
+    var trackResources = [
+        { fname: 'Aqua Regia', name: 'Crafting_Resource_Aquaregia' },
+        { fname: 'Aqua Vitae', name: 'Crafting_Resource_Aquavitae' },
+        { fname: 'Residuum',   name: 'Crafting_Resource_Residuum' },
+        { fname: 'Mining Claim', name: 'Crafting_Resource_Mining_Claim' },
+    ];
+    
     var defaultAccountSettings = {
         vendorSettings: {
             vendorJunk: false,
@@ -1618,10 +1713,10 @@ function _select_Gateway() { // Check for Gateway used to
 		defaultCharSettings.taskListSettingsAdvanced[i] = {};
 		defaultCharSettings.taskListSettingsAdvanced[i].Profession = tasklist[0].taskListName;
 		defaultCharSettings.taskListSettingsAdvanced[i].Profile = tasklist[0].profiles[0].profileName;
-		defaultCharSettings.taskListSettingsAdvanced[i].fillAssets = 0;   // 0 - default, 1 - people (white to purple), 2 - people (purple to white), 3 - tools
+		defaultCharSettings.taskListSettingsAdvanced[i].fillAssets = 0;   
 	}
-	
-	var charSlotsFillAssetsOptions = ['default', 'people (white to purple)', 'people (purple to white)', 'tools'];
+	// 0 - default, 1 - do not fill, 2 - people (white to purple), 3 - people (purple to white), 4 - tools
+	var charSlotsFillAssetsOptions = ['default', 'Do not fill', 'people (white to purple)', 'people (purple to white)', 'tools'];
 	
 	
 	
@@ -1758,18 +1853,6 @@ function _select_Gateway() { // Check for Gateway used to
         // Do nothing on the guard screen
         dfdNextRun.resolve(delay.LONG);
     }
-
-    /*  !!!test (on login)
-    characters = []
-    console.log(client.dataModel.model.loginInfo.choices);
-    var tempChars = JSON.parse( GM_getValue("characters", "{}") );
-    if(!tempChars) {
-    console.log('JSON.parse failed - The stored value for "characters" is likely to be corrupted.');
-    };
-    client.dataModel.model.loginInfo.choices.forEach( function (char) {
-    console.log(char.name);
-    })
-     */
 
     /**
      * Collects rewards for tasks or starts new tasks
@@ -2658,7 +2741,6 @@ function _select_Gateway() { // Check for Gateway used to
     }
 
     function switchChar() {
-
         if (settings["refinead"]) {
             var _currencies = unsafeWindow.client.dataModel.model.ent.main.currencies;
             if (_currencies.diamondsconvertleft && _currencies.roughdiamonds) {
@@ -2676,7 +2758,7 @@ function _select_Gateway() { // Check for Gateway used to
                     $("button.closeNotification").click();
                 });
                 refineCounters[settings["nw_charname" + charcurrent]] += refined_diamonds;
-                updateCounters(false);
+                charStatisticsList[settings["nw_charname" + charcurrent]].refineCounter += refined_diamonds;
             }
         }
 
@@ -2764,6 +2846,74 @@ function _select_Gateway() { // Check for Gateway used to
                 curgold += chargold[cc];
             }
         }
+
+        // Updating statistics
+        //console.log(unsafeWindow.client.dataModel.model.ent.main);
+        var _curCharName = settings["nw_charname" + charcurrent];
+        charStatisticsList[_curCharName].general.gold = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.gold);
+        charStatisticsList[_curCharName].general.rad = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.roughdiamonds);
+        charStatisticsList[_curCharName].general.diamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
+        charStatisticsList[_curCharName].general.rBI = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.rawblackice);
+        charStatisticsList[_curCharName].general.BI = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.blackice);
+        charStatisticsList[_curCharName].general.refined = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamondsconverted);
+        charStatisticsList[_curCharName].general.diamondsconvertleft = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.refineLimitLeft);
+        charStatisticsList[_curCharName].general.activeSlots = unsafeWindow.client.dataModel.model.ent.main.itemassignments.active;
+        
+        trackResources.forEach(function (resource, ri) {
+            charStatisticsList[_curCharName].trackedResources[ri] = 0; 
+        });
+        
+        unsafeWindow.client.dataModel.model.ent.main.inventory.bags
+        .filter(  function (bag) { return bag.bagid == "CraftingResources" })
+        .forEach( function (bag) {
+            bag.slots.forEach(function (slot) {
+                trackResources.forEach(function (resource, ri) {
+                    if (slot && slot.name === resource.name) {
+                        charStatisticsList[_curCharName].trackedResources[ri] += slot.count ; 
+                    }
+                })
+            })
+        });
+
+        unsafeWindow.client.dataModel.model.ent.main.inventory.assignedslots
+        .forEach( function (item) {
+            $.each(workerList, function (pName, pList) {
+                var index = pList.indexOf(item.name);
+                if (index > -1) {
+                    charStatisticsList[_curCharName].workers[pName].used[index] = item.count;
+                }
+            })   
+            $.each(toolList, function (tName, tList) {
+                var index = tList.indexOf(item.name);
+                if (index > -1) {
+                    charStatisticsList[_curCharName].tools[tName].used[index] = item.count;
+                }
+            })
+        });
+        
+        unsafeWindow.client.dataModel.model.ent.main.inventory.notassignedslots
+        .forEach( function (item) {
+            $.each(workerList, function (pName, pList) {
+                var index = pList.indexOf(item.name);
+                if (index > -1) {
+                    charStatisticsList[_curCharName].workers[pName].unused[index] = item.count;
+                }
+            })   
+            $.each(toolList, function (tName, tList) {
+                var index = tList.indexOf(item.name);
+                if (index > -1) {
+                    charStatisticsList[_curCharName].tools[tName].unused[index] = item.count;
+                }
+            })
+        });
+        // console.log(charStatisticsList[_curCharName].workers);
+        //professions levels at:  unsafeWindow.client.dataModel.model.ent.main.itemassignmentcategories.categories[].  currentrank / displayname
+        
+        GM_setValue("chars__statistics__" + _curCharName,JSON.stringify(charStatisticsList[_curCharName]));
+        
+        updateCounters(false);
+        
+
         
         console.log("Next run for " + settings["nw_charname" + charcurrent] + " in " + parseInt(chardelay / 1000) + " seconds.");
         $("#prinfopane").empty().append("<h3 class='promo-image copy-top prh3'>Professions Robot<br />Next task for " + settings["nw_charname" + charcurrent] + "<br /><span data-timer='" + chardate + "' data-timer-length='2'></span><br />Diamonds: " + curdiamonds.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "<br />Gold: " + curgold + "</h3>");
@@ -2853,7 +3003,7 @@ function _select_Gateway() { // Check for Gateway used to
             // Do a long delay and then retry the site
             console.log("Gateway down detected - relogging in " + (delay.MINS / 1000) + " seconds");
             window.setTimeout(function () {
-                unsafeWindow.location.href = current_Gateway; // edited by RottenMind
+                unsafeWindow.location.href = current_Gateway; 
             }, delay.MINS);
             return;
         }
@@ -2905,18 +3055,77 @@ function _select_Gateway() { // Check for Gateway used to
         }
 
         if (accountName) {
-            // Model should be available at this point, trying to use
-            // console.log(client.dataModel.model.loginInfo.choices);
-            // to load char data (only for counters for now)
-            tempList = {};
-            client.dataModel.model.loginInfo.choices.forEach(function (char) {
-                if (char.name == "Author")
-                    return;
-                tempList[char.name] = (refineCounters[char.name]) ? (refineCounters[char.name]) : 0;
-            });
-            refineCounters = tempList;
-            GM_setValue("refineCounters", JSON.stringify(refineCounters));
-            //console.log(refineCounters);
+
+            if (!loggedAccount) {
+                loggedAccount = accountName;
+                console.log("Loading settings for " + accountName);
+
+                var tempAccountSetting;
+                try {
+                    tempAccountSetting = JSON.parse( GM_getValue("account__settings__" + accountName, "{}") );
+                } catch(e) {
+                    tempAccountSetting = null;
+                }
+                if (!tempAccountSetting) {
+                    console.log('Account settings couldn\'t be retrieved, loading defaults.');
+                    tempAccountSetting = {};
+                };
+                accountSettings = $.extend(true, {}, defaultAccountSettings, tempAccountSetting );
+
+                console.log("Loading character list");
+                charNameList = [];
+                client.dataModel.model.loginInfo.choices.forEach( function (char) {
+                    if (char.name == "Author") return;
+                    charNameList.push(char.name);
+                });
+                console.log("Found names: "  + charNameList);
+
+                charNameList.forEach( function (charName) {
+                    console.log("Loading settings for " + charName);
+                    
+                    var tempCharsSetting;
+                    try {
+                        tempCharsSetting = JSON.parse( GM_getValue("chars__settings__" + charName, "{}") );
+                    } catch(e) {
+                        tempCharsSetting = null;
+                    }
+                    if(!tempCharsSetting) {
+                        console.log('Character settings couldn\'t be retrieved, loading defaults.');
+                        tempCharsSetting = {};
+                    };
+                    charSettingsTest[charName] = $.extend(true, {}, defaultCharSettings, tempCharsSetting );
+                    charSettingsTest[charName].charName = charName; // for compatibility if charSettingsTest changed to simple array
+
+                    console.log("Loading saved statistics for " + charName);
+                    var tempCharsStatistics;
+                    try {
+                        tempCharsStatistics = JSON.parse( GM_getValue("chars__statistics__" + charName, "{}") );
+                    } catch(e) {
+                        tempCharsStatistics = null;
+                    }
+                    if(!tempCharsStatistics) {
+                        console.log('Character statistics couldn\'t be retrieved, loading defaults.');
+                        tempCharsStatistics = {};
+                    };
+                    charStatisticsList[charName] = $.extend(true, {}, defaultCharStatistics, tempCharsStatistics );
+                    
+                })                    
+                
+                updateCounters(false); // updating the UI from saved list
+                // TODO: should be moved into the statistics
+                tempList = {};
+                client.dataModel.model.loginInfo.choices.forEach(function (char) {
+                    if (char.name == "Author")
+                        return;
+                    tempList[char.name] = (refineCounters[char.name]) ? (refineCounters[char.name]) : 0;
+                });
+                refineCounters = tempList;
+                //GM_setValue("refineCounters", JSON.stringify(refineCounters));
+                
+                
+                //if (JSON.stringify(accountSettings) !== GM_getValue("account_settings_" + accountName)) GM_setValue("account_settings_" + accountName, JSON.stringify(accountSettings));
+                //if (JSON.stringify(charSettingsTest) !== GM_getValue("chars_settings_" + accountName)) GM_setValue("chars_settings_" + accountName, JSON.stringify(charSettingsTest));                
+            }    
 
             // load current character position and values
             charcurrent = GM_getValue("charcurrent", 0);
@@ -3147,10 +3356,47 @@ function _select_Gateway() { // Check for Gateway used to
         };
 
         var tabs_num = $("div#main_tabs > ul > li").length + 1;
+        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Other</a></li>");
+        var tab = $("<div id='main_tab" + tabs_num + "'><div id='other'>will also delete character names <br /><button id='reset_settings_btn'>Reset ALL Settings</button><br />Should be used after login only, and can reset all characters<br /><button id='load_names_btn'>Load Names</button></div></div>");
+        $("div#main_tabs").append(tab);
+        
+        $('#reset_settings_btn').button();
+        $('#reset_settings_btn').click(function () {
+            var keys = GM_listValues();
+            for (i = 0; i < keys.length; i++) {
+                var key = keys[i];
+                GM_deleteValue(key);
+            }
+        });
+
+        $('#load_names_btn').button();
+        $('#load_names_btn').click(function () {
+            console.log(settings);
+            console.log(GM_listValues());
+            GM_setValue("charcount",charNameList.length);
+            charNameList.forEach( function (name, i) {
+                GM_setValue("nw_charname" + i,name);
+            })
+            unsafeWindow.location.href = current_Gateway;
+        });
+
+        
+        var tabs_num = $("div#main_tabs > ul > li").length + 1;
         $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Refine Counters</a></li>");
         var tab = $("<div id='main_tab" + tabs_num + "'><div id='rcounters'></div></div>");
         $("div#main_tabs").append(tab);
 
+        tabs_num = $("div#main_tabs > ul > li").length + 1;
+        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Worker overview</a></li>");
+        tab = $("<div id='main_tab" + tabs_num + "'><div id='worker_overview'></div></div>");
+        $("div#main_tabs").append(tab);
+
+        tabs_num = $("div#main_tabs > ul > li").length + 1;
+        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Tools overview</a></li>");
+        tab = $("<div id='main_tab" + tabs_num + "'><div id='tools_overview'></div></div>");
+        $("div#main_tabs").append(tab);
+        
+        
         $("div#main_tabs").tabs("refresh");
         $("div#main_tabs").tabs("option", "active", 0);
 
@@ -3173,7 +3419,7 @@ function _select_Gateway() { // Check for Gateway used to
                 '<div class="charSettingsTabs">',
                 '<ul>',
                 '<li><a href="#charSettingsTab-1-' + i + '">Tasks</a></li>',
-				'<li><a href="#charSettingsTab-2-' + i + '">Advanced Task Settings</a></li>',
+				'<li><a href="#charSettingsTab-2-' + i + '">Manual Task Settings</a></li>',
                 '<li><a href="#charSettingsTab-3-' + i + '">Char Settings</a></li>',
                 '</ul>',
                 '<div id="charSettingsTab-1-' + i + '" class="charSettingsTab">',
@@ -3223,13 +3469,13 @@ function _select_Gateway() { // Check for Gateway used to
 
 			// Advanced Slots allocation tab
 			addText += '<div id="charSettingsTab-2-' + i + '" class="charSettingsTab" >';
-			addText += '<input type="checkbox" name="settings__char__' + k + '__tasksOverride" /><label> Use advanced slot allocations -- NOT FULLY IMPLEMENTED YET </label>';
+			addText += '<input type="checkbox" name="settings__char__' + i + '__tasksOverride" /><label> Use advanced slot allocations -- NOT FULLY IMPLEMENTED YET </label>';
 			addText += '<table><thead><tr><th>Slot #</th><th>Profession</th><th>Profile</th><th>fill assets</th></tr></thead><tbody>';
 
 			for (var m = 1; m <= 9; m++) {
 				addText += '<tr>';
 				addText += '<td>' + m + '.</td>';
-				var _id = 'settings__char__' + k + '__slot__' + m; 
+				var _id = 'settings__char__' + i + '__slot__' + m; 
 				var _attrib = '';
 				addText += '<td><select class="taskSelectA" style="margin: 4px; padding: 2px;" name="'+ _id + '__profession" id="' + _id + '__profession">';
 				tasklist.forEach(function(task) { 
@@ -3468,8 +3714,50 @@ function _select_Gateway() { // Check for Gateway used to
     }
 
     function updateCounters(reset) {
-        var html = '<ul>';
+        
+        function formatNum (num) {
+            if ((num / 1000000) > 1)
+                return ((num / 1000000).toFixed(1) + 'm');
+            if ((num / 1000) > 1)
+                return ((num / 1000).toFixed(1) + 'k');
+            return num;
+        }
+        
         var total = 0;
+        var html = '<table>';
+        html += "<tr><th>Character Name</th><th>#slots</th><th>R.Counter</th><th>~rad/h</th>";
+        html += "<th>RAD</th><th>AD</th><th>gold</th><th>rBI</th><th>BI</th><th>R.today<th></th><th>R.left</th></tr>";
+
+        if (reset) {
+            charNameList.forEach( function (charName) {
+                charStatisticsList[charName].general.refineCounter = 0;
+                charStatisticsList[charName].general.refineCounterReset = Date.now();
+            });            
+        };
+
+        charNameList.forEach( function (charName) {
+            var counterTime = (Date.now - charStatisticsList[charName].general.refineCounterReset) / 1000 / 60 / 60; // in hours.
+            var radh = 0;
+            if (counterTime > 0) radh = charStatisticsList[charName].general.refineCounter  / counterTime;
+            
+            total += charStatisticsList[charName].general.refineCounter;
+            
+            html += "<tr>";
+            html += "<td>" + charName + "</td>";
+            html += "<td>" + charStatisticsList[charName].general.activeSlots + "</td>";
+            html += "<td>" + formatNum(charStatisticsList[charName].general.refineCounter) + "</td>";
+            html += "<td>" + radh + "</td>";
+            html += "<td>" + formatNum(charStatisticsList[charName].general.rad) + "</td>";
+            html += "<td>" + formatNum(charStatisticsList[charName].general.diamonds) + "</td>";
+            html += "<td>" + formatNum(charStatisticsList[charName].general.gold) + "</td>";
+            html += "<td>" + formatNum(charStatisticsList[charName].general.rBI) + "</td>";
+            html += "<td>" + formatNum(charStatisticsList[charName].general.BI) + "</td>";
+            html += "<td>" + formatNum(charStatisticsList[charName].general.refined) + "</td>";
+            html += "<td>" + formatNum(charStatisticsList[charName].general.refineLimitLeft) + "</td>";
+            html += "</tr>";
+        });            
+        html += "</table>";
+        /*
         Object.keys(refineCounters).forEach(function (key) {
             if (reset)
                 refineCounters[key] = 0;
@@ -3477,8 +3765,9 @@ function _select_Gateway() { // Check for Gateway used to
             total += refineCounters[key];
         });
         html += "</ul>"
-        html += "<div style='margin: 5px 0;'> Total: " + total + "</div>";
-        html += "<button>Reset</button>";
+        */
+        html += "<div style='margin: 5px 0;'> Total refined: " + total + "</div>";
+        html += "<button>Reset Refined Counter</button>";
         $('#rcounters').html(html);
 
         $('#rcounters button').button();
