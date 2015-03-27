@@ -2811,14 +2811,16 @@ function _select_Gateway() { // Check for Gateway used to
         // Updating statistics
         //console.log(unsafeWindow.client.dataModel.model.ent.main);
         var _curCharName = settings["nw_charname" + charcurrent];
-        charStatisticsList[_curCharName].general.gold = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.gold);
-        charStatisticsList[_curCharName].general.rad = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.roughdiamonds);
-        charStatisticsList[_curCharName].general.diamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
-        charStatisticsList[_curCharName].general.rBI = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.rawblackice);
-        charStatisticsList[_curCharName].general.BI = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.blackice);
-        charStatisticsList[_curCharName].general.refined = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamondsconverted);
-        charStatisticsList[_curCharName].general.diamondsconvertleft = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.refineLimitLeft);
-        charStatisticsList[_curCharName].general.activeSlots = unsafeWindow.client.dataModel.model.ent.main.itemassignments.active;
+        var _stat = charStatisticsList[_curCharName].general;
+        var _chardata = unsafeWindow.client.dataModel.model.ent.main.currencies;
+        _stat.gold = parseInt(_chardata.gold);
+        _stat.rad = parseInt(_chardata.roughdiamonds);
+        _stat.diamonds = parseInt(_chardata.diamonds);
+        _stat.rBI = parseInt(_chardata.rawblackice);
+        _stat.BI = parseInt(_chardata.blackice);
+        _stat.refined = parseInt(_chardata.diamondsconverted);
+        _stat.diamondsconvertleft = parseInt(_chardata.refineLimitLeft);
+        _stat.activeSlots = unsafeWindow.client.dataModel.model.ent.main.itemassignments.active;
         
         trackResources.forEach(function (resource, ri) {
             charStatisticsList[_curCharName].trackedResources[ri] = 0; 
@@ -3108,7 +3110,6 @@ function _select_Gateway() { // Check for Gateway used to
                         console.log('Character statistics couldn\'t be retrieved, loading defaults.');
                         tempCharsStatistics = {};
                     };
-                    console.log(tempCharsStatistics);
                     charStatisticsList[charName] = $.extend(true, {}, defaultCharStatistics, tempCharsStatistics );
                     
                 })                    
@@ -3388,6 +3389,12 @@ function _select_Gateway() { // Check for Gateway used to
         $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Tools overview</a></li>");
         tab = $("<div id='main_tab" + tabs_num + "'><div id='tools_overview'>Loaded on login.</div></div>");
         $("div#main_tabs").append(tab);
+
+        tabs_num = $("div#main_tabs > ul > li").length + 1;
+        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Resource Tracker</a></li>");
+        tab = $("<div id='main_tab" + tabs_num + "'><div id='resource_tracker'>Loaded on login.</div></div>");
+        $("div#main_tabs").append(tab);
+
         
         
         $("div#main_tabs").tabs("refresh");
@@ -3787,6 +3794,23 @@ function _select_Gateway() { // Check for Gateway used to
         
         html += "</table>";
         $('#worker_overview').html(html);
+        
+        // Resource tracker update.
+        html = '<table><tr><th>Character Name</th>';
+        trackResources.forEach( function(item) {
+            html += "<th>" + item.fname + "</th>";
+        })
+        html += '</tr>';
+        charNameList.forEach( function (charName) {
+            html += '<tr><td>' + charName + '</td>';
+            charStatisticsList[charName].trackedResources.forEach( function( count) {
+                html += '<td>' + count + '</td>';    
+            })
+            html += '</tr>';
+        })
+        html += "</table>";
+        $('#resource_tracker').html(html);
+        
     }
 
     function vendorJunk(evnt) {
