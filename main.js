@@ -42,6 +42,7 @@ Developers & Contributors:
 /* RELEASE NOTES
 2.2-hotfix
 - Fix broken ZEX Domino effect logic
+- Really really really fix that tabmenu padding
 2.1
 - Professions profiles related fixes by dlebedynskyi
 - Mailsmithing stuck fix by dlebedynskyi
@@ -2958,8 +2959,8 @@ function addSettings() {
             <span style="margin:3px">Settings</span>\
             </div>\
             <form style="margin: 0px; padding: 0px">\
-            <div id="main_tabs" style="padding:0;">\
-            <ul>\
+            <div id="main_tabs">\
+            <ul style="padding:0;">\
             </ul>\
             </div>\
             </form>\
