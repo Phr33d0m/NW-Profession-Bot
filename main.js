@@ -2425,7 +2425,7 @@ function claimZexOffer() {
             unsafeWindow.client.sendCommand("GatewayExchange_ClaimMTC", unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
             console.log("Attempting to withdraw exchange balancees... ClaimMT: " + unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
         }
-}
+    }
     else {
         window.setTimeout(claimZexOffer, delay.SHORT);
     }
@@ -2590,7 +2590,7 @@ function switchChar() {
 
     // MAC-NW -- AD Consolidation
     if (settings["autoexchange"]) {
-
+        
         // Check that we dont take money from the character assigned as the banker // Zen Transfer / Listing
         if (settings["bankchar"] != unsafeWindow.client.dataModel.model.ent.main.name) {
             // Check the required min AD amount on character
@@ -2856,7 +2856,7 @@ function loadCharacter(charname) {
     // Load character and restart next load loop
     console.log("Loading gateway script for", charname);
     unsafeWindow.client.dataModel.loadEntityByName(charname);
-
+ 
     try {
         var testChar = unsafeWindow.client.dataModel.model.ent.main.name;
         unsafeWindow.client.dataModel.fetchVendor('Nw_Gateway_Professions_Merchant');
