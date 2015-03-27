@@ -2339,13 +2339,13 @@ function postZexOffer() {
         //          will overwrite one of your previous orders and return the AD to that other character
         var exchangeDiamonds = parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
         if(exchangeDiamonds > 0)
-            window.setTimeout(claimZexOffer, delay.SHORT);
+            window.setTimeout(claimZexOffer, delay.MEDIUM);
         
         
         // Domino effect: first check if we're out of space for new offers
         if (unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length == 5) {
             // Domino effect: then withdraw as much offers as we can and claim the diamonds
-            window.setTimeout(withdrawZexOffer, delay.MEDIUM);
+            window.setTimeout(withdrawZexOffer, delay.LONG);
         }
         
         // Check that there is atleast 1 free zex order slot
@@ -2386,7 +2386,7 @@ function withdrawZexOffer() {
             });
             
             // Withdraw the balance from exchange
-            window.setTimeout(claimZexOffer, delay.SHORT);
+            window.setTimeout(claimZexOffer, delay.MEDIUM);
 
         } else {
             console.log("No listings found on Zex. Skipping Zex Withrdaw..");
