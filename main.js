@@ -3404,12 +3404,13 @@ function _select_Gateway() { // Check for Gateway used to
                 var key = keys[i];
                 GM_deleteValue(key);
             }
+            window.setTimeout(function () {
+                unsafeWindow.location.href = current_Gateway; 
+            }, delay.MINS);
         });
 
         $('#load_names_btn').button();
         $('#load_names_btn').click(function () {
-            console.log(settings);
-            console.log(GM_listValues());
             GM_setValue("charcount",charNameList.length);
             charNameList.forEach( function (name, i) {
                 GM_setValue("nw_charname" + i,name);
