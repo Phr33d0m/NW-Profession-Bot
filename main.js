@@ -12,14 +12,24 @@
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
 /*
-=== NW Gateway Professions Bot Developers
-- Bluep, Numberb, mac-nw, Phr33d0m, BigRedBrent, noonereally, WloBeb, dlebedynskyi
 
-=== NW Gateway Professions Bot Contributors
-- Kakoura, Nametaken, rotten_mind, Frankescript
+Developers & Contributors:
+- BigRedBrent
+- Bluep
+- dlebedynskyi
+- Frankescript
+- Kakoura
+- mac-nw
+- Nametaken
+- noonereally
+- Numberb
+- Phr33d0m
+- Rotten_mind
+- WloBeb
+
  */
 
-// @version 2.0
+// @version 2.2
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -30,10 +40,22 @@
 // ==/UserScript==
 
 /* RELEASE NOTES
--
--- UI added for advanced slot task allocations
--- Initial structures for JSON settings
--- Simplification of profile registration and some profile upkeep, thanks dlebedynskyi.
+- More info in the Counter Tab
+- Added Resources overvew
+- Added Profession assets overview tabs (needs more work)
+- Moved more statistic gathering into JSON object and added per char name settings load
+- Added "Load Charctar Names" button and reset settings button
+- Seperated vendoring of altars and node kits
+2.2-hotfix
+- Fix broken ZEX Domino effect logic
+- Really really really fix that tabmenu padding
+2.1
+- Professions profiles related fixes by dlebedynskyi
+- Mailsmithing stuck fix by dlebedynskyi
+- Create a claimZexOffer() function that withdraws already canceled orders
+- Now withdrawZexOffer() also calls claimZexOffer()
+- Implement ZEX "Domino effect" by Rotten_mind's idea (there's still room for improvement here)
+- Always withdrawZexOffer() before posting an offer
 2.0
 - Additional UI changes.
 - Added resetable counters for refined AD.
@@ -636,6 +658,7 @@ function _select_Gateway() { // Check for Gateway used to
         jQuery.extend(true, cloneBase, newProfile);
         profSet.profiles.push(cloneBase);
     }
+
 /*
      * Tasklist can be modified to configure the training you want to perform.
      * The configurable options window sets how many profession slots you want to use for each profession.
@@ -2565,13 +2588,13 @@ function _select_Gateway() { // Check for Gateway used to
             // Check that there is atleast 1 free zex order slot
             if (unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length < 5) {
                 // Place the order
+            // Domino effect: this new order will post all the gathered diamonds until now
                 var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
                 var ZenRate = parseInt(settings["banktransrate"]);
                 var ZenQty = Math.floor((charDiamonds - parseInt(settings["bankcharmin"])) / ZenRate);
                 ZenQty = (ZenQty > 5000) ? 5000 : ZenQty;
                 console.log("Posting Zex buy listing for " + ZenQty + " ZEN at the rate of " + ZenRate + " AD/ZEN. AD remainder: " + charDiamonds + " - " + (ZenRate * ZenQty) + " = " + (charDiamonds - (ZenRate * ZenQty)));
                 unsafeWindow.client.createBuyOrder(ZenQty, ZenRate);
-
             } else {
                 console.log("Zen Max Listings Reached (5). Skipping Zex Posting..");
             }
@@ -2585,6 +2608,7 @@ function _select_Gateway() { // Check for Gateway used to
         // Make sure the exchange data is loaded to model
         if (unsafeWindow.client.dataModel.model.exchangeaccountdata) {
             if (unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length >= 1) {
+            console.log("Withdrawing ZEX orders");
 
                 var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
                 var ZenRate = parseInt(settings["banktransrate"]);
@@ -2599,11 +2623,30 @@ function _select_Gateway() { // Check for Gateway used to
                     }
                 });
 
+            // Withdraw the balance from exchange
+            claimZexOffer();
+
             } else {
                 console.log("No listings found on Zex. Skipping Zex Withrdaw..");
             }
         } else {
             console.log("Zen Exchange data did not load in time for transfer. Skipping Zex Withrdaw..");
+        }
+    }
+
+    function claimZexOffer() {
+        if(unsafeWindow.client.dataModel.model.exchangeaccountdata) {
+            if (parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow) > 0) {
+                unsafeWindow.client.sendCommand("GatewayExchange_ClaimTC", unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
+                console.log("Attempting to withdraw exchange balancees... ClaimTC: " + unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
+            }
+            if (parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc) > 0) {
+                unsafeWindow.client.sendCommand("GatewayExchange_ClaimMTC", unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
+                console.log("Attempting to withdraw exchange balancees... ClaimMT: " + unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
+            }
+        }
+        else {
+            window.setTimeout(claimZexOffer, delay.SHORT);
         }
     }
 
@@ -3150,7 +3193,6 @@ function _select_Gateway() { // Check for Gateway used to
         console.log("Loading gateway script for", charname);
         unsafeWindow.client.dataModel.loadEntityByName(charname);
 
-        // MAC-NW -- AD Consolidation -- Banker Withdraw Secion
         try {
             var testChar = unsafeWindow.client.dataModel.model.ent.main.name;
             unsafeWindow.client.dataModel.fetchVendor('Nw_Gateway_Professions_Merchant');
@@ -3163,6 +3205,7 @@ function _select_Gateway() { // Check for Gateway used to
             return;
         }
 
+    // MAC-NW -- AD Consolidation -- Banker Withdraw Section
         if (settings["autoexchange"]) {
 
             unsafeWindow.client.dataModel.fetchExchangeAccountData();
@@ -3178,22 +3221,19 @@ function _select_Gateway() { // Check for Gateway used to
                 return;
             }
 
-            // Check to see if this is the designated banker character
-            if (settings["bankchar"] == unsafeWindow.client.dataModel.model.ent.main.name) {
-                // This is the banker -- withdraw any buy listings that match the transfer rate set in panel
-                window.setTimeout(withdrawZexOffer, delay.MEDIUM);
-                // withdraw the balance from exchange
-                window.setTimeout(function () {
-                    if (parseInt(client.dataModel.model.exchangeaccountdata.readytoclaimescrow) > 0) {
-                        client.sendCommand("GatewayExchange_ClaimTC", client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
-                        console.log("Attempting to withdraw exchange balancees... ClaimTC: " + client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
-                    }
-                    if (parseInt(client.dataModel.model.exchangeaccountdata.readytoclaimmtc) > 0) {
-                        client.sendCommand("GatewayExchange_ClaimMTC", client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
-                        console.log("Attempting to withdraw exchange balancees... ClaimMT: " + client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
+        // First check if there's anything we have to withdraw and claim it
+        // Sometimes the system will literally overwrite canceled and unclaimed orders and return AD to that character
+        // Example: if you cancel 5 orders, don't claim them, then create another order and cancel it, that last order
+        //          will overwrite one of your previous orders and return the AD to that other character
+        var exchangeDiamonds = parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
+        if(exchangeDiamonds > 0) {
+            claimZexOffer();
                     }
 
-                }, delay.SHORT);
+        // Domino effect: first check if we're out of space for new offers
+        if (unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length == 5) {
+            // Domino effect: then withdraw as much offers as we can and claim the diamonds
+            window.setTimeout(withdrawZexOffer, delay.SHORT);
             }
 
             WaitForState("button.closeNotification").done(function () {
@@ -3274,7 +3314,7 @@ function _select_Gateway() { // Check for Gateway used to
             </div>\
             <form style="margin: 0px; padding: 0px">\
             <div id="main_tabs">\
-            <ul>\
+            <ul style="padding:0;">\
             </ul>\
             </div>\
             </form>\
@@ -3308,7 +3348,7 @@ function _select_Gateway() { // Check for Gateway used to
                 settingsList.append('<li style="margin-left:0em; width: 48%; display: inline-block;"/>&nbsp;</li>')*/
                 var border = "";
                 if (settingListToAdd[i].border)
-                    border = "border-top: #000 solid 1px;";
+                    border = "border-top: #000 solid 1px;"
                         switch (settingListToAdd[i].type) {
                         case "checkbox":
                             var _checkWidth = "48%";
@@ -3374,7 +3414,9 @@ function _select_Gateway() { // Check for Gateway used to
             charNameList.forEach( function (name, i) {
                 GM_setValue("nw_charname" + i,name);
             })
-            unsafeWindow.location.href = current_Gateway;
+            window.setTimeout(function () {
+                unsafeWindow.location.href = current_Gateway; 
+            }, delay.MINS);
         });
 
         
@@ -3422,7 +3464,7 @@ function _select_Gateway() { // Check for Gateway used to
                 '<div class="charSettingsTabs">',
                 '<ul>',
                 '<li><a href="#charSettingsTab-1-' + i + '">Tasks</a></li>',
-				'<li><a href="#charSettingsTab-2-' + i + '">Manual Task Settings</a></li>',
+		'<li><a href="#charSettingsTab-2-' + i + '">Manual Task Settings</a></li>',
                 '<li><a href="#charSettingsTab-3-' + i + '">Char Settings</a></li>',
                 '</ul>',
                 '<div id="charSettingsTab-1-' + i + '" class="charSettingsTab">',
@@ -3470,29 +3512,29 @@ function _select_Gateway() { // Check for Gateway used to
             addText += '</tbody></table>\
                             </div>';
 
-			// Advanced Slots allocation tab
-			addText += '<div id="charSettingsTab-2-' + i + '" class="charSettingsTab" >';
-			addText += '<input type="checkbox" name="settings__char__' + i + '__tasksOverride" /><label> Use advanced slot allocations -- NOT FULLY IMPLEMENTED YET </label>';
-			addText += '<table><thead><tr><th>Slot #</th><th>Profession</th><th>Profile</th><th>fill assets</th></tr></thead><tbody>';
+            // Advanced Slots allocation tab
+            addText += '<div id="charSettingsTab-2-' + i + '" class="charSettingsTab" >';
+            addText += '<input type="checkbox" name="settings__char__' + i + '__tasksOverride" /><label> Use advanced slot allocations -- NOT FULLY IMPLEMENTED YET </label>';
+            addText += '<table><thead><tr><th>Slot #</th><th>Profession</th><th>Profile</th><th>fill assets</th></tr></thead><tbody>';
 
-			for (var m = 1; m <= 9; m++) {
-				addText += '<tr>';
-				addText += '<td>' + m + '.</td>';
-				var _id = 'settings__char__' + i + '__slot__' + m; 
-				var _attrib = '';
-				addText += '<td><select class="taskSelectA" style="margin: 4px; padding: 2px;" name="'+ _id + '__profession" id="' + _id + '__profession">';
-				tasklist.forEach(function(task) { 
-					addText += '<option value="' + task.taskListName + '">' + task.taskListName + '</option>';
-				})
-				addText += '</select></td>';
-				addText += '<td><select class="" style="margin: 4px; padding: 2px;" name="'+ _id + '__profession__profile" id="' + _id + '__profession__profile"></select></td>';
-				addText += '<td><select class="" style="margin: 4px; padding: 2px;" name="'+ _id + '__profession__assets" id="' + _id + '__profession__assets">';
-				$.each(charSlotsFillAssetsOptions, function( index, value ) {
-					addText += '<option value="' + index + '">' + value + '</option>';
-				});
-				addText += '</select></td>';
-				addText += '</tr>';
-			}
+            for (var m = 1; m <= 9; m++) {
+                    addText += '<tr>';
+                    addText += '<td>' + m + '.</td>';
+                    var _id = 'settings__char__' + i + '__slot__' + m; 
+                    var _attrib = '';
+                    addText += '<td><select class="taskSelectA" style="margin: 4px; padding: 2px;" name="'+ _id + '__profession" id="' + _id + '__profession">';
+                    tasklist.forEach(function(task) { 
+                            addText += '<option value="' + task.taskListName + '">' + task.taskListName + '</option>';
+                    })
+                    addText += '</select></td>';
+                    addText += '<td><select class="" style="margin: 4px; padding: 2px;" name="'+ _id + '__profession__profile" id="' + _id + '__profession__profile"></select></td>';
+                    addText += '<td><select class="" style="margin: 4px; padding: 2px;" name="'+ _id + '__profession__assets" id="' + _id + '__profession__assets">';
+                    $.each(charSlotsFillAssetsOptions, function( index, value ) {
+                            addText += '<option value="' + index + '">' + value + '</option>';
+                    });
+                    addText += '</select></td>';
+                    addText += '</tr>';
+            }
             addText += '</tbody></table></div>';
  							
 							
@@ -3539,20 +3581,20 @@ function _select_Gateway() { // Check for Gateway used to
         $("#settingsPanel form").append(addText);
 		
 
-		// Set up the advanced slot selects 
-		$(".taskSelectA").change( function (e) {
-			var _taskname = $(this).val();
-			var _profiles = tasklist.filter( function (task) { return task.taskListName == _taskname; })[0].profiles.filter( function (profile) {return profile.isProfileActive }); 
-			
-			var _options = "";
-			//tasklist[" .profiles.forEach( function(profile) { if (profile.isProfileActive) profileNames.push({name: profile.profileName, value: profile.profileName}); } ); 
-			
-			var profileSelect = $("#" + this.id + "__profile").html("");
-			_profiles.forEach( function (profile) { 
-				profileSelect.append( $("<option />").val(profile.profileName).text(profile.profileName));
-			});
-		});
-		$(".taskSelectA").change();
+        // Set up the advanced slot selects 
+        $(".taskSelectA").change( function (e) {
+                var _taskname = $(this).val();
+                var _profiles = tasklist.filter( function (task) { return task.taskListName == _taskname; })[0].profiles.filter( function (profile) {return profile.isProfileActive }); 
+
+                var _options = "";
+                //tasklist[" .profiles.forEach( function(profile) { if (profile.isProfileActive) profileNames.push({name: profile.profileName, value: profile.profileName}); } ); 
+
+                var profileSelect = $("#" + this.id + "__profile").html("");
+                _profiles.forEach( function (profile) { 
+                        profileSelect.append( $("<option />").val(profile.profileName).text(profile.profileName));
+                });
+        });
+        $(".taskSelectA").change();
 
 		
         // Add values to character input fields
