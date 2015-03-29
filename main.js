@@ -1496,7 +1496,7 @@ function _select_Gateway() { // Check for Gateway used to
 		}
 	});
 	addProfileToDefined("Alchemy", {
-		profileName : "Potency",
+        profileName : "Potency",
 		level: {
 			20:["Alchemy_Tier3_Experimentation_Rank20","Alchemy_Tier3_Potency_Potion_Major", "Alchemy_Tier2_Aquaregia", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
 		}
@@ -1532,40 +1532,38 @@ function _select_Gateway() { // Check for Gateway used to
     var loggedAccount = null;
     var accountSettings = {};
     var charSettingsTest = {};         
-	var charNameList = [];
-	var charStatisticsList = [];	// array of char names with the charStatistics for each char.
+    var charNameList = [];
+    var charStatisticsList = [];	// array of char names with the charStatistics for each char.
 	
-	var defaultCharStatistics = {
-		general: {
-			refineCounter: 0,
-			refineCounterReset: Date.now(),
-			diamonds: 0,
-			gold: 0,
-			rad: 0,
+    var defaultCharStatistics = {
+        general: {
+            refineCounter: 0,
+            refineCounterReset: Date.now(),
+            diamonds: 0,
+            gold: 0,
+            rad: 0,
             rBI: 0,
             BI: 0,
             refined: 0,
             refineLimitLeft: 0,
-			emptyBagSlots: 0,
-			activeSlots: 0,
-		},
-        levels: {
-        
+            emptyBagSlots: 0,
+            activeSlots: 0,
         },
-        workers: {
-            "Leadership":       { used: [], unused: [] },
-            "Alchemy":          { used: [], unused: [] },
-            "Jewelcrafting":    { used: [], unused: [] },
-            "Weaponsmithing":   { used: [], unused: [] },
-            "Artificing":       { used: [], unused: [] },
-            "Mailsmithing":     { used: [], unused: [] },
-            "Platesmithing":    { used: [], unused: [] },
-            "Leatherworking":   { used: [], unused: [] },
-            "Tailoring":        { used: [], unused: [] },
-            "Black Ice Shaping": { used: [], unused: [] },
+        professions: {
+            // Names must match unsafeWindow.client.dataModel.model.ent.main.itemassignmentcategories.categories.displayname
+            "Leadership":       { level: 0, workersUsed: [], workersUnused: [] },
+            "Alchemy":          { level: 0, workersUsed: [], workersUnused: [] },
+            "Jewelcrafting":    { level: 0, workersUsed: [], workersUnused: [] },
+            "Weaponsmithing":   { level: 0, workersUsed: [], workersUnused: [] },
+            "Artificing":       { level: 0, workersUsed: [], workersUnused: [] },
+            "Mailsmithing":     { level: 0, workersUsed: [], workersUnused: [] },
+            "Platesmithing":    { level: 0, workersUsed: [], workersUnused: [] },
+            "Leatherworking":   { level: 0, workersUsed: [], workersUnused: [] },
+            "Tailoring":        { level: 0, workersUsed: [], workersUnused: [] },
+            "Black Ice Shaping": { level: 0, workersUsed: [], workersUnused: [] },
             /*
-            "Winter Event":     { used: [], unused: [] },
-            "Siege Event":      { used: [], unused: [] },
+            "Winter Event":     { level: 0, workersUsed: [], workersUnused: [] },
+            "Siege Event":      { level: 0, workersUsed: [], workersUnused: [] },
             */
 		},
         tools: {
@@ -1585,6 +1583,7 @@ function _select_Gateway() { // Check for Gateway used to
             "Tongs":    { used: [], unused: [] },
         },
 		trackedResources: [],
+        slotUse: [],
 	};
     
     /*  For searching unsafeWindow.client.dataModel.model.ent.main.inventory.assignedslots / unsafeWindow.client.dataModel.model.ent.main.inventory.notassignedslots  
@@ -2855,7 +2854,6 @@ function _select_Gateway() { // Check for Gateway used to
 
         
         // Updating statistics
-        //console.log(unsafeWindow.client.dataModel.model.ent.main);
         var _curCharName = settings["nw_charname" + charcurrent];
         var _stat = charStatisticsList[_curCharName].general;
         var _chardata = unsafeWindow.client.dataModel.model.ent.main.currencies;
@@ -2880,8 +2878,12 @@ function _select_Gateway() { // Check for Gateway used to
                     if (slot && slot.name === resource.name) {
                         charStatisticsList[_curCharName].trackedResources[ri] += slot.count ; 
                     }
-                })
-            })
+                });
+            });
+        });
+
+        unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.forEach( function (slot, ix) {
+            charStatisticsList[_curCharName].slotUse[ix] = slot.category;
         });
 
         unsafeWindow.client.dataModel.model.ent.main.inventory.assignedslots
@@ -2889,15 +2891,15 @@ function _select_Gateway() { // Check for Gateway used to
             $.each(workerList, function (pName, pList) {
                 var index = pList.indexOf(item.name);
                 if (index > -1) {
-                    charStatisticsList[_curCharName].workers[pName].used[index] = item.count;
+                    charStatisticsList[_curCharName].professions[pName].workersUsed[index] = item.count;
                 }
-            })   
+            });   
             $.each(toolList, function (tName, tList) {
                 var index = tList.indexOf(item.name);
                 if (index > -1) {
                     charStatisticsList[_curCharName].tools[tName].used[index] = item.count;
                 }
-            })
+            });
         });
         
         unsafeWindow.client.dataModel.model.ent.main.inventory.notassignedslots
@@ -2905,7 +2907,7 @@ function _select_Gateway() { // Check for Gateway used to
             $.each(workerList, function (pName, pList) {
                 var index = pList.indexOf(item.name);
                 if (index > -1) {
-                    charStatisticsList[_curCharName].workers[pName].unused[index] = item.count;
+                    charStatisticsList[_curCharName].professions[pName].workersUnused[index] = item.count;
                 }
             })   
             $.each(toolList, function (tName, tList) {
@@ -2915,8 +2917,15 @@ function _select_Gateway() { // Check for Gateway used to
                 }
             })
         });
-        // console.log(charStatisticsList[_curCharName].workers);
-        //professions levels at:  unsafeWindow.client.dataModel.model.ent.main.itemassignmentcategories.categories[].  currentrank / displayname
+        
+        // getting profession levels from currentrank, model has displayname, name, and category, using displayname (platesmithing)
+        // Must match the names in charStatisticsList[_curCharName].professions
+        unsafeWindow.client.dataModel.model.ent.main.itemassignmentcategories.categories
+        .forEach( function (prof) {
+            if (charStatisticsList[_curCharName].professions[prof.displayname]) {
+                charStatisticsList[_curCharName].professions[prof.displayname].level = prof.currentrank;
+            }
+        });
         
         GM_setValue("chars__statistics__" + _curCharName,JSON.stringify(charStatisticsList[_curCharName]));
         updateCounters(false);
@@ -3307,6 +3316,9 @@ function _select_Gateway() { // Check for Gateway used to
             table.profesionRanks td { height: 14px; } \
             table.profesionRanks td.ranked2 { border-bottom: solid 1px #555; border-top: dashed 1px #777 }\
             table.profesionRanks td.ranked1 { border-top: solid 1px #555; } \
+            td.rotate, th.rotate { height: 100px; } \
+            td.rotate, th.rotate > div { transform: translate(0, 30px) rotate(290deg); width: 30px; } \
+            td.rotate, th.rotate > div > span { border-bottom: 1px solid #ccc; padding: 5px 10px; } \
             ");
 
         // Add settings panel to page body
@@ -3479,7 +3491,7 @@ function _select_Gateway() { // Check for Gateway used to
                 '<div class="charSettingsTabs">',
                 '<ul>',
                 '<li><a href="#charSettingsTab-1-' + i + '">Tasks</a></li>',
-		'<li><a href="#charSettingsTab-2-' + i + '">Manual Task Settings</a></li>',
+        		'<li><a href="#charSettingsTab-2-' + i + '">Manual Task Settings</a></li>',
                 '<li><a href="#charSettingsTab-3-' + i + '">Char Settings</a></li>',
                 '</ul>',
                 '<div id="charSettingsTab-1-' + i + '" class="charSettingsTab">',
@@ -3533,22 +3545,22 @@ function _select_Gateway() { // Check for Gateway used to
             addText += '<table><thead><tr><th>Slot #</th><th>Profession</th><th>Profile</th><th>fill assets</th></tr></thead><tbody>';
 
             for (var m = 1; m <= 9; m++) {
-                    addText += '<tr>';
-                    addText += '<td>' + m + '.</td>';
-                    var _id = 'settings__char__' + i + '__slot__' + m; 
-                    var _attrib = '';
-                    addText += '<td><select class="taskSelectA" style="margin: 4px; padding: 2px;" name="'+ _id + '__profession" id="' + _id + '__profession">';
-                    tasklist.forEach(function(task) { 
-                            addText += '<option value="' + task.taskListName + '">' + task.taskListName + '</option>';
-                    })
-                    addText += '</select></td>';
-                    addText += '<td><select class="" style="margin: 4px; padding: 2px;" name="'+ _id + '__profession__profile" id="' + _id + '__profession__profile"></select></td>';
-                    addText += '<td><select class="" style="margin: 4px; padding: 2px;" name="'+ _id + '__profession__assets" id="' + _id + '__profession__assets">';
-                    $.each(charSlotsFillAssetsOptions, function( index, value ) {
-                            addText += '<option value="' + index + '">' + value + '</option>';
-                    });
-                    addText += '</select></td>';
-                    addText += '</tr>';
+                addText += '<tr>';
+                addText += '<td>' + m + '.</td>';
+                var _id = 'settings__char__' + i + '__slot__' + m; 
+                var _attrib = '';
+                addText += '<td><select class="taskSelectA" style="margin: 4px; padding: 2px;" name="'+ _id + '__profession" id="' + _id + '__profession">';
+                tasklist.forEach(function(task) { 
+                        addText += '<option value="' + task.taskListName + '">' + task.taskListName + '</option>';
+                })
+                addText += '</select></td>';
+                addText += '<td><select class="" style="margin: 4px; padding: 2px;" name="'+ _id + '__profession__profile" id="' + _id + '__profession__profile"></select></td>';
+                addText += '<td><select class="" style="margin: 4px; padding: 2px;" name="'+ _id + '__profession__assets" id="' + _id + '__profession__assets">';
+                $.each(charSlotsFillAssetsOptions, function( index, value ) {
+                        addText += '<option value="' + index + '">' + value + '</option>';
+                });
+                addText += '</select></td>';
+                addText += '</tr>';
             }
             addText += '</tbody></table></div>';
  							
@@ -3830,7 +3842,7 @@ function _select_Gateway() { // Check for Gateway used to
         html += "<tr><th>Char name</th>";
         var options = "";
         var workerTabSelects = ["Leadership", "Leadership", "Leadership"];
-        $.each(charStatisticsList[charNameList[0]].workers, function (profession) {
+        $.each(charStatisticsList[charNameList[0]].professions, function (profession) {
             options += "<option value='"+ profession +"'>" + profession + "</option>" ;
         })
 
@@ -3845,10 +3857,10 @@ function _select_Gateway() { // Check for Gateway used to
             temp = "";
             html += "<tr><td rowspan=2>" + charName + "</td>";
             for (var i = 0; i < 3; i++) {
-                var list = charStatisticsList[charName].workers[workerTabSelects[i]];
+                var list = charStatisticsList[charName].professions[workerTabSelects[i]];
                 for (var ix = 0; ix < 6; ix++)  {
-                    html += "<td class='ranked'>" + $.trim(list.used[ix]) + "</td>";
-                    temp += "<td class='ranked2'>" + $.trim(list.unused[ix]) + "</td>";
+                    html += "<td class='ranked'>" + $.trim(list.workersUsed[ix]) + "</td>";
+                    temp += "<td class='ranked2'>" + $.trim(list.workersUnused[ix]) + "</td>";
                 };
             }
             /*
@@ -3886,6 +3898,45 @@ function _select_Gateway() { // Check for Gateway used to
         })
         html += "</table>";
         $('#resource_tracker').html(html);
+        
+        
+        // 'profession_levels' tab
+        html = '<table>';
+        html += "<tr><th class='rotate'><div><span>Character Name</div></span></th>";
+        $.each(charStatisticsList[charNameList[0]].professions, function (profession) {
+            html += "<th class='rotate'><div><span>" + profession + "</div></span></th>";
+        });
+        html += "</tr>";
+        charNameList.forEach( function (charName) {
+            html += "<tr>";
+            html += "<td>" + charName + "</td>";
+            $.each(charStatisticsList[charName].professions, function (name, profData) {
+                html += "<td>" + profData.level + "</td>";
+            });
+            html += "</tr>";
+        });            
+        html += "</table>";
+        $('#profession_levels').html(html);
+
+        // 'slot_tracker' tab
+        html = '<table>';
+        html += "<tr><th>Character Name</th>";
+        for (var i = 0; i < 9; i++) {
+            html += "<th> #" + (i+1) + " </th>";
+        }
+        html += "</tr>";
+
+        charNameList.forEach( function (charName) {
+            html += "<tr>";
+            html += "<td>" + charName + "</td>";
+            for (var i = 0; i < 9; i++) {
+                html += "<td>" + charStatisticsList[charName].slotUse[i].substring(0,3) + " </td>";
+            }
+            html += "</tr>";
+        });
+        html += "</table>";
+        $('#slot_tracker').html(html);
+        
         
     }
 
