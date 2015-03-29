@@ -41,11 +41,13 @@ Developers & Contributors:
 
 /* RELEASE NOTES
 - More info in the Counter Tab
-- Added Resources overvew
+- Added Resources overview
 - Added Profession assets overview tabs (needs more work)
 - Moved more statistic gathering into JSON object and added per char name settings load
-- Added "Load Charctar Names" button and reset settings button
-- Seperated vendoring of altars and node kits
+- Added "Load Character Names" button and reset settings button
+- Separated vendoring of altars and node kits
+- UI added for manual slot task allocations
+- Initial structures for JSON settings
 2.2-hotfix
 - Fix broken ZEX Domino effect logic
 - Really really really fix that tabmenu padding
@@ -1550,7 +1552,7 @@ function _select_Gateway() { // Check for Gateway used to
         levels: {
         
         },
-		workers: {
+        workers: {
             "Leadership":       { used: [], unused: [] },
             "Alchemy":          { used: [], unused: [] },
             "Jewelcrafting":    { used: [], unused: [] },
@@ -3301,7 +3303,10 @@ function _select_Gateway() { // Check for Gateway used to
             #settingsPanel table { width: 100%; }\
             .ranked:nth-child(6n+2) { color: purple; } .ranked:nth-child(6n+3) { color: blue; } .ranked:nth-child(6n+4) { color: green } \
             .ranked2:nth-child(6n+1) { color: purple; } .ranked2:nth-child(6n+2) { color: blue; } .ranked2:nth-child(6n+3) { color: green } \
-            table.profesionRanks {	border-collapse: collapse; } td.ranked2 { border-bottom: solid 1px #555; } td.ranked1 { border-top: solid 1px #555; } \
+            table.profesionRanks { border-collapse: collapse; } \
+            table.profesionRanks td { height: 14px; } \
+            table.profesionRanks td.ranked2 { border-bottom: solid 1px #555; border-top: dashed 1px #777 }\
+            table.profesionRanks td.ranked1 { border-top: solid 1px #555; } \
             ");
 
         // Add settings panel to page body
@@ -3427,12 +3432,12 @@ function _select_Gateway() { // Check for Gateway used to
         $("div#main_tabs").append(tab);
 
         tabs_num = $("div#main_tabs > ul > li").length + 1;
-        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Worker overview</a></li>");
+        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Workers</a></li>");
         tab = $("<div id='main_tab" + tabs_num + "'><div id='worker_overview'>Loaded on login.</div></div>");
         $("div#main_tabs").append(tab);
 
         tabs_num = $("div#main_tabs > ul > li").length + 1;
-        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Tools overview</a></li>");
+        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Tools</a></li>");
         tab = $("<div id='main_tab" + tabs_num + "'><div id='tools_overview'>Loaded on login.</div></div>");
         $("div#main_tabs").append(tab);
 
@@ -3441,6 +3446,15 @@ function _select_Gateway() { // Check for Gateway used to
         tab = $("<div id='main_tab" + tabs_num + "'><div id='resource_tracker'>Loaded on login.</div></div>");
         $("div#main_tabs").append(tab);
 
+        tabs_num = $("div#main_tabs > ul > li").length + 1;
+        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Prof levels</a></li>");
+        tab = $("<div id='main_tab" + tabs_num + "'><div id='profession_levels'>Loaded on login.</div></div>");
+        $("div#main_tabs").append(tab);
+
+        tabs_num = $("div#main_tabs > ul > li").length + 1;
+        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Slots</a></li>");
+        tab = $("<div id='main_tab" + tabs_num + "'><div id='slot_tracker'>Loaded on login.</div></div>");
+        $("div#main_tabs").append(tab);
         
         
         $("div#main_tabs").tabs("refresh");
@@ -3764,7 +3778,7 @@ function _select_Gateway() { // Check for Gateway used to
                 return ((num / 1000000).toFixed(1) + 'm');
             if ((num / 1000) > 1)
                 return ((num / 1000).toFixed(1) + 'k');
-            return num;
+            return Math.floor(num);
         }
         
         var total = 0;
@@ -3780,7 +3794,7 @@ function _select_Gateway() { // Check for Gateway used to
         };
 
         charNameList.forEach( function (charName) {
-            var counterTime = (Date.now - charStatisticsList[charName].general.refineCounterReset) / 1000 / 60 / 60; // in hours.
+            var counterTime = (Date.now() - charStatisticsList[charName].general.refineCounterReset) / 1000 / 60 / 60; // in hours.
             var radh = 0;
             if (counterTime > 0) radh = charStatisticsList[charName].general.refineCounter  / counterTime;
             
@@ -3790,7 +3804,7 @@ function _select_Gateway() { // Check for Gateway used to
             html += "<td>" + charName + "</td>";
             html += "<td>" + charStatisticsList[charName].general.activeSlots + "</td>";
             html += "<td>" + formatNum(charStatisticsList[charName].general.refineCounter) + "</td>";
-            html += "<td>" + radh + "</td>";
+            html += "<td>" + formatNum(radh) + "</td>";
             html += "<td>" + formatNum(charStatisticsList[charName].general.rad) + "</td>";
             html += "<td>" + formatNum(charStatisticsList[charName].general.diamonds) + "</td>";
             html += "<td>" + formatNum(charStatisticsList[charName].general.gold) + "</td>";
@@ -3814,30 +3828,48 @@ function _select_Gateway() { // Check for Gateway used to
         html = '<table class="profesionRanks">';
         var temp = "";
         html += "<tr><th>Char name</th>";
-        var cnt = 0;
+        var options = "";
+        var workerTabSelects = ["Leadership", "Leadership", "Leadership"];
         $.each(charStatisticsList[charNameList[0]].workers, function (profession) {
-            if (cnt++ > 3) return; // No room in the UI trimming for now
-            html += "<th colspan=6>" + profession.substring(0,4) + "</th>";
-            temp += "<th>p</th><th>b</th><th>g</th><th>t3</th><th>t2</th><th>t1</th>";
-            
+            options += "<option value='"+ profession +"'>" + profession + "</option>" ;
         })
+
+        for (var i = 0; i < 3; i++) {
+            //saving current select values
+            if ($('#setting__worker__tab__p' + i).val()) workerTabSelects[i] = $('#setting__worker__tab__p' + i).val();
+            html += "<th colspan=6>" + "<select name='setting__worker__tab__p"+i+"' id='setting__worker__tab__p"+i+"'>" + options + "</select></th>";
+            temp += "<th>p</th><th>b</th><th>g</th><th>t3</th><th>t2</th><th>t1</th>";
+        }
         html += "</tr><tr><th></th>" + temp + "</tr>";
         charNameList.forEach( function (charName) {
             temp = "";
             html += "<tr><td rowspan=2>" + charName + "</td>";
-            cnt = 0;
+            for (var i = 0; i < 3; i++) {
+                var list = charStatisticsList[charName].workers[workerTabSelects[i]];
+                for (var ix = 0; ix < 6; ix++)  {
+                    html += "<td class='ranked'>" + $.trim(list.used[ix]) + "</td>";
+                    temp += "<td class='ranked2'>" + $.trim(list.unused[ix]) + "</td>";
+                };
+            }
+            /*
             $.each(charStatisticsList[charName].workers, function (pf, list) {
-                if (cnt++ > 3) return; // No room in the UI trimming for now
                 for (var ix = 0; ix < 6; ix++)  {
                     html += "<td class='ranked'>" + $.trim(list.used[ix]) + "</td>";
                     temp += "<td class='ranked2'>" + $.trim(list.unused[ix]) + "</td>";
                 };
             })
+            */
             html += "</tr><tr>" + temp + "</tr>"; 
         })       
         
         html += "</table>";
         $('#worker_overview').html(html);
+        for (var i = 0; i < 3; i++) {
+            $('#setting__worker__tab__p' + i).val(workerTabSelects[i]);
+            $('#setting__worker__tab__p' + i).change( function(){
+                updateCounters(false);
+            });
+        }
         
         // Resource tracker update.
         html = '<table><tr><th>Character Name</th>';
