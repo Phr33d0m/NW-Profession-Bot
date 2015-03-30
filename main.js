@@ -40,6 +40,9 @@ Developers & Contributors:
 // ==/UserScript==
 
 /* RELEASE NOTES
+...
+ - Added level +20 tasks for Leadership, Mailsmithing, Jewelcrafting by dlebedynskyi 
+ - Fix the AD counter when AD is in ZEX transition by BigRedBrent
 2.2-hotfix
 - Fix broken ZEX Domino effect logic
 - Really really really fix that tabmenu padding
