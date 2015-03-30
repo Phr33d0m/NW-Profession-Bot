@@ -3926,12 +3926,12 @@ function _select_Gateway() { // Check for Gateway used to
             html += "<th> #" + (i+1) + " </th>";
         }
         html += "</tr>";
-
+        
         charNameList.forEach( function (charName) {
             html += "<tr>";
             html += "<td>" + charName + "</td>";
             for (var i = 0; i < 9; i++) {
-                html += "<td>" + charStatisticsList[charName].slotUse[i].substring(0,3) + " </td>";
+                html += "<td>" + $.trim(charStatisticsList[charName].slotUse[i]).substring(0,3) + " </td>";
             }
             html += "</tr>";
         });
