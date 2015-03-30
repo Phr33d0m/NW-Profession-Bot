@@ -2960,8 +2960,7 @@ function addSettings() {
             #settingsButton{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); display: block; position: fixed; overflow: auto; right: 0px; top: 0px; padding: 3px; z-index: 1000;}\
             #pauseButton{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); display: block; position: fixed; overflow: auto; right: 23px; top: 0px; padding: 3px; z-index: 1000;}\
             /* MAC-NW -- Put Panel at a higher layer than status window */ \
-            /*#settingsPanel{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); color: rgb(0, 0, 0); position: fixed; overflow: auto; right: 0px; top: 0px; width: 550px;max-height:750px;font: 12px sans-serif; text-align: left; display: block; z-index: 1001;}*/\
-            #settingsPanel{position: fixed; overflow: auto; right: 0px; top: 0px; width: 550px;max-height:750px;font: 12px sans-serif; text-align: left; display: block; z-index: 1001;}\
+            #settingsPanel{position: fixed; overflow: auto; right: 0px; top: 0px; width: 600px;max-height:750px;font: 12px sans-serif; text-align: left; display: block; z-index: 1001;}\
             #settings_title{font-weight: bolder; background: none repeat scroll 0% 0% rgb(204, 204, 204); border-bottom: 1px solid rgb(102, 102, 102); padding: 3px;}\
             #settingsPanelButtonContainer {background: none repeat scroll 0% 0% rgb(204, 204, 204); border-top: 1px solid rgb(102, 102, 102);padding: 3px;text-align:center} \
             #settingsPanel label.purple {font-weight:bold;color:#7C37F6}\
@@ -2997,7 +2996,7 @@ function addSettings() {
             </div>\
             <form style="margin: 0px; padding: 0px">\
             <div id="main_tabs">\
-            <ul style="padding:0;">\
+            <ul style="background:none;border:none;border-bottom:1px solid #aed0ea;padding:0;">\
             </ul>\
             </div>\
             </form>\
@@ -3046,7 +3045,7 @@ function addSettings() {
                     break;
                 case "text":
                     if (settingListToAdd[i].border)
-                        _inputkWidth = "95%; padding: 10px";
+                        _inputkWidth = "95%; padding: 10px 0";
                     else
                         _inputkWidth = "46%";
                     settingsList.append('<li title="' + settingListToAdd[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; margin-top:1em; width: ' + _inputkWidth + '; display: inline-block;"<label class="' + settingListToAdd[i].class + '" for="' + id + '">' + settingListToAdd[i].title + '</label><input style="margin:4px; padding: 2px; min-width: 80%;" name="' + id + '" id="' + id + '" type="text" /></li>')
