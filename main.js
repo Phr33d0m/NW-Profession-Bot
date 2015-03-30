@@ -40,7 +40,7 @@ Developers & Contributors:
 // ==/UserScript==
 
 /* RELEASE NOTES
-- Added overview tabs for profession levels and proffesion slots
+- Added overview tabs for profession levels and profession slots
 - More info in the Counter Tab
 - Added Resources overview
 - Added Profession assets overview tabs (needs more work)
