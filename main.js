@@ -1784,7 +1784,7 @@ function _select_Gateway() { // Check for Gateway used to
         {name: 'smartleadassets', title: 'Smart Asset allocation for leadership', def: true, type: 'checkbox', pane:'prof', tooltip: 'Try to spread adn fill non-common assets and suplement with common if needed'},
         {name: 'skippatrol', title: 'Skip Patrol task if > 10 claims', def: 'AD&Lvl20', type: 'select', 
             opts: [ {name: 'never', path: 'never'},{name: 'always', path: 'always'},{name: 'AD profile', path: 'ad'},{name: 'Leadership lvl 20', path: 'ld20'},{name: 'AD&Lvl20', path: 'AD&Lvl20'}], 
-            pane:'prof', tooltip: 'Skip \"Patrol the Mines\" leadership task if there are more than 10 mining claims in the inventory (Never, Always, On AD profile, if Leadership level is > 20, or both of the above )'},
+            pane:'prof', tooltip: 'Skip \"Patrol the Mines\" leadership task if there are more than 10 mining claims in the inventory (Never, Always, On AD profile, if Leadership level is &gt;= 20, or both of the above )'},
         {name: 'refinead', title: 'Refine AD', def: true, type: 'checkbox', pane:'main', tooltip: 'Enable refining of AD on character switch'},
         {name: 'openrewards', title: 'Open Reward Chests', def: false, type: 'checkbox', pane:'main', tooltip: 'Enable opeing of leadership chests on character switch'}, //MAC-NW
         {name: 'autoreload', title: 'Auto Reload', def: false, type: 'checkbox', pane:'main', tooltip: 'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)'},
