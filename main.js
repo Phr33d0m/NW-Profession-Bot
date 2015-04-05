@@ -2969,10 +2969,23 @@ function _select_Gateway() { // Check for Gateway used to
         _stat.diamondsconvertleft = parseInt(_chardata.refineLimitLeft);
         _stat.activeSlots = unsafeWindow.client.dataModel.model.ent.main.itemassignments.active;
         
+        //clearing
+        charStatisticsList[_curCharName].trackedResources = [];
+        $.each(charStatisticsList[_curCharName].tools, function(name, obj) {
+            obj.used = []; 
+            obj.unused = []; 
+        });
+        $.each(charStatisticsList[_curCharName].professions, function(name, obj) {
+            obj.workersUsed = []; 
+            obj.workersUnused = []; 
+            obj.level = 0;
+        });
+        
         trackResources.forEach(function (resource, ri) {
             charStatisticsList[_curCharName].trackedResources[ri] = 0; 
         });
         
+        // Counting tracked resources
         unsafeWindow.client.dataModel.model.ent.main.inventory.bags
         .filter(  function (bag) { return bag.bagid == "CraftingResources" })
         .forEach( function (bag) {
@@ -2985,10 +2998,12 @@ function _select_Gateway() { // Check for Gateway used to
             });
         });
 
+        // Slot assignment
         unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.forEach( function (slot, ix) {
             charStatisticsList[_curCharName].slotUse[ix] = slot.category;
         });
-
+        
+        // Workers and tools assignment and qty
         unsafeWindow.client.dataModel.model.ent.main.inventory.assignedslots
         .forEach( function (item) {
             $.each(workerList, function (pName, pList) {
@@ -3414,7 +3429,7 @@ function _select_Gateway() { // Check for Gateway used to
             #rcounters ul li span { display: inline-block; min-width: 125px; }\
             #settingsPanel table { width: 100%; }\
             .ranked:nth-child(6n+2) { color: purple; } .ranked:nth-child(6n+3) { color: blue; } .ranked:nth-child(6n+4) { color: green } \
-            .ranked2:nth-child(6n+1) { color: purple; } .ranked2:nth-child(6n+2) { color: blue; } .ranked2:nth-child(6n+3) { color: green } \\n\
+            .ranked2:nth-child(6n+1) { color: purple; } .ranked2:nth-child(6n+2) { color: blue; } .ranked2:nth-child(6n+3) { color: green } \
             .tranked:nth-child(4n+2) { color: purple; } .tranked:nth-child(4n+3) { color: blue; } .tranked:nth-child(4n) { color: green } \
             .tranked2:nth-child(4n+1) { color: purple; } .tranked2:nth-child(4n+2) { color: blue; } .tranked2:nth-child(4n+3) { color: green } \
             table.professionRanks { border-collapse: collapse; } \
