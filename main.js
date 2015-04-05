@@ -3962,7 +3962,7 @@ function _select_Gateway() { // Check for Gateway used to
         var temp = "";
         html += "<tr><th>Char name</th>";
         var options = "";
-        var workerTabSelects = ["Leadership", "Leadership", "Leadership"];
+        var workerTabSelects = ["Leadership", "Alchemy", "Leadership"];
         $.each(charStatisticsList[charNameList[0]].professions, function (profession) {
             options += "<option value='"+ profession +"'>" + profession + "</option>" ;
         })
