@@ -41,6 +41,10 @@ Developers & Contributors:
 
 /* RELEASE NOTES
 ...
+- Added active slot column to the profession levels tab
+- Tools overview tab working
+- Delays changed to select
+- Added dobule delays option
 - tweaks for leadership 20-25 AD/XP profiles
 - Added more menu options for Skip "Patrol the Mines" to allow more flexability (Until per char options implemented).
 - Better use of leadership assets (white used only if heros, adventurers & man-at-arms to low). WloBeb
@@ -1791,7 +1795,9 @@ function _select_Gateway() { // Check for Gateway used to
         {name: 'openrewards', title: 'Open Reward Chests', def: false, type: 'checkbox', pane:'main', tooltip: 'Enable opeing of leadership chests on character switch'}, //MAC-NW
         {name: 'autoreload', title: 'Auto Reload', def: false, type: 'checkbox', pane:'main', tooltip: 'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)'},
         {name: 'refinead', title: 'Refine AD', def: true, type: 'checkbox', pane:'main', tooltip: 'Enable refining of AD on character switch'},
-        {name: 'doubledelays', title: 'Double script delays', def: false, type: 'checkbox', pane:'main', tooltip: 'Double the delays the script waits before attempting action.'},
+        {name: 'incdelay', title: 'Increase script delays by', def: 1, type: 'select', 
+            opts: [ {name: 'default - 1', path: '1'},{name: '1.5', path: '1.5'},{name: '2', path: '2'},{name: '2.5', path: '2.5'},{name: '3', path: '3'}], 
+            pane:'main', tooltip: 'Increase the delays the script waits before attempting the actions.'},
         {name: 'autologin', title: 'Attempt to login automatically', def: false, type: 'checkbox', pane:'main', tooltip: 'Automatically attempt to login to the neverwinter gateway site', border: true},
         {name: 'nw_username', title: 'Neverwinter Username', def: '', type: 'text', pane:'main', tooltip: ''},
         {name: 'nw_password', title: 'Neverwinter Password', def: '', type: 'password', pane:'main', tooltip: ''},
@@ -1841,15 +1847,13 @@ function _select_Gateway() { // Check for Gateway used to
         }
     }
 
-    if (settings["doubledelays"]) {
-        delay.SHORT  *= 2;
-        delay.MEDIUM *= 2;
-        delay.LONG   *= 2;
-        //delay.MINS 
-        delay.DEFAULT *= 2;
-        delay.TIMEOUT *= 2;
-
-    }
+    var delay_modifier = parseFloat(settings["incdelay"]);
+    delay.SHORT  *= delay_modifier;
+    delay.MEDIUM *= delay_modifier;
+    delay.LONG   *= delay_modifier;
+    //delay.MINS 
+    delay.DEFAULT *= delay_modifier;
+    delay.TIMEOUT *= delay_modifier;
 
     if (settings["charcount"] < 1) {
         settings["charcount"] = 1;
@@ -3410,14 +3414,15 @@ function _select_Gateway() { // Check for Gateway used to
             #rcounters ul li span { display: inline-block; min-width: 125px; }\
             #settingsPanel table { width: 100%; }\
             .ranked:nth-child(6n+2) { color: purple; } .ranked:nth-child(6n+3) { color: blue; } .ranked:nth-child(6n+4) { color: green } \
-            .ranked2:nth-child(6n+1) { color: purple; } .ranked2:nth-child(6n+2) { color: blue; } .ranked2:nth-child(6n+3) { color: green } \
-            table.profesionRanks { border-collapse: collapse; } \
-            table.profesionRanks td { height: 14px; } \
-            table.profesionRanks td.ranked2 { border-bottom: solid 1px #555; border-top: dashed 1px #777 }\
-            table.profesionRanks td.ranked1 { border-top: solid 1px #555; } \
-            td.rotate, th.rotate { height: 100px; } \
-            td.rotate, th.rotate > div { transform: translate(0, 30px) rotate(290deg); width: 30px; } \
-            td.rotate, th.rotate > div > span { border-bottom: 1px solid #ccc; padding: 5px 10px; } \
+            .ranked2:nth-child(6n+1) { color: purple; } .ranked2:nth-child(6n+2) { color: blue; } .ranked2:nth-child(6n+3) { color: green } \\n\
+            .tranked:nth-child(4n+2) { color: purple; } .tranked:nth-child(4n+3) { color: blue; } .tranked:nth-child(4n) { color: green } \
+            .tranked2:nth-child(4n+1) { color: purple; } .tranked2:nth-child(4n+2) { color: blue; } .tranked2:nth-child(4n+3) { color: green } \
+            table.professionRanks { border-collapse: collapse; } \
+            table.professionRanks td { height: 14px; } \
+            td.ranked2, td.tranked2 { border-bottom: solid 1px #555; border-top: dashed 1px #888 }\
+            table.professionLevels td.rotate, table.professionLevels th.rotate { height: 100px; } \
+            table.professionLevels td.rotate, table.professionLevels th.rotate > div { transform: translate(0, 30px) rotate(290deg); width: 30px; } \
+            table.professionLevels td.rotate, table.professionLevels th.rotate > div > span { border-bottom: 1px solid #ccc; padding: 5px 10px; } \
             ");
 
         // Add settings panel to page body
@@ -3938,7 +3943,7 @@ function _select_Gateway() { // Check for Gateway used to
         });
 
         // Worker tab update.
-        html = '<table class="profesionRanks">';
+        html = '<table class="professionRanks">';
         var temp = "";
         html += "<tr><th>Char name</th>";
         var options = "";
@@ -3983,6 +3988,46 @@ function _select_Gateway() { // Check for Gateway used to
                 updateCounters(false);
             });
         }
+
+        // Tools tab update.
+        html = '<table class="professionRanks">';
+        var temp = "";
+        html += "<tr><th>Char name</th>";
+        var options = "";
+        var toolsTabSelects = ["Crucible", "Mortar", "Philosophersstone", "Graver"];
+        $.each(charStatisticsList[charNameList[0]].tools, function (tool) {
+            options += "<option value='"+ tool +"'>" + tool + "</option>" ;
+        })
+
+        for (var i = 0; i < 4; i++) {
+            //saving current select values
+            if ($('#setting__tools__tab__p' + i).val()) toolsTabSelects[i] = $('#setting__tools__tab__p' + i).val();
+            html += "<th colspan=4>" + "<select name='setting__tools__tab__p"+i+"' id='setting__tools__tab__p"+i+"'>" + options + "</select></th>";
+            temp += "<th>p</th><th>b</th><th>g</th><th>w</th>";
+        }
+        html += "</tr><tr><th></th>" + temp + "</tr>";
+        charNameList.forEach( function (charName) {
+            temp = "";
+            html += "<tr><td rowspan=2>" + charName + "</td>";
+            for (var i = 0; i < 4; i++) {
+                var list = charStatisticsList[charName].tools[toolsTabSelects[i]];
+                for (var ix = 0; ix < 4; ix++)  {
+                    html += "<td class='tranked'>" + $.trim(list.used[ix]) + "</td>";
+                    temp += "<td class='tranked2'>" + $.trim(list.unused[ix]) + "</td>";
+                };
+            }
+            html += "</tr><tr>" + temp + "</tr>"; 
+        })       
+        
+        html += "</table>";
+        $('#tools_overview').html(html);
+        for (var i = 0; i < 4; i++) {
+            $('#setting__tools__tab__p' + i).val(toolsTabSelects[i]);
+            $('#setting__tools__tab__p' + i).change( function(){
+                updateCounters(false);
+            });
+        }
+        
         
         // Resource tracker update.
         html = '<table><tr><th>Character Name</th>';
@@ -4002,8 +4047,9 @@ function _select_Gateway() { // Check for Gateway used to
         
         
         // 'profession_levels' tab
-        html = '<table>';
+        html = '<table class="professionLevels">';
         html += "<tr><th class='rotate'><div><span>Character Name</div></span></th>";
+        html += "<th class='rotate'><div><span>#slots</div></span></th>";
         $.each(charStatisticsList[charNameList[0]].professions, function (profession) {
             html += "<th class='rotate'><div><span>" + profession + "</div></span></th>";
         });
@@ -4011,6 +4057,7 @@ function _select_Gateway() { // Check for Gateway used to
         charNameList.forEach( function (charName) {
             html += "<tr>";
             html += "<td>" + charName + "</td>";
+            html += "<td>" + charStatisticsList[charName].general.activeSlots + "</td>";
             $.each(charStatisticsList[charName].professions, function (name, profData) {
                 html += "<td>" + profData.level + "</td>";
             });
