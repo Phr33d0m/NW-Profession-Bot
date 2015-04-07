@@ -41,6 +41,7 @@ Developers & Contributors:
 
 /* RELEASE NOTES
 ...
+- Added gathering profiles for 21-25 levels
 - Added active slot column to the profession levels tab
 - Tools overview tab working
 - Delays changed to select
@@ -921,6 +922,18 @@ function _select_Gateway() { // Check for Gateway used to
         }]
     };
 
+    addProfileToDefined("Jewelcrafting", {
+        profileName : "20->25 gather",
+        isProfileActive : true,
+        level : {
+                21 : ["Jewelcrafting_Tier4_Refine_Basic_Mass", "Jewelcrafting_Tier4_Gather_Basic"],
+				22 : ["Jewelcrafting_Tier4_Refine_Basic_Mass", "Jewelcrafting_Tier4_Gather_Basic"],
+				23 : ["Jewelcrafting_Tier4_Refine_Basic_Mass", "Jewelcrafting_Tier4_Gather_Basic"],
+				24 : ["Jewelcrafting_Tier4_Refine_Basic_Mass", "Jewelcrafting_Tier4_Gather_Basic"],
+				25 : ["Jewelcrafting_Tier4_Refine_Basic_Mass", "Jewelcrafting_Tier4_Gather_Basic"],
+        },
+    });    
+
     (function(){
         var necks  = ["Jewelcrafting_Tier3_Neck_Offense_4_Purple", "Jewelcrafting_Tier3_Neck_Defense_4_Purple",
                       "Jewelcrafting_Tier3_Ring_Offense_4_Purple", "Jewelcrafting_Tier3_Ring_Defense_4_Purple", "Jewelcrafting_Tier3_Ring_Misc_4_Purple",
@@ -1022,16 +1035,29 @@ function _select_Gateway() { // Check for Gateway used to
                 17 : ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
                 18 : ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
                 19 : ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                20 : ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                21 : ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                22 : ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                23 : ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                24 : ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                25 : ["Crafted_Med_Armorsmithing_T4_Refine_Basic","Crafted_Med_Armorsmithing_T4_Gather_Basic" ]
+                20 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
+				21 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
+				22 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
+				23 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
+				24 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
+				25 : ["Crafted_Med_Armorsmithing_T4_Refine_Basic", "Crafted_Med_Armorsmithing_T4_Gather_Basic"],
+                
             }
         }]
     };
     
+    addProfileToDefined("Mailsmithing", {
+        profileName : "20->25 gather",
+        isProfileActive : true,
+        level : {
+            21 : ["Crafted_Med_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Med_Armorsmithing_T4_Gather_Basic_Mass"],
+            22 : ["Crafted_Med_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Med_Armorsmithing_T4_Gather_Basic_Mass"],
+            23 : ["Crafted_Med_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Med_Armorsmithing_T4_Gather_Basic_Mass"],
+            24 : ["Crafted_Med_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Med_Armorsmithing_T4_Gather_Basic_Mass"],
+            25 : ["Crafted_Med_Armorsmithing_T4_Refine_Basic", "Crafted_Med_Armorsmithing_T4_Gather_Basic"],
+        },
+    });    
+
     // DC Chain  stuff
     addProfileToDefined("Mailsmithing", {
         profileName : "craft Chain Gambeson",
@@ -1256,13 +1282,28 @@ function _select_Gateway() { // Check for Gateway used to
 				17 : ["Hvy_Armorsmithing_Tier3_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants2", "Hvy_Armorsmithing_Tier3_Plate_Shirt2", "Hvy_Armorsmithing_Tier3_Plate_Helm_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
 				18 : ["Hvy_Armorsmithing_Tier3_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants2", "Hvy_Armorsmithing_Tier3_Plate_Shirt2", "Hvy_Armorsmithing_Tier3_Plate_Helm_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
 				19 : ["Hvy_Armorsmithing_Tier3_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants2", "Hvy_Armorsmithing_Tier3_Plate_Shirt2", "Hvy_Armorsmithing_Tier3_Plate_Helm_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
-				20 : ["Hvy_Armorsmithing_Tier2_Refine_Basic"],
-				//19:["Plate Armor +4","Fancy Plate Pants","Fancy Plate Shirt","Plate Helm +4","Ornate Plate Pants","Upgrade Armorer","Upgrade Miner","Hire an additional Miner"],
-				//20:["Forge Steel Plates"],
+				20 : ["Hvy_Armorsmithing_Tier3_Plate_Pants"],
+				21 : ["Hvy_Armorsmithing_Tier3_Plate_Pants"],
+				22 : ["Hvy_Armorsmithing_Tier3_Plate_Pants"],
+				23 : ["Hvy_Armorsmithing_Tier3_Plate_Pants"],
+				24 : ["Hvy_Armorsmithing_Tier3_Plate_Pants"],
+				25 : ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Hvy_Armorsmithing_T4_Gather_Basic_Mass"],
 			},
 		}
 		]
 	};
+
+    addProfileToDefined("Platesmithing", {
+        profileName : "20->25 gather",
+        isProfileActive : true,
+        level : {
+            21 : ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Hvy_Armorsmithing_T4_Gather_Basic_Mass"],
+            22 : ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Hvy_Armorsmithing_T4_Gather_Basic_Mass"],
+            23 : ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Hvy_Armorsmithing_T4_Gather_Basic_Mass"],
+            24 : ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Hvy_Armorsmithing_T4_Gather_Basic_Mass"],
+            25 : ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Hvy_Armorsmithing_T4_Gather_Basic_Mass"],
+        },
+    });    
 
 	definedTask["Leatherworking"] = {
 		taskListName : "Leatherworking",
@@ -1295,12 +1336,30 @@ function _select_Gateway() { // Check for Gateway used to
 				17 : ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants2", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Helm_Set_1", "Leatherworking_Tier3_Leather_Pants", "Leatherworking_Tier1_Gather_Basic"],
 				18 : ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants2", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Helm_Set_1", "Leatherworking_Tier3_Leather_Pants", "Leatherworking_Tier1_Gather_Basic"],
 				19 : ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants2", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Helm_Set_1", "Leatherworking_Tier3_Leather_Pants", "Leatherworking_Tier1_Gather_Basic"],
-				20 : ["Leatherworking_Tier2_Refine_Basic"],
 				//19:["Leather Armor +4","Fancy Leather Pants","Fancy Leather Shirt","Leather Helm +4","Ornate Leather Pants","Upgrade Tanner","Upgrade Skinner","Hire an additional Skinner"],
-				//20:["Cure Tough Pelts"],
+				20 : ["Leatherworking_Tier3_Leather_Pants"],
+				21 : ["Leatherworking_Tier3_Leather_Pants"],
+				22 : ["Leatherworking_Tier3_Leather_Pants"],
+				23 : ["Leatherworking_Tier3_Leather_Pants"],
+				24 : ["Leatherworking_Tier3_Leather_Pants"],
+				25 : ["Leatherworking_Tier4_Refine_Basic", "Leatherworking_Tier4_Gather_Basic"],
 			},
 		}  ]
 	};
+    
+    addProfileToDefined("Leatherworking", {
+        profileName : "20->25 gather",
+        isProfileActive : true,
+        level : {
+            20 : ["Leatherworking_Tier3_Leather_Pants"],
+            21 : ["Leatherworking_Tier4_Refine_Basic_Mass", "Leatherworking_Tier4_Gather_Basic"],
+            22 : ["Leatherworking_Tier4_Refine_Basic_Mass", "Leatherworking_Tier4_Gather_Basic"],
+            23 : ["Leatherworking_Tier4_Refine_Basic_Mass", "Leatherworking_Tier4_Gather_Basic"],
+            24 : ["Leatherworking_Tier4_Refine_Basic_Mass", "Leatherworking_Tier4_Gather_Basic"],
+            25 : ["Leatherworking_Tier4_Refine_Basic", "Leatherworking_Tier4_Gather_Basic"],
+        },
+    });    
+
 	addProfileToDefined("Leatherworking", {
 		profileName : "craft purples only",
 		level : {
@@ -1395,13 +1454,30 @@ function _select_Gateway() { // Check for Gateway used to
 				17 : ["Tailoring_Tier3_Cloth_Armor_Set_1", "Tailoring_Tier3_Cloth_Pants2_Set2", "Tailoring_Tier3_Cloth_Shirt2", "Tailoring_Tier3_Cloth_Helm_Set_1", "Tailoring_Tier1_Gather_Basic"],
 				18 : ["Tailoring_Tier3_Cloth_Armor_Set_3", "Tailoring_Tier3_Cloth_Armor_Set_2", "Tailoring_Tier3_Cloth_Armor_Set_1", "Tailoring_Tier3_Cloth_Pants2_Set2", "Tailoring_Tier3_Cloth_Shirt2", "Tailoring_Tier3_Cloth_Helm_Set_1", "Tailoring_Tier3_Cloth_Pants", "Tailoring_Tier1_Gather_Basic"],
 				19 : ["Tailoring_Tier3_Cloth_Armor_Set_3", "Tailoring_Tier3_Cloth_Armor_Set_2", "Tailoring_Tier3_Cloth_Armor_Set_1", "Tailoring_Tier3_Cloth_Pants2_Set2", "Tailoring_Tier3_Cloth_Shirt2", "Tailoring_Tier3_Cloth_Helm_Set_1", "Tailoring_Tier3_Cloth_Pants", "Tailoring_Tier1_Gather_Basic"],
-				20 : ["Tailoring_Tier2_Refine_Basic"],
 				//19:["Cloth Robes +4","Fancy Cloth Pants","Fancy Cloth Shirt","Cloth Cap +4","Ornate Cloth Pants","Upgrade Outfitter","Upgrade Weaver","Hire an additional Weaver"],
-				//20:["Weave Cotton Cloth"],
+				20 : ["Tailoring_Tier3_Cloth_Pants"],
+				21 : ["Tailoring_Tier3_Cloth_Pants"],
+				22 : ["Tailoring_Tier3_Cloth_Pants"],
+				23 : ["Tailoring_Tier3_Cloth_Pants"],
+				24 : ["Tailoring_Tier3_Cloth_Pants"],
+				25 : ["Crafted_Tailoring_T4_Refine_Basic", "Crafted_Tailoring_T4_Gather_Basic"],
 			},
 		}
 		]
 	};
+
+    addProfileToDefined("Tailoring", {
+        profileName : "20->25 gather",
+        isProfileActive : true,
+        level : {
+            21 : ["Tailoring/Crafted_Tailoring_T4_Refine_Basic_Mass", "Crafted_Tailoring_T4_Gather_Basic_Mass"],
+            22 : ["Tailoring/Crafted_Tailoring_T4_Refine_Basic_Mass", "Crafted_Tailoring_T4_Gather_Basic_Mass"],
+            23 : ["Tailoring/Crafted_Tailoring_T4_Refine_Basic_Mass", "Crafted_Tailoring_T4_Gather_Basic_Mass"],
+            24 : ["Tailoring/Crafted_Tailoring_T4_Refine_Basic_Mass", "Crafted_Tailoring_T4_Gather_Basic_Mass"],
+            25 : ["Crafted_Tailoring_T4_Refine_Basic", "Crafted_Tailoring_T4_Gather_Basic"],
+        },
+    });    
+
 
 	definedTask["Artificing"] = {
 		taskListName : "Artificing",
@@ -1434,13 +1510,18 @@ function _select_Gateway() { // Check for Gateway used to
 				17 : ["Artificing_Tier3_Pactblade_Temptation_5", "Artificing_Tier3_Icon_Virtuous_5", "Artificing_Tier3_Refine_Basic", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
 				18 : ["Artificing_Tier3_Pactblade_Temptation_5", "Artificing_Tier3_Icon_Virtuous_5", "Artificing_Tier3_Refine_Basic", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
 				19 : ["Artificing_Tier3_Pactblade_Temptation_5", "Artificing_Tier3_Icon_Virtuous_5", "Artificing_Tier3_Refine_Basic", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
-				20 : ["Artificing_Tier2_Refine_Basic"],
 				//19:["Virtuous Icon +5","Upgrade Engraver","Upgrade Carver","Hire an additional Carver"],
-				//20:["7:Craft Ornamental metal and Carved Wood"],
+				20:["Artificing_Tier3_Pactblade_Temptation_5", "Artificing_Tier3_Icon_Virtuous_5", "Artificing_Tier3_Refine_Basic", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
+				21:["Artificing_Tier4_Gather_Basic"],
+				22:["Artificing_Tier4_Gather_Basic"],
+				23:["Artificing_Tier4_Gather_Basic"],
+				24:["Artificing_Tier4_Gather_Basic"],
+				25:["Artificing_Tier4_Refine_Basic", "Artificing_Tier4_Gather_Basic"],
 			},
 		}
 		]
 	};
+
 
 	definedTask["Weaponsmithing"] = {
 		taskListName : "Weaponsmithing",
@@ -1473,9 +1554,13 @@ function _select_Gateway() { // Check for Gateway used to
 				17 : ["Weaponsmithing_Tier3_Dagger_4", "Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
 				18 : ["Weaponsmithing_Tier3_Dagger_4", "Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
 				19 : ["Weaponsmithing_Tier3_Dagger_4", "Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
-				20 : ["Weaponsmithing_Tier2_Refine_Basic"],
+				20 : ["Weaponsmithing_Tier3_Dagger_Set_2", "Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
 				//19:["Dagger+4","Upgrade Grinder","Upgrade Smelter","Hire an additional Smelter"],
-				//20:["Craft Steel Blades and Barausk Hafts"],
+				21:["Weaponsmithing_Tier4_Gather_Basic"],
+				22:["Weaponsmithing_Tier4_Gather_Basic"],
+				23:["Weaponsmithing_Tier4_Gather_Basic"],
+				24:["Weaponsmithing_Tier4_Gather_Basic"],
+				25:["Weaponsmithing_Tier4_Refine_Basic", "Weaponsmithing_Tier4_Gather_Basic"],
 			},
 		}
 		]
@@ -1515,7 +1600,12 @@ function _select_Gateway() { // Check for Gateway used to
 				//20:["Alchemy_Tier3_Experimentation_Rank20"],
 				//19:["Alchemical Research","Rank 20 ","Upgrade Mixologist","Upgrade Apothecary","Hire an additional Apothecary"],
 				//20:["Alchemy_Tier2_Aquavitae_2"],,"Alchemy_Tier3_Potency_Potion_Major"
-				20 : ["Alchemy_Tier3_Experimentation_Rank20", "Alchemy_Tier3_Potency_Potion_Major", "Alchemy_Tier3_Protection_Potion_Major", "Alchemy_Tier2_Aquaregia", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
+				20 : ["Alchemy_Tier3_Experimentation_Rank21", "Alchemy_Tier3_Experimentation_Rank20", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
+				21 : ["Alchemy_Tier3_Experimentation_Rank22", "Alchemy_Tier3_Experimentation_Rank21", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
+				22 : ["Alchemy_Tier3_Experimentation_Rank23", "Alchemy_Tier3_Experimentation_Rank22", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
+				23 : ["Alchemy_Tier3_Experimentation_Rank24", "Alchemy_Tier3_Experimentation_Rank23", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
+				24 : ["Alchemy_Tier3_Experimentation_Rank25", "Alchemy_Tier3_Experimentation_Rank24", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
+				25 : ["Alchemy_Tier3_Experimentation_Rank25", "Alchemy_Tier3_Experimentation_Rank24", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
 			},
 		}]
 	};
