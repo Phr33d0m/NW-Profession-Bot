@@ -1600,11 +1600,11 @@ function _select_Gateway() { // Check for Gateway used to
 				//20:["Alchemy_Tier3_Experimentation_Rank20"],
 				//19:["Alchemical Research","Rank 20 ","Upgrade Mixologist","Upgrade Apothecary","Hire an additional Apothecary"],
 				//20:["Alchemy_Tier2_Aquavitae_2"],,"Alchemy_Tier3_Potency_Potion_Major"
-				20 : ["Alchemy_Tier3_Experimentation_Rank21", "Alchemy_Tier3_Experimentation_Rank20", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
-				21 : ["Alchemy_Tier3_Experimentation_Rank22", "Alchemy_Tier3_Experimentation_Rank21", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
-				22 : ["Alchemy_Tier3_Experimentation_Rank23", "Alchemy_Tier3_Experimentation_Rank22", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
-				23 : ["Alchemy_Tier3_Experimentation_Rank24", "Alchemy_Tier3_Experimentation_Rank23", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
-				24 : ["Alchemy_Tier3_Experimentation_Rank25", "Alchemy_Tier3_Experimentation_Rank24", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
+				20 : ["Alchemy_Tier3_Experiment_Rank21", "Alchemy_Tier3_Experimentation_Rank20", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
+				21 : ["Alchemy_Tier4_Experiment_Rank22", "Alchemy_Tier3_Experimentation_Rank22", "Alchemy_Tier3_Experimentation_Rank21", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
+				22 : ["Alchemy_Tier4_Experiment_Rank23", "Alchemy_Tier3_Experimentation_Rank23", "Alchemy_Tier3_Experimentation_Rank22", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
+				23 : ["Alchemy_Tier4_Experiment_Rank24", "Alchemy_Tier3_Experimentation_Rank24", "Alchemy_Tier3_Experimentation_Rank23", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
+				24 : ["Alchemy_Tier4_Experiment_Rank25", "Alchemy_Tier3_Experimentation_Rank24", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
 				25 : ["Alchemy_Tier3_Experimentation_Rank25", "Alchemy_Tier3_Experimentation_Rank24", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
 			},
 		}]
