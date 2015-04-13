@@ -49,17 +49,17 @@ special
 
 
 
-
-
-
 Jewelcraft
+
+"Jewelcrafting_Tier3_Ring_Offense_3"       Wizard's Ring                                       15
+"Jewelcrafting_Tier3_Neck_Offense_3"       Wizard's Necklace                                   16
 
 
 special 
 
 Jewelcrafting_Tier4_Neck_Defense_4_Purple   Exquisite Adamant Necklace of Regeneration           25   egg  elemental aggregate x2
 Jewelcrafting_Tier4_Neck_Offense_4_Purple   Exquisite Adamant Necklace of Piercing  
-											Exquisite Adamant Necklace of Recovery
+Jewelcrafting_Tier4_Neck_Misc_4_Purple		Exquisite Adamant Necklace of Recovery
 
 
 Jewelcrafting_Tier4_Ring_Offense_4_Purple   Exquisite Adamant Ring of Piercing                  25 egg aggregate x2
