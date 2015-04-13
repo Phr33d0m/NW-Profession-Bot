@@ -1,0 +1,63 @@
+
+leatherworking 
+
+basic 
+
+Leatherworking_Tier4_Leather_Pants2        Elemental Leather Pants          23
+Leatherworking_Tier4_Leather_Pants2_Set2   Elemental Leather Trousers       23
+Leatherworking_Tier4_Leather_Shirt2        Elemental Leather Shirt          22
+Leatherworking_Tier4_Leather_Shirt2_Set2   Elemental Leather Tunic          22
+
+
+special 
+"Leatherworking_Tier4_Leather_Shirt_Special_2"                                           Exquisite Elemental Shirt        25 Unified Element egg
+"Leatherworking_Tier4_Leather_Shirt_Special_2_Set2"                                            Exquisite Elemental Tunic        25
+                                            Exquisite Elemental Trousers     25                                       
+                                            Exquisite Elemental Pants        25   
+
+mailsmith
+
+
+
+special 
+ 
+
+"Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps" Zealot's Exquisite Elemental Chainmail  - 25 unified egg + 
+"Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps" Zealot's Exquisite Elemental Chausses 
+"Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank" Prelate's Exquisite Elemental Chainmail  
+"Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank" Prelate's Exquisite Elemental Chausses 
+
+
+"Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Tank"  Soldier's Exquisite Elemental Chausses
+"Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank" Soldier's Exquisite Elemental Chainmail
+
+
+
+
+
+
+
+
+Jewelcraft
+
+personalized 
+
+Personalized Adamant Necklace of Piercing       uses Gemmed Exquisite Adamant Necklace of Piercing - Crafted_Jewelcrafting_T4_Neck_Offense_4c
+Personalized Adamant Necklace of Recovery       uses Gemmed Exquisite Adamant Necklace of Recovery - Crafted_Jewelcrafting_T4_Neck_Misc_4c
+Personalized Adamant Necklace of Regeneration   uses Gemmed Exquisite Adamant of Regeneration      - Crafted_Jewelcrafting_T4_Neck_Defense_4c
+Personalized Adamant Ring of Piercing           uses Gemmed Exquisite Adamant Ring of Piercing     - Crafted_Jewelcrafting_T4_Ring_Offense_4c
+Personalized Adamant Ring of Recovery           uses Gemmed Exquisite Adamant Ring of Recovery     - Crafted_Jewelcrafting_T4_Ring_Misc_4c
+Personalized Adamant Ring of Regeneration       uses Gemmed Exquisite Adamant Ring of Regeneration - Crafted_Jewelcrafting_T4_Ring_Defense_4c
+
+   
+
+
+special 
+
+"Jewelcrafting_Tier4_Neck_Defense_4_Purple"  "Exquisite Adamant Necklace of Regeneration" - 25   egg  elemental aggregate x2
+
+"Jewelcrafting_Tier4_Neck_Offense_4_Purple"  Exquisite Adamant Necklace of Piercing  - 
+
+"Jewelcrafting_Tier4_Ring_Offense_4_Purple" "Exquisite Adamant Ring of Piercing"
+"Jewelcrafting_Tier4_Ring_Misc_4_Purple"  Exquisite Adamant Ring of Recovery   - 25 egg aggregate x2
+"Jewelcrafting_Tier4_Ring_Defense_4_Purple" Exquisite Adamant Ring of Regeneration
