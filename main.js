@@ -41,6 +41,7 @@ Developers & Contributors:
 
 /* RELEASE NOTES
 ...
+- Add Black Ice lvl 4 & 5 professions
 - Added gathering profiles for 21-25 levels
 - Added active slot column to the profession levels tab
 - Tools overview tab working
@@ -892,6 +893,8 @@ function _select_Gateway() { // Check for Gateway used to
                 1: ["Blackice_Tier1_Process_Blackice"],
                 2: ["Blackice_Tier1_Process_Blackice"],
                 3: ["Blackice_Tier1_Process_Blackice"],
+                4: ["Blackice_Tier1_Process_Blackice"],
+                5: ["Blackice_Tier1_Process_Blackice"],
                 /*
                 1:["Forge Hammerstone Pick","Gather Raw Black Ice","Truesilver Pick Grip","Process Raw Black Ice","Upgrade Chillwright","Hire an additional Chillwright"],
                 2:["Forge Hammerstone Pick","Gather Raw Black Ice","Truesilver Pick Grip","Process Raw Black Ice","Upgrade Chillwright","Hire an additional Chillwright"],
