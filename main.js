@@ -1348,62 +1348,63 @@ function _select_Gateway() { // Check for Gateway used to
         profileName : "craft purples only",
         level : {
             //purples  first. shirts > tunics > pants.
-            20 : ["Leatherworking_Tier3_Leather_Shirt_Special_3_Set3", "Leatherworking_Tier3_Leather_Shirt_Special_2", "Leatherworking_Tier3_Leather_Tunic_Special_2",
-                "Leatherworking_Tier3_Leather_Pants_Special_2", "Leatherworking_Tier3_Leather_Pants_Special_2",
-
-                "Leatherworking_Tier3_Refine_Basic", "Leatherworking_Tier3_Gather_Basic"]
+            20 : ['Leatherworking_Tier4_Leather_Shirt_Special_2',//Exquisite Elemental Shirt
+                  'Leatherworking_Tier4_Leather_Shirt_Special_2_Set2',//Exquisite Elemental Tunic
+                  'Leatherworking_Tier4_Leather_Pants_Special_2_Set2',//???Exquisite Elemental Trousers
+                  'Leatherworking_Tier4_Leather_Pants_Special_2', //Exquisite Elemental Pants
+                  "Leatherworking_Tier3_Gather_Basic"]
         }
     });
 
     addProfileToDefined("Leatherworking", {
-        profileName : "craft Shirts",
+        profileName : "craft  Elemental Shirts",
         level : {
             //purples  first. shirts > tunics > pants.
-            20 : ["Leatherworking_Tier3_Leather_Shirt_Special_3_Set3", "Leatherworking_Tier3_Leather_Shirt_Special_2", "Leatherworking_Tier3_Leather_Tunic_Special_2",
-                "Leatherworking_Tier3_Leather_Pants_Special_2", "Leatherworking_Tier3_Leather_Pants_Special_2",
-                // Shirt                                 //Tunic
-                "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Shirt2_Set2",
-                "Leatherworking_Tier3_Leather_Pants2_Set2", "Leatherworking_Tier3_Leather_Pants2",
-                "Leatherworking_Tier3_Refine_Basic",
-                "Leatherworking_Tier3_Gather_Basic"]
+            25 : ['Leatherworking_Tier4_Leather_Shirt_Special_2',//Exquisite Elemental Shirt
+                  'Leatherworking_Tier4_Leather_Shirt_Special_2_Set2',//Exquisite Elemental Tunic
+                  'Leatherworking_Tier4_Leather_Pants_Special_2_Set2',//???Exquisite Elemental Trousers
+                  'Leatherworking_Tier4_Leather_Pants_Special_2', //Exquisite Elemental Pants
+                  'Leatherworking_Tier4_Leather_Shirt2',//Elemental Leather Shirt 
+                    ]
         }
     });
 
     addProfileToDefined("Leatherworking", {
-        profileName : "craft Tunic",
+        profileName : "craft  Elemental Tunic",
         level : {
             //purples  first. shirts > tunics > pants.
-            20 : ["Leatherworking_Tier3_Leather_Tunic_Special_2", "Leatherworking_Tier3_Leather_Shirt_Special_3_Set3", "Leatherworking_Tier3_Leather_Shirt_Special_2",
-                "Leatherworking_Tier3_Leather_Pants_Special_2", "Leatherworking_Tier3_Leather_Pants_Special_2",
-                "Leatherworking_Tier3_Leather_Shirt2_Set2", "Leatherworking_Tier3_Leather_Shirt2",
-                "Leatherworking_Tier3_Leather_Pants2_Set2", "Leatherworking_Tier3_Leather_Pants2",
-                "Leatherworking_Tier3_Refine_Basic",
-                "Leatherworking_Tier3_Gather_Basic"]
+            25 : ['Leatherworking_Tier4_Leather_Shirt_Special_2_Set2',//Exquisite Elemental Tunic
+                  'Leatherworking_Tier4_Leather_Shirt_Special_2',//Exquisite Elemental Shirt
+                  'Leatherworking_Tier4_Leather_Pants_Special_2_Set2',//???Exquisite Elemental Trousers
+                  'Leatherworking_Tier4_Leather_Pants_Special_2', //Exquisite Elemental Pants
+                  'Leatherworking_Tier4_Leather_Shirt2_Set2',//Elemental Leather Tunic 
+                    ]
+        }
+    });
+   
+    addProfileToDefined("Leatherworking", {
+        profileName : "craft  Elemental Trousers(?)",
+        level : {
+            //purples  first. shirts > tunics > pants.
+            25 : ['Leatherworking_Tier4_Leather_Pants_Special_2_Set2',//???Exquisite Elemental Trousers
+                  'Leatherworking_Tier4_Leather_Pants_Special_2', //Exquisite Elemental Pants
+                  'Leatherworking_Tier4_Leather_Shirt_Special_2_Set2',//Exquisite Elemental Tunic
+                  'Leatherworking_Tier4_Leather_Shirt_Special_2',//Exquisite Elemental Shirt
+                  'Leatherworking_Tier4_Leather_Pants2_Set2',//Elemental Leather Trousers 
+                    ]
         }
     });
 
     addProfileToDefined("Leatherworking", {
-        profileName : "craft Trousers",
+        profileName : "craft  Elemental Pants",
         level : {
             //purples  first. shirts > tunics > pants.
-            20 : ["Leatherworking_Tier3_Leather_Pants_Special_2", "Leatherworking_Tier3_Leather_Pants_Special_2",
-                "Leatherworking_Tier3_Leather_Shirt_Special_3_Set3", "Leatherworking_Tier3_Leather_Shirt_Special_2", "Leatherworking_Tier3_Leather_Tunic_Special_2",
-                "Leatherworking_Tier3_Leather_Pants2_Set2", "Leatherworking_Tier3_Leather_Pants2",
-                "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Shirt2_Set2",
-                "Leatherworking_Tier3_Refine_Basic", "Leatherworking_Tier3_Gather_Basic"]
-        }
-    });
-     
-    addProfileToDefined("Leatherworking", {
-        profileName : "craft Pants",
-        level : {
-            //purples  first. shirts > tunics > pants.
-            20 : ["Leatherworking_Tier3_Leather_Pants_Special_2", "Leatherworking_Tier3_Leather_Pants_Special_2",
-                "Leatherworking_Tier3_Leather_Shirt_Special_3_Set3", "Leatherworking_Tier3_Leather_Shirt_Special_2", "Leatherworking_Tier3_Leather_Tunic_Special_2",
-
-                "Leatherworking_Tier3_Leather_Pants2", "Leatherworking_Tier3_Leather_Pants2_Set2",
-                "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Shirt2_Set2",
-                "Leatherworking_Tier3_Refine_Basic", "Leatherworking_Tier3_Gather_Basic"]
+            25 : ['Leatherworking_Tier4_Leather_Pants_Special_2', //Exquisite Elemental Pants
+                  'Leatherworking_Tier4_Leather_Pants_Special_2_Set2',//???Exquisite Elemental Trousers
+                  'Leatherworking_Tier4_Leather_Shirt_Special_2_Set2',//Exquisite Elemental Tunic
+                  'Leatherworking_Tier4_Leather_Shirt_Special_2',//Exquisite Elemental Shirt
+                  'Leatherworking_Tier4_Leather_Pants2',//Elemental Leather Trousers 
+                    ]
         }
     });
 
