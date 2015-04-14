@@ -12,47 +12,48 @@ Leatherworking_Tier4_Leather_Shirt2_Set2              Elemental Leather Tunic   
 special 
 Leatherworking_Tier4_Leather_Shirt_Special_2          Exquisite Elemental Shirt        25 Unified Element egg
 Leatherworking_Tier4_Leather_Shirt_Special_2_Set2     Exquisite Elemental Tunic        25
-??????????????????????                                Exquisite Elemental Trousers     25                                       
- Leatherworking_Tier4_Leather_Pants_Special_2         Exquisite Elemental Pants        25   
+Leatherworking_Tier4_Leather_Pants_Special_2_Set2     Exquisite Elemental Trousers     ?????????????????? 25                                       
+Leatherworking_Tier4_Leather_Pants_Special_2          Exquisite Elemental Pants        25  
+ 
 
 
 
 mailsmith
 
-Crafted_Med_Armorsmithing_Scale_T4_Green_Pants_Dps    Berserker's Elemental Chausses    21 2 elem aggregate
-Crafted_Med_Armorsmithing_Chain_T4_Green_Pants_Tank   Prelate's Elemental Chausses 
-Crafted_Med_Armorsmithing_Scale_T4_Green_Pants_Tank    Soldier's Elemental Chausses
-Crafted_Med_Armorsmithing_Chain_T4_Green_Pants_Dps    Zealot's Elemental Chausses
+Crafted_Med_Armorsmithing_Scale_T4_Green_Pants_Dps    Berserker"s Elemental Chausses    21 2 elem aggregate
+Crafted_Med_Armorsmithing_Chain_T4_Green_Pants_Tank   Prelate"s Elemental Chausses 
+Crafted_Med_Armorsmithing_Scale_T4_Green_Pants_Tank    Soldier"s Elemental Chausses
+Crafted_Med_Armorsmithing_Chain_T4_Green_Pants_Dps    Zealot"s Elemental Chausses
 
 
-Crafted_Med_Armorsmithing_Scale_T4_Green_Shirt_Dps    Berserker's Elemental Chainmail
-Crafted_Med_Armorsmithing_Chain_T4_Green_Shirt_Tank   Prelate's Elemental Chainmail
-Crafted_Med_Armorsmithing_Scale_T4_Green_Shirt_Tank   Soldier's Elemental Chainmail
-Crafted_Med_Armorsmithing_Chain_T4_Green_Shirt_Dps    Zealot's Elemental Chainmail
+Crafted_Med_Armorsmithing_Scale_T4_Green_Shirt_Dps    Berserker"s Elemental Chainmail
+Crafted_Med_Armorsmithing_Chain_T4_Green_Shirt_Tank   Prelate"s Elemental Chainmail
+Crafted_Med_Armorsmithing_Scale_T4_Green_Shirt_Tank   Soldier"s Elemental Chainmail
+Crafted_Med_Armorsmithing_Chain_T4_Green_Shirt_Dps    Zealot"s Elemental Chainmail
 
 
 
 special 
  
 
-"Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps"   Zealot's Exquisite Elemental Chainmail      25 unified egg + 
-"Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps"   Zealot's Exquisite Elemental Chausses 
-"Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank"  Prelate's Exquisite Elemental Chainmail  
-"Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank"  Prelate's Exquisite Elemental Chausses 
+"Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps"   Zealot"s Exquisite Elemental Chainmail      25 unified egg + 
+"Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps"   Zealot"s Exquisite Elemental Chausses 
+"Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank"  Prelate"s Exquisite Elemental Chainmail  
+"Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank"  Prelate"s Exquisite Elemental Chausses 
 
 
-"Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Tank"  Soldier's Exquisite Elemental Chausses
-"Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank"  Soldier's Exquisite Elemental Chainmail
-"Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps"   Berserker's Exquisite Elemental Chausses
-"Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Dps"   Berserker's Exquisite Elemental Chainmail
+"Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Tank"  Soldier"s Exquisite Elemental Chausses
+"Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank"  Soldier"s Exquisite Elemental Chainmail
+"Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps"   Berserker"s Exquisite Elemental Chausses
+"Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Dps"   Berserker"s Exquisite Elemental Chainmail
 
 
 
 
 Jewelcraft
 
-"Jewelcrafting_Tier3_Ring_Offense_3"       Wizard's Ring                                       15
-"Jewelcrafting_Tier3_Neck_Offense_3"       Wizard's Necklace                                   16
+"Jewelcrafting_Tier3_Ring_Offense_3"       Wizard"s Ring                                       15
+"Jewelcrafting_Tier3_Neck_Offense_3"       Wizard"s Necklace                                   16
 
 
 special 
