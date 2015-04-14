@@ -1348,10 +1348,10 @@ function _select_Gateway() { // Check for Gateway used to
         profileName : "craft purples only",
         level : {
             //purples  first. shirts > tunics > pants.
-            20 : ['Leatherworking_Tier4_Leather_Shirt_Special_2',//Exquisite Elemental Shirt
-                  'Leatherworking_Tier4_Leather_Shirt_Special_2_Set2',//Exquisite Elemental Tunic
-                  'Leatherworking_Tier4_Leather_Pants_Special_2_Set2',//???Exquisite Elemental Trousers
-                  'Leatherworking_Tier4_Leather_Pants_Special_2', //Exquisite Elemental Pants
+            25 : ["Leatherworking_Tier4_Leather_Shirt_Special_2",//Exquisite Elemental Shirt
+                  "Leatherworking_Tier4_Leather_Shirt_Special_2_Set2",//Exquisite Elemental Tunic
+                  "Leatherworking_Tier4_Leather_Pants_Special_2_Set2",//Exquisite Elemental Trousers
+                  "Leatherworking_Tier4_Leather_Pants_Special_2", //Exquisite Elemental Pants
                   "Leatherworking_Tier3_Gather_Basic"]
         }
     });
@@ -1362,7 +1362,7 @@ function _select_Gateway() { // Check for Gateway used to
             //purples  first. shirts > tunics > pants.
             25 : ['Leatherworking_Tier4_Leather_Shirt_Special_2',//Exquisite Elemental Shirt
                   'Leatherworking_Tier4_Leather_Shirt_Special_2_Set2',//Exquisite Elemental Tunic
-                  'Leatherworking_Tier4_Leather_Pants_Special_2_Set2',//???Exquisite Elemental Trousers
+                  'Leatherworking_Tier4_Leather_Pants_Special_2_Set2',//Exquisite Elemental Trousers
                   'Leatherworking_Tier4_Leather_Pants_Special_2', //Exquisite Elemental Pants
                   'Leatherworking_Tier4_Leather_Shirt2',//Elemental Leather Shirt 
                     ]
@@ -1375,7 +1375,7 @@ function _select_Gateway() { // Check for Gateway used to
             //purples  first. shirts > tunics > pants.
             25 : ['Leatherworking_Tier4_Leather_Shirt_Special_2_Set2',//Exquisite Elemental Tunic
                   'Leatherworking_Tier4_Leather_Shirt_Special_2',//Exquisite Elemental Shirt
-                  'Leatherworking_Tier4_Leather_Pants_Special_2_Set2',//???Exquisite Elemental Trousers
+                  'Leatherworking_Tier4_Leather_Pants_Special_2_Set2',//Exquisite Elemental Trousers
                   'Leatherworking_Tier4_Leather_Pants_Special_2', //Exquisite Elemental Pants
                   'Leatherworking_Tier4_Leather_Shirt2_Set2',//Elemental Leather Tunic 
                     ]
@@ -1386,7 +1386,7 @@ function _select_Gateway() { // Check for Gateway used to
         profileName : "craft  Elemental Trousers(?)",
         level : {
             //purples  first. shirts > tunics > pants.
-            25 : ['Leatherworking_Tier4_Leather_Pants_Special_2_Set2',//???Exquisite Elemental Trousers
+            25 : ['Leatherworking_Tier4_Leather_Pants_Special_2_Set2',//Exquisite Elemental Trousers
                   'Leatherworking_Tier4_Leather_Pants_Special_2', //Exquisite Elemental Pants
                   'Leatherworking_Tier4_Leather_Shirt_Special_2_Set2',//Exquisite Elemental Tunic
                   'Leatherworking_Tier4_Leather_Shirt_Special_2',//Exquisite Elemental Shirt
@@ -1400,9 +1400,9 @@ function _select_Gateway() { // Check for Gateway used to
         level : {
             //purples  first. shirts > tunics > pants.
             25 : ['Leatherworking_Tier4_Leather_Pants_Special_2', //Exquisite Elemental Pants
-                  'Leatherworking_Tier4_Leather_Pants_Special_2_Set2',//???Exquisite Elemental Trousers
+                  'Leatherworking_Tier4_Leather_Pants_Special_2_Set2',//Exquisite Elemental Trousers
                   'Leatherworking_Tier4_Leather_Shirt_Special_2_Set2',//Exquisite Elemental Tunic
-                  'Leatherworking_Tier4_Leather_Shirt_Special_2',//Exquisite Elemental Shirt
+                  'Leatherdeworking_Tier4_Leather_Shirt_Special_2',//Exquisite Elemental Shirt
                   'Leatherworking_Tier4_Leather_Pants2',//Elemental Leather Trousers 
                     ]
         }
