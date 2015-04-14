@@ -12,7 +12,7 @@ Leatherworking_Tier4_Leather_Shirt2_Set2              Elemental Leather Tunic   
 special 
 Leatherworking_Tier4_Leather_Shirt_Special_2          Exquisite Elemental Shirt        25 Unified Element egg
 Leatherworking_Tier4_Leather_Shirt_Special_2_Set2     Exquisite Elemental Tunic        25
-????????????????????????????????????????????          Exquisite Elemental Trousers     25                                       
+??????????????????????                                Exquisite Elemental Trousers     25                                       
  Leatherworking_Tier4_Leather_Pants_Special_2         Exquisite Elemental Pants        25   
 
 
