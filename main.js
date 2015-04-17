@@ -3789,10 +3789,9 @@ function _select_Gateway() { // Check for Gateway used to
 
                 console.log("Loading character list");
                 charNameList = [];
-                client.dataModel.model.loginInfo.choices.forEach(function(char) {
-                    if (char.name == "Author") return;
-                    charNameList.push(char.name);
-                });
+                for(var i = 0; i < settings["charcount"]; i++) {
+                    charNameList.push(settings["nw_charname" + i]);
+                }
                 console.log("Found names: " + charNameList);
 
                 charNameList.forEach(function(charName) {
