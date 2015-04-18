@@ -1831,6 +1831,38 @@ function _select_Gateway() { // Check for Gateway used to
     });
 
     addProfileToDefined("Alchemy", {
+        profileName: "Blue & Green Vitriol",
+        isProfileActive: true,
+        level: {
+            1: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            2: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            3: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            4: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            5: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            6: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            7: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            8: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            9: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            10: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            11: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            12: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            13: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            14: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            15: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            16: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            17: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            18: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            19: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            20: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            21: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            22: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            23: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            24: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            25: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+        },
+    });
+
+    addProfileToDefined("Alchemy", {
         profileName: "Wondrous Sprocket",
         isProfileActive: true,
         level: {
