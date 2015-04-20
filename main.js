@@ -3940,7 +3940,7 @@ function _select_Gateway() { // Check for Gateway used to
             #settingsButton{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); display: block; position: fixed; overflow: auto; right: 0px; top: 0px; padding: 3px; z-index: 1000;}\
             #pauseButton{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); display: block; position: fixed; overflow: auto; right: 23px; top: 0px; padding: 3px; z-index: 1000;}\
             /* MAC-NW -- Put Panel at a higher layer than status window */ \
-            #settingsPanel{position: fixed; overflow: auto; right: 0px; top: 0px; width: 600px;max-height:750px;font: 12px sans-serif; text-align: left; display: block; z-index: 1001;}\
+            #settingsPanel{position: fixed; overflow: auto; right: 0px; top: 0px; width: 600px;max-height:100%;font: 12px sans-serif; text-align: left; display: block; z-index: 1001;}\
             #settings_title{font-weight: bolder; background: none repeat scroll 0% 0% rgb(204, 204, 204); border-bottom: 1px solid rgb(102, 102, 102); padding: 3px;}\
             #settingsPanelButtonContainer {background: none repeat scroll 0% 0% rgb(204, 204, 204); border-top: 1px solid rgb(102, 102, 102);padding: 3px;text-align:center} \
             #settingsPanel label.purple {font-weight:bold;color:#7C37F6}\
