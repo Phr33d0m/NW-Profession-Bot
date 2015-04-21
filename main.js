@@ -1287,6 +1287,33 @@ function _select_Gateway() { // Check for Gateway used to
         }
     });
 
+    addProfileToDefined("Mailsmithing", {
+        profileName: "Wondrous Sprocket",
+        isProfileActive: false,
+        level: {
+            6: ["Med_Armorsmithing_Tier1_Event_Gond"],
+            7: ["Med_Armorsmithing_Tier1_Event_Gond"],
+            8: ["Med_Armorsmithing_Tier1_Event_Gond"],
+            9: ["Med_Armorsmithing_Tier1_Event_Gond"],
+            10: ["Med_Armorsmithing_Tier1_Event_Gond"],
+            11: ["Med_Armorsmithing_Tier1_Event_Gond"],
+            12: ["Med_Armorsmithing_Tier1_Event_Gond"],
+            13: ["Med_Armorsmithing_Tier1_Event_Gond"],
+            14: ["Med_Armorsmithing_Tier1_Event_Gond"],
+            15: ["Med_Armorsmithing_Tier1_Event_Gond"],
+            16: ["Med_Armorsmithing_Tier1_Event_Gond"],
+            17: ["Med_Armorsmithing_Tier1_Event_Gond"],
+            18: ["Med_Armorsmithing_Tier1_Event_Gond"],
+            19: ["Med_Armorsmithing_Tier1_Event_Gond"],
+            20: ["Med_Armorsmithing_Tier1_Event_Gond"],
+            21: ["Med_Armorsmithing_Tier1_Event_Gond"],
+            22: ["Med_Armorsmithing_Tier1_Event_Gond"],
+            23: ["Med_Armorsmithing_Tier1_Event_Gond"],
+            24: ["Med_Armorsmithing_Tier1_Event_Gond"],
+            25: ["Med_Armorsmithing_Tier1_Event_Gond"],
+        },
+    });
+
     definedTask["Platesmithing"] = {
         taskListName: "Platesmithing",
         taskName: "Armorsmithing_Heavy",
@@ -1337,6 +1364,33 @@ function _select_Gateway() { // Check for Gateway used to
             23: ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Hvy_Armorsmithing_T4_Gather_Basic_Mass"],
             24: ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Hvy_Armorsmithing_T4_Gather_Basic_Mass"],
             25: ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Hvy_Armorsmithing_T4_Gather_Basic_Mass"],
+        },
+    });
+
+    addProfileToDefined("Platesmithing", {
+        profileName: "Wondrous Sprocket",
+        isProfileActive: false,
+        level: {
+            6: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
+            7: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
+            8: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
+            9: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
+            10: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
+            11: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
+            12: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
+            13: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
+            14: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
+            15: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
+            16: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
+            17: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
+            18: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
+            19: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
+            20: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
+            21: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
+            22: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
+            23: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
+            24: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
+            25: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
         },
     });
 
@@ -1463,6 +1517,33 @@ function _select_Gateway() { // Check for Gateway used to
         }
     });
 
+    addProfileToDefined("Leatherworking", {
+        profileName: "Wondrous Sprocket",
+        isProfileActive: false,
+        level: {
+            6: ["Leatherworking_Tier1_Event_Gond"],
+            7: ["Leatherworking_Tier1_Event_Gond"],
+            8: ["Leatherworking_Tier1_Event_Gond"],
+            9: ["Leatherworking_Tier1_Event_Gond"],
+            10: ["Leatherworking_Tier1_Event_Gond"],
+            11: ["Leatherworking_Tier1_Event_Gond"],
+            12: ["Leatherworking_Tier1_Event_Gond"],
+            13: ["Leatherworking_Tier1_Event_Gond"],
+            14: ["Leatherworking_Tier1_Event_Gond"],
+            15: ["Leatherworking_Tier1_Event_Gond"],
+            16: ["Leatherworking_Tier1_Event_Gond"],
+            17: ["Leatherworking_Tier1_Event_Gond"],
+            18: ["Leatherworking_Tier1_Event_Gond"],
+            19: ["Leatherworking_Tier1_Event_Gond"],
+            20: ["Leatherworking_Tier1_Event_Gond"],
+            21: ["Leatherworking_Tier1_Event_Gond"],
+            22: ["Leatherworking_Tier1_Event_Gond"],
+            23: ["Leatherworking_Tier1_Event_Gond"],
+            24: ["Leatherworking_Tier1_Event_Gond"],
+            25: ["Leatherworking_Tier1_Event_Gond"],
+        },
+    });
+
     definedTask["Tailoring"] = {
         taskListName: "Tailoring",
         taskName: "Tailoring",
@@ -1509,11 +1590,38 @@ function _select_Gateway() { // Check for Gateway used to
         profileName: "20->25 gather",
         isProfileActive: true,
         level: {
-            21: ["Tailoring/Crafted_Tailoring_T4_Refine_Basic_Mass", "Crafted_Tailoring_T4_Gather_Basic_Mass"],
-            22: ["Tailoring/Crafted_Tailoring_T4_Refine_Basic_Mass", "Crafted_Tailoring_T4_Gather_Basic_Mass"],
-            23: ["Tailoring/Crafted_Tailoring_T4_Refine_Basic_Mass", "Crafted_Tailoring_T4_Gather_Basic_Mass"],
-            24: ["Tailoring/Crafted_Tailoring_T4_Refine_Basic_Mass", "Crafted_Tailoring_T4_Gather_Basic_Mass"],
+            21: ["Crafted_Tailoring_T4_Refine_Basic_Mass", "Crafted_Tailoring_T4_Gather_Basic_Mass"],
+            22: ["Crafted_Tailoring_T4_Refine_Basic_Mass", "Crafted_Tailoring_T4_Gather_Basic_Mass"],
+            23: ["Crafted_Tailoring_T4_Refine_Basic_Mass", "Crafted_Tailoring_T4_Gather_Basic_Mass"],
+            24: ["Crafted_Tailoring_T4_Refine_Basic_Mass", "Crafted_Tailoring_T4_Gather_Basic_Mass"],
             25: ["Crafted_Tailoring_T4_Refine_Basic", "Crafted_Tailoring_T4_Gather_Basic"],
+        },
+    });
+
+    addProfileToDefined("Tailoring", {
+        profileName: "Wondrous Sprocket",
+        isProfileActive: false,
+        level: {
+            6: ["Tailoring_Tier1_Event_Gond"],
+            7: ["Tailoring_Tier1_Event_Gond"],
+            8: ["Tailoring_Tier1_Event_Gond"],
+            9: ["Tailoring_Tier1_Event_Gond"],
+            10: ["Tailoring_Tier1_Event_Gond"],
+            11: ["Tailoring_Tier1_Event_Gond"],
+            12: ["Tailoring_Tier1_Event_Gond"],
+            13: ["Tailoring_Tier1_Event_Gond"],
+            14: ["Tailoring_Tier1_Event_Gond"],
+            15: ["Tailoring_Tier1_Event_Gond"],
+            16: ["Tailoring_Tier1_Event_Gond"],
+            17: ["Tailoring_Tier1_Event_Gond"],
+            18: ["Tailoring_Tier1_Event_Gond"],
+            19: ["Tailoring_Tier1_Event_Gond"],
+            20: ["Tailoring_Tier1_Event_Gond"],
+            21: ["Tailoring_Tier1_Event_Gond"],
+            22: ["Tailoring_Tier1_Event_Gond"],
+            23: ["Tailoring_Tier1_Event_Gond"],
+            24: ["Tailoring_Tier1_Event_Gond"],
+            25: ["Tailoring_Tier1_Event_Gond"],
         },
     });
 
@@ -1560,6 +1668,33 @@ function _select_Gateway() { // Check for Gateway used to
         }]
     };
 
+    addProfileToDefined("Artificing", {
+        profileName: "Wondrous Sprocket",
+        isProfileActive: false,
+        level: {
+            6: ["Artificing_Tier1_Event_Gond"],
+            7: ["Artificing_Tier1_Event_Gond"],
+            8: ["Artificing_Tier1_Event_Gond"],
+            9: ["Artificing_Tier1_Event_Gond"],
+            10: ["Artificing_Tier1_Event_Gond"],
+            11: ["Artificing_Tier1_Event_Gond"],
+            12: ["Artificing_Tier1_Event_Gond"],
+            13: ["Artificing_Tier1_Event_Gond"],
+            14: ["Artificing_Tier1_Event_Gond"],
+            15: ["Artificing_Tier1_Event_Gond"],
+            16: ["Artificing_Tier1_Event_Gond"],
+            17: ["Artificing_Tier1_Event_Gond"],
+            18: ["Artificing_Tier1_Event_Gond"],
+            19: ["Artificing_Tier1_Event_Gond"],
+            20: ["Artificing_Tier1_Event_Gond"],
+            21: ["Artificing_Tier1_Event_Gond"],
+            22: ["Artificing_Tier1_Event_Gond"],
+            23: ["Artificing_Tier1_Event_Gond"],
+            24: ["Artificing_Tier1_Event_Gond"],
+            25: ["Artificing_Tier1_Event_Gond"],
+        },
+    });
+
 
     definedTask["Weaponsmithing"] = {
         taskListName: "Weaponsmithing",
@@ -1602,6 +1737,33 @@ function _select_Gateway() { // Check for Gateway used to
             },
         }]
     };
+
+    addProfileToDefined("Weaponsmithing", {
+        profileName: "Wondrous Sprocket",
+        isProfileActive: false,
+        level: {
+            6: ["Weaponsmithing_Tier1_Event_Gond"],
+            7: ["Weaponsmithing_Tier1_Event_Gond"],
+            8: ["Weaponsmithing_Tier1_Event_Gond"],
+            9: ["Weaponsmithing_Tier1_Event_Gond"],
+            10: ["Weaponsmithing_Tier1_Event_Gond"],
+            11: ["Weaponsmithing_Tier1_Event_Gond"],
+            12: ["Weaponsmithing_Tier1_Event_Gond"],
+            13: ["Weaponsmithing_Tier1_Event_Gond"],
+            14: ["Weaponsmithing_Tier1_Event_Gond"],
+            15: ["Weaponsmithing_Tier1_Event_Gond"],
+            16: ["Weaponsmithing_Tier1_Event_Gond"],
+            17: ["Weaponsmithing_Tier1_Event_Gond"],
+            18: ["Weaponsmithing_Tier1_Event_Gond"],
+            19: ["Weaponsmithing_Tier1_Event_Gond"],
+            20: ["Weaponsmithing_Tier1_Event_Gond"],
+            21: ["Weaponsmithing_Tier1_Event_Gond"],
+            22: ["Weaponsmithing_Tier1_Event_Gond"],
+            23: ["Weaponsmithing_Tier1_Event_Gond"],
+            24: ["Weaponsmithing_Tier1_Event_Gond"],
+            25: ["Weaponsmithing_Tier1_Event_Gond"],
+        },
+    });
 
     definedTask["Alchemy"] = {
         taskListName: "Alchemy",
@@ -1666,6 +1828,65 @@ function _select_Gateway() { // Check for Gateway used to
         level: {
             20: ["Alchemy_Tier3_Experimentation_Rank20", "Alchemy_Tier3_Potency_Potion_Major", "Alchemy_Tier2_Aquaregia", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
         }
+    });
+
+    addProfileToDefined("Alchemy", {
+        profileName: "Blue & Green Vitriol",
+        isProfileActive: true,
+        level: {
+            1: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            2: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            3: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            4: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            5: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            6: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            7: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            8: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            9: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            10: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            11: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            12: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            13: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            14: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            15: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            16: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            17: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            18: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            19: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            20: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            21: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            22: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            23: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            24: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+            25: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
+        },
+    });
+
+    addProfileToDefined("Alchemy", {
+        profileName: "Wondrous Sprocket",
+        isProfileActive: false,
+        level: {
+            6: ["Alchemy_Tier1_Event_Gond"],
+            7: ["Alchemy_Tier1_Event_Gond"],
+            8: ["Alchemy_Tier1_Event_Gond"],
+            9: ["Alchemy_Tier1_Event_Gond"],
+            10: ["Alchemy_Tier1_Event_Gond"],
+            11: ["Alchemy_Tier1_Event_Gond"],
+            12: ["Alchemy_Tier1_Event_Gond"],
+            13: ["Alchemy_Tier1_Event_Gond"],
+            14: ["Alchemy_Tier1_Event_Gond"],
+            15: ["Alchemy_Tier1_Event_Gond"],
+            16: ["Alchemy_Tier1_Event_Gond"],
+            17: ["Alchemy_Tier1_Event_Gond"],
+            18: ["Alchemy_Tier1_Event_Gond"],
+            19: ["Alchemy_Tier1_Event_Gond"],
+            20: ["Alchemy_Tier1_Event_Gond"],
+            21: ["Alchemy_Tier1_Event_Gond"],
+            22: ["Alchemy_Tier1_Event_Gond"],
+            23: ["Alchemy_Tier1_Event_Gond"],
+            24: ["Alchemy_Tier1_Event_Gond"],
+            25: ["Alchemy_Tier1_Event_Gond"],
+        },
     });
 
 
