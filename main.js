@@ -1289,7 +1289,7 @@ function _select_Gateway() { // Check for Gateway used to
 
     addProfileToDefined("Mailsmithing", {
         profileName: "Wondrous Sprocket",
-        isProfileActive: true,
+        isProfileActive: false,
         level: {
             6: ["Med_Armorsmithing_Tier1_Event_Gond"],
             7: ["Med_Armorsmithing_Tier1_Event_Gond"],
@@ -1369,7 +1369,7 @@ function _select_Gateway() { // Check for Gateway used to
 
     addProfileToDefined("Platesmithing", {
         profileName: "Wondrous Sprocket",
-        isProfileActive: true,
+        isProfileActive: false,
         level: {
             6: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
             7: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
@@ -1519,7 +1519,7 @@ function _select_Gateway() { // Check for Gateway used to
 
     addProfileToDefined("Leatherworking", {
         profileName: "Wondrous Sprocket",
-        isProfileActive: true,
+        isProfileActive: false,
         level: {
             6: ["Leatherworking_Tier1_Event_Gond"],
             7: ["Leatherworking_Tier1_Event_Gond"],
@@ -1600,7 +1600,7 @@ function _select_Gateway() { // Check for Gateway used to
 
     addProfileToDefined("Tailoring", {
         profileName: "Wondrous Sprocket",
-        isProfileActive: true,
+        isProfileActive: false,
         level: {
             6: ["Tailoring_Tier1_Event_Gond"],
             7: ["Tailoring_Tier1_Event_Gond"],
@@ -1670,7 +1670,7 @@ function _select_Gateway() { // Check for Gateway used to
 
     addProfileToDefined("Artificing", {
         profileName: "Wondrous Sprocket",
-        isProfileActive: true,
+        isProfileActive: false,
         level: {
             6: ["Artificing_Tier1_Event_Gond"],
             7: ["Artificing_Tier1_Event_Gond"],
@@ -1740,7 +1740,7 @@ function _select_Gateway() { // Check for Gateway used to
 
     addProfileToDefined("Weaponsmithing", {
         profileName: "Wondrous Sprocket",
-        isProfileActive: true,
+        isProfileActive: false,
         level: {
             6: ["Weaponsmithing_Tier1_Event_Gond"],
             7: ["Weaponsmithing_Tier1_Event_Gond"],
@@ -1864,7 +1864,7 @@ function _select_Gateway() { // Check for Gateway used to
 
     addProfileToDefined("Alchemy", {
         profileName: "Wondrous Sprocket",
-        isProfileActive: true,
+        isProfileActive: false,
         level: {
             6: ["Alchemy_Tier1_Event_Gond"],
             7: ["Alchemy_Tier1_Event_Gond"],
