@@ -694,7 +694,7 @@ function _select_Gateway() { // Check for Gateway used to
         if (!profSet) {
             return;
         }
-        var profile
+        var profile;
         for (var entry in profSet.profiles) {
             if (profSet.profiles[entry] && profSet.profiles[entry].profileName == "default") {
                 profile = jQuery.extend(true, {}, profSet.profiles[entry]);
