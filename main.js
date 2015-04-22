@@ -686,6 +686,35 @@ function _select_Gateway() { // Check for Gateway used to
     }
 
     /*
+     * Helper function to add "Mass Gathering" profile
+     */
+    function addMassProfile(prof, T1MassGat, T1MassRef, T1Gat, T1Ref, T2MassGat, T2MassRef, T2Gat, T2Ref, T3MassGat, T3MassRef, T3Gat, T3Ref, T4MassGat, T4MassRef, T4Gat, T4Ref)
+    {
+        var profSet = definedTask[prof];
+        if (!profSet) {
+            return;
+        }
+        var profile;
+        for (var entry in profSet.profiles) {
+            if (profSet.profiles[entry] && profSet.profiles[entry].profileName == "default") {
+                profile = jQuery.extend(true, {}, profSet.profiles[entry]);
+                break;
+            }
+        }
+        profile.profileName = "mass gathering";
+        for (i = 1; i <= 25; i++) 
+        {
+            var tasklist = [];
+            if ( i >= 1 && i <= 6 ) { tasklist[0] = T1MassGat; tasklist[1] = T1MassRef; tasklist[2] = T1Ref; tasklist[3] = T1Gat; }
+            if ( i >= 7 && i <= 13 ) { tasklist[0] = T2MassGat; tasklist[1] = T2MassRef; tasklist[2] = T2Ref; tasklist[3] = T2Gat; tasklist[4] = T1Ref; tasklist[5] = T1Gat;}
+            if ( i >= 14 && i <= 20 ) { tasklist[0] = T3MassGat; tasklist[1] = T3MassRef; tasklist[2] = T3Ref; tasklist[3] = T3Gat; tasklist[4] = T2Ref; tasklist[5] = T2Gat; tasklist[6] = T1Ref; tasklist[7] = T1Gat;}
+            if ( i >= 21 && i <= 25 ) { tasklist[0] = T4MassGat; tasklist[1] = T4MassRef; tasklist[2] = T4Ref; tasklist[3] = T4Gat; tasklist[4] = T3Ref; tasklist[5] = T3Gat; tasklist[6] = T2Ref; tasklist[7] = T2Gat; tasklist[8] = T1Ref; tasklist[9] = T1Gat;}
+            profile.level[i] = tasklist;
+        }
+        profSet.profiles.push(profile);
+    }
+
+    /*
      * Tasklist can be modified to configure the training you want to perform.
      * The configurable options window sets how many profession slots you want to use for each profession.
      * The level array below for each professions specifies the tasks you want to learn at each crafting level.
@@ -947,6 +976,11 @@ function _select_Gateway() { // Check for Gateway used to
         }]
     };
 
+    addMassProfile("Jewelcrafting", "Jewelcrafting_Tier1_Gather_Basic_Mass", "Jewelcrafting_Tier1_Refine_Basic_Mass", "Jewelcrafting_Tier1_Gather_Basic", "Jewelcrafting_Tier1_Refine_Basic",
+                                    "Jewelcrafting_Tier2_Gather_Basic_Mass", "Jewelcrafting_Tier2_Refine_Basic_Mass", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier2_Refine_Basic",
+                                    "Jewelcrafting_Tier3_Gather_Basic_Mass", "Jewelcrafting_Tier3_Refine_Basic_Mass", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier3_Refine_Basic",
+                                    "Jewelcrafting_Tier4_Gather_Basic_Mass", "Jewelcrafting_Tier4_Refine_Basic_Mass", "Jewelcrafting_Tier4_Gather_Basic", "Jewelcrafting_Tier4_Refine_Basic");
+
     addProfileToDefined("Jewelcrafting", {
         profileName : "20->25 gather",
         isProfileActive : true,
@@ -1069,6 +1103,11 @@ function _select_Gateway() { // Check for Gateway used to
             }
         }]
     };
+
+    addMassProfile("Mailsmithing", "Med_Armorsmithing_Tier1_Gather_Basic_Mass", "Med_Armorsmithing_Tier1_Refine_Basic_Mass", "Med_Armorsmithing_Tier1_Gather_Basic", "Med_Armorsmithing_Tier1_Refine_Basic",
+                                   "Med_Armorsmithing_Tier2_Gather_Basic_Mass", "Med_Armorsmithing_Tier2_Refine_Basic_Mass", "Med_Armorsmithing_Tier2_Gather_Basic", "Med_Armorsmithing_Tier2_Refine_Basic",
+                                   "Med_Armorsmithing_Tier3_Gather_Basic_Mass", "Med_Armorsmithing_Tier3_Refine_Basic_Mass", "Med_Armorsmithing_Tier3_Gather_Basic", "Med_Armorsmithing_Tier3_Refine_Basic",
+                                   "Crafted_Med_Armorsmithing_T4_Gather_Basic_Mass", "Crafted_Med_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Med_Armorsmithing_T4_Gather_Basic", "Crafted_Med_Armorsmithing_T4_Refine_Basic"); 
     
     addProfileToDefined("Mailsmithing", {
         profileName : "20->25 gather",
@@ -1334,6 +1373,11 @@ function _select_Gateway() { // Check for Gateway used to
         }]
     };
 
+    addMassProfile("Platesmithing", "Hvy_Armorsmithing_Tier1_Gather_Basic_Mass", "Hvy_Armorsmithing_Tier1_Refine_Basic_Mass", "Hvy_Armorsmithing_Tier1_Gather_Basic", "Hvy_Armorsmithing_Tier1_Refine_Basic",
+                                    "Hvy_Armorsmithing_Tier2_Gather_Basic_Mass", "Hvy_Armorsmithing_Tier2_Refine_Basic_Mass", "Hvy_Armorsmithing_Tier2_Gather_Basic", "Hvy_Armorsmithing_Tier2_Refine_Basic",
+                                    "Hvy_Armorsmithing_Tier3_Gather_Basic_Mass", "Hvy_Armorsmithing_Tier3_Refine_Basic_Mass", "Hvy_Armorsmithing_Tier3_Gather_Basic", "Hvy_Armorsmithing_Tier3_Refine_Basic",
+                                    "Crafted_Hvy_Armorsmithing_T4_Gather_Basic_Mass", "Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Hvy_Armorsmithing_T4_Gather_Basic", "Crafted_Hvy_Armorsmithing_T4_Refine_Basic");
+
     addProfileToDefined("Platesmithing", {
         profileName: "20->25 gather",
         isProfileActive: true,
@@ -1414,6 +1458,11 @@ function _select_Gateway() { // Check for Gateway used to
             },
         }  ]
     };
+
+    addMassProfile("Leatherworking", "Leatherworking_Tier1_Gather_Basic_Mass", "Leatherworking_Tier1_Refine_Basic_Mass", "Leatherworking_Tier1_Gather_Basic", "Leatherworking_Tier1_Refine_Basic",
+                                     "Leatherworking_Tier2_Gather_Basic_Mass", "Leatherworking_Tier2_Refine_Basic_Mass", "Leatherworking_Tier2_Gather_Basic", "Leatherworking_Tier2_Refine_Basic",
+                                     "Leatherworking_Tier3_Gather_Basic_Mass", "Leatherworking_Tier3_Refine_Basic_Mass", "Leatherworking_Tier3_Gather_Basic", "Leatherworking_Tier3_Refine_Basic",
+                                     "Leatherworking_Tier4_Gather_Basic_Mass", "Leatherworking_Tier4_Refine_Basic_Mass", "Leatherworking_Tier4_Gather_Basic", "Leatherworking_Tier4_Refine_Basic");
     
     addProfileToDefined("Leatherworking", {
         profileName : "20->25 gather",
@@ -1561,6 +1610,11 @@ function _select_Gateway() { // Check for Gateway used to
         }]
     };
 
+    addMassProfile("Tailoring", "Tailoring_Tier1_Gather_Basic_Mass", "Tailoring_Tier1_Refine_Basic_Mass", "Tailoring_Tier1_Gather_Basic", "Tailoring_Tier1_Refine_Basic",
+                                "Tailoring_Tier2_Gather_Basic_Mass", "Tailoring_Tier2_Refine_Basic_Mass", "Tailoring_Tier2_Gather_Basic", "Tailoring_Tier2_Refine_Basic",
+                                "Tailoring_Tier3_Gather_Basic_Mass", "Tailoring_Tier3_Refine_Basic_Mass", "Tailoring_Tier3_Gather_Basic", "Tailoring_Tier3_Refine_Basic",
+                                "Crafted_Tailoring_T4_Gather_Basic_Mass", "Crafted_Tailoring_T4_Gather_Basic_Mass", "Crafted_Tailoring_T4_Gather_Basic", "Crafted_Tailoring_T4_Gather_Basic");
+
     addProfileToDefined("Tailoring", {
         profileName: "20->25 gather",
         isProfileActive: true,
@@ -1643,6 +1697,11 @@ function _select_Gateway() { // Check for Gateway used to
         }]
     };
 
+    addMassProfile("Artificing", "Artificing_Tier1_Gather_Basic_Mass", "Artificing_Tier1_Refine_Basic_Mass", "Artificing_Tier1_Gather_Basic", "Artificing_Tier1_Refine_Basic",
+                                 "Artificing_Tier2_Gather_Basic_Mass", "Artificing_Tier2_Refine_Basic_Mass", "Artificing_Tier2_Gather_Basic", "Artificing_Tier2_Refine_Basic",
+                                 "Artificing_Tier3_Gather_Basic_Mass", "Artificing_Tier3_Refine_Basic_Mass", "Artificing_Tier3_Gather_Basic", "Artificing_Tier3_Refine_Basic",
+                                 "Artificing_Tier4_Gather_Basic_Mass", "Artificing_Tier4_Refine_Basic_Mass", "Artificing_Tier4_Gather_Basic", "Artificing_Tier4_Refine_Basic");
+
     addProfileToDefined("Artificing", {
         profileName: "Wondrous Sprocket",
         isProfileActive: false,
@@ -1712,6 +1771,11 @@ function _select_Gateway() { // Check for Gateway used to
             },
         }]
     };
+
+    addMassProfile("Weaponsmithing", "Weaponsmithing_Tier1_Gather_Basic_Mass", "Weaponsmithing_Tier1_Refine_Basic_Mass", "Weaponsmithing_Tier1_Gather_Basic", "Weaponsmithing_Tier1_Refine_Basic",
+                                     "Weaponsmithing_Tier2_Gather_Basic_Mass", "Weaponsmithing_Tier2_Refine_Basic_Mass", "Weaponsmithing_Tier2_Gather_Basic", "Weaponsmithing_Tier2_Refine_Basic",
+                                     "Weaponsmithing_Tier3_Gather_Basic_Mass", "Weaponsmithing_Tier3_Refine_Basic_Mass", "Weaponsmithing_Tier3_Gather_Basic", "Weaponsmithing_Tier3_Refine_Basic",
+                                     "Weaponsmithing_Tier4_Gather_Basic_Mass", "Weaponsmithing_Tier4_Refine_Basic_Mass", "Weaponsmithing_Tier4_Gather_Basic", "Weaponsmithing_Tier4_Refine_Basic")
 
     addProfileToDefined("Weaponsmithing", {
         profileName: "Wondrous Sprocket",
