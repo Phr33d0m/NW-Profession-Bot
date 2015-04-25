@@ -3664,8 +3664,6 @@ function _select_Gateway() { // Check for Gateway used to
                     claimZexOffer();
                 }
             }
-
-
         } else {
             console.log("Zen Exchange AD transfer not enabled. Skipping Zex Posting..");
         }
@@ -4112,7 +4110,7 @@ function _select_Gateway() { // Check for Gateway used to
                 // Domino effect: then withdraw as much offers as we can and claim the diamonds
                 window.setTimeout(withdrawZexOffer, delay.SHORT);
             }
-            
+
             WaitForState("button.closeNotification").done(function() {
                 $("button.closeNotification").click();
             });
