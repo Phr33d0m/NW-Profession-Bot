@@ -2452,7 +2452,7 @@ function _select_Gateway() { // Check for Gateway used to
             pane: 'bank',
             tooltip: 'Automatically attempt to post, cancel and withdraw AD via ZEX and consolidate to designated character',
         }, {
-            name: 'leaveadinexchanche',
+            name: 'leaveadinexchange',
             title: 'Leave AD in exchange',
             def: false,
             type: 'checkbox',
@@ -3660,7 +3660,7 @@ function _select_Gateway() { // Check for Gateway used to
             } else {
                 var exchangeDiamonds = parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
                 console.log("Banker - " + exchangeDiamonds + " AD to withdraw");
-                if ((exchangeDiamonds > 0) && (settings["leaveadinexchanche"] == false)) {
+                if ((exchangeDiamonds > 0) && (settings["leaveadinexchange"] == false)) {
                     claimZexOffer();
                 }
             }
@@ -4108,7 +4108,7 @@ function _select_Gateway() { // Check for Gateway used to
 
             // Domino effect: first check if we're out of space for new offers
             if ((unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length == 5) ||
-                ((settings["bankchar"] == unsafeWindow.client.dataModel.model.ent.main.name) && (settings["leaveadinexchanche"] == false))) {
+                ((settings["bankchar"] == unsafeWindow.client.dataModel.model.ent.main.name) && (settings["leaveadinexchange"] == false))) {
                 // Domino effect: then withdraw as much offers as we can and claim the diamonds
                 window.setTimeout(withdrawZexOffer, delay.SHORT);
             }
