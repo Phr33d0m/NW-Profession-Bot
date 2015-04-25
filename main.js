@@ -3659,7 +3659,6 @@ function _select_Gateway() { // Check for Gateway used to
                 }
             } else {
                 var exchangeDiamonds = parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
-                console.log("Banker - " + exchangeDiamonds + " AD to withdraw");
                 if ((exchangeDiamonds > 0) && (settings["leaveadinexchange"] == false)) {
                     claimZexOffer();
                 }
