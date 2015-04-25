@@ -4094,7 +4094,7 @@ function _select_Gateway() { // Check for Gateway used to
             }
 
             // Domino effect: first check if we're out of space for new offers
-            if (unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length == 5) {
+            if ((unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length == 5) || (settings["bankchar"] == unsafeWindow.client.dataModel.model.ent.main.name)) {
                 // Domino effect: then withdraw as much offers as we can and claim the diamonds
                 window.setTimeout(withdrawZexOffer, delay.SHORT);
             }
