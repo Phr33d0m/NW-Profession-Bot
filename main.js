@@ -3807,6 +3807,13 @@ function _select_Gateway() { // Check for Gateway used to
             }
         }
 
+        if (settings["autoexchange"]) {
+            // Withdraw AD from the ZAX into the banker character
+            if (settings["bankchar"] == settings["nw_charname" + charcurrent]) {
+                window.setTimeout(withdrawZexOffer, delay.SHORT);
+            }
+        }
+
         // Count AD & Gold
         var curdiamonds = zexdiamonds;
         var curgold = 0;
@@ -4094,7 +4101,7 @@ function _select_Gateway() { // Check for Gateway used to
             }
 
             // Domino effect: first check if we're out of space for new offers
-            if ((unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length == 5) || (settings["bankchar"] == unsafeWindow.client.dataModel.model.ent.main.name)) {
+            if (unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length == 5) {
                 // Domino effect: then withdraw as much offers as we can and claim the diamonds
                 window.setTimeout(withdrawZexOffer, delay.SHORT);
             }
