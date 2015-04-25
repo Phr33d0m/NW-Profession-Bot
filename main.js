@@ -2451,8 +2451,14 @@ function _select_Gateway() { // Check for Gateway used to
             type: 'checkbox',
             pane: 'bank',
             tooltip: 'Automatically attempt to post, cancel and withdraw AD via ZEX and consolidate to designated character',
-            border: true
         }, {
+            name: 'leaveadinexchanche',
+            title: 'Leave AD in exchange',
+            def: false,
+            type: 'checkbox',
+            pane: 'bank',
+            tooltip: 'Do not use banker - leave AD in exchange'
+         }, {
             name: 'bankchar',
             title: 'Character Name of Banker',
             def: '',
@@ -3651,7 +3657,14 @@ function _select_Gateway() { // Check for Gateway used to
                 } else {
                     console.log("Character does not have minimum AD balance to do funds transfer. Skipping Zex Posting..");
                 }
+            } else {
+                var exchangeDiamonds = parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
+                console.log("Banker - " + exchangeDiamonds + " AD to withdraw");
+                if ((exchangeDiamonds > 0) && (settings["leaveadinexchanche"] == false)) {
+                    claimZexOffer();
+                }
             }
+
 
         } else {
             console.log("Zen Exchange AD transfer not enabled. Skipping Zex Posting..");
@@ -4094,11 +4107,12 @@ function _select_Gateway() { // Check for Gateway used to
             }
 
             // Domino effect: first check if we're out of space for new offers
-            if (unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length == 5) {
+            if ((unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length == 5) ||
+                ((settings["bankchar"] == unsafeWindow.client.dataModel.model.ent.main.name) && (settings["leaveadinexchanche"] == false))) {
                 // Domino effect: then withdraw as much offers as we can and claim the diamonds
                 window.setTimeout(withdrawZexOffer, delay.SHORT);
             }
-
+            
             WaitForState("button.closeNotification").done(function() {
                 $("button.closeNotification").click();
             });
