@@ -3807,6 +3807,13 @@ function _select_Gateway() { // Check for Gateway used to
             }
         }
 
+        if (settings["autoexchange"]) {
+            // Withdraw AD from the ZAX into the banker character
+            if (settings["bankchar"] == settings["nw_charname" + charcurrent]) {
+                window.setTimeout(withdrawZexOffer, delay.SHORT);
+            }
+        }
+
         // Count AD & Gold
         var curdiamonds = zexdiamonds;
         var curgold = 0;
