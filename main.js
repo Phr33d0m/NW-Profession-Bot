@@ -29,7 +29,7 @@ Developers & Contributors:
 
  */
 
-// @version 2.2
+// @version 3.0
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -40,7 +40,8 @@ Developers & Contributors:
 // ==/UserScript==
 
 /* RELEASE NOTES
-...
+3.0
+- Fix the Domino Effect, now correctly withdraws to banker
 - Add Black Ice lvl 4 & 5 professions
 - Added gathering profiles for 21-25 levels
 - Added active slot column to the profession levels tab
@@ -3804,6 +3805,13 @@ function _select_Gateway() { // Check for Gateway used to
                 chardate = null;
                 console.log("No date found for " + settings["nw_charname" + cc] + ", switching now.");
                 break;
+            }
+        }
+
+        if (settings["autoexchange"]) {
+            // Withdraw AD from the ZAX into the banker character
+            if (settings["bankchar"] == settings["nw_charname" + charcurrent]) {
+                window.setTimeout(withdrawZexOffer, delay.SHORT);
             }
         }
 
