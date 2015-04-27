@@ -1795,13 +1795,13 @@ function _select_Gateway() { // Check for Gateway used to
     addProfileToDefined("Alchemy", {
         profileName : "Protection Superior",
         level: {
-            25:["Alchemy_Tier4_Experimentation_Rank25","Alchemy_Tier4_Protection_Potion_Superior","Alchemy_Tier3_Protection_Potion_Major", "Alchemy_Tier2_Aquaregia", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
+            25:["Alchemy_Tier4_Experimentation_Rank25","Alchemy_Tier4_Protection_Potion_Superior", "Alchemy_Tier4_Create_Elemental_Aggregate", "Alchemy_Tier3_Protection_Potion_Major", "Alchemy_Tier2_Aquaregia", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
         }
     });
     addProfileToDefined("Alchemy", {
         profileName : "Potency Superior",
         level: {
-            25:["Alchemy_Tier4_Experimentation_Rank25","Alchemy_Tier4_Potency_Potion_Superior", "Alchemy_Tier3_Potency_Potion_Major", "Alchemy_Tier2_Aquaregia", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
+            25:["Alchemy_Tier4_Experimentation_Rank25","Alchemy_Tier4_Potency_Potion_Superior", "Alchemy_Tier4_Create_Elemental_Aggregate", "Alchemy_Tier3_Potency_Potion_Major", "Alchemy_Tier2_Aquaregia", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
         }
     }); 
 
