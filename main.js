@@ -3133,7 +3133,7 @@ function _select_Gateway() { // Check for Gateway used to
             return false;
         }
 
-        var profession = tasklist.filter(function(entry) { console.log(entry); return entry.taskName == profname; });
+        var profession = tasklist.filter(function(entry) { return entry.taskName == profname; });
         var profile = profession[0].profiles.filter(function(entry) { return entry.profileName == profileName; });
         var massTaskAllowed = ((profile[0].useMassTask !== undefined) && (profile[0].useMassTask === true));
 
