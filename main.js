@@ -1780,15 +1780,15 @@ function _select_Gateway() { // Check for Gateway used to
                 25 : [ "Alchemy_Tier4_Experimentation_Rank25", "Alchemy_Tier4_Create_Elemental_Unified", "Alchemy_Tier3_Protection_Potion_Major", "Alchemy_Tier3_Potency_Potion_Major", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],           
             },
         }, {
-            profileName : "mass gathering",
+            profileName : "mass refining",
             isProfileActive : true,
             recursiveList : true,
             level : {
                 0 : ["Alchemy_Tier0_Intro_1"],
-                1 : ["Alchemy_Tier1_Gather_Components_Mass"],
-                7 : ["Alchemy_Tier2_Gather_Components_Mass"],
-                14 : ["Alchemy_Tier3_Gather_Components_Mass"],
-                21 : ["Alchemy_Tier4_Gather_Components_Mass"],
+                1 : ["Alchemy_Tier1_Refine_Basic_Mass"],
+                7 : ["Alchemy_Tier2_Refine_Basic_Mass"],
+                14 : ["Alchemy_Tier3_Refine_Basic_Mass"],
+                21 : ["Alchemy_Tier4_Refine_Basic_Mass"],
             },
         }]
     };
@@ -1879,10 +1879,12 @@ function _select_Gateway() { // Check for Gateway used to
 
     // expand recursive tasklist
     for (var professionIdx in definedTask) {
+        //console.log(definedTask[professionIdx].taskName); 
         for (var profileIdx in definedTask[professionIdx].profiles) {
+            //console.log(definedTask[professionIdx].profiles[profileIdx]);
             var profile = definedTask[professionIdx].profiles[profileIdx];
             if ((profile.recursiveList !== undefined) && (profile.recursiveList === true)) {
-                // console.log("list to expand: " + profile.profileName);
+                console.log("list to expand: " + profile.profileName);
                 for (var i=2; i<=25; i++) {
                     if (profile.level[i] === undefined) {
                         profile.level[i] = profile.level[i-1];
@@ -1890,12 +1892,29 @@ function _select_Gateway() { // Check for Gateway used to
                         profile.level[i] = profile.level[i].concat(profile.level[i-1]);
                     }
                 }
+                //console.log(profile);
                 definedTask[professionIdx].profiles[profileIdx] = profile;
             } else {
                // console.log("old type list: " + profile.profileName);
             }
         }
     }
+
+/*        var profSet = definedTask[prof];
+        if (!profSet) {
+            return;
+        }
+        var bp = {};
+        for (var entry in profSet.profiles) {
+            if (profSet.profiles[entry] && profSet.profiles[entry].profileName == baseProfile) {
+                bp = profSet.profiles[entry];
+                break;
+            }
+        }
+        var cloneBase = jQuery.extend(true, {}, bp);
+        jQuery.extend(true, cloneBase, newProfile);
+        profSet.profiles.push(cloneBase);
+*/
 
     // Profession priority list by order
     var tasklist = [
@@ -3153,10 +3172,12 @@ function _select_Gateway() { // Check for Gateway used to
                     return false;
                 }
             }
-
-            // Skip mass production tasks
-            if (entry.def.displayname.match(/^(Batch|Mass|Deep|Intensive) /)) {
-                return false;
+            
+            // Skip mass production tasks (don't skip if "mass ...." profile selected)
+            if (profileName.indexOf("mass ") != 0) {
+                if (entry.def.displayname.match(/^(Batch|Mass|Deep|Intensive) /)) {
+                    return false;
+                }
             }
 
             // Skip trading tasks
@@ -3175,6 +3196,16 @@ function _select_Gateway() { // Check for Gateway used to
         if (!taskList.length) {
             console.log("No ingredient tasks found for:", taskname, searchItem);
             return false;
+        }
+        
+        // for "mass ...." profile name select Mass task
+        if (profileName.indexOf("mass ") == 0) {
+            for (var i=0; i<taskList.length; i++) {
+                if (taskList[i].def.name.indexOf("_Mass") != -1) {
+                    taskList = taskList.splice(i, 1);
+                    break;
+                }
+            }
         }
 
         // Use more efficient Empowered task for Aqua if available.
