@@ -1779,8 +1779,20 @@ function _select_Gateway() { // Check for Gateway used to
                 24 : ["Alchemy_Tier4_Experiment_Rank25", "Alchemy_Tier4_Experimentation_Rank24", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
                 25 : [ "Alchemy_Tier4_Experimentation_Rank25", "Alchemy_Tier4_Create_Elemental_Unified", "Alchemy_Tier3_Protection_Potion_Major", "Alchemy_Tier3_Potency_Potion_Major", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],           
             },
+        }, {
+            profileName : "mass gathering",
+            isProfileActive : true,
+            recursiveList : true,
+            level : {
+                0 : ["Alchemy_Tier0_Intro_1"],
+                1 : ["Alchemy_Tier1_Gather_Components_Mass"],
+                7 : ["Alchemy_Tier2_Gather_Components_Mass"],
+                14 : ["Alchemy_Tier3_Gather_Components_Mass"],
+                21 : ["Alchemy_Tier4_Gather_Components_Mass"],
+            },
         }]
     };
+    
     addProfileToDefined("Alchemy", {
         profileName : "Aqua Regia",
         level: {
@@ -1865,6 +1877,25 @@ function _select_Gateway() { // Check for Gateway used to
         },
     });
 
+    // expand recursive tasklist
+    for (var professionIdx in definedTask) {
+        for (var profileIdx in definedTask[professionIdx].profiles) {
+            var profile = definedTask[professionIdx].profiles[profileIdx];
+            if ((profile.recursiveList !== undefined) && (profile.recursiveList === true)) {
+                // console.log("list to expand: " + profile.profileName);
+                for (var i=2; i<=25; i++) {
+                    if (profile.level[i] === undefined) {
+                        profile.level[i] = profile.level[i-1];
+                    } else {
+                        profile.level[i] = profile.level[i].concat(profile.level[i-1]);
+                    }
+                }
+                definedTask[professionIdx].profiles[profileIdx] = profile;
+            } else {
+               // console.log("old type list: " + profile.profileName);
+            }
+        }
+    }
 
     // Profession priority list by order
     var tasklist = [
