@@ -652,6 +652,7 @@ function _select_Gateway() { // Check for Gateway used to
     var charcurrent = 0; // current character counter
     var charlast = charcurrent;
     var chartimers = {};
+    var maxLevel = 25;
     var delay = {
         SHORT: 1000,
         MEDIUM: 5000,
@@ -677,10 +678,9 @@ function _select_Gateway() { // Check for Gateway used to
       - name as string of prifile to use as extension. 
       Will extend default definition- > can be short
      */
-
 function addProfile(profession, profile, base)
     {    
-        var maxLevel = 25;
+        maxLevel = maxLevel || 25;
         definedTask = definedTask || {};
         //general prototype for profession
         var professionBase = {
@@ -723,6 +723,7 @@ function addProfile(profession, profile, base)
           if (existing){newProfile = jQuery.extend(true, newProfile, existing.length ? existing[0] : existing);}
       }
 
+      if (!profile.hasOwnProperty('recursiveList')){profile.recursiveList = true;}
       newProfile = jQuery.extend(true, newProfile, profile);
       //setting levels
       for(var i = 0; i<= maxLevel; i++){
