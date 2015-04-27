@@ -945,6 +945,18 @@ function _select_Gateway() { // Check for Gateway used to
                 //basic resources  for lvl 16 and 15 items. 
                 25 : ["Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
             },
+        }, {
+            profileName : "mass refining",
+            isProfileActive : true,
+            recursiveList : true,
+            useMassTask : true,
+            level : {
+                0 : ["Jewelcrafting_Tier0_Intro"],
+                1 : ["Jewelcrafting_Tier1_Refine_Basic_Mass", "Jewelcrafting_Tier1_Gather_Basic"],
+                7 : ["Jewelcrafting_Tier2_Refine_Basic_Mass"],
+                14 : ["Jewelcrafting_Tier3_Refine_Basic_Mass"],
+                21 : ["Jewelcrafting_Tier4_Refine_Basic_Mass"],
+            },
         }]
     };
 
@@ -1066,8 +1078,19 @@ function _select_Gateway() { // Check for Gateway used to
                 23 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
                 24 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
                 25 : ["Crafted_Med_Armorsmithing_T4_Refine_Basic", "Crafted_Med_Armorsmithing_T4_Gather_Basic"],
-                
             }
+        }, {
+            profileName : "mass refining",
+            isProfileActive : true,
+            recursiveList : true,
+            useMassTask : true,
+            level : {
+                0 : ["Med_Armorsmithing_Tier0_Intro"],
+                1 : ["Med_Armorsmithing_Tier1_Refine_Basic_Mass", "Med_Armorsmithing_Tier1_Gather_Basic"],
+                7 : ["Med_Armorsmithing_Tier2_Refine_Basic_Mass"],
+                14 : ["Med_Armorsmithing_Tier3_Refine_Basic_Mass"],
+                21 : ["Crafted_Med_Armorsmithing_T4_Refine_Basic_Mass"],
+            },
         }]
     };
     
@@ -1332,6 +1355,18 @@ function _select_Gateway() { // Check for Gateway used to
                 24: ["Hvy_Armorsmithing_Tier3_Plate_Pants"],
                 25: ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Hvy_Armorsmithing_T4_Gather_Basic_Mass"],
             },
+        }, {
+            profileName : "mass refining",
+            isProfileActive : true,
+            recursiveList : true,
+            useMassTask : true,
+            level : {
+                0 : ["Hvy_Armorsmithing_Tier0_Intro"],
+                1 : ["Hvy_Armorsmithing_Tier1_Refine_Basic_Mass", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+                7 : ["Hvy_Armorsmithing_Tier2_Refine_Basic_Mass"],
+                14 : ["Hvy_Armorsmithing_Tier3_Refine_Basic_Mass"],
+                21 : ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass"],
+            },
         }]
     };
 
@@ -1413,7 +1448,19 @@ function _select_Gateway() { // Check for Gateway used to
                 24 : ["Leatherworking_Tier3_Leather_Pants"],
                 25 : ["Leatherworking_Tier4_Refine_Basic", "Leatherworking_Tier4_Gather_Basic"],
             },
-        }  ]
+        }, {
+            profileName : "mass refining",
+            isProfileActive : true,
+            recursiveList : true,
+            useMassTask : true,
+            level : {
+                0 : ["Leatherworking_Tier0_Intro_1"],
+                1 : ["Leatherworking_Tier1_Refine_Basic_Mass", "Leatherworking_Tier1_Gather_Basic"],
+                7 : ["Leatherworking_Tier2_Refine_Basic_Mass"],
+                14 : ["Leatherworking_Tier3_Refine_Basic_Mass"],
+                21 : ["Leatherworking_Tier4_Refine_Basic_Mass"],
+            },
+        }]
     };
     
     addProfileToDefined("Leatherworking", {
@@ -1559,6 +1606,18 @@ function _select_Gateway() { // Check for Gateway used to
                 24: ["Tailoring_Tier3_Cloth_Pants"],
                 25: ["Crafted_Tailoring_T4_Refine_Basic", "Crafted_Tailoring_T4_Gather_Basic"],
             },
+        }, {
+            profileName : "mass refining",
+            isProfileActive : true,
+            recursiveList : true,
+            useMassTask : true,
+            level : {
+                0 : ["Tailoring_Tier0_Intro"],
+                1 : ["Tailoring_Tier1_Refine_Basic_Mass", "Tailoring_Tier1_Gather_Basic"],
+                7 : ["Tailoring_Tier2_Refine_Basic_Mass"],
+                14 : ["Tailoring_Tier3_Refine_Basic_Mass"],
+                21 : ["Crafted_Tailoring_T4_Refine_Basic_Mass"],
+            },
         }]
     };
 
@@ -1641,6 +1700,18 @@ function _select_Gateway() { // Check for Gateway used to
                 24: ["Artificing_Tier4_Gather_Basic"],
                 25: ["Artificing_Tier4_Refine_Basic", "Artificing_Tier4_Gather_Basic"],
             },
+        }, {
+            profileName : "mass refining",
+            isProfileActive : true,
+            recursiveList : true,
+            useMassTask : true,
+            level : {
+                0 : ["Artificing_Tier0_Intro_1"],
+                1 : ["Artificing_Tier1_Refine_Basic_Mass", "Artificing_Tier1_Gather_Basic"],
+                7 : ["Artificing_Tier2_Refine_Basic_Mass"],
+                14 : ["Artificing_Tier3_Refine_Basic_Mass"],
+                21 : ["Artificing_Tier4_Refine_Basic_Mass"],
+            },
         }]
     };
 
@@ -1710,6 +1781,18 @@ function _select_Gateway() { // Check for Gateway used to
                 23: ["Weaponsmithing_Tier4_Gather_Basic"],
                 24: ["Weaponsmithing_Tier4_Gather_Basic"],
                 25: ["Weaponsmithing_Tier4_Refine_Basic", "Weaponsmithing_Tier4_Gather_Basic"],
+            },
+        }, {
+            profileName : "mass refining",
+            isProfileActive : true,
+            recursiveList : true,
+            useMassTask : true,
+            level : {
+                0 : ["Weaponsmithing_Tier0_Intro"],
+                1 : ["Weaponsmithing_Tier1_Refine_Basic_Mass", "Weaponsmithing_Tier1_Gather_Basic"],
+                7 : ["Weaponsmithing_Tier2_Refine_Basic_Mass"],
+                14 : ["Weaponsmithing_Tier3_Refine_Basic_Mass"],
+                21 : ["Weaponsmithing_Tier4_Refine_Basic_Mass"],
             },
         }]
     };
@@ -1786,7 +1869,7 @@ function _select_Gateway() { // Check for Gateway used to
             useMassTask : true,
             level : {
                 0 : ["Alchemy_Tier0_Intro_1"],
-                1 : ["Alchemy_Tier1_Refine_Basic_Mass"],
+                1 : ["Alchemy_Tier1_Refine_Basic_Mass", "Alchemy_Tier1_Refine_Basic"],
                 7 : ["Alchemy_Tier2_Refine_Basic_Mass"],
                 14 : ["Alchemy_Tier3_Refine_Basic_Mass"],
                 21 : ["Alchemy_Tier4_Refine_Basic_Mass"],
