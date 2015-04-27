@@ -1885,6 +1885,9 @@ function _select_Gateway() { // Check for Gateway used to
             var profile = definedTask[professionIdx].profiles[profileIdx];
             if ((profile.recursiveList !== undefined) && (profile.recursiveList === true)) {
                 console.log("list to expand: " + profile.profileName);
+                if (profile.level[1] === undefined) {
+                    profile.level[1] = [];
+                }
                 for (var i=2; i<=25; i++) {
                     if (profile.level[i] === undefined) {
                         profile.level[i] = profile.level[i-1];
