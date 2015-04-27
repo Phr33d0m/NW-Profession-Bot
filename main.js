@@ -1783,6 +1783,7 @@ function _select_Gateway() { // Check for Gateway used to
             profileName : "mass refining",
             isProfileActive : true,
             recursiveList : true,
+            useMassTask : true,
             level : {
                 0 : ["Alchemy_Tier0_Intro_1"],
                 1 : ["Alchemy_Tier1_Refine_Basic_Mass"],
@@ -3132,6 +3133,10 @@ function _select_Gateway() { // Check for Gateway used to
             return false;
         }
 
+        var profession = tasklist.filter(function(entry) { console.log(entry); return entry.taskName == profname; });
+        var profile = profession[0].profiles.filter(function(entry) { return entry.profileName == profileName; });
+        var massTaskAllowed = ((profile[0].useMassTask !== undefined) && (profile[0].useMassTask === true));
+
         // Generate list of available tasks to search ingredients/assets from
         console.log("Searching ingredient tasks for:", profname);
         var taskList = unsafeWindow.client.dataModel.model.craftinglist['craft_' + profname].entries.filter(function(entry) {
@@ -3161,7 +3166,7 @@ function _select_Gateway() { // Check for Gateway used to
             }
             
             // Skip mass production tasks (don't skip if "mass ...." profile selected)
-            if (profileName.indexOf("mass ") != 0) {
+            if (! massTaskAllowed) {
                 if (entry.def.displayname.match(/^(Batch|Mass|Deep|Intensive) /)) {
                     return false;
                 }
@@ -3186,9 +3191,9 @@ function _select_Gateway() { // Check for Gateway used to
         }
         
         // for "mass ...." profile name select Mass task
-        if (profileName.indexOf("mass ") == 0) {
+        if (massTaskAllowed) {
             for (var i=0; i<taskList.length; i++) {
-                if (taskList[i].def.name.indexOf("_Mass") != -1) {
+                if (taskList[i].def.displayname.match(/^(Batch|Mass|Deep|Intensive) /)) {
                     taskList = taskList.splice(i, 1);
                     break;
                 }
