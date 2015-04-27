@@ -662,82 +662,79 @@ function _select_Gateway() { // Check for Gateway used to
     };
 
 
-    /*
-     adds new profession and new profile to task list.
-     
-     profession 
-       - name as string of profession to add.  Will create new one if not found
-       - object. will extend or create new profession 
-       Will extend default definition- > can be short
-       
-     profile 
-       - new profile to add. 
-       Will extend default definition- > can be short
-       
-    base 
-      - name as string of prifile to use as extension. 
-      Will extend default definition- > can be short
-
-    noOverride 
-      - if true will only override exact level and won't override following. Use for OLD behavior
-      otherwise recursive override will be used from profiles levels.
-     */
-    function addProfile(profession, profile, base, noOverride)
-    {    
-        var maxLevel = 25;
-        definedTask = definedTask || {};
-        //general prototype for profession
-        var professionBase = {
-            taskListName: profession, // Friendly name used at the UI
-            taskName: profession, // String used at the gateway
-            taskDefaultPriority: 2, // Priority to allocate free task slots: 0 - High, 1 - Medium, 2 - Low
-            taskActive: true,
-            taskDefaultSlotNum: 0,
-            taskDescription: "",
-            profiles: []  
-        };
-        
-        //profile prototype
-        var profileBase = {
-            profileName : 'Add profile name',
-            isProfileActive : true,
-            level : {}
-        };
-        
-      //creating new profession or using existing one 
-    var professionSet =  (typeof profession === 'object') 
-                            ? jQuery.extend(true,professionBase, profession) 
-                            : definedTask[profession] || professionBase;
-      if (!professionSet) { return;}
-        
-      if (!definedTask[profession]){
-        definedTask[profession] = professionSet;
-      }  
-      
-      if (!profile) {return;}
-        
-      //getting base one to extend
-     var newProfile = jQuery.extend(true, {}, profileBase);
-      if (base && typeof base === 'string')  { 
-          var existing = professionSet.profiles.filter(function(e){return e.profileName === base;});
-          if (existing){newProfile = jQuery.extend(true, newProfile, existing.length ? existing[0] : existing);}
+     /*
+ adds new profession and new profile to task list.
+ 
+ profession 
+   - name as string of profession to add.  Will create new one if not found
+   - object. will extend or create new profession 
+   Will extend default definition- > can be short
+   
+ profile 
+   - new profile to add.  Set recursiveList to false not use resursive list generation
+   Will extend default definition- > can be short
+   
+base 
+  - name as string of prifile to use as extension. 
+  Will extend default definition- > can be short
+ */
+function addProfile(profession, profile, base)
+{    
+    var maxLevel = 25;
+    definedTask = definedTask || {};
+    //general prototype for profession
+    var professionBase = {
+        taskListName: profession, // Friendly name used at the UI
+        taskName: profession, // String used at the gateway
+        taskDefaultPriority: 2, // Priority to allocate free task slots: 0 - High, 1 - Medium, 2 - Low
+        taskActive: true,
+        taskDefaultSlotNum: 0,
+        taskDescription: "",
+        profiles: []  
+    };
+    
+    //profile prototype
+    var profileBase = {
+        profileName : 'Add profile name',
+        isProfileActive : true,
+        recursiveList : true,
+        level : {}
+    };
+    
+  //creating new profession or using existing one 
+var professionSet =  (typeof profession === 'object') 
+                        ? jQuery.extend(true,professionBase, profession) 
+                        : definedTask[profession] || professionBase;
+  if (!professionSet) { return;}
+    
+  if (!definedTask[profession]){
+    definedTask[profession] = professionSet;
+  }  
+  
+  if (!profile) {return;}
+    
+  //getting base one to extend
+ var newProfile = jQuery.extend(true, {}, profileBase);
+  if (base && typeof base === 'string')  { 
+      var existing = professionSet.profiles.filter(function(e){return e.profileName === base;});
+      if (existing){newProfile = jQuery.extend(true, newProfile, existing.length ? existing[0] : existing);}
+  }
+  newProfile = jQuery.extend(true, newProfile, profile);
+  //setting levels
+  for(var i = 0; i<= maxLevel; i++){
+      //override
+      if (profile.level && profile.level[i]){
+          newProfile.level[i] = profile.level[i];
+          continue;
       }
-      newProfile = jQuery.extend(true, newProfile, profile);
-      //setting levels
-      for(var i = 0; i<= maxLevel; i++){
-          //override
-          if (profile.level && profile.level[i]){
-              newProfile.level[i] = profile.level[i];
-              continue;
-          }
-          //iterate and set
-          if ((!noOverride || noOverride && !newProfile.level[i]) && i>0){
-              newProfile.level[i] = newProfile.level[i-1];
-          }
+      //iterate and set
+      if (newProfile.recursiveList && i>0){
+          newProfile.level[i] = newProfile.level[i-1];
       }
-        
-      professionSet.profiles.push(newProfile);
-    }
+  }
+    
+  professionSet.profiles.push(newProfile);
+}
 
     /*
      * Helper function to define extended profiles on top of existing ones. Extends
