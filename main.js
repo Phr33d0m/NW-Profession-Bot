@@ -1900,22 +1900,6 @@ function _select_Gateway() { // Check for Gateway used to
         }
     }
 
-/*        var profSet = definedTask[prof];
-        if (!profSet) {
-            return;
-        }
-        var bp = {};
-        for (var entry in profSet.profiles) {
-            if (profSet.profiles[entry] && profSet.profiles[entry].profileName == baseProfile) {
-                bp = profSet.profiles[entry];
-                break;
-            }
-        }
-        var cloneBase = jQuery.extend(true, {}, bp);
-        jQuery.extend(true, cloneBase, newProfile);
-        profSet.profiles.push(cloneBase);
-*/
-
     // Profession priority list by order
     var tasklist = [
         definedTask["Leadership"],
