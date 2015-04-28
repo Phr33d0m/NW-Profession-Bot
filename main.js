@@ -652,6 +652,7 @@ function _select_Gateway() { // Check for Gateway used to
     var charcurrent = 0; // current character counter
     var charlast = charcurrent;
     var chartimers = {};
+    var maxLevel = 25;
     var delay = {
         SHORT: 1000,
         MEDIUM: 5000,
@@ -662,29 +663,84 @@ function _select_Gateway() { // Check for Gateway used to
     };
 
     /*
-     * Helper function to define extended profiles on top of existing ones. Extends
-     * prof - profession name
-     * newProfile - new profile definition.
-     * baseProfile - name of base profile to extend. Default is "default" or "XP" in case of Leadership
+     adds new profession and new profile to task list.
+     
+     profession 
+       - name as string of profession to add.  Will create new one if not found
+       - object. will extend or create new profession 
+       Will extend default definition- > can be short
+       
+     profile 
+       - new profile to add.  Set recursiveList to false not use resursive list generation
+       Will extend default definition- > can be short
+       
+    base 
+      - name as string of prifile to use as extension. 
+      Will extend default definition- > can be short
      */
+function addProfile(profession, profile, base)
+    {    
+        maxLevel = maxLevel || 25;
+        definedTask = definedTask || {};
+        //general prototype for profession
+        var professionBase = {
+            taskListName: profession, // Friendly name used at the UI
+            taskName: profession, // String used at the gateway
+            taskDefaultPriority: 2, // Priority to allocate free task slots: 0 - High, 1 - Medium, 2 - Low
+            taskActive: true,
+            taskDefaultSlotNum: 0,
+            taskDescription: "",
+            profiles: []  
+        };
+        
+        //profile prototype
+        var profileBase = {
+            profileName : 'Add profile name',
+            isProfileActive : true,
+            recursiveList : true,
+            level : {}
+        };
+        
+      //creating new profession or using existing one 
+    var professionSet =  (typeof profession === 'object') 
+                            ? jQuery.extend(true,professionBase, profession) 
+                            : definedTask[profession] || professionBase;
+      if (!professionSet) { return;}
+        
+      if (!definedTask[profession]){
+        definedTask[profession] = professionSet;
+      }  
+      
+      if (!profile) {return;}
+        
+      //getting base one to extend
+     var newProfile = jQuery.extend(true, {}, profileBase);
+     
+     if (!base) { base = (professionSet.taskListName === 'Leadership' ? 'XP' : 'default');}
 
-    function addProfileToDefined(prof, newProfile, baseProfile) {
-        baseProfile = baseProfile || (prof === "Leadership" ? "XP" : "default");
-        var profSet = definedTask[prof];
-        if (!profSet) {
-            return;
-        }
-        var bp = {};
-        for (var entry in profSet.profiles) {
-            if (profSet.profiles[entry] && profSet.profiles[entry].profileName == baseProfile) {
-                bp = profSet.profiles[entry];
-                break;
-            }
-        }
-        var cloneBase = jQuery.extend(true, {}, bp);
-        jQuery.extend(true, cloneBase, newProfile);
-        profSet.profiles.push(cloneBase);
+      if (base && typeof base === 'string')  { 
+          var existing = professionSet.profiles.filter(function(e){return e.profileName === base;});
+          if (existing){newProfile = jQuery.extend(true, newProfile, existing.length ? existing[0] : existing);}
+      }
+
+      if (!profile.hasOwnProperty('recursiveList')){profile.recursiveList = true;}
+      newProfile = jQuery.extend(true, newProfile, profile);
+      //setting levels
+      for(var i = 0; i<= maxLevel; i++){
+          //override
+          if (profile.level && profile.level[i]){
+              newProfile.level[i] = profile.level[i];
+              continue;
+          }
+          //iterate and set
+          if (newProfile.recursiveList && i>0){
+              newProfile.level[i] = newProfile.level[i-1];
+          }
+      }
+        
+      professionSet.profiles.push(newProfile);
     }
+
 
     /*
      * Tasklist can be modified to configure the training you want to perform.
@@ -791,7 +847,7 @@ function _select_Gateway() { // Check for Gateway used to
         }]
     };
 
-    addProfileToDefined("Leadership", {
+    addProfile("Leadership", {
         profileName: "Resource/AD",
         level: {
             // DL
@@ -948,33 +1004,21 @@ function _select_Gateway() { // Check for Gateway used to
         }]
     };
 
-    addProfileToDefined("Jewelcrafting", {
+    addProfile("Jewelcrafting", {
         profileName : "20->25 gather",
         isProfileActive : true,
         level : {
                 21 : ["Jewelcrafting_Tier4_Refine_Basic_Mass", "Jewelcrafting_Tier4_Gather_Basic"],
-                22 : ["Jewelcrafting_Tier4_Refine_Basic_Mass", "Jewelcrafting_Tier4_Gather_Basic"],
-                23 : ["Jewelcrafting_Tier4_Refine_Basic_Mass", "Jewelcrafting_Tier4_Gather_Basic"],
-                24 : ["Jewelcrafting_Tier4_Refine_Basic_Mass", "Jewelcrafting_Tier4_Gather_Basic"],
-                25 : ["Jewelcrafting_Tier4_Refine_Basic_Mass", "Jewelcrafting_Tier4_Gather_Basic"],
         },
     });    
 
 
-    addProfileToDefined("Jewelcrafting", {
+    addProfile("Jewelcrafting", {
         profileName : "Craft Purple Neck",
         isProfileActive : true,
         level : {
             // we care only about neck items that we can start pile up at lvl 16
             16 : ["Jewelcrafting_Tier3_Neck_Offense_3",  "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-            17 : ["Jewelcrafting_Tier3_Neck_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-            18 : ["Jewelcrafting_Tier3_Neck_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-            19 : ["Jewelcrafting_Tier3_Neck_Offense_3",  "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-            20 : ["Jewelcrafting_Tier3_Neck_Offense_3",  "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-            21 : ["Jewelcrafting_Tier3_Neck_Offense_3",  "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-            22 : ["Jewelcrafting_Tier3_Neck_Offense_3",  "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-            23 : ["Jewelcrafting_Tier3_Neck_Offense_3",  "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-            24 : ["Jewelcrafting_Tier3_Neck_Offense_3",  "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
             25 : ["Jewelcrafting_Tier4_Neck_Offense_4_Purple", //Exquisite Adamant Necklace of Piercing
                   "Jewelcrafting_Tier4_Neck_Misc_4_Purple", // Exquisite Adamant Necklace of Recovery 
                   "Jewelcrafting_Tier4_Neck_Defense_4_Purple",//Exquisite Adamant Necklace of Regeneration
@@ -986,21 +1030,12 @@ function _select_Gateway() { // Check for Gateway used to
         },
     });
     
-    addProfileToDefined("Jewelcrafting", {
+    addProfile("Jewelcrafting", {
         profileName : "Craft Purple Rings",
         isProfileActive : true,
         level : {
             // we care only about neck items that we can start pile up at lvl 15
             15 : ["Jewelcrafting_Tier3_Ring_Offense_3",  "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-            16 : ["Jewelcrafting_Tier3_Ring_Offense_3",  "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-            17 : ["Jewelcrafting_Tier3_Ring_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-            18 : ["Jewelcrafting_Tier3_Ring_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-            19 : ["Jewelcrafting_Tier3_Ring_Offense_3",  "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-            20 : ["Jewelcrafting_Tier3_Ring_Offense_3",  "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-            21 : ["Jewelcrafting_Tier3_Ring_Offense_3",  "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-            22 : ["Jewelcrafting_Tier3_Ring_Offense_3",  "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-            23 : ["Jewelcrafting_Tier3_Ring_Offense_3",  "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-            24 : ["Jewelcrafting_Tier3_Ring_Offense_3",  "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
             25 : ["Jewelcrafting_Tier4_Ring_Offense_4_Purple",//Exquisite Adamant Ring of Piercing
                   "Jewelcrafting_Tier4_Ring_Misc_4_Purple",//Exquisite Adamant Ring of Recovery
                   "Jewelcrafting_Tier4_Ring_Defense_4_Purple",//Exquisite Adamant Ring of Regeneration
@@ -1013,7 +1048,7 @@ function _select_Gateway() { // Check for Gateway used to
     });
     
 
-    addProfileToDefined("Jewelcrafting", {
+    addProfile("Jewelcrafting", {
         profileName : "Craft Purple lvl 25",
         isProfileActive : true,
         level : {
@@ -1071,20 +1106,17 @@ function _select_Gateway() { // Check for Gateway used to
         }]
     };
     
-    addProfileToDefined("Mailsmithing", {
+    addProfile("Mailsmithing", {
         profileName : "20->25 gather",
         isProfileActive : true,
         level : {
             21 : ["Crafted_Med_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Med_Armorsmithing_T4_Gather_Basic_Mass"],
-            22 : ["Crafted_Med_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Med_Armorsmithing_T4_Gather_Basic_Mass"],
-            23 : ["Crafted_Med_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Med_Armorsmithing_T4_Gather_Basic_Mass"],
-            24 : ["Crafted_Med_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Med_Armorsmithing_T4_Gather_Basic_Mass"],
             25 : ["Crafted_Med_Armorsmithing_T4_Refine_Basic", "Crafted_Med_Armorsmithing_T4_Gather_Basic"],
         },
     });    
 
     
-    addProfileToDefined("Mailsmithing", {
+    addProfile("Mailsmithing", {
         profileName : "Berserker's Chausses and rares",
         isProfileActive : true,
         level : {                   
@@ -1104,7 +1136,7 @@ function _select_Gateway() { // Check for Gateway used to
         },
     });
 
-    addProfileToDefined("Mailsmithing", {
+    addProfile("Mailsmithing", {
             profileName : "Soldier's Chausses and rares",
             isProfileActive : true,
             level : {                   
@@ -1124,7 +1156,7 @@ function _select_Gateway() { // Check for Gateway used to
             },
         });
     
-    addProfileToDefined("Mailsmithing", {
+    addProfile("Mailsmithing", {
             profileName : "Soldier's Chainmail and rares",
             isProfileActive : true,
             level : {                   
@@ -1144,7 +1176,7 @@ function _select_Gateway() { // Check for Gateway used to
             },
         });
 
-    addProfileToDefined("Mailsmithing", {
+    addProfile("Mailsmithing", {
             profileName : "Berserker's Chainmail and rares",
             isProfileActive : true,
             level : {                   
@@ -1164,7 +1196,7 @@ function _select_Gateway() { // Check for Gateway used to
             },
         });
 
-    addProfileToDefined("Mailsmithing", {
+    addProfile("Mailsmithing", {
             profileName : "Zealot's Chausses and rares",
             isProfileActive : true,
             level : {                   
@@ -1185,7 +1217,7 @@ function _select_Gateway() { // Check for Gateway used to
             },
         });
 
-    addProfileToDefined("Mailsmithing", {
+    addProfile("Mailsmithing", {
             profileName : "Zealot's Chainmail and rares",
             isProfileActive : true,
             level : {                   
@@ -1206,7 +1238,7 @@ function _select_Gateway() { // Check for Gateway used to
             },
         });
    
-   addProfileToDefined("Mailsmithing", {
+   addProfile("Mailsmithing", {
             profileName : "Prelate's Chainmail and rares",
             isProfileActive : true,
             level : {                   
@@ -1227,7 +1259,7 @@ function _select_Gateway() { // Check for Gateway used to
             },
         });
 
-    addProfileToDefined("Mailsmithing", {
+    addProfile("Mailsmithing", {
             profileName : "Prelate's Chausses and rares",
             isProfileActive : true,
             level : {                   
@@ -1248,7 +1280,7 @@ function _select_Gateway() { // Check for Gateway used to
             },
         });
 
-    addProfileToDefined("Mailsmithing", {
+    addProfile("Mailsmithing", {
         profileName : "craft rares only",
         isProfileActive : true,
         level : {                   
@@ -1267,30 +1299,11 @@ function _select_Gateway() { // Check for Gateway used to
         }
     }); 
 
-    addProfileToDefined("Mailsmithing", {
+    addProfile("Mailsmithing", {
         profileName: "Wondrous Sprocket",
         isProfileActive: false,
         level: {
             6: ["Med_Armorsmithing_Tier1_Event_Gond"],
-            7: ["Med_Armorsmithing_Tier1_Event_Gond"],
-            8: ["Med_Armorsmithing_Tier1_Event_Gond"],
-            9: ["Med_Armorsmithing_Tier1_Event_Gond"],
-            10: ["Med_Armorsmithing_Tier1_Event_Gond"],
-            11: ["Med_Armorsmithing_Tier1_Event_Gond"],
-            12: ["Med_Armorsmithing_Tier1_Event_Gond"],
-            13: ["Med_Armorsmithing_Tier1_Event_Gond"],
-            14: ["Med_Armorsmithing_Tier1_Event_Gond"],
-            15: ["Med_Armorsmithing_Tier1_Event_Gond"],
-            16: ["Med_Armorsmithing_Tier1_Event_Gond"],
-            17: ["Med_Armorsmithing_Tier1_Event_Gond"],
-            18: ["Med_Armorsmithing_Tier1_Event_Gond"],
-            19: ["Med_Armorsmithing_Tier1_Event_Gond"],
-            20: ["Med_Armorsmithing_Tier1_Event_Gond"],
-            21: ["Med_Armorsmithing_Tier1_Event_Gond"],
-            22: ["Med_Armorsmithing_Tier1_Event_Gond"],
-            23: ["Med_Armorsmithing_Tier1_Event_Gond"],
-            24: ["Med_Armorsmithing_Tier1_Event_Gond"],
-            25: ["Med_Armorsmithing_Tier1_Event_Gond"],
         },
     });
 
@@ -1335,42 +1348,20 @@ function _select_Gateway() { // Check for Gateway used to
         }]
     };
 
-    addProfileToDefined("Platesmithing", {
+    addProfile("Platesmithing", {
         profileName: "20->25 gather",
         isProfileActive: true,
         level: {
             21: ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Hvy_Armorsmithing_T4_Gather_Basic_Mass"],
-            22: ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Hvy_Armorsmithing_T4_Gather_Basic_Mass"],
-            23: ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Hvy_Armorsmithing_T4_Gather_Basic_Mass"],
-            24: ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Hvy_Armorsmithing_T4_Gather_Basic_Mass"],
-            25: ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Hvy_Armorsmithing_T4_Gather_Basic_Mass"],
         },
     });
 
-    addProfileToDefined("Platesmithing", {
+    addProfile("Platesmithing", {
         profileName: "Wondrous Sprocket",
         isProfileActive: false,
         level: {
             6: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
-            7: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
-            8: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
-            9: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
-            10: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
-            11: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
-            12: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
-            13: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
-            14: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
-            15: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
-            16: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
-            17: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
-            18: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
-            19: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
-            20: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
-            21: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
-            22: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
-            23: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
-            24: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
-            25: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
+            
         },
     });
 
@@ -1416,20 +1407,17 @@ function _select_Gateway() { // Check for Gateway used to
         }  ]
     };
     
-    addProfileToDefined("Leatherworking", {
+    addProfile("Leatherworking", {
         profileName : "20->25 gather",
         isProfileActive : true,
         level : {
             20 : ["Leatherworking_Tier3_Leather_Pants"],
             21 : ["Leatherworking_Tier4_Refine_Basic_Mass", "Leatherworking_Tier4_Gather_Basic"],
-            22 : ["Leatherworking_Tier4_Refine_Basic_Mass", "Leatherworking_Tier4_Gather_Basic"],
-            23 : ["Leatherworking_Tier4_Refine_Basic_Mass", "Leatherworking_Tier4_Gather_Basic"],
-            24 : ["Leatherworking_Tier4_Refine_Basic_Mass", "Leatherworking_Tier4_Gather_Basic"],
             25 : ["Leatherworking_Tier4_Refine_Basic", "Leatherworking_Tier4_Gather_Basic"],
         },
     });    
 
-    addProfileToDefined("Leatherworking", {
+    addProfile("Leatherworking", {
         profileName : "craft purples only",
         level : {
             //purples  first. shirts > tunics > pants.
@@ -1441,7 +1429,7 @@ function _select_Gateway() { // Check for Gateway used to
         }
     });
 
-    addProfileToDefined("Leatherworking", {
+    addProfile("Leatherworking", {
         profileName : "craft  Elemental Shirts",
         level : {
             //purples  first. shirts > tunics > pants.
@@ -1454,7 +1442,7 @@ function _select_Gateway() { // Check for Gateway used to
         }
     });
 
-    addProfileToDefined("Leatherworking", {
+    addProfile("Leatherworking", {
         profileName : "craft  Elemental Tunic",
         level : {
             //purples  first. shirts > tunics > pants.
@@ -1467,7 +1455,7 @@ function _select_Gateway() { // Check for Gateway used to
         }
     });
    
-    addProfileToDefined("Leatherworking", {
+    addProfile("Leatherworking", {
         profileName : "craft  Elemental Trousers(?)",
         level : {
             //purples  first. shirts > tunics > pants.
@@ -1480,7 +1468,7 @@ function _select_Gateway() { // Check for Gateway used to
         }
     });
 
-    addProfileToDefined("Leatherworking", {
+    addProfile("Leatherworking", {
         profileName : "craft  Elemental Pants",
         level : {
             //purples  first. shirts > tunics > pants.
@@ -1493,30 +1481,11 @@ function _select_Gateway() { // Check for Gateway used to
         }
     });
 
-    addProfileToDefined("Leatherworking", {
+    addProfile("Leatherworking", {
         profileName: "Wondrous Sprocket",
         isProfileActive: false,
         level: {
             6: ["Leatherworking_Tier1_Event_Gond"],
-            7: ["Leatherworking_Tier1_Event_Gond"],
-            8: ["Leatherworking_Tier1_Event_Gond"],
-            9: ["Leatherworking_Tier1_Event_Gond"],
-            10: ["Leatherworking_Tier1_Event_Gond"],
-            11: ["Leatherworking_Tier1_Event_Gond"],
-            12: ["Leatherworking_Tier1_Event_Gond"],
-            13: ["Leatherworking_Tier1_Event_Gond"],
-            14: ["Leatherworking_Tier1_Event_Gond"],
-            15: ["Leatherworking_Tier1_Event_Gond"],
-            16: ["Leatherworking_Tier1_Event_Gond"],
-            17: ["Leatherworking_Tier1_Event_Gond"],
-            18: ["Leatherworking_Tier1_Event_Gond"],
-            19: ["Leatherworking_Tier1_Event_Gond"],
-            20: ["Leatherworking_Tier1_Event_Gond"],
-            21: ["Leatherworking_Tier1_Event_Gond"],
-            22: ["Leatherworking_Tier1_Event_Gond"],
-            23: ["Leatherworking_Tier1_Event_Gond"],
-            24: ["Leatherworking_Tier1_Event_Gond"],
-            25: ["Leatherworking_Tier1_Event_Gond"],
         },
     });
 
@@ -1562,42 +1531,20 @@ function _select_Gateway() { // Check for Gateway used to
         }]
     };
 
-    addProfileToDefined("Tailoring", {
+    addProfile("Tailoring", {
         profileName: "20->25 gather",
         isProfileActive: true,
         level: {
             21: ["Crafted_Tailoring_T4_Refine_Basic_Mass", "Crafted_Tailoring_T4_Gather_Basic_Mass"],
-            22: ["Crafted_Tailoring_T4_Refine_Basic_Mass", "Crafted_Tailoring_T4_Gather_Basic_Mass"],
-            23: ["Crafted_Tailoring_T4_Refine_Basic_Mass", "Crafted_Tailoring_T4_Gather_Basic_Mass"],
-            24: ["Crafted_Tailoring_T4_Refine_Basic_Mass", "Crafted_Tailoring_T4_Gather_Basic_Mass"],
             25: ["Crafted_Tailoring_T4_Refine_Basic", "Crafted_Tailoring_T4_Gather_Basic"],
         },
     });
 
-    addProfileToDefined("Tailoring", {
+    addProfile("Tailoring", {
         profileName: "Wondrous Sprocket",
         isProfileActive: false,
         level: {
             6: ["Tailoring_Tier1_Event_Gond"],
-            7: ["Tailoring_Tier1_Event_Gond"],
-            8: ["Tailoring_Tier1_Event_Gond"],
-            9: ["Tailoring_Tier1_Event_Gond"],
-            10: ["Tailoring_Tier1_Event_Gond"],
-            11: ["Tailoring_Tier1_Event_Gond"],
-            12: ["Tailoring_Tier1_Event_Gond"],
-            13: ["Tailoring_Tier1_Event_Gond"],
-            14: ["Tailoring_Tier1_Event_Gond"],
-            15: ["Tailoring_Tier1_Event_Gond"],
-            16: ["Tailoring_Tier1_Event_Gond"],
-            17: ["Tailoring_Tier1_Event_Gond"],
-            18: ["Tailoring_Tier1_Event_Gond"],
-            19: ["Tailoring_Tier1_Event_Gond"],
-            20: ["Tailoring_Tier1_Event_Gond"],
-            21: ["Tailoring_Tier1_Event_Gond"],
-            22: ["Tailoring_Tier1_Event_Gond"],
-            23: ["Tailoring_Tier1_Event_Gond"],
-            24: ["Tailoring_Tier1_Event_Gond"],
-            25: ["Tailoring_Tier1_Event_Gond"],
         },
     });
 
@@ -1644,30 +1591,11 @@ function _select_Gateway() { // Check for Gateway used to
         }]
     };
 
-    addProfileToDefined("Artificing", {
+    addProfile("Artificing", {
         profileName: "Wondrous Sprocket",
         isProfileActive: false,
         level: {
             6: ["Artificing_Tier1_Event_Gond"],
-            7: ["Artificing_Tier1_Event_Gond"],
-            8: ["Artificing_Tier1_Event_Gond"],
-            9: ["Artificing_Tier1_Event_Gond"],
-            10: ["Artificing_Tier1_Event_Gond"],
-            11: ["Artificing_Tier1_Event_Gond"],
-            12: ["Artificing_Tier1_Event_Gond"],
-            13: ["Artificing_Tier1_Event_Gond"],
-            14: ["Artificing_Tier1_Event_Gond"],
-            15: ["Artificing_Tier1_Event_Gond"],
-            16: ["Artificing_Tier1_Event_Gond"],
-            17: ["Artificing_Tier1_Event_Gond"],
-            18: ["Artificing_Tier1_Event_Gond"],
-            19: ["Artificing_Tier1_Event_Gond"],
-            20: ["Artificing_Tier1_Event_Gond"],
-            21: ["Artificing_Tier1_Event_Gond"],
-            22: ["Artificing_Tier1_Event_Gond"],
-            23: ["Artificing_Tier1_Event_Gond"],
-            24: ["Artificing_Tier1_Event_Gond"],
-            25: ["Artificing_Tier1_Event_Gond"],
         },
     });
 
@@ -1714,30 +1642,11 @@ function _select_Gateway() { // Check for Gateway used to
         }]
     };
 
-    addProfileToDefined("Weaponsmithing", {
+    addProfile("Weaponsmithing", {
         profileName: "Wondrous Sprocket",
         isProfileActive: false,
         level: {
             6: ["Weaponsmithing_Tier1_Event_Gond"],
-            7: ["Weaponsmithing_Tier1_Event_Gond"],
-            8: ["Weaponsmithing_Tier1_Event_Gond"],
-            9: ["Weaponsmithing_Tier1_Event_Gond"],
-            10: ["Weaponsmithing_Tier1_Event_Gond"],
-            11: ["Weaponsmithing_Tier1_Event_Gond"],
-            12: ["Weaponsmithing_Tier1_Event_Gond"],
-            13: ["Weaponsmithing_Tier1_Event_Gond"],
-            14: ["Weaponsmithing_Tier1_Event_Gond"],
-            15: ["Weaponsmithing_Tier1_Event_Gond"],
-            16: ["Weaponsmithing_Tier1_Event_Gond"],
-            17: ["Weaponsmithing_Tier1_Event_Gond"],
-            18: ["Weaponsmithing_Tier1_Event_Gond"],
-            19: ["Weaponsmithing_Tier1_Event_Gond"],
-            20: ["Weaponsmithing_Tier1_Event_Gond"],
-            21: ["Weaponsmithing_Tier1_Event_Gond"],
-            22: ["Weaponsmithing_Tier1_Event_Gond"],
-            23: ["Weaponsmithing_Tier1_Event_Gond"],
-            24: ["Weaponsmithing_Tier1_Event_Gond"],
-            25: ["Weaponsmithing_Tier1_Event_Gond"],
         },
     });
 
@@ -1781,87 +1690,44 @@ function _select_Gateway() { // Check for Gateway used to
             },
         }]
     };
-    addProfileToDefined("Alchemy", {
+    addProfile("Alchemy", {
         profileName : "Aqua Regia",
         level: {
             20:["Alchemy_Tier2_Aquaregia", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
         }
     });
-    addProfileToDefined("Alchemy", {
+    addProfile("Alchemy", {
         profileName : "Aqua Vitae",
         level: {
             20:["Alchemy_Tier2_Aquavitae_2", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
         }
     });
-    addProfileToDefined("Alchemy", {
+    addProfile("Alchemy", {
         profileName : "Protection Superior",
         level: {
             25:["Alchemy_Tier4_Experimentation_Rank25","Alchemy_Tier4_Protection_Potion_Superior", "Alchemy_Tier4_Create_Elemental_Aggregate", "Alchemy_Tier3_Protection_Potion_Major", "Alchemy_Tier2_Aquaregia", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
         }
     });
-    addProfileToDefined("Alchemy", {
+    addProfile("Alchemy", {
         profileName : "Potency Superior",
         level: {
             25:["Alchemy_Tier4_Experimentation_Rank25","Alchemy_Tier4_Potency_Potion_Superior", "Alchemy_Tier4_Create_Elemental_Aggregate", "Alchemy_Tier3_Potency_Potion_Major", "Alchemy_Tier2_Aquaregia", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
         }
     }); 
 
-    addProfileToDefined("Alchemy", {
+    addProfile("Alchemy", {
         profileName: "Blue & Green Vitriol",
         isProfileActive: true,
         level: {
             1: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            2: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            3: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            4: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            5: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            6: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            7: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            8: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            9: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            10: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            11: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            12: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            13: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            14: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            15: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            16: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            17: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            18: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            19: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            20: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            21: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            22: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            23: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            24: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            25: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
         },
     });
 
-    addProfileToDefined("Alchemy", {
+    addProfile("Alchemy", {
         profileName: "Wondrous Sprocket",
         isProfileActive: false,
         level: {
             6: ["Alchemy_Tier1_Event_Gond"],
-            7: ["Alchemy_Tier1_Event_Gond"],
-            8: ["Alchemy_Tier1_Event_Gond"],
-            9: ["Alchemy_Tier1_Event_Gond"],
-            10: ["Alchemy_Tier1_Event_Gond"],
-            11: ["Alchemy_Tier1_Event_Gond"],
-            12: ["Alchemy_Tier1_Event_Gond"],
-            13: ["Alchemy_Tier1_Event_Gond"],
-            14: ["Alchemy_Tier1_Event_Gond"],
-            15: ["Alchemy_Tier1_Event_Gond"],
-            16: ["Alchemy_Tier1_Event_Gond"],
-            17: ["Alchemy_Tier1_Event_Gond"],
-            18: ["Alchemy_Tier1_Event_Gond"],
-            19: ["Alchemy_Tier1_Event_Gond"],
-            20: ["Alchemy_Tier1_Event_Gond"],
-            21: ["Alchemy_Tier1_Event_Gond"],
-            22: ["Alchemy_Tier1_Event_Gond"],
-            23: ["Alchemy_Tier1_Event_Gond"],
-            24: ["Alchemy_Tier1_Event_Gond"],
-            25: ["Alchemy_Tier1_Event_Gond"],
         },
     });
 
