@@ -945,6 +945,18 @@ function _select_Gateway() { // Check for Gateway used to
                 //basic resources  for lvl 16 and 15 items. 
                 25 : ["Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
             },
+        }, {
+            profileName : "mass refining",
+            isProfileActive : true,
+            recursiveList : true,
+            useMassTask : true,
+            level : {
+                0 : ["Jewelcrafting_Tier0_Intro"],
+                1 : ["Jewelcrafting_Tier1_Refine_Basic_Mass", "Jewelcrafting_Tier1_Gather_Basic"],
+                7 : ["Jewelcrafting_Tier2_Refine_Basic_Mass"],
+                14 : ["Jewelcrafting_Tier3_Refine_Basic_Mass"],
+                21 : ["Jewelcrafting_Tier4_Refine_Basic_Mass"],
+            },
         }]
     };
 
@@ -1066,8 +1078,19 @@ function _select_Gateway() { // Check for Gateway used to
                 23 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
                 24 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
                 25 : ["Crafted_Med_Armorsmithing_T4_Refine_Basic", "Crafted_Med_Armorsmithing_T4_Gather_Basic"],
-                
             }
+        }, {
+            profileName : "mass refining",
+            isProfileActive : true,
+            recursiveList : true,
+            useMassTask : true,
+            level : {
+                0 : ["Med_Armorsmithing_Tier0_Intro"],
+                1 : ["Med_Armorsmithing_Tier1_Refine_Basic_Mass", "Med_Armorsmithing_Tier1_Gather_Basic"],
+                7 : ["Med_Armorsmithing_Tier2_Refine_Basic_Mass"],
+                14 : ["Med_Armorsmithing_Tier3_Refine_Basic_Mass"],
+                21 : ["Crafted_Med_Armorsmithing_T4_Refine_Basic_Mass"],
+            },
         }]
     };
     
@@ -1332,6 +1355,18 @@ function _select_Gateway() { // Check for Gateway used to
                 24: ["Hvy_Armorsmithing_Tier3_Plate_Pants"],
                 25: ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Hvy_Armorsmithing_T4_Gather_Basic_Mass"],
             },
+        }, {
+            profileName : "mass refining",
+            isProfileActive : true,
+            recursiveList : true,
+            useMassTask : true,
+            level : {
+                0 : ["Hvy_Armorsmithing_Tier0_Intro"],
+                1 : ["Hvy_Armorsmithing_Tier1_Refine_Basic_Mass", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+                7 : ["Hvy_Armorsmithing_Tier2_Refine_Basic_Mass"],
+                14 : ["Hvy_Armorsmithing_Tier3_Refine_Basic_Mass"],
+                21 : ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass"],
+            },
         }]
     };
 
@@ -1413,7 +1448,19 @@ function _select_Gateway() { // Check for Gateway used to
                 24 : ["Leatherworking_Tier3_Leather_Pants"],
                 25 : ["Leatherworking_Tier4_Refine_Basic", "Leatherworking_Tier4_Gather_Basic"],
             },
-        }  ]
+        }, {
+            profileName : "mass refining",
+            isProfileActive : true,
+            recursiveList : true,
+            useMassTask : true,
+            level : {
+                0 : ["Leatherworking_Tier0_Intro_1"],
+                1 : ["Leatherworking_Tier1_Refine_Basic_Mass", "Leatherworking_Tier1_Gather_Basic"],
+                7 : ["Leatherworking_Tier2_Refine_Basic_Mass"],
+                14 : ["Leatherworking_Tier3_Refine_Basic_Mass"],
+                21 : ["Leatherworking_Tier4_Refine_Basic_Mass"],
+            },
+        }]
     };
     
     addProfileToDefined("Leatherworking", {
@@ -1559,6 +1606,18 @@ function _select_Gateway() { // Check for Gateway used to
                 24: ["Tailoring_Tier3_Cloth_Pants"],
                 25: ["Crafted_Tailoring_T4_Refine_Basic", "Crafted_Tailoring_T4_Gather_Basic"],
             },
+        }, {
+            profileName : "mass refining",
+            isProfileActive : true,
+            recursiveList : true,
+            useMassTask : true,
+            level : {
+                0 : ["Tailoring_Tier0_Intro"],
+                1 : ["Tailoring_Tier1_Refine_Basic_Mass", "Tailoring_Tier1_Gather_Basic"],
+                7 : ["Tailoring_Tier2_Refine_Basic_Mass"],
+                14 : ["Tailoring_Tier3_Refine_Basic_Mass"],
+                21 : ["Crafted_Tailoring_T4_Refine_Basic_Mass"],
+            },
         }]
     };
 
@@ -1641,6 +1700,18 @@ function _select_Gateway() { // Check for Gateway used to
                 24: ["Artificing_Tier4_Gather_Basic"],
                 25: ["Artificing_Tier4_Refine_Basic", "Artificing_Tier4_Gather_Basic"],
             },
+        }, {
+            profileName : "mass refining",
+            isProfileActive : true,
+            recursiveList : true,
+            useMassTask : true,
+            level : {
+                0 : ["Artificing_Tier0_Intro_1"],
+                1 : ["Artificing_Tier1_Refine_Basic_Mass", "Artificing_Tier1_Gather_Basic"],
+                7 : ["Artificing_Tier2_Refine_Basic_Mass"],
+                14 : ["Artificing_Tier3_Refine_Basic_Mass"],
+                21 : ["Artificing_Tier4_Refine_Basic_Mass"],
+            },
         }]
     };
 
@@ -1711,6 +1782,18 @@ function _select_Gateway() { // Check for Gateway used to
                 24: ["Weaponsmithing_Tier4_Gather_Basic"],
                 25: ["Weaponsmithing_Tier4_Refine_Basic", "Weaponsmithing_Tier4_Gather_Basic"],
             },
+        }, {
+            profileName : "mass refining",
+            isProfileActive : true,
+            recursiveList : true,
+            useMassTask : true,
+            level : {
+                0 : ["Weaponsmithing_Tier0_Intro"],
+                1 : ["Weaponsmithing_Tier1_Refine_Basic_Mass", "Weaponsmithing_Tier1_Gather_Basic"],
+                7 : ["Weaponsmithing_Tier2_Refine_Basic_Mass"],
+                14 : ["Weaponsmithing_Tier3_Refine_Basic_Mass"],
+                21 : ["Weaponsmithing_Tier4_Refine_Basic_Mass"],
+            },
         }]
     };
 
@@ -1779,8 +1862,21 @@ function _select_Gateway() { // Check for Gateway used to
                 24 : ["Alchemy_Tier4_Experiment_Rank25", "Alchemy_Tier4_Experimentation_Rank24", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
                 25 : [ "Alchemy_Tier4_Experimentation_Rank25", "Alchemy_Tier4_Create_Elemental_Unified", "Alchemy_Tier3_Protection_Potion_Major", "Alchemy_Tier3_Potency_Potion_Major", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],           
             },
+        }, {
+            profileName : "mass refining",
+            isProfileActive : true,
+            recursiveList : true,
+            useMassTask : true,
+            level : {
+                0 : ["Alchemy_Tier0_Intro_1"],
+                1 : ["Alchemy_Tier1_Refine_Basic_Mass", "Alchemy_Tier1_Refine_Basic"],
+                7 : ["Alchemy_Tier2_Refine_Basic_Mass"],
+                14 : ["Alchemy_Tier3_Refine_Basic_Mass"],
+                21 : ["Alchemy_Tier4_Refine_Basic_Mass"],
+            },
         }]
     };
+    
     addProfileToDefined("Alchemy", {
         profileName : "Aqua Regia",
         level: {
@@ -1865,6 +1961,35 @@ function _select_Gateway() { // Check for Gateway used to
         },
     });
 
+    // expand recursive tasklist
+    for (var professionIdx in definedTask) {
+        //console.log(definedTask[professionIdx].taskName); 
+        for (var profileIdx in definedTask[professionIdx].profiles) {
+            //console.log(definedTask[professionIdx].profiles[profileIdx]);
+            var profile = definedTask[professionIdx].profiles[profileIdx];
+            if ((profile.recursiveList !== undefined) && (profile.recursiveList === true)) {
+                //console.log("list to expand: " + profile.profileName);
+                if (profile.level[1] === undefined) {
+                    profile.level[1] = [];
+                }
+                for (var i=2; i<=25; i++) {
+                    if (profile.level[i] === undefined) {
+                        profile.level[i] = profile.level[i-1];
+                    } else {
+                        for (var j=0; j<profile.level[i-1].length; j++) {
+                            if (profile.level[i].indexOf(profile.level[i-1][j]) == -1) {
+                                profile.level[i].push(profile.level[i-1][j]);
+                            }
+                        }
+                    }
+                }
+                //console.log(profile);
+                definedTask[professionIdx].profiles[profileIdx] = profile;
+            } else {
+               // console.log("old type list: " + profile.profileName);
+            }
+        }
+    }
 
     // Profession priority list by order
     var tasklist = [
@@ -3095,6 +3220,10 @@ function _select_Gateway() { // Check for Gateway used to
             return false;
         }
 
+        var profession = tasklist.filter(function(entry) { return entry.taskName == profname; });
+        var profile = profession[0].profiles.filter(function(entry) { return entry.profileName == profileName; });
+        var massTaskAllowed = ((profile[0].useMassTask !== undefined) && (profile[0].useMassTask === true));
+
         // Generate list of available tasks to search ingredients/assets from
         console.log("Searching ingredient tasks for:", profname);
         var taskList = unsafeWindow.client.dataModel.model.craftinglist['craft_' + profname].entries.filter(function(entry) {
@@ -3122,10 +3251,12 @@ function _select_Gateway() { // Check for Gateway used to
                     return false;
                 }
             }
-
-            // Skip mass production tasks
-            if (entry.def.displayname.match(/^(Batch|Mass|Deep|Intensive) /)) {
-                return false;
+            
+            // Skip mass production tasks (don't skip if "mass ...." profile selected)
+            if (! massTaskAllowed) {
+                if (entry.def.displayname.match(/^(Batch|Mass|Deep|Intensive) /)) {
+                    return false;
+                }
             }
 
             // Skip trading tasks
@@ -3144,6 +3275,16 @@ function _select_Gateway() { // Check for Gateway used to
         if (!taskList.length) {
             console.log("No ingredient tasks found for:", taskname, searchItem);
             return false;
+        }
+        
+        // for "mass ...." profile name select Mass task
+        if (massTaskAllowed) {
+            for (var i=0; i<taskList.length; i++) {
+                if (taskList[i].def.displayname.match(/^(Batch|Mass|Deep|Intensive) /)) {
+                    taskList = taskList.splice(i, 1);
+                    break;
+                }
+            }
         }
 
         // Use more efficient Empowered task for Aqua if available.
