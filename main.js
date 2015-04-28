@@ -4007,7 +4007,7 @@ function _select_Gateway() { // Check for Gateway used to
                 console.log("Loading character list");
                 charNameList = [];
                 client.dataModel.model.loginInfo.choices.forEach(function(char) {
-                    if (char.name == "Author") return;
+                    if (char.shardname == "Dungeon") return;
                     charNameList.push(char.name);
                 });                
                 console.log("Found names: " + charNameList);
