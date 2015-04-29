@@ -40,8 +40,9 @@ Developers & Contributors:
 // ==/UserScript==
 
 /* RELEASE NOTES
-- added new recursive tasklist 
-- flag "recursiveList" to mark lists of new type,
+- new function "addProfile" which adds a whole new profiles, or overwrites over the old ones
+- all "definedTask" definition in one place, then profile definitions
+- added new recursive tasklist
 - flag "useMassTask" for list witch should use " _Mass" tasks,
 - new profiles "mass gathering" for every profile,
 - "Gond task" profiles redefined,
@@ -61,7 +62,7 @@ Developers & Contributors:
 - tweaks for leadership 20-25 AD/XP profiles
 - Added more menu options for Skip "Patrol the Mines" to allow more flexability (Until per char options implemented).
 - Better use of leadership assets (white used only if heros, adventurers & man-at-arms to low). WloBeb
-- Added level +20 tasks for Leadership, Mailsmithing, Jewelcrafting by dlebedynskyi 
+- Added level +20 tasks for Leadership, Mailsmithing, Jewelcrafting by dlebedynskyi
 - Fix the AD counter when AD is in ZEX transition by BigRedBrent
 - Added overview tabs for profession levels and profession slots
 - More info in the Counter Tab
@@ -85,7 +86,7 @@ Developers & Contributors:
 2.0
 - Additional UI changes.
 - Added resetable counters for refined AD.
-- Added stuck task trap (repeatition trap and restart). Thanks WloBeb 
+- Added stuck task trap (repeatition trap and restart). Thanks WloBeb
 - Added profession profiles by dlebedynskyi.
 1.10.2RC1 for Greasyfork
 - UI improvement
@@ -333,13 +334,14 @@ var chardiamonds = {};
 var zexdiamonds = 0;
 var chargold = {};
 var definedTask = {};
-var antiInfLoopTrap = { // without this script sometimes try to start the same task in infinite loop (lags?) 
+var maxLevel = 25; // max profession level
+var antiInfLoopTrap = { // without this script sometimes try to start the same task in infinite loop (lags?)
     prevCharName: "unknown", // character name which recently launched a task
     prevTaskName: "unknown", // name of the task previously launched
-    startCounter: 0, // how many times the same character starts the same task 
+    startCounter: 0, // how many times the same character starts the same task
     currCharName: "unknown", // character name which try to launch new task
     currTaskName: "unknown", // name of the new task to launch
-    trapActivation: 15 // number of repetition to activation trap 
+    trapActivation: 15 // number of repetition to activation trap
 };
 // Page Reloading function
 // Every second the page is idle or loading is tracked
@@ -674,28 +676,76 @@ function _select_Gateway() { // Check for Gateway used to
     };
 
     /*
-     * Helper function to define extended profiles on top of existing ones. Extends
-     * prof - profession name
+     * Helper function to define profiles on top of existing ones. Extends
+     * profName - profession name
      * newProfile - new profile definition.
-     * baseProfile - name of base profile to extend. Default is "default" or "XP" in case of Leadership
+     * baseProfileName - name of base profile to extend. If omitted clean new profile added.
      */
 
-    function addProfileToDefined(prof, newProfile, baseProfile) {
-        baseProfile = baseProfile || (prof === "Leadership" ? "XP" : "default");
-        var profSet = definedTask[prof];
+    function addProfile(profName, newProfile, baseProfileName) {
+        var profSet = definedTask[profName];
+        var baseProfile;
+        var createdProfile = {};
+        var createdTaskList = {};
         if (!profSet) {
+            console.log("addProfile ERROR: " + profName + " profession doesn't exist");
             return;
         }
-        var bp = {};
-        for (var entry in profSet.profiles) {
-            if (profSet.profiles[entry] && profSet.profiles[entry].profileName == baseProfile) {
-                bp = profSet.profiles[entry];
-                break;
+        baseProfile = profSet.profiles.filter(function(entry) { return entry.profileName == newProfile.profileName; });
+        if (baseProfile.length > 0) {
+            console.log("addProfile ERROR: redefinition of profile: " + newProfile.profileName + ", profession: " + profName);
+            return;
+        }
+
+        if (baseProfileName !== undefined) {
+            baseProfile = profSet.profiles.filter(function(entry) { return entry.profileName == baseProfileName; });
+            if (baseProfile.length === 0) {
+                console.log("addProfile ERROR: Base profile: " + baseProfileName + ", profession: " + profName + " doesn't exist");
+                return;
+            } else {
+                baseProfile = baseProfile[0];
+            }
+            jQuery.extend(createdProfile, baseProfile, newProfile)
+            // copy every level from baseProfile until first defined level in newProfile
+            for (var i=0; i<maxLevel; i++) {
+                if (newProfile.level[i] !== undefined) {
+                    break;
+                }
+                if (baseProfile.level[i] !== undefined) {
+                    createdTaskList[i] = baseProfile.level[i];
+                }
+            }
+            // copy everything from newProfile
+            for (var i=0; i<maxLevel; i++) {
+                if (newProfile.level[i] !== undefined) {
+                    createdTaskList[i] = newProfile.level[i];
+                }
+            }
+            createdProfile.level = createdTaskList;
+        } else {
+            createdProfile = newProfile;
+        }
+        if ((createdProfile.level[0] === undefined) || (createdProfile.level[0].length === 0)) {
+            console.log("addProfile ERROR: Profile: " + newProfile.profileName + ", profession: " + profName + " empty task list for level 0");
+            return;
+        }
+        if ((createdProfile.level[1] === undefined) || (createdProfile.level[1].length === 0)) {
+            console.log("addProfile ERROR: Profile: " + newProfile.profileName + ", profession: " + profName + " empty task list for level 1");
+            return;
+        }
+        // expand task list
+        for (var i=2; i<=maxLevel; i++) {
+            if (createdProfile.level[i] === undefined) {
+                createdProfile.level[i] = createdProfile.level[i-1];
+            } else {
+                for (var j=0; j<createdProfile.level[i-1].length; j++) {
+                    if (createdProfile.level[i].indexOf(createdProfile.level[i-1][j]) == -1) {
+                        createdProfile.level[i].push(createdProfile.level[i-1][j]);
+                    }
+                }
             }
         }
-        var cloneBase = jQuery.extend(true, {}, bp);
-        jQuery.extend(true, cloneBase, newProfile);
-        profSet.profiles.push(cloneBase);
+        profSet.profiles.push(createdProfile);
     }
 
     /*
@@ -715,95 +765,181 @@ function _select_Gateway() { // Check for Gateway used to
         taskActive: true,
         taskDefaultSlotNum: 9,
         taskDescription: "",
-        profiles: [{
-            profileName: "AD",
-            isProfileActive: true,
-            level: {
-                0: ["Leadership_Tier0_Intro_1"],
-                1: ["Leadership_Tier0_Intro_5", "Leadership_Tier0_Intro_4", "Leadership_Tier0_Intro_3", "Leadership_Tier0_Intro_2"],
-                2: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
-                3: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
-                4: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
-                5: ["Leadership_Tier1_4_Protect", "Leadership_Tier1_5_Explore", "Leadership_Tier1_2_Guardduty"],
-                6: ["Leadership_Tier1_4_Protect", "Leadership_Tier1_5_Explore", "Leadership_Tier1_2_Guardduty"],
-                7: ["Leadership_Tier1_4_Protect", "Leadership_Tier1_5_Explore", "Leadership_Tier1_2_Guardduty"],
-                8: ["Leadership_Tier1_4_Protect", "Leadership_Tier1_5_Explore", "Leadership_Tier1_2_Guardduty"],
-                9: ["Leadership_Tier1_4_Protect", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                // Begin prioritizing "Battle Undead"
-                10: ["Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                11: ["Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                12: ["Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                // Add "protect diamonds rare" and the patrol quest as a backup
-                13: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                14: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                15: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                // AD Production mode: Spellplague + Battle Undead
-                16: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                17: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier3_17_Deliver", "Leadership_Tier2_12_Taxes", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                18: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier3_17_Deliver", "Leadership_Tier2_12_Taxes", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                19: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier3_17_Deliver", "Leadership_Tier2_12_Taxes", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                // 20
-
-                20: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_20_Destroy", "Leadership_Tier2_12_Taxes",
-                    "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-                ],
-                21: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_20_Destroy", "Leadership_Tier2_12_Taxes",
-                    "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-                ],
-                22: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_20_Destroy",
-                    "Leadership_Tier2_12_Taxes", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-                ],
-                23: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_20_Destroy",
-                    "Leadership_Tier2_12_Taxes", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-                ],
-                24: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_20_Destroy",
-                    "Leadership_Tier2_12_Taxes", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-                ],
-                25: ["Leadership_Tier4_25r_Huntexperiment", "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier3_13r_Protectdiamonds",
-                    "Leadership_Tier3_20_Destroy", "Leadership_Tier2_12_Taxes", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_25_Battleelementalcultists", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle",
-                    "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-                ],
-            },
-        }, {
-            profileName: "XP",
-            isProfileActive: true,
-            level: {
-                0: ["Leadership_Tier0_Intro_1"],
-                1: ["Leadership_Tier0_Intro_5", "Leadership_Tier0_Intro_4", "Leadership_Tier0_Intro_3", "Leadership_Tier0_Intro_2"],
-                2: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
-                3: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
-                4: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
-                5: ["Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
-                6: ["Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
-                7: ["Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
-                8: ["Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
-                9: ["Leadership_Tier1_5_Explore", "Leadership_Tier2_9_Chart", "Leadership_Tier1_4_Protect"],
-                10: ["Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
-                11: ["Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
-                12: ["Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
-                13: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
-                14: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
-                15: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
-                16: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
-                17: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
-                18: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
-                19: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
-                //20
-
-                20: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
-                21: ["Leadership_Tier4_21_Training", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
-                22: ["Leadership_Tier4_21_Training", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                23: ["Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_21_Training", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                24: ["Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_21_Training", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                25: ["Leadership_Tier4_25r_Huntexperiment", "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier3_13r_Protectdiamonds",
-                    "Leadership_Tier3_20_Destroy", "Leadership_Tier2_12_Taxes", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_25_Battleelementalcultists", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle",
-                    "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-                ],
-            },
-        }]
+        profiles: [],
+    };
+    definedTask["Winter Event"] = {
+        taskListName: "WinterEvent",
+        taskName: "WinterEvent",
+        taskDefaultPriority: 1,
+        taskDefaultSlotNum: 0,
+        taskActive: true,
+        taskDescription: "",
+        profiles: [],
+    };
+    definedTask["Siege Event"] = {
+        taskListName: "SiegeEvent",
+        taskName: "Event_Siege",
+        taskDefaultPriority: 1,
+        taskDefaultSlotNum: 0,
+        taskActive: true,
+        taskDescription: "",
+        profiles: [],
+    };
+    definedTask["Black Ice Shaping"] = {
+        taskListName: "BlackIce",
+        taskName: "BlackIce",
+        taskDefaultPriority: 1,
+        taskDefaultSlotNum: 0,
+        taskActive: true,
+        taskDescription: "",
+        profiles: [],
+    };
+    definedTask["Jewelcrafting"] = {
+        taskListName : "Jewelcrafting",
+        taskName : "Jewelcrafting",
+        taskDefaultPriority : 1,
+        taskDefaultSlotNum : 0,
+        taskActive : true,
+        taskDescription : "",
+        profiles : [],
+    };
+    definedTask["Mailsmithing"] = {
+        taskListName : "Mailsmithing",
+        taskName : "Armorsmithing_Med",
+        taskDefaultPriority : 1,
+        taskDefaultSlotNum : 0,
+        taskActive : true,
+        taskDescription : "",
+        profiles : [],
+    };
+    definedTask["Platesmithing"] = {
+        taskListName: "Platesmithing",
+        taskName: "Armorsmithing_Heavy",
+        taskDefaultPriority: 1,
+        taskDefaultSlotNum: 0,
+        taskActive: true,
+        taskDescription: "",
+        profiles: [],
+    };
+    definedTask["Leatherworking"] = {
+        taskListName : "Leatherworking",
+        taskName : "Leatherworking",
+        taskDefaultPriority : 1,
+        taskDefaultSlotNum : 0,
+        taskActive : true,
+        taskDescription : "",
+        profiles : [],
+    };
+    definedTask["Tailoring"] = {
+        taskListName: "Tailoring",
+        taskName: "Tailoring",
+        taskDefaultPriority: 1,
+        taskDefaultSlotNum: 0,
+        taskActive: true,
+        taskDescription: "",
+        profiles: [],
+    };
+    definedTask["Artificing"] = {
+        taskListName: "Artificing",
+        taskName: "Artificing",
+        taskDefaultPriority: 1,
+        taskDefaultSlotNum: 0,
+        taskActive: true,
+        taskDescription: "",
+        profiles: [],
+    };
+    definedTask["Weaponsmithing"] = {
+        taskListName: "Weaponsmithing",
+        taskName: "Weaponsmithing",
+        taskDefaultPriority: 1,
+        taskDefaultSlotNum: 0,
+        taskActive: true,
+        taskDescription: "",
+        profiles: [],
+    };
+    definedTask["Alchemy"] = {
+        taskListName : "Alchemy",
+        taskName : "Alchemy",
+        taskDefaultPriority : 1,
+        taskDefaultSlotNum : 0,
+        taskActive : true,
+        taskDescription : "",
+        profiles : [],
     };
 
-    addProfileToDefined("Leadership", {
+    addProfile("Leadership", {
+        profileName: "AD",
+        isProfileActive: true,
+        level: {
+            0: ["Leadership_Tier0_Intro_1"],
+            1: ["Leadership_Tier0_Intro_5", "Leadership_Tier0_Intro_4", "Leadership_Tier0_Intro_3", "Leadership_Tier0_Intro_2"],
+            2: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
+            3: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
+            4: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
+            5: ["Leadership_Tier1_4_Protect", "Leadership_Tier1_5_Explore", "Leadership_Tier1_2_Guardduty"],
+            6: ["Leadership_Tier1_4_Protect", "Leadership_Tier1_5_Explore", "Leadership_Tier1_2_Guardduty"],
+            7: ["Leadership_Tier1_4_Protect", "Leadership_Tier1_5_Explore", "Leadership_Tier1_2_Guardduty"],
+            8: ["Leadership_Tier1_4_Protect", "Leadership_Tier1_5_Explore", "Leadership_Tier1_2_Guardduty"],
+            9: ["Leadership_Tier1_4_Protect", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
+            // Begin prioritizing "Battle Undead"
+            10: ["Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
+            11: ["Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
+            12: ["Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
+            // Add "protect diamonds rare" and the patrol quest as a backup
+            13: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
+            14: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
+            15: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
+            // AD Production mode: Spellplague + Battle Undead
+            16: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
+            17: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier3_17_Deliver", "Leadership_Tier2_12_Taxes", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
+            18: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier3_17_Deliver", "Leadership_Tier2_12_Taxes", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
+            19: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier3_17_Deliver", "Leadership_Tier2_12_Taxes", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
+            // 20
+            20: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_20_Destroy", "Leadership_Tier2_12_Taxes",
+                 "Leadership_Tier3_13_Patrol", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
+            ],
+            21: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_20_Destroy", "Leadership_Tier2_12_Taxes",
+                 "Leadership_Tier3_13_Patrol", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
+            ],
+            22: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_20_Destroy",
+                 "Leadership_Tier3_13_Patrol", "Leadership_Tier2_12_Taxes", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
+            ],
+            23: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_20_Destroy",
+                 "Leadership_Tier3_13_Patrol", "Leadership_Tier2_12_Taxes", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
+            ],
+            24: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_20_Destroy",
+                 "Leadership_Tier3_13_Patrol", "Leadership_Tier2_12_Taxes", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
+            ],
+            25: ["Leadership_Tier4_25r_Huntexperiment", "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier3_13r_Protectdiamonds",
+                 "Leadership_Tier3_20_Destroy", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_12_Taxes", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_25_Battleelementalcultists", "Leadership_Tier3_16_Fight",
+                 "Leadership_Tier2_10_Battle", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
+            ],
+        },
+    });
+
+    addProfile("Leadership", {
+        profileName: "XP",
+        isProfileActive: true,
+        level: {
+            0: ["Leadership_Tier0_Intro_1"],
+            1: ["Leadership_Tier0_Intro_5", "Leadership_Tier0_Intro_4", "Leadership_Tier0_Intro_3", "Leadership_Tier0_Intro_2"],
+            2: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
+            4: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_4_Protect"],
+            5: ["Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
+            9: ["Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect"],
+            13: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+            21: ["Leadership_Tier4_21_Training", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+            22: ["Leadership_Tier4_21_Training", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
+            23: ["Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_21_Training", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
+            24: ["Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_21_Training", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
+            25: ["Leadership_Tier4_25r_Huntexperiment", "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier3_13r_Protectdiamonds",
+                    "Leadership_Tier3_20_Destroy", "Leadership_Tier2_12_Taxes", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_25_Battleelementalcultists", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle",
+                    "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
+            ],
+        },
+    });
+
+    addProfile("Leadership", {
         profileName: "Resource/AD",
         level: {
             // DL
@@ -843,136 +979,97 @@ function _select_Gateway() { // Check for Gateway used to
         }
     }, "AD");
 
-    definedTask["Winter Event"] = {
-        taskListName: "WinterEvent",
-        taskName: "WinterEvent",
-        taskDefaultPriority: 1,
-        taskDefaultSlotNum: 0,
-        taskActive: true,
-        taskDescription: "",
-        profiles: [{
-            profileName: "default",
-            isProfileActive: true,
-            level: {
-                0: ["Event_Winter_Tier0_Intro"],
-                1: ["Event_Winter_Tier1_Rankup", /*"Event_Winter_Tier1_Shiny_Lure",*/
-                    "Event_Winter_Tier1_Refine", "Event_Winter_Tier1_Gather"
-                ],
-                2: ["Event_Winter_Tier1_Rankup_2", /*"Event_Winter_Tier1_Fishingpole_Blue","Event_Winter_Tier1_Shiny_Lure_Mass",*/
-                    "Event_Winter_Tier1_Refine_2", "Event_Winter_Tier1_Gather_2"
-                ],
-                3: [ /*"Event_Winter_Tier1_Heros_Feast","Event_Winter_Tier1_Lightwine","Event_Winter_Tier1_Sparkliest_Gem","Event_Winter_Tier1_Mesmerizing_Lure",*/
-                    "Event_Winter_Tier1_Gather_3"
-                ],
-            },
-        }]
-    };
+    addProfile("Winter Event", {
+        profileName: "default",
+        isProfileActive: true,
+        level: {
+            0: ["Event_Winter_Tier0_Intro"],
+            1: ["Event_Winter_Tier1_Rankup", /*"Event_Winter_Tier1_Shiny_Lure",*/
+                "Event_Winter_Tier1_Refine", "Event_Winter_Tier1_Gather"
+            ],
+            2: ["Event_Winter_Tier1_Rankup_2", /*"Event_Winter_Tier1_Fishingpole_Blue","Event_Winter_Tier1_Shiny_Lure_Mass",*/
+                "Event_Winter_Tier1_Refine_2", "Event_Winter_Tier1_Gather_2"
+            ],
+            3: [ /*"Event_Winter_Tier1_Heros_Feast","Event_Winter_Tier1_Lightwine","Event_Winter_Tier1_Sparkliest_Gem","Event_Winter_Tier1_Mesmerizing_Lure",*/
+                "Event_Winter_Tier1_Gather_3"
+            ],
+        },
+    });
 
-    definedTask["Siege Event"] = {
-        taskListName: "SiegeEvent",
-        taskName: "Event_Siege",
-        taskDefaultPriority: 1,
-        taskDefaultSlotNum: 0,
-        taskActive: true,
-        taskDescription: "",
-        profiles: [{
-            profileName: "default",
-            isProfileActive: true,
-            level: {
-                0: ["Event_Siege_Tier0_Intro"], // Hire a Siege Master
-                //1:["Event_Siege_Tier1_Donate_Minorinjury"], // Create Defense Supplies from Minor Injury Kits
-                //1:["Event_Siege_Tier1_Donate_Injury"], // Create Defense Supplies from Injury Kits
-                //1:["Event_Siege_Tier1_Donate_Majorinjury"], // Create Defense Supplies from Major Injury Kits
-                //1:["Event_Siege_Tier1_Donate_Altar_10"], // Create Defense Supplies from 10 Portable Altars
-                //1:["Event_Siege_Tier1_Donate_Altar_50"], // Create Defense Supplies from 50 Portable Altars
-                //1:["Event_Siege_Tier1_Donate_Resources_T2"], // Create Defense Supplies from Tier 2 crafting resources
-                //1:["Event_Siege_Tier1_Donate_Resources_T3"], // Create Defense Supplies from Tier 3 crafting resources
-                1: ["Event_Siege_Tier1_Donate_Resources_T3", "Event_Siege_Tier1_Donate_Resources_T2", "Event_Siege_Tier1_Donate_Minorinjury", "Event_Siege_Tier1_Donate_Injury", "Event_Siege_Tier1_Donate_Majorinjury", "Event_Siege_Tier1_Donate_Altar_10"],
-            },
-        }]
-    };
+    addProfile("Siege Event",{
+        profileName: "default",
+        isProfileActive: true,
+        level: {
+            0: ["Event_Siege_Tier0_Intro"], // Hire a Siege Master
+            //1:["Event_Siege_Tier1_Donate_Minorinjury"], // Create Defense Supplies from Minor Injury Kits
+            //1:["Event_Siege_Tier1_Donate_Injury"], // Create Defense Supplies from Injury Kits
+            //1:["Event_Siege_Tier1_Donate_Majorinjury"], // Create Defense Supplies from Major Injury Kits
+            //1:["Event_Siege_Tier1_Donate_Altar_10"], // Create Defense Supplies from 10 Portable Altars
+            //1:["Event_Siege_Tier1_Donate_Altar_50"], // Create Defense Supplies from 50 Portable Altars
+            //1:["Event_Siege_Tier1_Donate_Resources_T2"], // Create Defense Supplies from Tier 2 crafting resources
+            //1:["Event_Siege_Tier1_Donate_Resources_T3"], // Create Defense Supplies from Tier 3 crafting resources
+            1: ["Event_Siege_Tier1_Donate_Resources_T3", "Event_Siege_Tier1_Donate_Resources_T2", "Event_Siege_Tier1_Donate_Minorinjury", "Event_Siege_Tier1_Donate_Injury", "Event_Siege_Tier1_Donate_Majorinjury", "Event_Siege_Tier1_Donate_Altar_10"],
+        },
+    });
 
-    definedTask["Black Ice Shaping"] = {
-        taskListName: "BlackIce",
-        taskName: "BlackIce",
-        taskDefaultPriority: 1,
-        taskDefaultSlotNum: 0,
-        taskActive: true,
-        taskDescription: "",
-        profiles: [{
-            profileName: "default",
-            isProfileActive: true,
-            level: {
-                1: ["Blackice_Tier1_Process_Blackice","Blackice_Tier1_Recruit_Blackice_Smith"],
-                2: ["Blackice_Tier1_Process_Blackice","Blackice_Tier2_Recruit_Assistant_Cryomancer"],
-                3: ["Blackice_Tier1_Process_Blackice","Blackice_Tier2_Recruit_Assistant_Cryomancer"],
-                4: ["Blackice_Tier1_Process_Blackice","Blackice_Tier2_Recruit_Assistant_Cryomancer"],
-                5: ["Blackice_Tier1_Process_Blackice","Blackice_Tier2_Recruit_Assistant_Cryomancer"],
-                /*
-                1:["Forge Hammerstone Pick","Gather Raw Black Ice","Truesilver Pick Grip","Process Raw Black Ice","Upgrade Chillwright","Hire an additional Chillwright"],
-                2:["Forge Hammerstone Pick","Gather Raw Black Ice","Truesilver Pick Grip","Process Raw Black Ice","Upgrade Chillwright","Hire an additional Chillwright"],
-                3:["Forge Hammerstone Pick","Gather Raw Black Ice","Truesilver Pick Grip","Process Raw Black Ice","Upgrade Chillwright","Hire an additional Chillwright"],
-                 */
-            },
-        }]
-    };
+    addProfile("Black Ice Shaping", {
+        profileName: "default",
+        isProfileActive: true,
+        level: {
+            0: ["dumb task"],
+            1: ["Blackice_Tier1_Process_Blackice","Blackice_Tier1_Recruit_Blackice_Smith"],
+            2: ["Blackice_Tier1_Process_Blackice","Blackice_Tier2_Recruit_Assistant_Cryomancer"],
+            3: ["Blackice_Tier1_Process_Blackice","Blackice_Tier2_Recruit_Assistant_Cryomancer"],
+            4: ["Blackice_Tier1_Process_Blackice","Blackice_Tier2_Recruit_Assistant_Cryomancer"],
+            5: ["Blackice_Tier1_Process_Blackice","Blackice_Tier2_Recruit_Assistant_Cryomancer"],
+            /*
+            1:["Forge Hammerstone Pick","Gather Raw Black Ice","Truesilver Pick Grip","Process Raw Black Ice","Upgrade Chillwright","Hire an additional Chillwright"],
+            2:["Forge Hammerstone Pick","Gather Raw Black Ice","Truesilver Pick Grip","Process Raw Black Ice","Upgrade Chillwright","Hire an additional Chillwright"],
+            3:["Forge Hammerstone Pick","Gather Raw Black Ice","Truesilver Pick Grip","Process Raw Black Ice","Upgrade Chillwright","Hire an additional Chillwright"],
+             */
+        },
+    });
 
-    definedTask["Jewelcrafting"] = {
-        taskListName : "Jewelcrafting",
-        taskName : "Jewelcrafting",
-        taskDefaultPriority : 1,
-        taskDefaultSlotNum : 0,
-        taskActive : true,
-        taskDescription : "",
-        profiles : [{
-            profileName : "default",
-            isProfileActive : true,
-            level : {
-                0 : ["Jewelcrafting_Tier0_Intro"],
-                1 : ["Jewelcrafting_Tier1_Waist_Offense_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                2 : ["Jewelcrafting_Tier1_Waist_Offense_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                3 : ["Jewelcrafting_Tier1_Neck_Offense_1", "Jewelcrafting_Tier1_Waist_Offense_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                4 : ["Jewelcrafting_Tier1_Neck_Offense_1", "Jewelcrafting_Tier1_Waist_Misc_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                5 : ["Jewelcrafting_Tier1_Neck_Offense_1", "Jewelcrafting_Tier1_Waist_Misc_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                6 : ["Jewelcrafting_Tier1_Neck_Misc_1", "Jewelcrafting_Tier1_Waist_Misc_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                7 : ["Jewelcrafting_Tier2_Waist_Offense_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                8 : ["Jewelcrafting_Tier2_Waist_Offense_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                9 : ["Jewelcrafting_Tier2_Neck_Offense_2", "Jewelcrafting_Tier2_Waist_Offense_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                10 : ["Jewelcrafting_Tier2_Waist_Misc_2", "Jewelcrafting_Tier2_Neck_Offense_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                11 : ["Jewelcrafting_Tier2_Waist_Misc_2", "Jewelcrafting_Tier2_Neck_Offense_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                12 : ["Jewelcrafting_Tier2_Waist_Misc_2", "Jewelcrafting_Tier2_Neck_Offense_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                13 : ["Jewelcrafting_Tier2_Neck_Misc_2", "Jewelcrafting_Tier2_Waist_Misc_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                14 : ["Jewelcrafting_Tier3_Waist_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                15 : ["Jewelcrafting_Tier3_Waist_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                16 : ["Jewelcrafting_Tier3_Neck_Offense_3", "Jewelcrafting_Tier3_Waist_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                17 : ["Jewelcrafting_Tier3_Neck_Offense_3", "Jewelcrafting_Tier3_Waist_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                18 : ["Jewelcrafting_Tier3_Neck_Offense_3", "Jewelcrafting_Tier3_Waist_Misc_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                19 : ["Jewelcrafting_Tier3_Neck_Offense_3", "Jewelcrafting_Tier3_Waist_Misc_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                
-                20 : ["Jewelcrafting_Tier3_Neck_Misc_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                21 : ["Jewelcrafting_Tier3_Neck_Misc_3", "Jewelcrafting_Tier4_Refine_Basic", "Jewelcrafting_Tier4_Gather_Basic", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                22 : ["Jewelcrafting_Tier4_Neck_Base_3", "Jewelcrafting_Tier4_Refine_Basic", "Jewelcrafting_Tier4_Gather_Basic", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                23 : ["Jewelcrafting_Tier4_Neck_Defense_3",  "Jewelcrafting_Tier4_Neck_Offense_3", "Jewelcrafting_Tier4_Gather_Basic", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                24 : ["Jewelcrafting_Tier4_Neck_Misc_3", "Jewelcrafting_Tier3_Neck_Misc_3", "Jewelcrafting_Tier4_Gather_Basic", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                //basic resources  for lvl 16 and 15 items. 
-                25 : ["Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-            },
-        }, {
-            profileName : "mass refining",
-            isProfileActive : true,
-            recursiveList : true,
-            useMassTask : true,
-            level : {
-                0 : ["Jewelcrafting_Tier0_Intro"],
-                1 : ["Jewelcrafting_Tier1_Refine_Basic_Mass", "Jewelcrafting_Tier1_Gather_Basic"],
-                7 : ["Jewelcrafting_Tier2_Refine_Basic_Mass"],
-                14 : ["Jewelcrafting_Tier3_Refine_Basic_Mass"],
-                21 : ["Jewelcrafting_Tier4_Refine_Basic_Mass"],
-            },
-        }]
-    };
+    addProfile("Jewelcrafting", {
+        profileName : "default",
+        isProfileActive : true,
+        level : {
+            0 : ["Jewelcrafting_Tier0_Intro"],
+            1 : ["Jewelcrafting_Tier1_Waist_Offense_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+            3 : ["Jewelcrafting_Tier1_Neck_Offense_1", "Jewelcrafting_Tier1_Waist_Offense_1"],
+            4 : ["Jewelcrafting_Tier1_Neck_Offense_1", "Jewelcrafting_Tier1_Waist_Misc_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+            6 : ["Jewelcrafting_Tier1_Neck_Misc_1", "Jewelcrafting_Tier1_Waist_Misc_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+            7 : ["Jewelcrafting_Tier2_Waist_Offense_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+            9 : ["Jewelcrafting_Tier2_Neck_Offense_2", "Jewelcrafting_Tier2_Waist_Offense_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+            10 : ["Jewelcrafting_Tier2_Waist_Misc_2", "Jewelcrafting_Tier2_Neck_Offense_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+            13 : ["Jewelcrafting_Tier2_Neck_Misc_2", "Jewelcrafting_Tier2_Waist_Misc_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+            14 : ["Jewelcrafting_Tier3_Waist_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+            15 : ["Jewelcrafting_Tier3_Waist_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+            16 : ["Jewelcrafting_Tier3_Neck_Offense_3", "Jewelcrafting_Tier3_Waist_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+            18 : ["Jewelcrafting_Tier3_Neck_Offense_3", "Jewelcrafting_Tier3_Waist_Misc_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+            20 : ["Jewelcrafting_Tier3_Neck_Misc_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+            21 : ["Jewelcrafting_Tier3_Neck_Misc_3", "Jewelcrafting_Tier4_Refine_Basic", "Jewelcrafting_Tier4_Gather_Basic", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+            22 : ["Jewelcrafting_Tier4_Neck_Base_3", "Jewelcrafting_Tier4_Refine_Basic", "Jewelcrafting_Tier4_Gather_Basic", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+            23 : ["Jewelcrafting_Tier4_Neck_Defense_3",  "Jewelcrafting_Tier4_Neck_Offense_3", "Jewelcrafting_Tier4_Gather_Basic", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+            24 : ["Jewelcrafting_Tier4_Neck_Misc_3", "Jewelcrafting_Tier3_Neck_Misc_3", "Jewelcrafting_Tier4_Gather_Basic", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+            25 : ["Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+        },
+    });
 
-    addProfileToDefined("Jewelcrafting", {
+    addProfile("Jewelcrafting", {
+        profileName : "mass refining",
+        isProfileActive : true,
+        useMassTask : true,
+        level : {
+            0 : ["Jewelcrafting_Tier0_Intro"],
+            1 : ["Jewelcrafting_Tier1_Refine_Basic_Mass", "Jewelcrafting_Tier1_Gather_Basic"],
+            7 : ["Jewelcrafting_Tier2_Refine_Basic_Mass"],
+            14 : ["Jewelcrafting_Tier3_Refine_Basic_Mass"],
+            21 : ["Jewelcrafting_Tier4_Refine_Basic_Mass"],
+        },
+    });
+
+    addProfile("Jewelcrafting", {
         profileName : "Craft Purple Neck",
         isProfileActive : true,
         level : {
@@ -987,17 +1084,17 @@ function _select_Gateway() { // Check for Gateway used to
             23 : ["Jewelcrafting_Tier3_Neck_Offense_3",  "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
             24 : ["Jewelcrafting_Tier3_Neck_Offense_3",  "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
             25 : ["Jewelcrafting_Tier4_Neck_Offense_4_Purple", //Exquisite Adamant Necklace of Piercing
-                  "Jewelcrafting_Tier4_Neck_Misc_4_Purple", // Exquisite Adamant Necklace of Recovery 
+                  "Jewelcrafting_Tier4_Neck_Misc_4_Purple", // Exquisite Adamant Necklace of Recovery
                   "Jewelcrafting_Tier4_Neck_Defense_4_Purple",//Exquisite Adamant Necklace of Regeneration
                   "Jewelcrafting_Tier4_Ring_Offense_4_Purple",//Exquisite Adamant Ring of Piercing
                   "Jewelcrafting_Tier4_Ring_Misc_4_Purple",//Exquisite Adamant Ring of Recovery
                   "Jewelcrafting_Tier4_Ring_Defense_4_Purple",//Exquisite Adamant Ring of Regeneration
-                  "Jewelcrafting_Tier3_Neck_Offense_3", 
+                  "Jewelcrafting_Tier3_Neck_Offense_3",
                   "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier1_Refine_Basic"],
         },
-    });
-    
-    addProfileToDefined("Jewelcrafting", {
+    }, "default");
+
+    addProfile("Jewelcrafting", {
         profileName : "Craft Purple Rings",
         isProfileActive : true,
         level : {
@@ -1016,15 +1113,14 @@ function _select_Gateway() { // Check for Gateway used to
                   "Jewelcrafting_Tier4_Ring_Misc_4_Purple",//Exquisite Adamant Ring of Recovery
                   "Jewelcrafting_Tier4_Ring_Defense_4_Purple",//Exquisite Adamant Ring of Regeneration
                   "Jewelcrafting_Tier4_Neck_Offense_4_Purple", //Exquisite Adamant Necklace of Piercing
-                  "Jewelcrafting_Tier4_Neck_Misc_4_Purple", // Exquisite Adamant Necklace of Recovery 
+                  "Jewelcrafting_Tier4_Neck_Misc_4_Purple", // Exquisite Adamant Necklace of Recovery
                   "Jewelcrafting_Tier4_Neck_Defense_4_Purple",//Exquisite Adamant Necklace of Regeneration
-                  "Jewelcrafting_Tier3_Ring_Offense_3",  
+                  "Jewelcrafting_Tier3_Ring_Offense_3",
                   "Jewelcrafting_Tier3_Refine_Basic"]
         },
-    });
-    
+    }, "default");
 
-    addProfileToDefined("Jewelcrafting", {
+    addProfile("Jewelcrafting", {
         profileName : "Craft Purple lvl 25",
         isProfileActive : true,
         level : {
@@ -1037,245 +1133,232 @@ function _select_Gateway() { // Check for Gateway used to
                   "Jewelcrafting_Tier3_Refine_Basic"//timeout task
                   ],
         },
-    }); 
-   
+    }, "default");
 
-    definedTask["Mailsmithing"] = {
-        taskListName : "Mailsmithing",
-        taskName : "Armorsmithing_Med",
-        taskDefaultPriority : 1,
-        taskDefaultSlotNum : 0,
-        taskActive : true,
-        taskDescription : "",
-        profiles : [{
-            profileName : "default",
-            isProfileActive : true,
-            level : {
-                0 : ["Med_Armorsmithing_Tier0_Intro"],
-                1 : ["Med_Armorsmithing_Tier1_Gather_Basic"],
-                2 : ["Med_Armorsmithing_Tier1_Chain_Armor_1", "Med_Armorsmithing_Tier1_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                3 : ["Med_Armorsmithing_Tier1_Chain_Armor_1", "Med_Armorsmithing_Tier1_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                4 : ["Med_Armorsmithing_Tier1_Chain_Armor_1", "Med_Armorsmithing_Tier1_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                5 : ["Med_Armorsmithing_Tier1_Chain_Armor_Set_1", "Med_Armorsmithing_Tier1_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                6 : ["Med_Armorsmithing_Tier1_Chain_Armor_Set_1", "Med_Armorsmithing_Tier1_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                7 : ["Med_Armorsmithing_Tier1_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt", "Med_Armorsmithing_Tier1_Gather_Basic", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                8 : ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                9 : ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                10 : ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt_2", "Med_Armorsmithing_Tier1_Gather_Basic", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                11 : ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_2", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt_2", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                12 : ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_2", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt_2", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                13 : ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_2", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt_2", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                14 : ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_2", "Med_Armorsmithing_Tier3_Chain_Shirt", "Med_Armorsmithing_Tier3_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                15 : ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                16 : ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                17 : ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                18 : ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                19 : ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                20 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
-                21 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
-                22 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
-                23 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
-                24 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
-                25 : ["Crafted_Med_Armorsmithing_T4_Refine_Basic", "Crafted_Med_Armorsmithing_T4_Gather_Basic"],
-            }
-        }, {
-            profileName : "mass refining",
-            isProfileActive : true,
-            recursiveList : true,
-            useMassTask : true,
-            level : {
-                0 : ["Med_Armorsmithing_Tier0_Intro"],
-                1 : ["Med_Armorsmithing_Tier1_Refine_Basic_Mass", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                7 : ["Med_Armorsmithing_Tier2_Refine_Basic_Mass"],
-                14 : ["Med_Armorsmithing_Tier3_Refine_Basic_Mass"],
-                21 : ["Crafted_Med_Armorsmithing_T4_Refine_Basic_Mass"],
-            },
-        }, {
-            profileName : "Wondrous Sprocket",
-            isProfileActive : false,
-            recursiveList : true,
-            level : {
-                0 : ["Med_Armorsmithing_Tier0_Intro"],
-                1 : ["Med_Armorsmithing_Tier1_Gather_Basic"],
-                6 : ["Med_Armorsmithing_Tier1_Event_Gond"],
-            },
-        }]
-    };
-        
-    addProfileToDefined("Mailsmithing", {
+    addProfile("Mailsmithing", {
+        profileName : "default",
+        isProfileActive : true,
+        level : {
+            0 : ["Med_Armorsmithing_Tier0_Intro"],
+            1 : ["Med_Armorsmithing_Tier1_Gather_Basic"],
+            2 : ["Med_Armorsmithing_Tier1_Chain_Armor_1", "Med_Armorsmithing_Tier1_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
+            3 : ["Med_Armorsmithing_Tier1_Chain_Armor_1", "Med_Armorsmithing_Tier1_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
+            4 : ["Med_Armorsmithing_Tier1_Chain_Armor_1", "Med_Armorsmithing_Tier1_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
+            5 : ["Med_Armorsmithing_Tier1_Chain_Armor_Set_1", "Med_Armorsmithing_Tier1_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
+            6 : ["Med_Armorsmithing_Tier1_Chain_Armor_Set_1", "Med_Armorsmithing_Tier1_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
+            7 : ["Med_Armorsmithing_Tier1_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt", "Med_Armorsmithing_Tier1_Gather_Basic", "Med_Armorsmithing_Tier1_Gather_Basic"],
+            8 : ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt", "Med_Armorsmithing_Tier1_Gather_Basic"],
+            9 : ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt", "Med_Armorsmithing_Tier1_Gather_Basic"],
+            10 : ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt_2", "Med_Armorsmithing_Tier1_Gather_Basic", "Med_Armorsmithing_Tier1_Gather_Basic"],
+            11 : ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_2", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt_2", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
+            12 : ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_2", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt_2", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
+            13 : ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_2", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt_2", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
+            14 : ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_2", "Med_Armorsmithing_Tier3_Chain_Shirt", "Med_Armorsmithing_Tier3_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
+            15 : ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
+            16 : ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
+            17 : ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
+            18 : ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
+            19 : ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
+            20 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
+            21 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
+            22 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
+            23 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
+            24 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
+            25 : ["Crafted_Med_Armorsmithing_T4_Refine_Basic", "Crafted_Med_Armorsmithing_T4_Gather_Basic"],
+        }
+    });
+
+    addProfile("Mailsmithing", {
+        profileName : "mass refining",
+        isProfileActive : true,
+        useMassTask : true,
+        level : {
+            0 : ["Med_Armorsmithing_Tier0_Intro"],
+            1 : ["Med_Armorsmithing_Tier1_Refine_Basic_Mass", "Med_Armorsmithing_Tier1_Gather_Basic"],
+            7 : ["Med_Armorsmithing_Tier2_Refine_Basic_Mass"],
+            14 : ["Med_Armorsmithing_Tier3_Refine_Basic_Mass"],
+            21 : ["Crafted_Med_Armorsmithing_T4_Refine_Basic_Mass"],
+        },
+    });
+
+    addProfile("Mailsmithing", {
+        profileName : "Wondrous Sprocket",
+        isProfileActive : false,
+        level : {
+            6 : ["Med_Armorsmithing_Tier1_Event_Gond"],
+        },
+    }, "default");
+
+    addProfile("Mailsmithing", {
         profileName : "Berserker's Chausses and rares",
         isProfileActive : true,
-        level : {                   
+        level : {
             25 : ["Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Berserker's Exquisite Elemental Chausses
                   "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank",//Berserker's Exquisite Elemental Chainmail
 
                   "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Soldier's Exquisite Elemental Chausses
                   "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Dps",//Soldier's Exquisite Elemental Chainmail
-                  
+
                   "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps",//Zealot's Exquisite Elemental Chainmail
-                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps",//Zealot's Exquisite Elemental Chausses 
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps",//Zealot's Exquisite Elemental Chausses
                   "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank",//Prelate's Exquisite Elemental Chainmail
-                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank",//Prelate's Exquisite Elemental Chausses 
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank",//Prelate's Exquisite Elemental Chausses
 
                   "Crafted_Med_Armorsmithing_Scale_T4_Green_Pants_Dps"//Berserker's Elemental Chausses
             ],
         },
-    });
+    }, "default");
 
-    addProfileToDefined("Mailsmithing", {
-            profileName : "Soldier's Chausses and rares",
-            isProfileActive : true,
-            level : {                   
-                25 : ["Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Soldier's Exquisite Elemental Chausses
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Dps",//Soldier's Exquisite Elemental Chainmail
+    addProfile("Mailsmithing", {
+        profileName : "Soldier's Chausses and rares",
+        isProfileActive : true,
+        level : {
+            25 : ["Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Soldier's Exquisite Elemental Chausses
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Dps",//Soldier's Exquisite Elemental Chainmail
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Berserker's Exquisite Elemental Chausses
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank",//Berserker's Exquisite Elemental Chainmail
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps",//Zealot's Exquisite Elemental Chainmail
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps",//Zealot's Exquisite Elemental Chausses
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank",//Prelate's Exquisite Elemental Chainmail
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank",//Prelate's Exquisite Elemental Chausses
+                  "Crafted_Med_Armorsmithing_Scale_T4_Green_Pants_Tank"//Soldier's Elemental Chausses
+            ],
+        },
+    }, "default");
 
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Berserker's Exquisite Elemental Chausses
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank",//Berserker's Exquisite Elemental Chainmail
+    addProfile("Mailsmithing", {
+        profileName : "Soldier's Chainmail and rares",
+        isProfileActive : true,
+        level : {
+            25 : ["Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Dps",//Soldier's Exquisite Elemental Chainmail
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Soldier's Exquisite Elemental Chausses
 
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps",//Zealot's Exquisite Elemental Chainmail
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps",//Zealot's Exquisite Elemental Chausses 
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank",//Prelate's Exquisite Elemental Chainmail
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank",//Prelate's Exquisite Elemental Chausses 
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank",//Berserker's Exquisite Elemental Chainmail
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Berserker's Exquisite Elemental Chausses
 
-                      "Crafted_Med_Armorsmithing_Scale_T4_Green_Pants_Tank"//Soldier's Elemental Chausses
-                ],
-            },
-        });
-    
-    addProfileToDefined("Mailsmithing", {
-            profileName : "Soldier's Chainmail and rares",
-            isProfileActive : true,
-            level : {                   
-                25 : ["Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Dps",//Soldier's Exquisite Elemental Chainmail
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Soldier's Exquisite Elemental Chausses
-                      
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank",//Berserker's Exquisite Elemental Chainmail
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Berserker's Exquisite Elemental Chausses
-                      
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps",//Zealot's Exquisite Elemental Chainmail
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps",//Zealot's Exquisite Elemental Chausses 
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank",//Prelate's Exquisite Elemental Chainmail
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank",//Prelate's Exquisite Elemental Chausses 
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps",//Zealot's Exquisite Elemental Chainmail
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps",//Zealot's Exquisite Elemental Chausses
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank",//Prelate's Exquisite Elemental Chainmail
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank",//Prelate's Exquisite Elemental Chausses
 
-                      "Crafted_Med_Armorsmithing_Scale_T4_Green_Shirt_Tank"//Soldier's Elemental Chainmail
-                ],
-            },
-        });
+                  "Crafted_Med_Armorsmithing_Scale_T4_Green_Shirt_Tank"//Soldier's Elemental Chainmail
+            ],
+        },
+    }, "default");
 
-    addProfileToDefined("Mailsmithing", {
-            profileName : "Berserker's Chainmail and rares",
-            isProfileActive : true,
-            level : {                   
-                25 : ["Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank",//Berserker's Exquisite Elemental Chainmail
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Berserker's Exquisite Elemental Chausses
+    addProfile("Mailsmithing", {
+        profileName : "Berserker's Chainmail and rares",
+        isProfileActive : true,
+        level : {
+            25 : ["Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank",//Berserker's Exquisite Elemental Chainmail
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Berserker's Exquisite Elemental Chausses
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Dps",//Soldier's Exquisite Elemental Chainmail
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Soldier's Exquisite Elemental Chausses
 
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Dps",//Soldier's Exquisite Elemental Chainmail
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Soldier's Exquisite Elemental Chausses
-                      
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps",//Zealot's Exquisite Elemental Chainmail
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps",//Zealot's Exquisite Elemental Chausses 
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank",//Prelate's Exquisite Elemental Chainmail
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank",//Prelate's Exquisite Elemental Chausses 
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps",//Zealot's Exquisite Elemental Chainmail
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps",//Zealot's Exquisite Elemental Chausses
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank",//Prelate's Exquisite Elemental Chainmail
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank",//Prelate's Exquisite Elemental Chausses
 
-                      "Crafted_Med_Armorsmithing_Scale_T4_Green_Shirt_Dps"//Berserker's Elemental Chainmail
-                ],
-            },
-        });
+                  "Crafted_Med_Armorsmithing_Scale_T4_Green_Shirt_Dps"//Berserker's Elemental Chainmail
+            ],
+        },
+    }, "default");
 
-    addProfileToDefined("Mailsmithing", {
-            profileName : "Zealot's Chausses and rares",
-            isProfileActive : true,
-            level : {                   
-                25 : ["Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps",//Zealot's Exquisite Elemental Chausses 
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps",//Zealot's Exquisite Elemental Chainmail
-                      
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank",//Prelate's Exquisite Elemental Chausses 
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank",//Prelate's Exquisite Elemental Chainmail                      
+    addProfile("Mailsmithing", {
+        profileName : "Zealot's Chausses and rares",
+        isProfileActive : true,
+        level : {
+            25 : ["Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps",//Zealot's Exquisite Elemental Chausses
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps",//Zealot's Exquisite Elemental Chainmail
 
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Soldier's Exquisite Elemental Chausses
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Dps",//Soldier's Exquisite Elemental Chainmail
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank",//Prelate's Exquisite Elemental Chausses
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank",//Prelate's Exquisite Elemental Chainmail
 
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Berserker's Exquisite Elemental Chausses
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank",//Berserker's Exquisite Elemental Chainmail
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Soldier's Exquisite Elemental Chausses
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Dps",//Soldier's Exquisite Elemental Chainmail
 
-                      "Crafted_Med_Armorsmithing_Chain_T4_Green_Pants_Dps"//Berserker's Elemental Chainmail
-                ],
-            },
-        });
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Berserker's Exquisite Elemental Chausses
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank",//Berserker's Exquisite Elemental Chainmail
 
-    addProfileToDefined("Mailsmithing", {
-            profileName : "Zealot's Chainmail and rares",
-            isProfileActive : true,
-            level : {                   
-                25 : ["Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps",//Zealot's Exquisite Elemental Chainmail
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps",//Zealot's Exquisite Elemental Chausses 
-                      
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank",//Prelate's Exquisite Elemental Chainmail                      
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank",//Prelate's Exquisite Elemental Chausses 
-                      
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Soldier's Exquisite Elemental Chausses
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Dps",//Soldier's Exquisite Elemental Chainmail
+                  "Crafted_Med_Armorsmithing_Chain_T4_Green_Pants_Dps"//Berserker's Elemental Chainmail
+            ],
+        },
+    }, "default");
 
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Berserker's Exquisite Elemental Chausses
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank",//Berserker's Exquisite Elemental Chainmail
+    addProfile("Mailsmithing", {
+        profileName : "Zealot's Chainmail and rares",
+        isProfileActive : true,
+        level : {
+            25 : ["Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps",//Zealot's Exquisite Elemental Chainmail
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps",//Zealot's Exquisite Elemental Chausses
 
-                      "Crafted_Med_Armorsmithing_Chain_T4_Green_Shirt_Dps"//Zealot's Elemental Chainmail
-                ],
-            },
-        });
-   
-   addProfileToDefined("Mailsmithing", {
-            profileName : "Prelate's Chainmail and rares",
-            isProfileActive : true,
-            level : {                   
-                25 : ["Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank",//Prelate's Exquisite Elemental Chainmail                      
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank",//Prelate's Exquisite Elemental Chausses 
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank",//Prelate's Exquisite Elemental Chainmail
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank",//Prelate's Exquisite Elemental Chausses
 
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps",//Zealot's Exquisite Elemental Chainmail
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps",//Zealot's Exquisite Elemental Chausses 
-                      
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Soldier's Exquisite Elemental Chausses
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Dps",//Soldier's Exquisite Elemental Chainmail
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Soldier's Exquisite Elemental Chausses
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Dps",//Soldier's Exquisite Elemental Chainmail
 
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Berserker's Exquisite Elemental Chausses
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank",//Berserker's Exquisite Elemental Chainmail
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Berserker's Exquisite Elemental Chausses
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank",//Berserker's Exquisite Elemental Chainmail
 
-                      "Crafted_Med_Armorsmithing_Chain_T4_Green_Shirt_Tank"//Prelate's Elemental Chainmail
-                ],
-            },
-        });
+                  "Crafted_Med_Armorsmithing_Chain_T4_Green_Shirt_Dps"//Zealot's Elemental Chainmail
+           ],
+       },
+   }, "default");
 
-    addProfileToDefined("Mailsmithing", {
-            profileName : "Prelate's Chausses and rares",
-            isProfileActive : true,
-            level : {                   
-                25 : ["Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank",//Prelate's Exquisite Elemental Chausses 
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank",//Prelate's Exquisite Elemental Chainmail                      
-                      
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps",//Zealot's Exquisite Elemental Chausses 
-                      "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps",//Zealot's Exquisite Elemental Chainmail
-                      
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Soldier's Exquisite Elemental Chausses
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Dps",//Soldier's Exquisite Elemental Chainmail
+   addProfile("Mailsmithing", {
+       profileName : "Prelate's Chainmail and rares",
+       isProfileActive : true,
+       level : {
+            25 : ["Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank",//Prelate's Exquisite Elemental Chainmail
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank",//Prelate's Exquisite Elemental Chausses
 
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Berserker's Exquisite Elemental Chausses
-                      "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank",//Berserker's Exquisite Elemental Chainmail
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps",//Zealot's Exquisite Elemental Chainmail
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps",//Zealot's Exquisite Elemental Chausses
 
-                      "Crafted_Med_Armorsmithing_Chain_T4_Green_Pants_Tank"//Prelate's Elemental Chainmail
-                ]
-            },
-        });
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Soldier's Exquisite Elemental Chausses
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Dps",//Soldier's Exquisite Elemental Chainmail
 
-    addProfileToDefined("Mailsmithing", {
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Berserker's Exquisite Elemental Chausses
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank",//Berserker's Exquisite Elemental Chainmail
+
+                  "Crafted_Med_Armorsmithing_Chain_T4_Green_Shirt_Tank"//Prelate's Elemental Chainmail
+            ],
+        },
+    }, "default");
+
+    addProfile("Mailsmithing", {
+        profileName : "Prelate's Chausses and rares",
+        isProfileActive : true,
+        level : {
+            25 : ["Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank",//Prelate's Exquisite Elemental Chausses
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank",//Prelate's Exquisite Elemental Chainmail
+
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps",//Zealot's Exquisite Elemental Chausses
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps",//Zealot's Exquisite Elemental Chainmail
+
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Soldier's Exquisite Elemental Chausses
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Dps",//Soldier's Exquisite Elemental Chainmail
+
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Berserker's Exquisite Elemental Chausses
+                  "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank",//Berserker's Exquisite Elemental Chainmail
+
+                  "Crafted_Med_Armorsmithing_Chain_T4_Green_Pants_Tank"//Prelate's Elemental Chainmail
+            ]
+        },
+    }, "default");
+
+    addProfile("Mailsmithing", {
         profileName : "craft rares only",
         isProfileActive : true,
-        level : {                   
-            25 : ["Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank",//Prelate's Exquisite Elemental Chausses 
-                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank",//Prelate's Exquisite Elemental Chainmail                      
-                      
-                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps",//Zealot's Exquisite Elemental Chausses 
+        level : {
+            25 : ["Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank",//Prelate's Exquisite Elemental Chausses
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank",//Prelate's Exquisite Elemental Chainmail
+
+                  "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps",//Zealot's Exquisite Elemental Chausses
                   "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps",//Zealot's Exquisite Elemental Chainmail
-                     
+
                   "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps",//Soldier's Exquisite Elemental Chausses
                   "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Dps",//Soldier's Exquisite Elemental Chainmail
 
@@ -1283,133 +1366,112 @@ function _select_Gateway() { // Check for Gateway used to
                   "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank",//Berserker's Exquisite Elemental Chainmail
                    "Med_Armorsmithing_Tier2_Refine_Basic"]
         }
-    }); 
+    }, "default");
 
-    definedTask["Platesmithing"] = {
-        taskListName: "Platesmithing",
-        taskName: "Armorsmithing_Heavy",
-        taskDefaultPriority: 1,
-        taskDefaultSlotNum: 0,
-        taskActive: true,
-        taskDescription: "",
-        profiles: [{
-            profileName: "default",
-            isProfileActive: true,
-            level: {
-                0: ["Hvy_Armorsmithing_Tier0_Intro"],
-                1: ["Hvy_Armorsmithing_Tier1_Plate_Boots_1", "Hvy_Armorsmithing_Tier1_Plate_Shirt_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
-                2: ["Hvy_Armorsmithing_Tier1_Plate_Armor_1", "Hvy_Armorsmithing_Tier1_Plate_Pants_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
-                3: ["Hvy_Armorsmithing_Tier1_Plate_Armor_1", "Hvy_Armorsmithing_Tier1_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
-                4: ["Hvy_Armorsmithing_Tier1_Plate_Armor_1", "Hvy_Armorsmithing_Tier1_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
-                5: ["Hvy_Armorsmithing_Tier1_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier1_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
-                6: ["Hvy_Armorsmithing_Tier1_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier1_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
-                7: ["Hvy_Armorsmithing_Tier1_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Shirt", "Hvy_Armorsmithing_Tier2_Shield_Set_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
-                8: ["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Pants_1", "Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Shirt", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
-                9: ["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Pants_1", "Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Shirt", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
-                10: ["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Pants_1", "Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Shirt_2", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
-                11: ["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Pants_2", "Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Shirt_2", "Hvy_Armorsmithing_Tier2_Plate_Pants_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
-                12: ["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Pants_2", "Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Shirt_2", "Hvy_Armorsmithing_Tier2_Plate_Pants_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
-                13: ["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Pants_2", "Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Shirt_2", "Hvy_Armorsmithing_Tier2_Plate_Pants_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
-                14: ["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Pants_2", "Hvy_Armorsmithing_Tier3_Plate_Shirt", "Hvy_Armorsmithing_Tier3_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
-                15: ["Hvy_Armorsmithing_Tier3_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants", "Hvy_Armorsmithing_Tier3_Plate_Shirt2", "Hvy_Armorsmithing_Tier3_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier1_Gather_Basic", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
-                16: ["Hvy_Armorsmithing_Tier3_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants2", "Hvy_Armorsmithing_Tier3_Plate_Shirt2", "Hvy_Armorsmithing_Tier3_Plate_Helm_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
-                17: ["Hvy_Armorsmithing_Tier3_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants2", "Hvy_Armorsmithing_Tier3_Plate_Shirt2", "Hvy_Armorsmithing_Tier3_Plate_Helm_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
-                18: ["Hvy_Armorsmithing_Tier3_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants2", "Hvy_Armorsmithing_Tier3_Plate_Shirt2", "Hvy_Armorsmithing_Tier3_Plate_Helm_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
-                19: ["Hvy_Armorsmithing_Tier3_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants2", "Hvy_Armorsmithing_Tier3_Plate_Shirt2", "Hvy_Armorsmithing_Tier3_Plate_Helm_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
-                20: ["Hvy_Armorsmithing_Tier3_Plate_Pants"],
-                21: ["Hvy_Armorsmithing_Tier3_Plate_Pants"],
-                22: ["Hvy_Armorsmithing_Tier3_Plate_Pants"],
-                23: ["Hvy_Armorsmithing_Tier3_Plate_Pants"],
-                24: ["Hvy_Armorsmithing_Tier3_Plate_Pants"],
-                25: ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Hvy_Armorsmithing_T4_Gather_Basic_Mass"],
-            },
-        }, {
-            profileName : "mass refining",
-            isProfileActive : true,
-            recursiveList : true,
-            useMassTask : true,
-            level : {
-                0 : ["Hvy_Armorsmithing_Tier0_Intro"],
-                1 : ["Hvy_Armorsmithing_Tier1_Refine_Basic_Mass", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
-                7 : ["Hvy_Armorsmithing_Tier2_Refine_Basic_Mass"],
-                14 : ["Hvy_Armorsmithing_Tier3_Refine_Basic_Mass"],
-                21 : ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass"],
-            },
-        }, {
-            profileName : "Wondrous Sprocket",
-            isProfileActive : false,
-            recursiveList : true,
-            level : {
-                0 : ["Hvy_Armorsmithing_Tier0_Intro"],
-                1 : ["Hvy_Armorsmithing_Tier1_Gather_Basic"],
-                6 : ["Hvy_Armorsmithing_Tier1_Event_Gond"],                
-            },
-        }]
-    };
+    addProfile("Platesmithing", {
+        profileName: "default",
+        isProfileActive: true,
+        level: {
+            0: ["Hvy_Armorsmithing_Tier0_Intro"],
+            1: ["Hvy_Armorsmithing_Tier1_Plate_Boots_1", "Hvy_Armorsmithing_Tier1_Plate_Shirt_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+            2: ["Hvy_Armorsmithing_Tier1_Plate_Armor_1", "Hvy_Armorsmithing_Tier1_Plate_Pants_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+            3: ["Hvy_Armorsmithing_Tier1_Plate_Armor_1", "Hvy_Armorsmithing_Tier1_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+            4: ["Hvy_Armorsmithing_Tier1_Plate_Armor_1", "Hvy_Armorsmithing_Tier1_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+            5: ["Hvy_Armorsmithing_Tier1_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier1_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+            6: ["Hvy_Armorsmithing_Tier1_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier1_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+            7: ["Hvy_Armorsmithing_Tier1_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Shirt", "Hvy_Armorsmithing_Tier2_Shield_Set_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+            8: ["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Pants_1", "Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Shirt", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+            9: ["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Pants_1", "Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Shirt", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+            10: ["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Pants_1", "Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Shirt_2", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+            11: ["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Pants_2", "Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Shirt_2", "Hvy_Armorsmithing_Tier2_Plate_Pants_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+            12: ["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Pants_2", "Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Shirt_2", "Hvy_Armorsmithing_Tier2_Plate_Pants_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+            13: ["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Pants_2", "Hvy_Armorsmithing_Tier2_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Shirt_2", "Hvy_Armorsmithing_Tier2_Plate_Pants_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+            14: ["Hvy_Armorsmithing_Tier2_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier2_Plate_Pants_2", "Hvy_Armorsmithing_Tier3_Plate_Shirt", "Hvy_Armorsmithing_Tier3_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+            15: ["Hvy_Armorsmithing_Tier3_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants", "Hvy_Armorsmithing_Tier3_Plate_Shirt2", "Hvy_Armorsmithing_Tier3_Plate_Boots_Set_1", "Hvy_Armorsmithing_Tier1_Gather_Basic", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+            16: ["Hvy_Armorsmithing_Tier3_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants2", "Hvy_Armorsmithing_Tier3_Plate_Shirt2", "Hvy_Armorsmithing_Tier3_Plate_Helm_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+            17: ["Hvy_Armorsmithing_Tier3_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants2", "Hvy_Armorsmithing_Tier3_Plate_Shirt2", "Hvy_Armorsmithing_Tier3_Plate_Helm_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+            18: ["Hvy_Armorsmithing_Tier3_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants2", "Hvy_Armorsmithing_Tier3_Plate_Shirt2", "Hvy_Armorsmithing_Tier3_Plate_Helm_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+            19: ["Hvy_Armorsmithing_Tier3_Plate_Armor_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants2", "Hvy_Armorsmithing_Tier3_Plate_Shirt2", "Hvy_Armorsmithing_Tier3_Plate_Helm_Set_1", "Hvy_Armorsmithing_Tier3_Plate_Pants", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+            20: ["Hvy_Armorsmithing_Tier3_Plate_Pants"],
+            25: ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Hvy_Armorsmithing_T4_Gather_Basic_Mass"],
+        },
+    });
 
-    definedTask["Leatherworking"] = {
-        taskListName : "Leatherworking",
-        taskName : "Leatherworking",
-        taskDefaultPriority : 1,
-        taskDefaultSlotNum : 0,
-        taskActive : true,
-        taskDescription : "",
-        profiles : [{
-            profileName : "default",
-            isProfileActive : true,
-            level : {
-                0 : ["Leatherworking_Tier0_Intro_1"],
-                1 : ["Leatherworking_Tier1_Leather_Boots_1", "Leatherworking_Tier1_Leather_Shirt_1", "Leatherworking_Tier1_Gather_Basic"],
-                2 : ["Leatherworking_Tier1_Leather_Armor_1", "Leatherworking_Tier1_Leather_Pants_1", "Leatherworking_Tier1_Gather_Basic"],
-                3 : ["Leatherworking_Tier1_Leather_Armor_1", "Leatherworking_Tier1_Leather_Boots_Set_1", "Leatherworking_Tier1_Gather_Basic"],
-                4 : ["Leatherworking_Tier1_Leather_Armor_1", "Leatherworking_Tier1_Leather_Boots_Set_1", "Leatherworking_Tier1_Gather_Basic"],
-                5 : ["Leatherworking_Tier1_Leather_Armor_Set_1", "Leatherworking_Tier1_Leather_Boots_Set_1", "Leatherworking_Tier1_Gather_Basic"],
-                6 : ["Leatherworking_Tier1_Leather_Armor_Set_1", "Leatherworking_Tier1_Leather_Boots_Set_1", "Leatherworking_Tier1_Gather_Basic"],
-                7 : ["Leatherworking_Tier1_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt", "Leatherworking_Tier1_Gather_Basic"],
-                8 : ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt", "Leatherworking_Tier1_Gather_Basic"],
-                9 : ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt", "Leatherworking_Tier1_Gather_Basic"],
-                10 : ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt_2", "Leatherworking_Tier1_Gather_Basic"],
-                11 : ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_2", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt_2", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier1_Gather_Basic"],
-                12 : ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_2", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt_2", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier1_Gather_Basic"],
-                13 : ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_2", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt_2", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier1_Gather_Basic"],
-                14 : ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_2", "Ornate Leatherworking_Tier1_Leather_Shirt_1", "Leatherworking_Tier3_Leather_Boots_Set_1", "Leatherworking_Tier1_Gather_Basic"],
-                15 : ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Boots_Set_1", "Leatherworking_Tier1_Gather_Basic"],
-                16 : ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants2", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Helm_Set_1", "Leatherworking_Tier3_Leather_Pants", "Leatherworking_Tier1_Gather_Basic"],
-                17 : ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants2", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Helm_Set_1", "Leatherworking_Tier3_Leather_Pants", "Leatherworking_Tier1_Gather_Basic"],
-                18 : ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants2", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Helm_Set_1", "Leatherworking_Tier3_Leather_Pants", "Leatherworking_Tier1_Gather_Basic"],
-                19 : ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants2", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Helm_Set_1", "Leatherworking_Tier3_Leather_Pants", "Leatherworking_Tier1_Gather_Basic"],
-                20 : ["Leatherworking_Tier3_Leather_Pants"],
-                21 : ["Leatherworking_Tier3_Leather_Pants"],
-                22 : ["Leatherworking_Tier3_Leather_Pants"],
-                23 : ["Leatherworking_Tier3_Leather_Pants"],
-                24 : ["Leatherworking_Tier3_Leather_Pants"],
-                25 : ["Leatherworking_Tier4_Refine_Basic", "Leatherworking_Tier4_Gather_Basic"],
-            },
-        }, {
-            profileName : "mass refining",
-            isProfileActive : true,
-            recursiveList : true,
-            useMassTask : true,
-            level : {
-                0 : ["Leatherworking_Tier0_Intro_1"],
-                1 : ["Leatherworking_Tier1_Refine_Basic_Mass", "Leatherworking_Tier1_Gather_Basic"],
-                7 : ["Leatherworking_Tier2_Refine_Basic_Mass"],
-                14 : ["Leatherworking_Tier3_Refine_Basic_Mass"],
-                21 : ["Leatherworking_Tier4_Refine_Basic_Mass"],
-            },
-        }, {
-            profileName : "Wondrous Sprocket",
-            isProfileActive : false,
-            recursiveList : true,
-            level : {
-                0 : ["Leatherworking_Tier0_Intro_1"],
-                1 : ["Leatherworking_Tier1_Gather_Basic"],
-                6 : ["Leatherworking_Tier1_Event_Gond"],                
-            },
-        }]
-    };
+    addProfile("Platesmithing", {
+        profileName : "mass refining",
+        isProfileActive : true,
+        useMassTask : true,
+        level : {
+            0 : ["Hvy_Armorsmithing_Tier0_Intro"],
+            1 : ["Hvy_Armorsmithing_Tier1_Refine_Basic_Mass", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+            7 : ["Hvy_Armorsmithing_Tier2_Refine_Basic_Mass"],
+            14 : ["Hvy_Armorsmithing_Tier3_Refine_Basic_Mass"],
+            21 : ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass"],
+        },
+    });
 
-    addProfileToDefined("Leatherworking", {
+    addProfile("Platesmithing", {
+        profileName : "Wondrous Sprocket",
+        isProfileActive : false,
+        level : {
+            6 : ["Hvy_Armorsmithing_Tier1_Event_Gond"],
+        },
+    }, "default");
+
+    addProfile("Leatherworking", {
+        profileName : "default",
+        isProfileActive : true,
+        level : {
+            0 : ["Leatherworking_Tier0_Intro_1"],
+            1 : ["Leatherworking_Tier1_Leather_Boots_1", "Leatherworking_Tier1_Leather_Shirt_1", "Leatherworking_Tier1_Gather_Basic"],
+            2 : ["Leatherworking_Tier1_Leather_Armor_1", "Leatherworking_Tier1_Leather_Pants_1", "Leatherworking_Tier1_Gather_Basic"],
+            3 : ["Leatherworking_Tier1_Leather_Armor_1", "Leatherworking_Tier1_Leather_Boots_Set_1", "Leatherworking_Tier1_Gather_Basic"],
+            5 : ["Leatherworking_Tier1_Leather_Armor_Set_1", "Leatherworking_Tier1_Leather_Boots_Set_1", "Leatherworking_Tier1_Gather_Basic"],
+            6 : ["Leatherworking_Tier1_Leather_Armor_Set_1", "Leatherworking_Tier1_Leather_Boots_Set_1", "Leatherworking_Tier1_Gather_Basic"],
+            7 : ["Leatherworking_Tier1_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt", "Leatherworking_Tier1_Gather_Basic"],
+            8 : ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt", "Leatherworking_Tier1_Gather_Basic"],
+            9 : ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt", "Leatherworking_Tier1_Gather_Basic"],
+            10 : ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt_2", "Leatherworking_Tier1_Gather_Basic"],
+            11 : ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_2", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt_2", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier1_Gather_Basic"],
+            12 : ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_2", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt_2", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier1_Gather_Basic"],
+            13 : ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_2", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt_2", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier1_Gather_Basic"],
+            14 : ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_2", "Ornate Leatherworking_Tier1_Leather_Shirt_1", "Leatherworking_Tier3_Leather_Boots_Set_1", "Leatherworking_Tier1_Gather_Basic"],
+            15 : ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Boots_Set_1", "Leatherworking_Tier1_Gather_Basic"],
+            16 : ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants2", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Helm_Set_1", "Leatherworking_Tier3_Leather_Pants", "Leatherworking_Tier1_Gather_Basic"],
+            17 : ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants2", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Helm_Set_1", "Leatherworking_Tier3_Leather_Pants", "Leatherworking_Tier1_Gather_Basic"],
+            18 : ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants2", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Helm_Set_1", "Leatherworking_Tier3_Leather_Pants", "Leatherworking_Tier1_Gather_Basic"],
+            19 : ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants2", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Helm_Set_1", "Leatherworking_Tier3_Leather_Pants", "Leatherworking_Tier1_Gather_Basic"],
+            20 : ["Leatherworking_Tier3_Leather_Pants"],
+            21 : ["Leatherworking_Tier3_Leather_Pants"],
+            22 : ["Leatherworking_Tier3_Leather_Pants"],
+            23 : ["Leatherworking_Tier3_Leather_Pants"],
+            24 : ["Leatherworking_Tier3_Leather_Pants"],
+            25 : ["Leatherworking_Tier4_Refine_Basic", "Leatherworking_Tier4_Gather_Basic"],
+        },
+    });
+
+    addProfile("Leatherworking", {
+        profileName : "mass refining",
+        isProfileActive : true,
+        useMassTask : true,
+        level : {
+            0 : ["Leatherworking_Tier0_Intro_1"],
+            1 : ["Leatherworking_Tier1_Refine_Basic_Mass", "Leatherworking_Tier1_Gather_Basic"],
+            7 : ["Leatherworking_Tier2_Refine_Basic_Mass"],
+            14 : ["Leatherworking_Tier3_Refine_Basic_Mass"],
+            21 : ["Leatherworking_Tier4_Refine_Basic_Mass"],
+        },
+    });
+
+    addProfile("Leatherworking", {
+        profileName : "Wondrous Sprocket",
+        isProfileActive : false,
+        level : {
+            6 : ["Leatherworking_Tier1_Event_Gond"],
+        },
+    }, "default");
+
+    addProfile("Leatherworking", {
         profileName : "craft purples only",
         level : {
             //purples  first. shirts > tunics > pants.
@@ -1419,9 +1481,9 @@ function _select_Gateway() { // Check for Gateway used to
                   "Leatherworking_Tier4_Leather_Pants_Special_2", //Exquisite Elemental Pants
                   "Leatherworking_Tier3_Gather_Basic"]
         }
-    });
+    }, "default");
 
-    addProfileToDefined("Leatherworking", {
+    addProfile("Leatherworking", {
         profileName : "craft  Elemental Shirts",
         level : {
             //purples  first. shirts > tunics > pants.
@@ -1429,12 +1491,12 @@ function _select_Gateway() { // Check for Gateway used to
                   'Leatherworking_Tier4_Leather_Shirt_Special_2_Set2',//Exquisite Elemental Tunic
                   'Leatherworking_Tier4_Leather_Pants_Special_2_Set2',//Exquisite Elemental Trousers
                   'Leatherworking_Tier4_Leather_Pants_Special_2', //Exquisite Elemental Pants
-                  'Leatherworking_Tier4_Leather_Shirt2',//Elemental Leather Shirt 
+                  'Leatherworking_Tier4_Leather_Shirt2',//Elemental Leather Shirt
                     ]
         }
-    });
+    }, "default");
 
-    addProfileToDefined("Leatherworking", {
+    addProfile("Leatherworking", {
         profileName : "craft  Elemental Tunic",
         level : {
             //purples  first. shirts > tunics > pants.
@@ -1442,12 +1504,12 @@ function _select_Gateway() { // Check for Gateway used to
                   'Leatherworking_Tier4_Leather_Shirt_Special_2',//Exquisite Elemental Shirt
                   'Leatherworking_Tier4_Leather_Pants_Special_2_Set2',//Exquisite Elemental Trousers
                   'Leatherworking_Tier4_Leather_Pants_Special_2', //Exquisite Elemental Pants
-                  'Leatherworking_Tier4_Leather_Shirt2_Set2',//Elemental Leather Tunic 
+                  'Leatherworking_Tier4_Leather_Shirt2_Set2',//Elemental Leather Tunic
                     ]
         }
-    });
-   
-    addProfileToDefined("Leatherworking", {
+    }, "default");
+
+    addProfile("Leatherworking", {
         profileName : "craft  Elemental Trousers(?)",
         level : {
             //purples  first. shirts > tunics > pants.
@@ -1455,12 +1517,12 @@ function _select_Gateway() { // Check for Gateway used to
                   'Leatherworking_Tier4_Leather_Pants_Special_2', //Exquisite Elemental Pants
                   'Leatherworking_Tier4_Leather_Shirt_Special_2_Set2',//Exquisite Elemental Tunic
                   'Leatherworking_Tier4_Leather_Shirt_Special_2',//Exquisite Elemental Shirt
-                  'Leatherworking_Tier4_Leather_Pants2_Set2',//Elemental Leather Trousers 
+                  'Leatherworking_Tier4_Leather_Pants2_Set2',//Elemental Leather Trousers
                     ]
         }
-    });
+    }, "default");
 
-    addProfileToDefined("Leatherworking", {
+    addProfile("Leatherworking", {
         profileName : "craft  Elemental Pants",
         level : {
             //purples  first. shirts > tunics > pants.
@@ -1468,356 +1530,264 @@ function _select_Gateway() { // Check for Gateway used to
                   'Leatherworking_Tier4_Leather_Pants_Special_2_Set2',//Exquisite Elemental Trousers
                   'Leatherworking_Tier4_Leather_Shirt_Special_2_Set2',//Exquisite Elemental Tunic
                   'Leatherdeworking_Tier4_Leather_Shirt_Special_2',//Exquisite Elemental Shirt
-                  'Leatherworking_Tier4_Leather_Pants2',//Elemental Leather Trousers 
+                  'Leatherworking_Tier4_Leather_Pants2',//Elemental Leather Trousers
                     ]
         }
+    }, "default");
+
+    addProfile("Tailoring", {
+        profileName: "default",
+        isProfileActive: true,
+        level: {
+            0: ["Tailoring_Tier0_Intro"],
+            1: ["Tailoring_Tier1_Cloth_Boots_1", "Tailoring_Tier1_Cloth_Shirt_1", "Tailoring_Tier1_Gather_Basic"],
+            2: ["Tailoring_Tier1_Cloth_Armor_1", "Tailoring_Tier1_Cloth_Pants_1", "Tailoring_Tier1_Gather_Basic"],
+            3: ["Tailoring_Tier1_Cloth_Armor_1", "Tailoring_Tier1_Cloth_Boots_Set_1", "Tailoring_Tier1_Gather_Basic"],
+            4: ["Tailoring_Tier1_Cloth_Armor_1", "Tailoring_Tier1_Cloth_Boots_Set_1", "Tailoring_Tier1_Gather_Basic"],
+            5: ["Tailoring_Tier1_Cloth_Armor_Set_1", "Tailoring_Tier1_Cloth_Boots_Set_1", "Tailoring_Tier1_Gather_Basic"],
+            6: ["Tailoring_Tier1_Cloth_Armor_Set_1", "Tailoring_Tier1_Cloth_Boots_Set_1", "Tailoring_Tier1_Gather_Basic"],
+            7: ["Tailoring_Tier1_Cloth_Armor_Set_1", "Tailoring_Tier2_Cloth_Boots_Set_1", "Tailoring_Tier2_Cloth_Shirt", "Tailoring_Tier1_Gather_Basic", "Tailoring_Tier1_Gather_Basic"],
+            8: ["Tailoring_Tier2_Cloth_Armor_Set_1", "Tailoring_Tier2_Cloth_Pants_1", "Tailoring_Tier2_Cloth_Boots_Set_1", "Tailoring_Tier2_Cloth_Shirt", "Tailoring_Tier1_Gather_Basic"],
+            9: ["Tailoring_Tier2_Cloth_Armor_Set_1", "Tailoring_Tier2_Cloth_Pants_1", "Tailoring_Tier2_Cloth_Boots_Set_1", "Tailoring_Tier2_Cloth_Shirt", "Tailoring_Tier1_Gather_Basic"],
+            10: ["Tailoring_Tier2_Cloth_Armor_Set_1", "Tailoring_Tier2_Cloth_Pants_1", "Tailoring_Tier2_Cloth_Boots_Set_1", "Tailoring_Tier2_Cloth_Shirt_2", "Tailoring_Tier1_Gather_Basic"],
+            11: ["Tailoring_Tier2_Cloth_Armor_Set_1", "Tailoring_Tier2_Cloth_Pants_2", "Tailoring_Tier2_Cloth_Boots_Set_1", "Tailoring_Tier2_Cloth_Shirt_2", "Tailoring_Tier2_Cloth_Pants_1", "Tailoring_Tier1_Gather_Basic"],
+            12: ["Tailoring_Tier2_Cloth_Armor_Set_1", "Tailoring_Tier2_Cloth_Pants_2", "Tailoring_Tier2_Cloth_Boots_Set_1", "Tailoring_Tier2_Cloth_Shirt_2", "Tailoring_Tier2_Cloth_Pants_1", "Tailoring_Tier1_Gather_Basic"],
+            13: ["Tailoring_Tier2_Cloth_Armor_Set_1", "Tailoring_Tier2_Cloth_Pants_2", "Tailoring_Tier2_Cloth_Boots_Set_1", "Tailoring_Tier2_Cloth_Shirt_2", "Tailoring_Tier2_Cloth_Pants_1", "Tailoring_Tier1_Gather_Basic"],
+            14: ["Tailoring_Tier2_Cloth_Armor_Set_1", "Tailoring_Tier2_Cloth_Pants_2", "Tailoring_Tier3_Cloth_Shirt", "Tailoring_Tier3_Cloth_Boots_Set_1", "Tailoring_Tier1_Gather_Basic"],
+            15: ["Tailoring_Tier3_Cloth_Armor_Set_1", "Tailoring_Tier3_Cloth_Pants", "Tailoring_Tier3_Cloth_Shirt2", "Tailoring_Tier3_Cloth_Boots_Set_1", "Tailoring_Tier1_Gather_Basic"],
+            16: ["Tailoring_Tier3_Cloth_Armor_Set_1", "Tailoring_Tier3_Cloth_Pants", "Tailoring_Tier3_Cloth_Shirt2", "Tailoring_Tier3_Cloth_Helm_Set_1", "Tailoring_Tier1_Gather_Basic"],
+            17: ["Tailoring_Tier3_Cloth_Armor_Set_1", "Tailoring_Tier3_Cloth_Pants2_Set2", "Tailoring_Tier3_Cloth_Shirt2", "Tailoring_Tier3_Cloth_Helm_Set_1", "Tailoring_Tier1_Gather_Basic"],
+            18: ["Tailoring_Tier3_Cloth_Armor_Set_3", "Tailoring_Tier3_Cloth_Armor_Set_2", "Tailoring_Tier3_Cloth_Armor_Set_1", "Tailoring_Tier3_Cloth_Pants2_Set2", "Tailoring_Tier3_Cloth_Shirt2", "Tailoring_Tier3_Cloth_Helm_Set_1", "Tailoring_Tier3_Cloth_Pants", "Tailoring_Tier1_Gather_Basic"],
+            19: ["Tailoring_Tier3_Cloth_Armor_Set_3", "Tailoring_Tier3_Cloth_Armor_Set_2", "Tailoring_Tier3_Cloth_Armor_Set_1", "Tailoring_Tier3_Cloth_Pants2_Set2", "Tailoring_Tier3_Cloth_Shirt2", "Tailoring_Tier3_Cloth_Helm_Set_1", "Tailoring_Tier3_Cloth_Pants", "Tailoring_Tier1_Gather_Basic"],
+            20: ["Tailoring_Tier3_Cloth_Pants"],
+            25: ["Crafted_Tailoring_T4_Refine_Basic", "Crafted_Tailoring_T4_Gather_Basic"],
+        },
     });
 
-    definedTask["Tailoring"] = {
-        taskListName: "Tailoring",
-        taskName: "Tailoring",
-        taskDefaultPriority: 1,
-        taskDefaultSlotNum: 0,
-        taskActive: true,
-        taskDescription: "",
-        profiles: [{
-            profileName: "default",
-            isProfileActive: true,
-            level: {
-                0: ["Tailoring_Tier0_Intro"],
-                1: ["Tailoring_Tier1_Cloth_Boots_1", "Tailoring_Tier1_Cloth_Shirt_1", "Tailoring_Tier1_Gather_Basic"],
-                2: ["Tailoring_Tier1_Cloth_Armor_1", "Tailoring_Tier1_Cloth_Pants_1", "Tailoring_Tier1_Gather_Basic"],
-                3: ["Tailoring_Tier1_Cloth_Armor_1", "Tailoring_Tier1_Cloth_Boots_Set_1", "Tailoring_Tier1_Gather_Basic"],
-                4: ["Tailoring_Tier1_Cloth_Armor_1", "Tailoring_Tier1_Cloth_Boots_Set_1", "Tailoring_Tier1_Gather_Basic"],
-                5: ["Tailoring_Tier1_Cloth_Armor_Set_1", "Tailoring_Tier1_Cloth_Boots_Set_1", "Tailoring_Tier1_Gather_Basic"],
-                6: ["Tailoring_Tier1_Cloth_Armor_Set_1", "Tailoring_Tier1_Cloth_Boots_Set_1", "Tailoring_Tier1_Gather_Basic"],
-                7: ["Tailoring_Tier1_Cloth_Armor_Set_1", "Tailoring_Tier2_Cloth_Boots_Set_1", "Tailoring_Tier2_Cloth_Shirt", "Tailoring_Tier1_Gather_Basic", "Tailoring_Tier1_Gather_Basic"],
-                8: ["Tailoring_Tier2_Cloth_Armor_Set_1", "Tailoring_Tier2_Cloth_Pants_1", "Tailoring_Tier2_Cloth_Boots_Set_1", "Tailoring_Tier2_Cloth_Shirt", "Tailoring_Tier1_Gather_Basic"],
-                9: ["Tailoring_Tier2_Cloth_Armor_Set_1", "Tailoring_Tier2_Cloth_Pants_1", "Tailoring_Tier2_Cloth_Boots_Set_1", "Tailoring_Tier2_Cloth_Shirt", "Tailoring_Tier1_Gather_Basic"],
-                10: ["Tailoring_Tier2_Cloth_Armor_Set_1", "Tailoring_Tier2_Cloth_Pants_1", "Tailoring_Tier2_Cloth_Boots_Set_1", "Tailoring_Tier2_Cloth_Shirt_2", "Tailoring_Tier1_Gather_Basic"],
-                11: ["Tailoring_Tier2_Cloth_Armor_Set_1", "Tailoring_Tier2_Cloth_Pants_2", "Tailoring_Tier2_Cloth_Boots_Set_1", "Tailoring_Tier2_Cloth_Shirt_2", "Tailoring_Tier2_Cloth_Pants_1", "Tailoring_Tier1_Gather_Basic"],
-                12: ["Tailoring_Tier2_Cloth_Armor_Set_1", "Tailoring_Tier2_Cloth_Pants_2", "Tailoring_Tier2_Cloth_Boots_Set_1", "Tailoring_Tier2_Cloth_Shirt_2", "Tailoring_Tier2_Cloth_Pants_1", "Tailoring_Tier1_Gather_Basic"],
-                13: ["Tailoring_Tier2_Cloth_Armor_Set_1", "Tailoring_Tier2_Cloth_Pants_2", "Tailoring_Tier2_Cloth_Boots_Set_1", "Tailoring_Tier2_Cloth_Shirt_2", "Tailoring_Tier2_Cloth_Pants_1", "Tailoring_Tier1_Gather_Basic"],
-                14: ["Tailoring_Tier2_Cloth_Armor_Set_1", "Tailoring_Tier2_Cloth_Pants_2", "Tailoring_Tier3_Cloth_Shirt", "Tailoring_Tier3_Cloth_Boots_Set_1", "Tailoring_Tier1_Gather_Basic"],
-                15: ["Tailoring_Tier3_Cloth_Armor_Set_1", "Tailoring_Tier3_Cloth_Pants", "Tailoring_Tier3_Cloth_Shirt2", "Tailoring_Tier3_Cloth_Boots_Set_1", "Tailoring_Tier1_Gather_Basic"],
-                16: ["Tailoring_Tier3_Cloth_Armor_Set_1", "Tailoring_Tier3_Cloth_Pants", "Tailoring_Tier3_Cloth_Shirt2", "Tailoring_Tier3_Cloth_Helm_Set_1", "Tailoring_Tier1_Gather_Basic"],
-                17: ["Tailoring_Tier3_Cloth_Armor_Set_1", "Tailoring_Tier3_Cloth_Pants2_Set2", "Tailoring_Tier3_Cloth_Shirt2", "Tailoring_Tier3_Cloth_Helm_Set_1", "Tailoring_Tier1_Gather_Basic"],
-                18: ["Tailoring_Tier3_Cloth_Armor_Set_3", "Tailoring_Tier3_Cloth_Armor_Set_2", "Tailoring_Tier3_Cloth_Armor_Set_1", "Tailoring_Tier3_Cloth_Pants2_Set2", "Tailoring_Tier3_Cloth_Shirt2", "Tailoring_Tier3_Cloth_Helm_Set_1", "Tailoring_Tier3_Cloth_Pants", "Tailoring_Tier1_Gather_Basic"],
-                19: ["Tailoring_Tier3_Cloth_Armor_Set_3", "Tailoring_Tier3_Cloth_Armor_Set_2", "Tailoring_Tier3_Cloth_Armor_Set_1", "Tailoring_Tier3_Cloth_Pants2_Set2", "Tailoring_Tier3_Cloth_Shirt2", "Tailoring_Tier3_Cloth_Helm_Set_1", "Tailoring_Tier3_Cloth_Pants", "Tailoring_Tier1_Gather_Basic"],
-                //19:["Cloth Robes +4","Fancy Cloth Pants","Fancy Cloth Shirt","Cloth Cap +4","Ornate Cloth Pants","Upgrade Outfitter","Upgrade Weaver","Hire an additional Weaver"],
-                20: ["Tailoring_Tier3_Cloth_Pants"],
-                21: ["Tailoring_Tier3_Cloth_Pants"],
-                22: ["Tailoring_Tier3_Cloth_Pants"],
-                23: ["Tailoring_Tier3_Cloth_Pants"],
-                24: ["Tailoring_Tier3_Cloth_Pants"],
-                25: ["Crafted_Tailoring_T4_Refine_Basic", "Crafted_Tailoring_T4_Gather_Basic"],
-            },
-        }, {
-            profileName : "mass refining",
-            isProfileActive : true,
-            recursiveList : true,
-            useMassTask : true,
-            level : {
-                0 : ["Tailoring_Tier0_Intro"],
-                1 : ["Tailoring_Tier1_Refine_Basic_Mass", "Tailoring_Tier1_Gather_Basic"],
-                7 : ["Tailoring_Tier2_Refine_Basic_Mass"],
-                14 : ["Tailoring_Tier3_Refine_Basic_Mass"],
-                21 : ["Crafted_Tailoring_T4_Refine_Basic_Mass"],
-            },
-        }, {
-            profileName : "Wondrous Sprocket",
-            isProfileActive : false,
-            recursiveList : true,
-            level : {
-                0 : ["Tailoring_Tier0_Intro"],
-                1 : ["Tailoring_Tier1_Gather_Basic"],
-                6 : ["Tailoring_Tier1_Event_Gond"],                
-            },
-        }]
-    };
-    
-    definedTask["Artificing"] = {
-        taskListName: "Artificing",
-        taskName: "Artificing",
-        taskDefaultPriority: 1,
-        taskDefaultSlotNum: 0,
-        taskActive: true,
-        taskDescription: "",
-        profiles: [{
-            profileName: "default",
-            isProfileActive: true,
-            level: {
-                0: ["Artificing_Tier0_Intro_1"],
-                1: ["Artificing_Tier1_Pactblade_Convergence_1", "Artificing_Tier1_Symbol_Virtuous_1", "Artificing_Tier1_Gather_Basic"],
-                2: ["Artificing_Tier1_Pactblade_Convergence_1", "Artificing_Tier1_Icon_Virtuous_1", "Artificing_Tier1_Gather_Basic"],
-                3: ["Artificing_Tier1_Pactblade_Convergence_1", "Artificing_Tier1_Icon_Virtuous_1", "Artificing_Tier1_Gather_Basic"],
-                4: ["Artificing_Tier1_Pactblade_Convergence_2", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier1_Gather_Basic"],
-                5: ["Artificing_Tier1_Pactblade_Convergence_2", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier1_Gather_Basic"],
-                6: ["Artificing_Tier1_Pactblade_Convergence_2", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier1_Gather_Basic"],
-                7: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
-                8: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
-                9: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
-                10: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
-                11: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
-                12: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
-                13: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
-                14: ["Artificing_Tier3_Pactblade_Temptation_4", "Artificing_Tier3_Icon_Virtuous_4", "Artificing_Tier3_Refine_Basic", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
-                15: ["Artificing_Tier3_Pactblade_Temptation_4", "Artificing_Tier3_Icon_Virtuous_4", "Artificing_Tier3_Refine_Basic", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
-                16: ["Artificing_Tier3_Pactblade_Temptation_4", "Artificing_Tier3_Icon_Virtuous_4", "Artificing_Tier3_Refine_Basic", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
-                17: ["Artificing_Tier3_Pactblade_Temptation_5", "Artificing_Tier3_Icon_Virtuous_5", "Artificing_Tier3_Refine_Basic", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
-                18: ["Artificing_Tier3_Pactblade_Temptation_5", "Artificing_Tier3_Icon_Virtuous_5", "Artificing_Tier3_Refine_Basic", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
-                19: ["Artificing_Tier3_Pactblade_Temptation_5", "Artificing_Tier3_Icon_Virtuous_5", "Artificing_Tier3_Refine_Basic", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
-                //19:["Virtuous Icon +5","Upgrade Engraver","Upgrade Carver","Hire an additional Carver"],
-                20: ["Artificing_Tier3_Pactblade_Temptation_5", "Artificing_Tier3_Icon_Virtuous_5", "Artificing_Tier3_Refine_Basic", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
-                21: ["Artificing_Tier4_Gather_Basic"],
-                22: ["Artificing_Tier4_Gather_Basic"],
-                23: ["Artificing_Tier4_Gather_Basic"],
-                24: ["Artificing_Tier4_Gather_Basic"],
-                25: ["Artificing_Tier4_Refine_Basic", "Artificing_Tier4_Gather_Basic"],
-            },
-        }, {
-            profileName : "mass refining",
-            isProfileActive : true,
-            recursiveList : true,
-            useMassTask : true,
-            level : {
-                0 : ["Artificing_Tier0_Intro_1"],
-                1 : ["Artificing_Tier1_Refine_Basic_Mass", "Artificing_Tier1_Gather_Basic"],
-                7 : ["Artificing_Tier2_Refine_Basic_Mass"],
-                14 : ["Artificing_Tier3_Refine_Basic_Mass"],
-                21 : ["Artificing_Tier4_Refine_Basic_Mass"],
-            },
-        }, {
-            profileName : "Wondrous Sprocket",
-            isProfileActive : false,
-            recursiveList : true,
-            level : {
-                0 : ["Artificing_Tier0_Intro_1"],
-                1 : ["Artificing_Tier1_Gather_Basic"],
-                6 : ["Artificing_Tier1_Event_Gond"],                
-            },
-        }]
-    };
+    addProfile("Tailoring", {
+        profileName : "mass refining",
+        isProfileActive : true,
+        useMassTask : true,
+        level : {
+            0 : ["Tailoring_Tier0_Intro"],
+            1 : ["Tailoring_Tier1_Refine_Basic_Mass", "Tailoring_Tier1_Gather_Basic"],
+            7 : ["Tailoring_Tier2_Refine_Basic_Mass"],
+            14 : ["Tailoring_Tier3_Refine_Basic_Mass"],
+            21 : ["Crafted_Tailoring_T4_Refine_Basic_Mass"],
+        },
+    });
 
-    definedTask["Weaponsmithing"] = {
-        taskListName: "Weaponsmithing",
-        taskName: "Weaponsmithing",
-        taskDefaultPriority: 1,
-        taskDefaultSlotNum: 0,
-        taskActive: true,
-        taskDescription: "",
-        profiles: [{
-            profileName: "default",
-            isProfileActive: true,
-            level: {
-                0: ["Weaponsmithing_Tier0_Intro"],
-                1: ["Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
-                2: ["Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
-                3: ["Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
-                4: ["Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
-                5: ["Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
-                6: ["Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
-                7: ["Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
-                8: ["Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
-                9: ["Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
-                10: ["Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
-                11: ["Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
-                12: ["Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
-                13: ["Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
-                14: ["Weaponsmithing_Tier3_Dagger_4", "Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
-                15: ["Weaponsmithing_Tier3_Dagger_4", "Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
-                16: ["Weaponsmithing_Tier3_Dagger_4", "Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
-                17: ["Weaponsmithing_Tier3_Dagger_4", "Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
-                18: ["Weaponsmithing_Tier3_Dagger_4", "Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
-                19: ["Weaponsmithing_Tier3_Dagger_4", "Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
-                20: ["Weaponsmithing_Tier3_Dagger_Set_2", "Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
-                //19:["Dagger+4","Upgrade Grinder","Upgrade Smelter","Hire an additional Smelter"],
-                21: ["Weaponsmithing_Tier4_Gather_Basic"],
-                22: ["Weaponsmithing_Tier4_Gather_Basic"],
-                23: ["Weaponsmithing_Tier4_Gather_Basic"],
-                24: ["Weaponsmithing_Tier4_Gather_Basic"],
-                25: ["Weaponsmithing_Tier4_Refine_Basic", "Weaponsmithing_Tier4_Gather_Basic"],
-            },
-        }, {
-            profileName : "mass refining",
-            isProfileActive : true,
-            recursiveList : true,
-            useMassTask : true,
-            level : {
-                0 : ["Weaponsmithing_Tier0_Intro"],
-                1 : ["Weaponsmithing_Tier1_Refine_Basic_Mass", "Weaponsmithing_Tier1_Gather_Basic"],
-                7 : ["Weaponsmithing_Tier2_Refine_Basic_Mass"],
-                14 : ["Weaponsmithing_Tier3_Refine_Basic_Mass"],
-                21 : ["Weaponsmithing_Tier4_Refine_Basic_Mass"],
-            },
-        }, {
-            profileName : "Wondrous Sprocket",
-            isProfileActive : false,
-            recursiveList : true,
-            level : {
-                0 : ["Weaponsmithing_Tier0_Intro"],
-                1 : ["Weaponsmithing_Tier1_Gather_Basic"],
-                6 : ["Weaponsmithing_Tier1_Event_Gond"],                
-            },
-        }]
-    };
+    addProfile("Tailoring", {
+        profileName : "Wondrous Sprocket",
+        isProfileActive : false,
+        level : {
+            6 : ["Tailoring_Tier1_Event_Gond"],
+        },
+    }, "default");
 
-    definedTask["Alchemy"] = {
-        taskListName : "Alchemy",
-        taskName : "Alchemy",
-        taskDefaultPriority : 1,
-        taskDefaultSlotNum : 0,
-        taskActive : true,
-        taskDescription : "",
-        profiles : [{
-            profileName : "default",
-            isProfileActive : true,
-            level : {
-                0 : ["Alchemy_Tier0_Intro_1"],
-                1 : ["Alchemy_Tier1_Experiment_Rank2", "Alchemy_Tier1_Experimentation_Rank1", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
-                2 : ["Alchemy_Tier1_Experiment_Rank3", "Alchemy_Tier1_Experimentation_Rank2", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
-                3 : ["Alchemy_Tier1_Experiment_Rank4", "Alchemy_Tier1_Experimentation_Rank3", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
-                4 : ["Alchemy_Tier1_Experiment_Rank5", "Alchemy_Tier1_Experimentation_Rank4", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
-                5 : ["Alchemy_Tier1_Experiment_Rank6", "Alchemy_Tier1_Experimentation_Rank5", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
-                6 : ["Alchemy_Tier1_Experiment_Rank7", "Alchemy_Tier1_Experimentation_Rank6", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
-                7 : ["Alchemy_Tier2_Experiment_Rank08", "Alchemy_Tier2_Experimentation_Rank07", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
-                8 : ["Alchemy_Tier2_Experiment_Rank09", "Alchemy_Tier2_Experimentation_Rank08", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
-                9 : ["Alchemy_Tier2_Experiment_Rank10", "Alchemy_Tier2_Experimentation_Rank09", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
-                10 : ["Alchemy_Tier2_Experiment_Rank11", "Alchemy_Tier2_Experimentation_Rank10", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier1_Refine_Basic"],
-                11 : ["Alchemy_Tier2_Experiment_Rank12", "Alchemy_Tier2_Experimentation_Rank11", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier1_Refine_Basic"],
-                12 : ["Alchemy_Tier2_Experiment_Rank13", "Alchemy_Tier2_Experimentation_Rank12", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier1_Refine_Basic"],
-                13 : ["Alchemy_Tier2_Experiment_Rank14", "Alchemy_Tier2_Experimentation_Rank13", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier1_Refine_Basic"],
-                14 : ["Alchemy_Tier3_Experiment_Rank15", "Alchemy_Tier3_Experimentation_Rank14", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
-                15 : ["Alchemy_Tier3_Experiment_Rank16", "Alchemy_Tier3_Experimentation_Rank15", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
-                16 : ["Alchemy_Tier3_Experiment_Rank17", "Alchemy_Tier3_Experimentation_Rank16", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
-                17 : ["Alchemy_Tier3_Experiment_Rank18", "Alchemy_Tier3_Experimentation_Rank17", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
-                18 : ["Alchemy_Tier3_Experiment_Rank19", "Alchemy_Tier3_Experimentation_Rank18", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
-                19 : ["Alchemy_Tier3_Experiment_Rank20", "Alchemy_Tier3_Experimentation_Rank19", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
-                20 : ["Alchemy_Tier3_Experiment_Rank21", "Alchemy_Tier3_Experimentation_Rank20", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
-                21 : ["Alchemy_Tier4_Experiment_Rank22", "Alchemy_Tier4_Experimentation_Rank21", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
-                22 : ["Alchemy_Tier4_Experiment_Rank23", "Alchemy_Tier4_Experimentation_Rank22", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
-                23 : ["Alchemy_Tier4_Experiment_Rank24", "Alchemy_Tier4_Experimentation_Rank23", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
-                24 : ["Alchemy_Tier4_Experiment_Rank25", "Alchemy_Tier4_Experimentation_Rank24", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
-                25 : [ "Alchemy_Tier4_Experimentation_Rank25", "Alchemy_Tier4_Create_Elemental_Unified", "Alchemy_Tier3_Protection_Potion_Major", "Alchemy_Tier3_Potency_Potion_Major", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],           
-            },
-        }, {
-            profileName : "mass refining",
-            isProfileActive : true,
-            recursiveList : true,
-            useMassTask : true,
-            level : {
-                0 : ["Alchemy_Tier0_Intro_1"],
-                1 : ["Alchemy_Tier1_Refine_Basic_Mass", "Alchemy_Tier1_Refine_Basic"],
-                7 : ["Alchemy_Tier2_Refine_Basic_Mass"],
-                14 : ["Alchemy_Tier3_Refine_Basic_Mass"],
-                21 : ["Alchemy_Tier4_Refine_Basic_Mass"],
-            },
-        }, {
-            profileName : "Aqua Regia",
-            isProfileActive : true,
-            recursiveList : true,
-            useMassTask : false,
-            level : {
-                0 : ["Alchemy_Tier0_Intro_1"],
-                1 : ["Alchemy_Tier1_Refine_Basic"],
-                13 : ["Alchemy_Tier2_Aquaregia"],
-                22 : ["Alchemy_Tier4_Aquaregia_2"],
-            },
-        }, {
-            profileName : "Aqua Vitae",
-            isProfileActive : true,
-            recursiveList : true,
-            useMassTask : false,
-            level : {
-                0 : ["Alchemy_Tier0_Intro_1"],
-                1 : ["Alchemy_Tier1_Refine_Basic"],
-                4 : ["Alchemy_Tier1_Aquavitae"],
-                8 : ["Alchemy_Tier2_Aquavitae_2"],
-            },
-        }, {
-            profileName : "Wondrous Sprocket",
-            isProfileActive : false,
-            recursiveList : true,
-            level : {
-                0 : ["Alchemy_Tier0_Intro_1"],
-                1 : ["Alchemy_Tier1_Refine_Basic"],
-                6 : ["Alchemy_Tier1_Event_Gond"],                
-            },
-        }]
-    };
+    addProfile("Artificing", {
+        profileName: "default",
+        isProfileActive: true,
+        level: {
+            0: ["Artificing_Tier0_Intro_1"],
+            1: ["Artificing_Tier1_Pactblade_Convergence_1", "Artificing_Tier1_Symbol_Virtuous_1", "Artificing_Tier1_Gather_Basic"],
+            2: ["Artificing_Tier1_Pactblade_Convergence_1", "Artificing_Tier1_Icon_Virtuous_1", "Artificing_Tier1_Gather_Basic"],
+            3: ["Artificing_Tier1_Pactblade_Convergence_1", "Artificing_Tier1_Icon_Virtuous_1", "Artificing_Tier1_Gather_Basic"],
+            4: ["Artificing_Tier1_Pactblade_Convergence_2", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier1_Gather_Basic"],
+            5: ["Artificing_Tier1_Pactblade_Convergence_2", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier1_Gather_Basic"],
+            6: ["Artificing_Tier1_Pactblade_Convergence_2", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier1_Gather_Basic"],
+            7: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
+            8: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
+            9: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
+            10: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
+            11: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
+            12: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
+            13: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
+            14: ["Artificing_Tier3_Pactblade_Temptation_4", "Artificing_Tier3_Icon_Virtuous_4", "Artificing_Tier3_Refine_Basic", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
+            15: ["Artificing_Tier3_Pactblade_Temptation_4", "Artificing_Tier3_Icon_Virtuous_4", "Artificing_Tier3_Refine_Basic", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
+            16: ["Artificing_Tier3_Pactblade_Temptation_4", "Artificing_Tier3_Icon_Virtuous_4", "Artificing_Tier3_Refine_Basic", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
+            17: ["Artificing_Tier3_Pactblade_Temptation_5", "Artificing_Tier3_Icon_Virtuous_5", "Artificing_Tier3_Refine_Basic", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
+            18: ["Artificing_Tier3_Pactblade_Temptation_5", "Artificing_Tier3_Icon_Virtuous_5", "Artificing_Tier3_Refine_Basic", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
+            19: ["Artificing_Tier3_Pactblade_Temptation_5", "Artificing_Tier3_Icon_Virtuous_5", "Artificing_Tier3_Refine_Basic", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
+            //19:["Virtuous Icon +5","Upgrade Engraver","Upgrade Carver","Hire an additional Carver"],
+            20: ["Artificing_Tier3_Pactblade_Temptation_5", "Artificing_Tier3_Icon_Virtuous_5", "Artificing_Tier3_Refine_Basic", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
+            21: ["Artificing_Tier4_Gather_Basic"],
+            25: ["Artificing_Tier4_Refine_Basic", "Artificing_Tier4_Gather_Basic"],
+        },
+    });
 
-    addProfileToDefined("Alchemy", {
+    addProfile("Artificing", {
+        profileName : "mass refining",
+        isProfileActive : true,
+        useMassTask : true,
+        level : {
+            0 : ["Artificing_Tier0_Intro_1"],
+            1 : ["Artificing_Tier1_Refine_Basic_Mass", "Artificing_Tier1_Gather_Basic"],
+            7 : ["Artificing_Tier2_Refine_Basic_Mass"],
+            14 : ["Artificing_Tier3_Refine_Basic_Mass"],
+            21 : ["Artificing_Tier4_Refine_Basic_Mass"],
+        },
+    });
+
+    addProfile("Artificing", {
+        profileName : "Wondrous Sprocket",
+        isProfileActive : false,
+        level : {
+            6 : ["Artificing_Tier1_Event_Gond"],
+            },
+    }, "default");
+
+    addProfile("Weaponsmithing", {
+        profileName: "default",
+        isProfileActive: true,
+        level: {
+            0: ["Weaponsmithing_Tier0_Intro"],
+            1: ["Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
+            2: ["Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
+            3: ["Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
+            4: ["Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
+            5: ["Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
+            6: ["Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
+            7: ["Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
+            8: ["Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
+            9: ["Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
+            10: ["Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
+            11: ["Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
+            12: ["Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
+            13: ["Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
+            14: ["Weaponsmithing_Tier3_Dagger_4", "Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
+            15: ["Weaponsmithing_Tier3_Dagger_4", "Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
+            16: ["Weaponsmithing_Tier3_Dagger_4", "Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
+            17: ["Weaponsmithing_Tier3_Dagger_4", "Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
+            18: ["Weaponsmithing_Tier3_Dagger_4", "Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
+            19: ["Weaponsmithing_Tier3_Dagger_4", "Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
+            20: ["Weaponsmithing_Tier3_Dagger_Set_2", "Weaponsmithing_Tier2_Dagger_3", "Weaponsmithing_Tier1_Dagger_2", "Weaponsmithing_Tier1_Dagger_1", "Weaponsmithing_Tier1_Gather_Basic"],
+            //19:["Dagger+4","Upgrade Grinder","Upgrade Smelter","Hire an additional Smelter"],
+            21: ["Weaponsmithing_Tier4_Gather_Basic"],
+            25: ["Weaponsmithing_Tier4_Refine_Basic", "Weaponsmithing_Tier4_Gather_Basic"],
+        },
+    });
+
+    addProfile("Weaponsmithing", {
+        profileName : "mass refining",
+        isProfileActive : true,
+        useMassTask : true,
+        level : {
+            0 : ["Weaponsmithing_Tier0_Intro"],
+            1 : ["Weaponsmithing_Tier1_Refine_Basic_Mass", "Weaponsmithing_Tier1_Gather_Basic"],
+            7 : ["Weaponsmithing_Tier2_Refine_Basic_Mass"],
+            14 : ["Weaponsmithing_Tier3_Refine_Basic_Mass"],
+            21 : ["Weaponsmithing_Tier4_Refine_Basic_Mass"],
+        },
+    });
+
+    addProfile("Weaponsmithing", {
+        profileName : "Wondrous Sprocket",
+        isProfileActive : false,
+        level : {
+            6 : ["Weaponsmithing_Tier1_Event_Gond"],
+        },
+    }, "default");
+
+    addProfile("Alchemy", {
+        profileName : "default",
+        isProfileActive : true,
+        level : {
+            0 : ["Alchemy_Tier0_Intro_1"],
+            1 : ["Alchemy_Tier1_Experiment_Rank2", "Alchemy_Tier1_Experimentation_Rank1", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
+            2 : ["Alchemy_Tier1_Experiment_Rank3", "Alchemy_Tier1_Experimentation_Rank2", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
+            3 : ["Alchemy_Tier1_Experiment_Rank4", "Alchemy_Tier1_Experimentation_Rank3", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
+            4 : ["Alchemy_Tier1_Experiment_Rank5", "Alchemy_Tier1_Experimentation_Rank4", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
+            5 : ["Alchemy_Tier1_Experiment_Rank6", "Alchemy_Tier1_Experimentation_Rank5", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
+            6 : ["Alchemy_Tier1_Experiment_Rank7", "Alchemy_Tier1_Experimentation_Rank6", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
+            7 : ["Alchemy_Tier2_Experiment_Rank08", "Alchemy_Tier2_Experimentation_Rank07", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
+            8 : ["Alchemy_Tier2_Experiment_Rank09", "Alchemy_Tier2_Experimentation_Rank08", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
+            9 : ["Alchemy_Tier2_Experiment_Rank10", "Alchemy_Tier2_Experimentation_Rank09", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
+            10 : ["Alchemy_Tier2_Experiment_Rank11", "Alchemy_Tier2_Experimentation_Rank10", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier1_Refine_Basic"],
+            11 : ["Alchemy_Tier2_Experiment_Rank12", "Alchemy_Tier2_Experimentation_Rank11", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier1_Refine_Basic"],
+            12 : ["Alchemy_Tier2_Experiment_Rank13", "Alchemy_Tier2_Experimentation_Rank12", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier1_Refine_Basic"],
+            13 : ["Alchemy_Tier2_Experiment_Rank14", "Alchemy_Tier2_Experimentation_Rank13", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier1_Refine_Basic"],
+            14 : ["Alchemy_Tier3_Experiment_Rank15", "Alchemy_Tier3_Experimentation_Rank14", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
+            15 : ["Alchemy_Tier3_Experiment_Rank16", "Alchemy_Tier3_Experimentation_Rank15", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
+            16 : ["Alchemy_Tier3_Experiment_Rank17", "Alchemy_Tier3_Experimentation_Rank16", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
+            17 : ["Alchemy_Tier3_Experiment_Rank18", "Alchemy_Tier3_Experimentation_Rank17", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
+            18 : ["Alchemy_Tier3_Experiment_Rank19", "Alchemy_Tier3_Experimentation_Rank18", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
+            19 : ["Alchemy_Tier3_Experiment_Rank20", "Alchemy_Tier3_Experimentation_Rank19", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special",  "Alchemy_Tier1_Refine_Basic"],
+            20 : ["Alchemy_Tier3_Experiment_Rank21", "Alchemy_Tier3_Experimentation_Rank20", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
+            21 : ["Alchemy_Tier4_Experiment_Rank22", "Alchemy_Tier4_Experimentation_Rank21", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
+            22 : ["Alchemy_Tier4_Experiment_Rank23", "Alchemy_Tier4_Experimentation_Rank22", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
+            23 : ["Alchemy_Tier4_Experiment_Rank24", "Alchemy_Tier4_Experimentation_Rank23", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
+            24 : ["Alchemy_Tier4_Experiment_Rank25", "Alchemy_Tier4_Experimentation_Rank24", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
+            25 : [ "Alchemy_Tier4_Experimentation_Rank25", "Alchemy_Tier4_Create_Elemental_Unified", "Alchemy_Tier3_Protection_Potion_Major", "Alchemy_Tier3_Potency_Potion_Major", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
+        },
+    });
+
+    addProfile("Alchemy", {
+        profileName : "mass refining",
+        isProfileActive : true,
+        useMassTask : true,
+        level : {
+            0 : ["Alchemy_Tier0_Intro_1"],
+            1 : ["Alchemy_Tier1_Refine_Basic_Mass", "Alchemy_Tier1_Refine_Basic"],
+            7 : ["Alchemy_Tier2_Refine_Basic_Mass"],
+            14 : ["Alchemy_Tier3_Refine_Basic_Mass"],
+            21 : ["Alchemy_Tier4_Refine_Basic_Mass"],
+        },
+    });
+
+    addProfile("Alchemy", {
+        profileName : "Aqua Regia",
+        isProfileActive : true,
+        useMassTask : false,
+        level : {
+            0 : ["Alchemy_Tier0_Intro_1"],
+            1 : ["Alchemy_Tier1_Refine_Basic"],
+            13 : ["Alchemy_Tier2_Aquaregia"],
+            22 : ["Alchemy_Tier4_Aquaregia_2"],
+        },
+    });
+
+    addProfile("Alchemy", {
+        profileName : "Aqua Vitae",
+        isProfileActive : true,
+        useMassTask : false,
+        level : {
+            0 : ["Alchemy_Tier0_Intro_1"],
+            1 : ["Alchemy_Tier1_Refine_Basic"],
+            4 : ["Alchemy_Tier1_Aquavitae"],
+            8 : ["Alchemy_Tier2_Aquavitae_2"],
+        },
+    });
+
+    addProfile("Alchemy", {
+        profileName : "Wondrous Sprocket",
+        isProfileActive : false,
+        level : {
+            6 : ["Alchemy_Tier1_Event_Gond"],
+        },
+    }, "default");
+
+    addProfile("Alchemy", {
         profileName : "Protection Superior",
         level: {
             25:["Alchemy_Tier4_Experimentation_Rank25","Alchemy_Tier4_Protection_Potion_Superior","Alchemy_Tier3_Protection_Potion_Major", "Alchemy_Tier2_Aquaregia", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
         }
-    });
-    
-    addProfileToDefined("Alchemy", {
+    }, "default");
+
+    addProfile("Alchemy", {
         profileName : "Potency Superior",
         level: {
             25:["Alchemy_Tier4_Experimentation_Rank25","Alchemy_Tier4_Potency_Potion_Superior", "Alchemy_Tier3_Potency_Potion_Major", "Alchemy_Tier2_Aquaregia", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
         }
-    }); 
+    }, "default");
 
-    addProfileToDefined("Alchemy", {
+    addProfile("Alchemy", {
         profileName: "Blue & Green Vitriol",
         isProfileActive: true,
         level: {
             1: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            2: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            3: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            4: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            5: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            6: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            7: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            8: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            9: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            10: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            11: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            12: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            13: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            14: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            15: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            16: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            17: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            18: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            19: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            20: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            21: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            22: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            23: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            24: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
-            25: ["Alchemy_Tier1_Refine_Basic","Alchemy_Tier1_Gather_Components"],
         },
-    });
-
-
-    // expand recursive tasklist
-    for (var professionIdx in definedTask) {
-        //console.log(definedTask[professionIdx].taskName); 
-        for (var profileIdx in definedTask[professionIdx].profiles) {
-            //console.log(definedTask[professionIdx].profiles[profileIdx]);
-            var profile = definedTask[professionIdx].profiles[profileIdx];
-            if ((profile.recursiveList !== undefined) && (profile.recursiveList === true)) {
-                // console.log("list to expand: " + profile.profileName);
-                if (profile.level[1] === undefined) {
-                    profile.level[1] = [];
-                }
-                for (var i=2; i<=25; i++) {
-                    if (profile.level[i] === undefined) {
-                        profile.level[i] = profile.level[i-1];
-                    } else {
-                        profile.level[i] = profile.level[i].concat(profile.level[i-1]);
-                    }
-                }
-                //console.log(profile);
-                definedTask[professionIdx].profiles[profileIdx] = profile;
-            } else {
-               // console.log("old type list: " + profile.profileName);
-            }
-        }
-    }
+    }, "default");
 
     // Profession priority list by order
     var tasklist = [
@@ -1844,7 +1814,7 @@ function _select_Gateway() { // Check for Gateway used to
     };
 
 
-    // Populated at login   
+    // Populated at login
     var loggedAccount = null;
     var accountSettings = {};
     var charSettingsTest = {};
@@ -1984,7 +1954,7 @@ function _select_Gateway() { // Check for Gateway used to
         slotUse: [],
     };
 
-    /*  For searching unsafeWindow.client.dataModel.model.ent.main.inventory.assignedslots / unsafeWindow.client.dataModel.model.ent.main.inventory.notassignedslots  
+    /*  For searching unsafeWindow.client.dataModel.model.ent.main.inventory.assignedslots / unsafeWindow.client.dataModel.model.ent.main.inventory.notassignedslots
     This needs some design change. */
 
     // purple, blue, green, t3, t2, t1
@@ -2471,7 +2441,7 @@ function _select_Gateway() { // Check for Gateway used to
     delay.SHORT *= delay_modifier;
     delay.MEDIUM *= delay_modifier;
     delay.LONG *= delay_modifier;
-    //delay.MINS 
+    //delay.MINS
     delay.DEFAULT *= delay_modifier;
     delay.TIMEOUT *= delay_modifier;
 
@@ -3085,7 +3055,7 @@ function _select_Gateway() { // Check for Gateway used to
                     return false;
                 }
             }
-            
+
             // Skip mass production tasks (don't skip if "mass ...." profile selected)
             if (! massTaskAllowed) {
                 if (entry.def.displayname.match(/^(Batch|Mass|Deep|Intensive) /)) {
@@ -3110,7 +3080,7 @@ function _select_Gateway() { // Check for Gateway used to
             console.log("No ingredient tasks found for:", taskname, searchItem);
             return false;
         }
-        
+
         // for "mass ...." profile name select Mass task
         if (massTaskAllowed) {
             for (var i=0; i<taskList.length; i++) {
@@ -3384,7 +3354,7 @@ function _select_Gateway() { // Check for Gateway used to
                 var exchangeDiamonds = parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
                 if (exchangeDiamonds > 0) {
                     console.log("AD in exchange: " + exchangeDiamonds);
-                }  
+                }
                 // Domino effect: this new order will post all the gathered diamonds until now
                 var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
                 var ZenRate = parseInt(settings["banktransrate"]);
@@ -4006,7 +3976,7 @@ function _select_Gateway() { // Check for Gateway used to
 
                 updateCounters(false); // updating the UI from saved list
                 //if (JSON.stringify(accountSettings) !== GM_getValue("account_settings_" + accountName)) GM_setValue("account_settings_" + accountName, JSON.stringify(accountSettings));
-                //if (JSON.stringify(charSettingsTest) !== GM_getValue("chars_settings_" + accountName)) GM_setValue("chars_settings_" + accountName, JSON.stringify(charSettingsTest));                
+                //if (JSON.stringify(charSettingsTest) !== GM_getValue("chars_settings_" + accountName)) GM_setValue("chars_settings_" + accountName, JSON.stringify(charSettingsTest));
             }
 
             // load current character position and values
@@ -4445,7 +4415,7 @@ function _select_Gateway() { // Check for Gateway used to
         $("#settingsPanel form").append(addText);
 
 
-        // Set up the advanced slot selects 
+        // Set up the advanced slot selects
         $(".taskSelectA").change(function(e) {
             var _taskname = $(this).val();
             var _profiles = tasklist.filter(function(task) {
@@ -4455,7 +4425,7 @@ function _select_Gateway() { // Check for Gateway used to
             });
 
             var _options = "";
-            //tasklist[" .profiles.forEach( function(profile) { if (profile.isProfileActive) profileNames.push({name: profile.profileName, value: profile.profileName}); } ); 
+            //tasklist[" .profiles.forEach( function(profile) { if (profile.isProfileActive) profileNames.push({name: profile.profileName, value: profile.profileName}); } );
 
             var profileSelect = $("#" + this.id + "__profile").html("");
             _profiles.forEach(function(profile) {
