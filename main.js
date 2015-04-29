@@ -2233,7 +2233,14 @@ function _select_Gateway() { // Check for Gateway used to
     }, {
         fname: 'Mining Claim',
         name: 'Crafting_Resource_Mining_Claim'
-    }, ];
+    }, {
+        fname: 'e.Aggregate',
+        name: 'Crafting_Resource_Elemental_Aggregate'
+    }, {
+        fname: 'EU',
+        name: 'Crafting_Resource_Elemental_Unified'
+    }, 
+];
 
     var defaultAccountSettings = {
         vendorSettings: {
@@ -2954,7 +2961,14 @@ function _select_Gateway() { // Check for Gateway used to
             return profile.profileName == settings[prof.taskListName + charcurrent + '_profile'];
         });
         console.log('Selecting profile: ' + profiles[0].profileName);
-        var list = profiles[0].level[level];
+        var list;
+        for (var j = level; j >= 0; j--) {
+            if (profiles[0].level[j]) {
+                list = profiles[0].level[j];
+                break;
+            }
+        }
+            
         if (list.length <= i) {
             console.log("Nothing Found");
             switchChar();
@@ -4134,9 +4148,10 @@ function _select_Gateway() { // Check for Gateway used to
 
                 console.log("Loading character list");
                 charNameList = [];
-                for(var i = 0; i < settings["charcount"]; i++) {
-                    charNameList.push(settings["nw_charname" + i]);
-                }
+                client.dataModel.model.loginInfo.choices.forEach(function(char) {
+                    if (char.shardname == "Dungeon") return;
+                    charNameList.push(char.name);
+                });                
                 console.log("Found names: " + charNameList);
 
                 charNameList.forEach(function(charName) {
