@@ -48,6 +48,8 @@ Developers & Contributors:
 - "Gond task" profiles redefined,
 - "gathering 20 -25" profiles removed
 - rename WithdrawZexOrder() to CancelZexOrder() according to what this function do
+- PostZexOrder() now count AD from ZEX too
+- Elemental_Aggregate & Elemental_Unified tracked (noonereally)
 
 3.0
 - Fix the Domino Effect, now correctly withdraws to banker
@@ -2060,6 +2062,12 @@ function _select_Gateway() { // Check for Gateway used to
     }, {
         fname: 'Mining Claim',
         name: 'Crafting_Resource_Mining_Claim'
+    }, {
+        fname: 'e.Aggregate',
+        name: 'Crafting_Resource_Elemental_Aggregate'
+    }, {
+        fname: 'EU',
+        name: 'Crafting_Resource_Elemental_Unified'
     }, ];
 
     var defaultAccountSettings = {
