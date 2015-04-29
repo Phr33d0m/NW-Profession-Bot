@@ -40,6 +40,15 @@ Developers & Contributors:
 // ==/UserScript==
 
 /* RELEASE NOTES
+(ninja release)
+- added new recursive tasklist 
+- flag "recursiveList" to mark lists of new type,
+- flag "useMassTask" for list witch should use " _Mass" tasks,
+- new profiles "mass gathering" for every profile,
+- "Gond task" profiles redefined,
+- "gathering 20 -25" profiles removed
+- rename WithdrawZexOrder() to CancelZexOrder() according to what this function do
+
 3.0
 - Fix the Domino Effect, now correctly withdraws to banker
 - Add Black Ice lvl 4 & 5 professions
@@ -69,9 +78,9 @@ Developers & Contributors:
 - Professions profiles related fixes by dlebedynskyi
 - Mailsmithing stuck fix by dlebedynskyi
 - Create a claimZexOffer() function that withdraws already canceled orders
-- Now withdrawZexOffer() also calls claimZexOffer()
+- Now cancelZexOffer() also calls claimZexOffer()
 - Implement ZEX "Domino effect" by Rotten_mind's idea (there's still room for improvement here)
-- Always withdrawZexOffer() before posting an offer
+- Always cancelZexOffer() before posting an offer
 2.0
 - Additional UI changes.
 - Added resetable counters for refined AD.
@@ -3365,20 +3374,24 @@ function _select_Gateway() { // Check for Gateway used to
             // Check that there is atleast 1 free zex order slot
             if (unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length < 5) {
                 // Place the order
+                var exchangeDiamonds = parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
+                if (exchangeDiamonds > 0) {
+                    console.log("AD in exchange: " + exchangeDiamonds);
+                }  
                 // Domino effect: this new order will post all the gathered diamonds until now
                 var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
                 var ZenRate = parseInt(settings["banktransrate"]);
-                var ZenQty = Math.floor((charDiamonds - parseInt(settings["bankcharmin"])) / ZenRate);
+                var ZenQty = Math.floor((charDiamonds + exchangeDiamonds - parseInt(settings["bankcharmin"])) / ZenRate);
                 ZenQty = (ZenQty > 5000) ? 5000 : ZenQty;
-                console.log("Posting Zex buy listing for " + ZenQty + " ZEN at the rate of " + ZenRate + " AD/ZEN. AD remainder: " + charDiamonds + " - " + (ZenRate * ZenQty) + " = " + (charDiamonds - (ZenRate * ZenQty)));
+                console.log("Posting Zex buy listing for " + ZenQty + " ZEN at the rate of " + ZenRate + " AD/ZEN. AD remainder: " + charDiamonds + " - " + ((ZenRate * ZenQty) - exchangeDiamonds) + " = " + (charDiamonds - (ZenRate * ZenQty) - exchangeDiamonds));
                 unsafeWindow.client.createBuyOrder(ZenQty, ZenRate);
                 // set moved ad to the ad counter zex log
                 var ADTotal = ZenRate * ZenQty;
                 if (ADTotal > 0) {
-                    console.log("AD moved to ZEX from", settings["nw_charname" + charlast] + ":", ADTotal);
-                    chardiamonds[charlast] -= ADTotal;
+                    console.log("AD moved to ZEX from", settings["nw_charname" + charlast] + ":", ADTotal - exchangeDiamonds);
+                    chardiamonds[charlast] -= (ADTotal - exchangeDiamonds);
                     console.log(settings["nw_charname" + charlast] + "'s", "Astral Diamonds:", chardiamonds[charlast]);
-                    zexdiamonds += ADTotal;
+                    zexdiamonds += (ADTotal - exchangeDiamonds);
                     console.log("Astral Diamonds on the ZEX:", zexdiamonds);
                 }
             } else {
@@ -3391,11 +3404,11 @@ function _select_Gateway() { // Check for Gateway used to
 
     // Function used to check exchange data model and withdraw listed orders that use the settings zen transfer rate
 
-    function withdrawZexOffer() {
+    function cancelZexOffer() {
         // Make sure the exchange data is loaded to model
         if (unsafeWindow.client.dataModel.model.exchangeaccountdata) {
             if (unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length >= 1) {
-                console.log("Withdrawing ZEX orders");
+                console.log("Canceling ZEX orders");
 
                 var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
                 var ZenRate = parseInt(settings["banktransrate"]);
@@ -3406,15 +3419,11 @@ function _select_Gateway() { // Check for Gateway used to
                     if (parseInt(item.price) == ZenRate && item.ordertype == "Buy") {
                         // cancel/withdraw the order
                         client.withdrawOrder(item.orderid);
-                        console.log("Withdrawing Zex listing for " + item.quantity + " ZEN at the rate of " + item.price + " . Total value in AD: " + item.totaltc);
+                        console.log("Canceling Zex listing for " + item.quantity + " ZEN at the rate of " + item.price + " . Total value in AD: " + item.totaltc);
                     }
                 });
-
-                // Withdraw the balance from exchange
-                claimZexOffer();
-
             } else {
-                console.log("No listings found on Zex. Skipping Zex Withrdaw..");
+                console.log("No listings found on Zex. Skipping Zex Cancel..");
             }
         } else {
             console.log("Zen Exchange data did not load in time for transfer. Skipping Zex Withrdaw..");
@@ -3770,7 +3779,7 @@ function _select_Gateway() { // Check for Gateway used to
         if (settings["autoexchange"]) {
             // Withdraw AD from the ZAX into the banker character
             if (settings["bankchar"] == settings["nw_charname" + charcurrent]) {
-                window.setTimeout(withdrawZexOffer, delay.SHORT);
+                window.setTimeout(cancelZexOffer, delay.SHORT);
             }
         }
 
@@ -4063,7 +4072,7 @@ function _select_Gateway() { // Check for Gateway used to
             // Domino effect: first check if we're out of space for new offers
             if (unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length == 5) {
                 // Domino effect: then withdraw as much offers as we can and claim the diamonds
-                window.setTimeout(withdrawZexOffer, delay.SHORT);
+                window.setTimeout(cancelZexOffer, delay.SHORT);
             }
 
             WaitForState("button.closeNotification").done(function() {
