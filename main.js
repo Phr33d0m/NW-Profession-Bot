@@ -2486,11 +2486,11 @@ function addProfile(profession, profile, base)
      */
 
     function GetCurrentPage() {
-        for each(var page in PAGES) {
+        PAGES.forEach(function(page, index) {
             if ($(page["path"]).filter(":visible").length) {
                 return page;
             }
-        }
+        });
     }
 
     /**
