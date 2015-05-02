@@ -2509,7 +2509,7 @@ function _select_Gateway() { // Check for Gateway used to
      */
 
     function GetCurrentPage() {
-        PAGES.forEach(function(page, index) {
+        $.each(PAGES, function(index, page) {
             if($(page["path"]).filter(":visible").length) {
                 return page;
             }
