@@ -902,6 +902,14 @@ function _select_Gateway() { // Check for Gateway used to
             ],
         }
     }, "AD");
+    
+    addProfile("Leadership", {
+        profileName: "Assets",
+        isProfileActive: true,
+        level: {
+            3: ["Leadership_Tier3_13_Recruit", "Leadership_Tier2_7_Recruit", "Leadership_Tier1_2_Recruit"],
+        }
+    });
 
     definedTask["Winter Event"] = {
         taskListName: "WinterEvent",
