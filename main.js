@@ -2499,7 +2499,7 @@ function _select_Gateway() { // Check for Gateway used to
             path: "div#login"
         },
         GUARD: {
-            name: "Account Guard",
+            name: "Guard",
             path: "div#page-accountguard"
         },
     });
@@ -2509,11 +2509,16 @@ function _select_Gateway() { // Check for Gateway used to
      */
 
     function GetCurrentPage() {
+        var pageReturn;
+        
         $.each(PAGES, function(index, page) {
-            if($(page["path"]).filter(":visible").length) {
-                return page;
+            if ($(page["path"]).filter(":visible").length) {
+                pageReturn = page["name"];
+                return false;
             }
         });
+        
+        return pageReturn;
     }
 
     /**
@@ -3742,10 +3747,10 @@ function _select_Gateway() { // Check for Gateway used to
 
         // Check for login or account guard and process accordingly
         var currentPage = GetCurrentPage();
-        if(currentPage == PAGES.LOGIN) {
+        if (currentPage === "Login") {
             page_LOGIN();
             return;
-        } else if(currentPage == PAGES.GUARD) {
+        } else if (currentPage === "Guard") {
             page_GUARD();
             return;
         }
