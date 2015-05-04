@@ -317,8 +317,11 @@ var fouxConsole = {
     error: function() {
     },
     warn: function() {
+    },
+    time: function() {
+    },
+    timeEnd: function() {
     }
-
 };
 var console = unsafeWindow.console || fouxConsole;
 var chardiamonds = {};
