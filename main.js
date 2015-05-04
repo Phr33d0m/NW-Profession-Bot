@@ -40,6 +40,178 @@
 // ==/UserScript==
 
 /* RELEASE NOTES
+3.0
+- Fix the Domino Effect, now correctly withdraws to banker
+- Add Black Ice lvl 4 & 5 professions
+- Added gathering profiles for 21-25 levels
+- Added active slot column to the profession levels tab
+- Tools overview tab working
+- Delays changed to select
+- Added dobule delays option
+- tweaks for leadership 20-25 AD/XP profiles
+- Added more menu options for Skip "Patrol the Mines" to allow more flexability (Until per char options implemented).
+- Better use of leadership assets (white used only if heros, adventurers & man-at-arms to low). WloBeb
+- Added level +20 tasks for Leadership, Mailsmithing, Jewelcrafting by dlebedynskyi
+- Fix the AD counter when AD is in ZEX transition by BigRedBrent
+- Added overview tabs for profession levels and profession slots
+- More info in the Counter Tab
+- Added Resources overview
+- Added Profession assets overview tabs (needs more work)
+- Moved more statistic gathering into JSON object and added per char name settings load
+- Added "Load Character Names" button and reset settings button
+- Separated vendoring of altars and node kits
+- UI added for manual slot task allocations
+- Initial structures for JSON settings
+2.2-hotfix
+- Fix broken ZEX Domino effect logic
+- Really really really fix that tabmenu padding
+2.1
+- Professions profiles related fixes by dlebedynskyi
+- Mailsmithing stuck fix by dlebedynskyi
+- Create a claimZexOffer() function that withdraws already canceled orders
+- Now cancelZexOffer() also calls claimZexOffer()
+- Implement ZEX "Domino effect" by Rotten_mind's idea (there's still room for improvement here)
+- Always cancelZexOffer() before posting an offer
+2.0
+- Additional UI changes.
+- Added resetable counters for refined AD.
+- Added stuck task trap (repeatition trap and restart). Thanks WloBeb
+- Added profession profiles by dlebedynskyi.
+1.10.2RC1 for Greasyfork
+- UI improvement
+- removed "Save Task" & "Clear Task" buttons, on current build they do nothing
+- replaced JAVA string search(partially) for better multilingual support(tooltip translation not included)
+- reverted tasklist order to old(cosmetic change)
+- Replaced defaultTasklist with tasklist
+- Clear saved settings before re-saving
+- Added leadership asset auto buy
+- Improvements for AD transfer and reports to console log
+- added missing asset names
+- Added "Leadership XP" use second tasklist
+- Added "Gateway_Reward" collection
+- Added vendoring Rank 3 enchantments and runestones to UI
+- Added "Vendor all Altar Node skill kits" to UI
+- Edited vendoring rank 1 and rank 2 enchantments
+1.10.1
+- Patern undefined bug fix
+1.10.0 - Release Candidate
+- Vendor exclude filter has now higher "Safeguards" (it still might need added some unbound items eg. Glyphs, potions, etc)
+- Added vendor safeguards
+- Separated autovendor and profession items vendor
+- SCA daily reward collection  by cycling through all configured characters (leaving SCA page will cancel the collection)
+- Multi URL support for testing
+- Support for gatewaytest, RU gateway (gateway.nw.ru.perfectworld.eu) and regular gateway
+1.05.0.1k
+- RC2 for ver. 1.0.05.2
+- Added vendoring to UI
+- Added vendoring "safety" setting what check item is "unbound"
+- Code clearing
+1.05.0.1j
+- RC1 for ver. 1.05.0.2
+- Rebuild sell items selection method making it more comprehensive
+- Vendoring function now use array to vendor item objects
+- Updated vendoring list
+- Sell all runestones and enchantments rank 1 & rank 2
+- Limit, altars 80, skill kits 50, healing potions T 1 - 3 10
+- Re-edited warning "Tooltip"- selecting "what skill kit character not need" when selling
+- Merged back the split of the pause function
+- Added a parameter to specify pause/unpause/toggle (defaults to toggle as in original behavior)
+- Tasklist updates
+BETA 1.05.0.1i
+- Edited "sell items" list
+- Edited/added WARNING´s on tooltip
+BETA 1.05.0.1h
+- Added "sell skill kits", works same as "open_rewards" (experimental, inventory cleaning needs more specific "sell filter" and event what trigger "sell")
+- Changed switching character and completing character task logic, trying prevent wrong task execution after  switch
+- Refined "save settings" function
+- WinterEvent tasklist got new additions
+1.05.01G
+- Github release
+1.05.0.1f
+- Minor tasklist updates
+- Added button "open all(99)", opens rewardchest
+- Fixed "open rewardchest" disconnect issues(need furter testing, RM)
+- Fixed unnecessary ZEX visit´s
+-
+1.05.0.1e
+- Info page updates for non-compatible browser/XXXmonkey
+1.05.0.1d
+- WinterEvent tasks added
+- Added AD transfer automation
+- Settings Panel UI: Increased size and implemented two columns for options to minimize vertical length. Also implemented new radio and button styles.
+1.05.0.1c
+- UI feature: Limit the gateway popup notification messages that appear at the top of the screen to a max of 2 notifications. The oldest (first) notification will always be removed when reaching the limit.
+1.05.0.1b
+- Added Reward Chest Opening Option
+- Added All button when selling from inventory
+- Added condition check for profession slot input val > 0 when processing tasks
+1.05.0.1 (v1, mod 5)
+- Started with bluep's edits (https://greasyfork.org/en/forum/discussion/270/x)
+- Edited back in leadership asset priority (https://greasyfork.org/en/forum/discussion/comment/7213/#Comment_7213)
+- Edited in Jewelcrafting for Mod5 (https://greasyfork.org/en/forum/discussion/comment/6930/#Comment_6930)
+- Modified the default leadership tasks to prioritize AD generation (feel free to rever)
+/* End Bunta's Edits?
+1.0.0.3
+- Fix some gem trading tasks not being filtered correctly
+- Add check for gateway disconnected
+1.0.0.2
+- Fix leadership tasks not creating assets correctly
+- Add option to save task lists per character (experimental)
+1.0.0.1
+- Rewrite script using client.dataModel methods to massively improve reliability and performance (thanks Msc)
+- AD refining will now only attempt to refine if you are able to collect diamonds
+- Change task lists to use exact task names so no ambiguity exists (no longer requires excluderare option)
+- Asset resources are now trained as needed (only for required slots)
+0.3.0.5
+- Fix resources not buying correctly in all cases
+- Fix pause button state saving correctly in firefox
+0.3.0.4
+- Add page timeout reloading functions outside of main function (thanks Kreese and Frabtik)
+- Add check to ensure tasks are being started for the correct character
+- Alter next run resolve function to use delay parameter to allow for unique delay timers to be used in certain cases
+0.3.0.3
+- Fix ingredient task selection to correctly iterate through all ingredient tasks
+- Alter character selection to pick only exact character name matches
+- Update leadership tasks
+0.3.0.2
+- Exclude alchemy from rare task exclusions due to Aqua Regia (thanks Eversor)
+- Reduce GM_setValue calls to avoid tampermonkey failing to save settings (thanks miah)
+0.3.0.1
+- Altered mutichar selector to be faster (thanks miah)
+- Updated rare tasks selector (thanks Traktor)
+- Add option to refine AD during character switching (thanks Eversor)
+- Added some level 20 gather tasks
+- Increased supply buying to 100 units
+0.3.0.0
+- Added Multi-Character support
+- Added function to clear all saved settings for script
+- Remove disable sound functionality (now configurable in gateway)
+0.2.0.1.8
+- Added pause button to allow easy on/off switching
+0.2.0.1.7
+- Added option to enable/disable filling optional asset slots
+- Added batch potions tasks to be skipped in ingredient selection
+- Added timer to reload page if stuck loading for too long
+- Added option to disable page sounds
+- Updated license to by-nc-sa
+0.2.0.1.6
+- Add configurable option for excluding rare tasks
+0.2.0.1.5
+- Add ability to specify specific level for tasks and configure same named artificing resource tasks to request correct level of task
+- Remove purchase notification that never times out
+0.2.0.1.4
+- Added functionality to purchase required resources from gateway shop
+0.2.0.1.3
+- Add Artificing and Weaponsmithing to Robot
+(Artificing will not work properly yet as all three tiers of gather and craft tasks have the same task name)
+0.2.0.1.2
+- Update reload process
+- Fix optional asset selector with gateway update
+0.2.0.1.1
+- Simplify asset selection after they fixed bug in previous gateway update
+- Update level 20 leadership tasks
+- Update with changes in Mustex's script (version 15)
+=======
  3.0
  - Fix the Domino Effect, now correctly withdraws to banker
  - Add Black Ice lvl 4 & 5 professions
@@ -318,7 +490,6 @@ var fouxConsole = {
     },
     warn: function() {
     }
-
 };
 var console = unsafeWindow.console || fouxConsole;
 var chardiamonds = {};
@@ -328,10 +499,10 @@ var definedTask = {};
 var antiInfLoopTrap = {// without this script sometimes try to start the same task in infinite loop (lags?) 
     prevCharName: "unknown", // character name which recently launched a task
     prevTaskName: "unknown", // name of the task previously launched
-    startCounter: 0, // how many times the same character starts the same task 
+    startCounter: 0, // how many times the same character starts the same task
     currCharName: "unknown", // character name which try to launch new task
     currTaskName: "unknown", // name of the new task to launch
-    trapActivation: 15 // number of repetition to activation trap 
+    trapActivation: 15 // number of repetition to activation trap
 };
 // Page Reloading function
 // Every second the page is idle or loading is tracked
@@ -735,6 +906,29 @@ function _select_Gateway() { // Check for Gateway used to
             if(existing) {
                 newProfile = jQuery.extend(true, newProfile, existing.length ? existing[0] : existing);
             }
+            jQuery.extend(createdProfile, baseProfile, newProfile)
+            // copy every level from baseProfile until first defined level in newProfile
+            for (var i=0; i<maxLevel; i++) {
+                if (newProfile.level[i] !== undefined) {
+                    break;
+                }
+                if (baseProfile.level[i] !== undefined) {
+                    createdTaskList[i] = baseProfile.level[i];
+                }
+            }
+            // copy everything from newProfile
+            for (var i=0; i<maxLevel; i++) {
+                if (newProfile.level[i] !== undefined) {
+                    createdTaskList[i] = newProfile.level[i];
+                }
+            }
+            createdProfile.level = createdTaskList;
+        } else {
+            createdProfile = newProfile;
+        }
+        if ((createdProfile.level[0] === undefined) || (createdProfile.level[0].length === 0)) {
+            console.log("addProfile ERROR: Profile: " + newProfile.profileName + ", profession: " + profName + " empty task list for level 0");
+            return;
         }
 
         if(!profile.hasOwnProperty('recursiveList')) {
@@ -1035,6 +1229,18 @@ function _select_Gateway() { // Check for Gateway used to
         },
     });
 
+    addProfile("Jewelcrafting", {
+        profileName : "mass refining",
+        isProfileActive : true,
+        useMassTask : true,
+        level : {
+            0 : ["Jewelcrafting_Tier0_Intro"],
+            1 : ["Jewelcrafting_Tier1_Refine_Basic_Mass", "Jewelcrafting_Tier1_Gather_Basic"],
+            7 : ["Jewelcrafting_Tier2_Refine_Basic_Mass"],
+            14 : ["Jewelcrafting_Tier3_Refine_Basic_Mass"],
+            21 : ["Jewelcrafting_Tier4_Refine_Basic_Mass"],
+        },
+    });
 
     addProfile("Jewelcrafting", {
         profileName: "Craft Purple Neck",
@@ -1156,7 +1362,7 @@ function _select_Gateway() { // Check for Gateway used to
                 "Crafted_Med_Armorsmithing_Scale_T4_Green_Pants_Dps"//Berserker's Elemental Chausses
             ],
         },
-    });
+    }, "default");
 
     addProfile("Mailsmithing", {
         profileName: "Soldier's Chausses and rares",
@@ -1327,7 +1533,7 @@ function _select_Gateway() { // Check for Gateway used to
         level: {
             6: ["Med_Armorsmithing_Tier1_Event_Gond"],
         },
-    });
+    }, "default");
 
     definedTask["Platesmithing"] = {
         taskListName: "Platesmithing",
@@ -1448,7 +1654,7 @@ function _select_Gateway() { // Check for Gateway used to
                 "Leatherworking_Tier4_Leather_Pants_Special_2", //Exquisite Elemental Pants
                 "Leatherworking_Tier3_Gather_Basic"]
         }
-    });
+    }, "default");
 
     addProfile("Leatherworking", {
         profileName: "craft  Elemental Shirts",
@@ -1461,7 +1667,7 @@ function _select_Gateway() { // Check for Gateway used to
                 'Leatherworking_Tier4_Leather_Shirt2', //Elemental Leather Shirt 
             ]
         }
-    });
+    }, "default");
 
     addProfile("Leatherworking", {
         profileName: "craft  Elemental Tunic",
@@ -1487,7 +1693,7 @@ function _select_Gateway() { // Check for Gateway used to
                 'Leatherworking_Tier4_Leather_Pants2_Set2', //Elemental Leather Trousers 
             ]
         }
-    });
+    }, "default");
 
     addProfile("Leatherworking", {
         profileName: "craft  Elemental Pants",
@@ -1500,7 +1706,7 @@ function _select_Gateway() { // Check for Gateway used to
                 'Leatherworking_Tier4_Leather_Pants2', //Elemental Leather Trousers 
             ]
         }
-    });
+    }, "default");
 
     addProfile("Leatherworking", {
         profileName: "Wondrous Sprocket",
@@ -1620,6 +1826,18 @@ function _select_Gateway() { // Check for Gateway used to
         },
     });
 
+    addProfile("Weaponsmithing", {
+        profileName : "mass refining",
+        isProfileActive : true,
+        useMassTask : true,
+        level : {
+            0 : ["Weaponsmithing_Tier0_Intro"],
+            1 : ["Weaponsmithing_Tier1_Refine_Basic_Mass", "Weaponsmithing_Tier1_Gather_Basic"],
+            7 : ["Weaponsmithing_Tier2_Refine_Basic_Mass"],
+            14 : ["Weaponsmithing_Tier3_Refine_Basic_Mass"],
+            21 : ["Weaponsmithing_Tier4_Refine_Basic_Mass"],
+        },
+    });
 
     definedTask["Weaponsmithing"] = {
         taskListName: "Weaponsmithing",
@@ -1728,12 +1946,14 @@ function _select_Gateway() { // Check for Gateway used to
         level: {
             25: ["Alchemy_Tier4_Experimentation_Rank25", "Alchemy_Tier4_Protection_Potion_Superior", "Alchemy_Tier4_Create_Elemental_Aggregate", "Alchemy_Tier3_Protection_Potion_Major", "Alchemy_Tier2_Aquaregia", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
         }
+
     });
     addProfile("Alchemy", {
         profileName: "Potency Superior",
         level: {
             25: ["Alchemy_Tier4_Experimentation_Rank25", "Alchemy_Tier4_Potency_Potion_Superior", "Alchemy_Tier4_Create_Elemental_Aggregate", "Alchemy_Tier3_Potency_Potion_Major", "Alchemy_Tier2_Aquaregia", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
         }
+
     });
 
     addProfile("Alchemy", {
@@ -1778,7 +1998,7 @@ function _select_Gateway() { // Check for Gateway used to
     };
 
 
-    // Populated at login   
+    // Populated at login
     var loggedAccount = null;
     var accountSettings = {};
     var charSettingsTest = {};
@@ -1984,6 +2204,7 @@ function _select_Gateway() { // Check for Gateway used to
 
 
     var trackResources = [{
+
             fname: 'Aqua Regia',
             name: 'Crafting_Resource_Aquaregia'
         }, {
@@ -2399,7 +2620,7 @@ function _select_Gateway() { // Check for Gateway used to
     delay.SHORT *= delay_modifier;
     delay.MEDIUM *= delay_modifier;
     delay.LONG *= delay_modifier;
-    //delay.MINS 
+    //delay.MINS
     delay.DEFAULT *= delay_modifier;
     delay.TIMEOUT *= delay_modifier;
 
@@ -2974,6 +3195,10 @@ function _select_Gateway() { // Check for Gateway used to
             return false;
         }
 
+        var profession = tasklist.filter(function(entry) { return entry.taskName == profname; });
+        var profile = profession[0].profiles.filter(function(entry) { return entry.profileName == profileName; });
+        var massTaskAllowed = ((profile[0].useMassTask !== undefined) && (profile[0].useMassTask === true));
+
         // Generate list of available tasks to search ingredients/assets from
         console.log("Searching ingredient tasks for:", profname);
         var taskList = unsafeWindow.client.dataModel.model.craftinglist['craft_' + profname].entries.filter(function(entry) {
@@ -3024,6 +3249,16 @@ function _select_Gateway() { // Check for Gateway used to
         if(!taskList.length) {
             console.log("No ingredient tasks found for:", taskname, searchItem);
             return false;
+        }
+
+        // for "mass ...." profile name select Mass task
+        if (massTaskAllowed) {
+            for (var i=0; i<taskList.length; i++) {
+                if (taskList[i].def.displayname.match(/^(Batch|Mass|Deep|Intensive) /)) {
+                    taskList = taskList.splice(i, 1);
+                    break;
+                }
+            }
         }
 
         // Use more efficient Empowered task for Aqua if available.
@@ -3233,12 +3468,16 @@ function _select_Gateway() { // Check for Gateway used to
             // Check that there is atleast 1 free zex order slot
             if(unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length < 5) {
                 // Place the order
+                var exchangeDiamonds = parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
+                if (exchangeDiamonds > 0) {
+                    console.log("AD in exchange: " + exchangeDiamonds);
+                }
                 // Domino effect: this new order will post all the gathered diamonds until now
                 var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
                 var ZenRate = parseInt(settings["banktransrate"]);
-                var ZenQty = Math.floor((charDiamonds - parseInt(settings["bankcharmin"])) / ZenRate);
+                var ZenQty = Math.floor((charDiamonds + exchangeDiamonds - parseInt(settings["bankcharmin"])) / ZenRate);
                 ZenQty = (ZenQty > 5000) ? 5000 : ZenQty;
-                console.log("Posting Zex buy listing for " + ZenQty + " ZEN at the rate of " + ZenRate + " AD/ZEN. AD remainder: " + charDiamonds + " - " + (ZenRate * ZenQty) + " = " + (charDiamonds - (ZenRate * ZenQty)));
+                console.log("Posting Zex buy listing for " + ZenQty + " ZEN at the rate of " + ZenRate + " AD/ZEN. AD remainder: " + charDiamonds + " - " + ((ZenRate * ZenQty) - exchangeDiamonds) + " = " + (charDiamonds - (ZenRate * ZenQty) - exchangeDiamonds));
                 unsafeWindow.client.createBuyOrder(ZenQty, ZenRate);
                 // set moved ad to the ad counter zex log
                 var ADTotal = ZenRate * ZenQty;
@@ -3246,7 +3485,7 @@ function _select_Gateway() { // Check for Gateway used to
                     console.log("AD moved to ZEX from", settings["nw_charname" + charlast] + ":", ADTotal);
                     chardiamonds[charlast] -= ADTotal;
                     console.log(settings["nw_charname" + charlast] + "'s", "Astral Diamonds:", chardiamonds[charlast]);
-                    zexdiamonds += ADTotal;
+                    zexdiamonds += (ADTotal - exchangeDiamonds);
                     console.log("Astral Diamonds on the ZEX:", zexdiamonds);
                 }
             } else {
@@ -3259,7 +3498,7 @@ function _select_Gateway() { // Check for Gateway used to
 
     // Function used to check exchange data model and withdraw listed orders that use the settings zen transfer rate
 
-    function withdrawZexOffer() {
+    function cancelZexOffer() {
         // Make sure the exchange data is loaded to model
         if(unsafeWindow.client.dataModel.model.exchangeaccountdata) {
             if(unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length >= 1) {
@@ -3274,15 +3513,11 @@ function _select_Gateway() { // Check for Gateway used to
                     if(parseInt(item.price) == ZenRate && item.ordertype == "Buy") {
                         // cancel/withdraw the order
                         client.withdrawOrder(item.orderid);
-                        console.log("Withdrawing Zex listing for " + item.quantity + " ZEN at the rate of " + item.price + " . Total value in AD: " + item.totaltc);
+                        console.log("Canceling Zex listing for " + item.quantity + " ZEN at the rate of " + item.price + " . Total value in AD: " + item.totaltc);
                     }
                 });
-
-                // Withdraw the balance from exchange
-                claimZexOffer();
-
             } else {
-                console.log("No listings found on Zex. Skipping Zex Withrdaw..");
+                console.log("No listings found on Zex. Skipping Zex Cancel..");
             }
         } else {
             console.log("Zen Exchange data did not load in time for transfer. Skipping Zex Withrdaw..");
@@ -3852,7 +4087,7 @@ function _select_Gateway() { // Check for Gateway used to
 
                 updateCounters(false); // updating the UI from saved list
                 //if (JSON.stringify(accountSettings) !== GM_getValue("account_settings_" + accountName)) GM_setValue("account_settings_" + accountName, JSON.stringify(accountSettings));
-                //if (JSON.stringify(charSettingsTest) !== GM_getValue("chars_settings_" + accountName)) GM_setValue("chars_settings_" + accountName, JSON.stringify(charSettingsTest));                
+                //if (JSON.stringify(charSettingsTest) !== GM_getValue("chars_settings_" + accountName)) GM_setValue("chars_settings_" + accountName, JSON.stringify(charSettingsTest));
             }
 
             // load current character position and values
@@ -3925,7 +4160,7 @@ function _select_Gateway() { // Check for Gateway used to
             // Domino effect: first check if we're out of space for new offers
             if(unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length == 5) {
                 // Domino effect: then withdraw as much offers as we can and claim the diamonds
-                window.setTimeout(withdrawZexOffer, delay.SHORT);
+                window.setTimeout(cancelZexOffer, delay.SHORT);
             }
 
             WaitForState("button.closeNotification").done(function() {
@@ -4292,7 +4527,7 @@ function _select_Gateway() { // Check for Gateway used to
         $("#settingsPanel form").append(addText);
 
 
-        // Set up the advanced slot selects 
+        // Set up the advanced slot selects
         $(".taskSelectA").change(function(e) {
             var _taskname = $(this).val();
             var _profiles = tasklist.filter(function(task) {
@@ -4302,7 +4537,7 @@ function _select_Gateway() { // Check for Gateway used to
             });
 
             var _options = "";
-            //tasklist[" .profiles.forEach( function(profile) { if (profile.isProfileActive) profileNames.push({name: profile.profileName, value: profile.profileName}); } ); 
+            //tasklist[" .profiles.forEach( function(profile) { if (profile.isProfileActive) profileNames.push({name: profile.profileName, value: profile.profileName}); } );
 
             var profileSelect = $("#" + this.id + "__profile").html("");
             _profiles.forEach(function(profile) {
