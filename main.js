@@ -1029,6 +1029,19 @@ function _select_Gateway() { // Check for Gateway used to
                 },
             }]
     };
+    
+    addProfile("Jewelcrafting", {
+        profileName : "mass refining",
+        isProfileActive : true,
+        useMassTask : true,
+        level : {
+            0: ["Jewelcrafting_Tier0_Intro"],
+            1: ["Jewelcrafting_Tier1_Refine_Basic_Mass", "Jewelcrafting_Tier1_Gather_Basic"],
+            7: ["Jewelcrafting_Tier2_Refine_Basic_Mass"],
+            14: ["Jewelcrafting_Tier3_Refine_Basic_Mass"],
+            21: ["Jewelcrafting_Tier4_Refine_Basic_Mass"],
+        },
+    });
 
     addProfile("Jewelcrafting", {
         profileName: "20->25 gather",
@@ -1130,6 +1143,19 @@ function _select_Gateway() { // Check for Gateway used to
                 }
             }]
     };
+    
+    addProfile("Mailsmithing", {
+        profileName : "mass refining",
+        isProfileActive : true,
+        useMassTask : true,
+        level : {
+            0: ["Med_Armorsmithing_Tier0_Intro"],
+            1: ["Med_Armorsmithing_Tier1_Refine_Basic_Mass", "Med_Armorsmithing_Tier1_Gather_Basic"],
+            7: ["Med_Armorsmithing_Tier2_Refine_Basic_Mass"],
+            14: ["Med_Armorsmithing_Tier3_Refine_Basic_Mass"],
+            21: ["Crafted_Med_Armorsmithing_T4_Refine_Basic_Mass"],
+        },
+    });
 
     addProfile("Mailsmithing", {
         profileName: "20->25 gather",
@@ -1374,6 +1400,19 @@ function _select_Gateway() { // Check for Gateway used to
     };
 
     addProfile("Platesmithing", {
+        profileName : "mass refining",
+        isProfileActive : true,
+        useMassTask : true,
+        level : {
+            0: ["Hvy_Armorsmithing_Tier0_Intro"],
+            1: ["Hvy_Armorsmithing_Tier1_Refine_Basic_Mass", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+            7: ["Hvy_Armorsmithing_Tier2_Refine_Basic_Mass"],
+            14: ["Hvy_Armorsmithing_Tier3_Refine_Basic_Mass"],
+            21: ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass"],
+        },
+    });
+
+    addProfile("Platesmithing", {
         profileName: "20->25 gather",
         isProfileActive: true,
         level: {
@@ -1430,6 +1469,19 @@ function _select_Gateway() { // Check for Gateway used to
                 },
             }]
     };
+
+    addProfile("Leatherworking", {
+        profileName : "mass refining",
+        isProfileActive : true,
+        useMassTask : true,
+        level : {
+            0: ["Leatherworking_Tier0_Intro_1"],
+            1: ["Leatherworking_Tier1_Refine_Basic_Mass", "Leatherworking_Tier1_Gather_Basic"],
+            7: ["Leatherworking_Tier2_Refine_Basic_Mass"],
+            14: ["Leatherworking_Tier3_Refine_Basic_Mass"],
+            21: ["Leatherworking_Tier4_Refine_Basic_Mass"],
+        },
+    });
 
     addProfile("Leatherworking", {
         profileName: "20->25 gather",
@@ -1556,6 +1608,19 @@ function _select_Gateway() { // Check for Gateway used to
     };
 
     addProfile("Tailoring", {
+        profileName : "mass refining",
+        isProfileActive : true,
+        useMassTask : true,
+        level : {
+            0: ["Tailoring_Tier0_Intro"],
+            1: ["Tailoring_Tier1_Refine_Basic_Mass", "Tailoring_Tier1_Gather_Basic"],
+            7: ["Tailoring_Tier2_Refine_Basic_Mass"],
+            14: ["Tailoring_Tier3_Refine_Basic_Mass"],
+            21: ["Crafted_Tailoring_T4_Refine_Basic_Mass"],
+        },
+    });
+
+    addProfile("Tailoring", {
         profileName: "20->25 gather",
         isProfileActive: true,
         level: {
@@ -1616,6 +1681,19 @@ function _select_Gateway() { // Check for Gateway used to
     };
 
     addProfile("Artificing", {
+        profileName : "mass refining",
+        isProfileActive : true,
+        useMassTask : true,
+        level : {
+            0: ["Artificing_Tier0_Intro_1"],
+            1: ["Artificing_Tier1_Refine_Basic_Mass", "Artificing_Tier1_Gather_Basic"],
+            7: ["Artificing_Tier2_Refine_Basic_Mass"],
+            14: ["Artificing_Tier3_Refine_Basic_Mass"],
+            21: ["Artificing_Tier4_Refine_Basic_Mass"],
+        },
+    });
+
+    addProfile("Artificing", {
         profileName: "Wondrous Sprocket",
         isProfileActive: false,
         level: {
@@ -1665,6 +1743,19 @@ function _select_Gateway() { // Check for Gateway used to
                 },
             }]
     };
+
+    addProfile("Weaponsmithing", {
+        profileName : "mass refining",
+        isProfileActive : true,
+        useMassTask : true,
+        level : {
+            0: ["Weaponsmithing_Tier0_Intro"],
+            1: ["Weaponsmithing_Tier1_Refine_Basic_Mass", "Weaponsmithing_Tier1_Gather_Basic"],
+            7: ["Weaponsmithing_Tier2_Refine_Basic_Mass"],
+            14: ["Weaponsmithing_Tier3_Refine_Basic_Mass"],
+            21: ["Weaponsmithing_Tier4_Refine_Basic_Mass"],
+        },
+    });
 
     addProfile("Weaponsmithing", {
         profileName: "Wondrous Sprocket",
@@ -1718,6 +1809,7 @@ function _select_Gateway() { // Check for Gateway used to
         profileName: "Aqua Regia",
         level: {
             20: ["Alchemy_Tier2_Aquaregia", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
+            22: ["Alchemy_Tier4_Aquaregia_2", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"]
         }
     });
     addProfile("Alchemy", {
@@ -2739,7 +2831,8 @@ function _select_Gateway() { // Check for Gateway used to
         console.log("Searching for task:", taskName);
 
         // Search for task to start
-        var task = searchForTask(taskName, prof.taskName, profiles[0].profileName, level);
+        var massTaskAllowed = ((profiles[0].useMassTask !== undefined) && (profiles[0].useMassTask === true));
+        var task = searchForTask(taskName, prof.taskName, profiles[0].profileName, level, massTaskAllowed);
 
         // Finish createNextTask function
         if(task === null) {
@@ -2845,7 +2938,7 @@ function _select_Gateway() { // Check for Gateway used to
      * @param {Deferred} dfd Deferred object to process on return
      */
 
-    function searchForTask(taskname, profname, profileName, professionLevel) {
+    function searchForTask(taskname, profname, profileName, professionLevel, massTaskAllowed) {
         // Return first object that matches exact craft name
         // edited by WloBeb - start Patrol the Mines task only if char has less than 10 Mining Claims
         if(taskname == "Leadership_Tier3_13_Patrol" && (settings["skippatrol"] == 'always' ||
@@ -2976,7 +3069,7 @@ function _select_Gateway() { // Check for Gateway used to
             console.log("Failed to resolve item requirements for task:", taskname);
             return false;
         }
-
+        
         // Generate list of available tasks to search ingredients/assets from
         console.log("Searching ingredient tasks for:", profname);
         var taskList = unsafeWindow.client.dataModel.model.craftinglist['craft_' + profname].entries.filter(function(entry) {
@@ -3006,9 +3099,11 @@ function _select_Gateway() { // Check for Gateway used to
                 }
             }
 
-            // Skip mass production tasks
-            if(entry.def.displayname.match(/^(Batch|Mass|Deep|Intensive) /)) {
-                return false;
+            // Skip mass production tasks (don't skip for profiles with useMassTask flag == true)
+            if (! massTaskAllowed) {
+                if (entry.def.displayname.match(/^(Batch|Mass|Deep|Intensive) /)) {
+                    return false;
+                }
             }
 
             // Skip trading tasks
@@ -3029,6 +3124,16 @@ function _select_Gateway() { // Check for Gateway used to
             return false;
         }
 
+        // for profiles with useMassTask flag == true select Mass task
+        if (massTaskAllowed) {
+            for (var i=0; i<taskList.length; i++) {
+                if (taskList[i].def.displayname.match(/^(Batch|Mass|Deep|Intensive) /)) {
+                    taskList = taskList.splice(i, 1);
+                    break;
+                }
+            }
+        }
+
         // Use more efficient Empowered task for Aqua if available.
         if((searchItem == "Crafting_Resource_Aquavitae" || searchItem == "Crafting_Resource_Aquaregia") && taskList.length > 1) {
             taskList.shift();
@@ -3037,7 +3142,7 @@ function _select_Gateway() { // Check for Gateway used to
         // Should really only be one result now but lets iterate through anyway.
         for(var i = 0; i < taskList.length; i++) {
             console.log("Attempting search for ingredient task:", taskList[i].def.name);
-            var task = searchForTask(taskList[i].def.name, profname, profileName, professionLevel);
+            var task = searchForTask(taskList[i].def.name, profname, profileName, professionLevel, massTaskAllowed);
             if(task === null || task) {
                 return task;
             }
