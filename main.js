@@ -1044,7 +1044,7 @@ function _select_Gateway() { // Check for Gateway used to
     });
 
     addProfile("Jewelcrafting", {
-        profileName: "20->25 gather",
+        profileName: "21->25 gather",
         isProfileActive: true,
         level: {
             21: ["Jewelcrafting_Tier4_Refine_Basic_Mass", "Jewelcrafting_Tier4_Gather_Basic"],
@@ -1158,7 +1158,7 @@ function _select_Gateway() { // Check for Gateway used to
     });
 
     addProfile("Mailsmithing", {
-        profileName: "20->25 gather",
+        profileName: "21->25 gather",
         isProfileActive: true,
         level: {
             21: ["Crafted_Med_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Med_Armorsmithing_T4_Gather_Basic_Mass"],
@@ -1413,7 +1413,7 @@ function _select_Gateway() { // Check for Gateway used to
     });
 
     addProfile("Platesmithing", {
-        profileName: "20->25 gather",
+        profileName: "21->25 gather",
         isProfileActive: true,
         level: {
             21: ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Hvy_Armorsmithing_T4_Gather_Basic_Mass"],
@@ -1621,7 +1621,7 @@ function _select_Gateway() { // Check for Gateway used to
     });
 
     addProfile("Tailoring", {
-        profileName: "20->25 gather",
+        profileName: "21->25 gather",
         isProfileActive: true,
         level: {
             21: ["Crafted_Tailoring_T4_Refine_Basic_Mass", "Crafted_Tailoring_T4_Gather_Basic_Mass"],
