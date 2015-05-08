@@ -2403,6 +2403,14 @@ function _select_Gateway() { // Check for Gateway used to
             tooltip: 'Vendor all greater potions (lvl 45) found in player bags'
         }, //MAC-NW
         {
+            name: 'autovendor_pots5',
+            title: 'Auto Vendor major potions (lvl 60)',
+            def: false,
+            type: 'checkbox',
+            pane: 'vend',
+            tooltip: 'Vendor all major potions (lvl 60) found in player bags'
+        },
+        {
             name: 'autovendor_rank1',
             title: 'Auto Vendor enchants & runes Rank 1',
             def: false,
@@ -4853,6 +4861,12 @@ function _select_Gateway() { // Check for Gateway used to
         if(settings["autovendor_pots4"]) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_4$/,
+                limit: 0
+            };
+        }
+        if(settings["autovendor_pots5"]) {
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_5$/,
                 limit: 0
             };
         }
