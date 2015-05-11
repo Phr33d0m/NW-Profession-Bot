@@ -10,7 +10,7 @@ Automatically selects professions for empty slots
 + Sell/limit items from inventory, UI controlled
 + etc...
 
-Update URL: https://rawgit.com/Phr33d0m/NW-Profession-Bot/master/main.js (you can add this URL to the "Update URL" in your Tampermonkey). Tampermonkey triggers auto-update once a day by default.
+Update URL: https://greasyfork.org/scripts/9812-neverwinter-gateway-professions-robot/code/Neverwinter%20gateway%20-%20Professions%20Robot.user.js (you can add this URL to the "Update URL" in your Tampermonkey). Tampermonkey triggers auto-update once a day by default.
 
 Works on | Doesn't work on
 ---------|----------------
