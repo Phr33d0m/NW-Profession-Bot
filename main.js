@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Neverwinter gateway - Professions Robot
 // @description Automatically selects professions for empty slots
-// @namespace https://greasyfork.org/scripts/7061-neverwinter-gateway-professions-robot/
+// @namespace https://greasyfork.org/scripts/9812-neverwinter-gateway-professions-robot/
 // @include http://gateway*.playneverwinter.com/*
 // @include https://gateway*.playneverwinter.com/*
 // @include http://gateway.*.perfectworld.eu/*
