@@ -306,7 +306,7 @@ the task is uncraftable but the ingredients show as available and it will not cr
 if (window.self !== window.top) {
     throw "";
 }
-var current_Gateway = _select_Gateway(); // edited by RottenMind
+var current_Gateway = _select_Gateway(); 
 // Set global console variables
 var fouxConsole = {
     log: function() {},
@@ -503,146 +503,6 @@ function _select_Gateway() { // Check for Gateway used to
     function countLeadingSpaces(str) {
         return str.match(/^(\s*)/)[1].length;
     }
-
-    var image_pause = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAY" +
-        "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" +
-        "BNp57TyT3+MAAAAASUVORK5CYII=";
-    var image_play = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYA" +
-        "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";
-    var image_prefs = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQC" +
-        "AMAAAAoLQ9TAAAAllBMVEUAGQASEhIfHx8fJy8pKSk2NjZBQUFJR0ZQUE9RUVFSUlJNX3No" +
-        "aGhsaWdramlycG1meY98fHx+fn5wgpV0iqKKh4R4jaR9jJx8kad9kad/mbONmaWEnrmEnrq" +
-        "koZy3t7fIx8bKyMHT0c3S0dDU09DV1NPP1t3W1dXY2Njb2tfe29bf3tzj4uHr6+js6+r39/" +
-        "f5+PgAAABrL3yvAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTA" +
-        "QCanBgAAAAHdElNRQfWBRoFKh31UQ8DAAAAgUlEQVQY022OxxLCMAwFRSc4BEIPJZQQ08v+" +
-        "/8+RsTExDDpIe3ijfSJ/hx9g62Dt4GaAI+8YT0t27+BxxvvE/no5pYT10lGFrE34Ja40W3g" +
-        "1oMGmW7YZ6hnCYexKTPVkXivuvWe1Cz1aKqPNI3N0slI2TNYZiARJX30qERc7wBPKC4WRDz" +
-        "WdWHfmAAAAAElFTkSuQmCC";
-    var image_close = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQC" +
-        "AQAAAC1+jfqAAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfW" +
-        "BRkTNhxuPxLkAAAAHXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBUaGUgR0lNUO9kJW4AAAE" +
-        "KSURBVCjPhdGxSgNBFAXQMzpgYWwsLEQUDBJBQgqFIChZEPR7/DA/QCGQTgQtJE1ENoWohY" +
-        "UgbGKQyFjErNv52nObe19wqGWg7z0l5YVgVdOu+wUt507tqIVQ4Zodp861ooELe15M5KFI6" +
-        "Zfr9u25MIj6Jl4cmSIPBWrq2o5cufO4aOJDYSozNTa2pK4t03PtwUdMKRRykAmW0dTRcyNX" +
-        "pBQpI8GJDTR050zkNzK0bMMZLvUNZ8yCfy6Wvbc1NVyi4dloXjqWvds6uvp41pFmpVOKJWd" +
-        "6bgwxkmTMIotWKpwrfBkZl7uMonUHf5wSlV2+fUZrjnXdzrmyy7djD8GWTW9e51z557o1Tz" +
-        "85FH/WkOkaHQAAAABJRU5ErkJggg==";
 
     // Setup global closure variables
     var $ = unsafeWindow.jQuery;
@@ -1881,24 +1741,19 @@ function _select_Gateway() { // Check for Gateway used to
         definedTask["Siege Event"],
     ];
 
-    var globalSettings = {
-        scriptPaused: false,
-        scriptDebugMode: false,
-        autoLogin: false,
-        autoLoginAccount: "",
-        autoLoginPassword: "",
-    };
-
-
     // Populated at login   
     var loggedAccount = null;
+    var UIaccount = null;
+    var scriptSettings = {};
     var accountSettings = {};
-    var charSettingsTest = {};
+    var charSettingsList = [];
     var charNameList = [];
     var charStatisticsList = []; // array of char names with the charStatistics for each char.
 
     var defaultCharStatistics = {
         general: {
+            nextTask: null,
+            lastSCAVisit: null,
             refineCounter: 0,
             refineCounterReset: Date.now(),
             diamonds: 0,
@@ -1969,62 +1824,20 @@ function _select_Gateway() { // Check for Gateway used to
             */
         },
         tools: {
-            "Awl": {
-                used: [],
-                unused: []
-            },
-            "Shears": {
-                used: [],
-                unused: []
-            },
-            "Hammer": {
-                used: [],
-                unused: []
-            },
-            "Needle": {
-                used: [],
-                unused: []
-            },
-            "Bellows": {
-                used: [],
-                unused: []
-            },
-            "Bezelpusher": {
-                used: [],
-                unused: []
-            },
-            "Mortar": {
-                used: [],
-                unused: []
-            },
-            "Anvil": {
-                used: [],
-                unused: []
-            },
-            "Grindstone": {
-                used: [],
-                unused: []
-            },
-            "Philosophersstone": {
-                used: [],
-                unused: []
-            },
-            "Loupe": {
-                used: [],
-                unused: []
-            },
-            "Graver": {
-                used: [],
-                unused: []
-            },
-            "Crucible": {
-                used: [],
-                unused: []
-            },
-            "Tongs": {
-                used: [],
-                unused: []
-            },
+            "Awl":{used:[],unused:[]},
+            "Shears":{used:[],unused:[]},
+            "Hammer":{used:[],unused:[]},
+            "Needle":{used:[],unused:[]},
+            "Bellows":{used:[],unused:[]},
+            "Bezelpusher":{used:[],unused:[]},
+            "Mortar":{used:[],unused:[]},
+            "Anvil":{used:[],unused:[]},
+            "Grindstone":{used:[],unused:[]},
+            "Philosophersstone":{used:[],unused:[]},
+            "Loupe":{used:[],unused:[]},
+            "Graver":{used:[],unused:[]},
+            "Crucible":{used:[],unused:[]},
+            "Tongs":{used:[],unused:[]},
         },
         trackedResources: [],
         slotUse: [],
@@ -2116,6 +1929,18 @@ function _select_Gateway() { // Check for Gateway used to
     }, 
 ];
 
+    var defaultScriptSettings = {
+        general: {
+            scriptPaused: false,
+            scriptDebugMode: false,
+            autoLogin: false,
+            autoLoginAccount: "",
+            autoLoginPassword: "",
+            autoReload: false,
+            scriptDelayFactor: 1,
+        }
+    };
+
     var defaultAccountSettings = {
         vendorSettings: {
             vendorJunk: false,
@@ -2177,6 +2002,8 @@ function _select_Gateway() { // Check for Gateway used to
             fillOptionals: false,
             autoPurchaseRes: false,
             trainAssets: false,
+            skipPatrolTask: 'AD&Lvl20',
+            smartLeadershipAssets: true,
         },
         generalSettings: {
             refineAD: false,
@@ -2186,6 +2013,8 @@ function _select_Gateway() { // Check for Gateway used to
             consolidate: false,
             minCharBalance: 10000,
             minToTransfer: 50000,
+            bankChar: '',
+            transferRate: 300,
         },
         taskListSettigns: [],
         taskListSettingsAdvanced: [],
@@ -2216,290 +2045,70 @@ function _select_Gateway() { // Check for Gateway used to
     var charSlotsFillAssetsOptions = ['default', 'Do not fill', 'people (white to purple)', 'people (purple to white)', 'tools'];
 
 
-
     // Load Settings
-    var settingnames = [{
-            name: 'paused',
-            title: 'Pause Script',
-            def: false,
-            type: 'checkbox',
-            pane: 'main',
-            tooltip: 'Disable All Automation'
-        }, {
-            name: 'debug',
-            title: 'Enable Debug',
-            def: false,
-            type: 'checkbox',
-            pane: 'main',
-            tooltip: 'Enable all debug output to console',
+    var settingnames = [
+        //{scope: 'script', group: 'general', name: 'scriptPaused',     title: 'Pause Script', type: 'checkbox', pane: 'main', tooltip: 'Disable All Automation'},
+        {scope: 'script', group: 'general', name: 'scriptDebugMode',  title: 'Enable Debug', type: 'checkbox', pane: 'main', tooltip: 'Enable all debug output to console',
             onsave: function(newValue, oldValue) {
                 console = newValue ? unsafeWindow.console || fouxConsole : fouxConsole;
             }
-        }, {
-            name: 'openrewards',
-            title: 'Open Reward Chests',
-            def: false,
-            type: 'checkbox',
-            pane: 'main',
-            tooltip: 'Enable opeing of leadership chests on character switch'
-        }, //MAC-NW
-        {
-            name: 'autoreload',
-            title: 'Auto Reload',
-            def: false,
-            type: 'checkbox',
-            pane: 'main',
-            tooltip: 'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)'
-        }, {
-            name: 'refinead',
-            title: 'Refine AD',
-            def: true,
-            type: 'checkbox',
-            pane: 'main',
-            tooltip: 'Enable refining of AD on character switch'
-        }, {
-            name: 'incdelay',
-            title: 'Increase script delays by',
-            def: 1,
-            type: 'select',
-            opts: [{
-                name: 'default - 1',
-                path: '1'
-            }, {
-                name: '1.5',
-                path: '1.5'
-            }, {
-                name: '2',
-                path: '2'
-            }, {
-                name: '2.5',
-                path: '2.5'
-            }, {
-                name: '3',
-                path: '3'
-            }],
-            pane: 'main',
-            tooltip: 'Increase the delays the script waits before attempting the actions.'
-        }, {
-            name: 'autologin',
-            title: 'Attempt to login automatically',
-            def: false,
-            type: 'checkbox',
-            pane: 'main',
-            tooltip: 'Automatically attempt to login to the neverwinter gateway site',
-            border: true
-        }, {
-            name: 'nw_username',
-            title: 'Neverwinter Username',
-            def: '',
-            type: 'text',
-            pane: 'main',
-            tooltip: ''
-        }, {
-            name: 'nw_password',
-            title: 'Neverwinter Password',
-            def: '',
-            type: 'password',
-            pane: 'main',
-            tooltip: ''
         },
+        {scope: 'script', group: 'general', name: 'autoReload', title: 'Auto Reload', type: 'checkbox', pane: 'main', tooltip: 'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)'},
+        {scope: 'script', group: 'general', name: 'scriptDelayFactor',    title: 'Increase script delays by', type: 'select', pane: 'main', tooltip: 'Increase the delays the script waits before attempting the actions.',
+            opts: [ { name: 'default - 1',  value: '1'}, 
+                    { name: '1.5',          value: '1.5'}, 
+                    { name: '2',            value: '2'},
+                    { name: '2.5',          value: '2.5'},
+                    { name: '3',            value: '3'}],
+        }, 
+        {scope: 'script', group: 'general', name: 'autoLogin', title: 'Attempt to login automatically', type: 'checkbox', pane: 'main', tooltip: 'Automatically attempt to login to the neverwinter gateway site'},
+        {scope: 'script', group: 'general', name: 'autoLoginAccount',  title: 'Neverwinter Username',   type: 'text',     pane: 'main', tooltip: ''},
+        {scope: 'script', group: 'general', name: 'autoLoginPassword', title: 'Neverwinter Password',   type: 'password', pane: 'main', tooltip: ''},
+        
+        {scope: 'account', group: 'generalSettings', name: 'openRewards', title: 'Open Reward Chests',  type: 'checkbox', pane: 'main', tooltip: 'Enable opeing of leadership chests on character switch' },
+        {scope: 'account', group: 'generalSettings', name: 'refineAD',    title: 'Refine AD',           type: 'checkbox', pane: 'main', tooltip: 'Enable refining of AD on character switch'},
+        {scope: 'account', group: 'professionSettings', name: 'fillOptionals',   type: 'checkbox', pane: 'prof',    title: 'Fill Optional Assets',  tooltip: 'Enable to include selecting the optional assets of tasks'},
+        {scope: 'account', group: 'professionSettings', name: 'autoPurchaseRes', type: 'checkbox', pane: 'prof',    title: 'Auto Purchase Resources', tooltip: 'Automatically purchase required resources from gateway shop (100 at a time)'}, 
+        {scope: 'account', group: 'professionSettings', name:'trainAssets',      type:'checkbox',  pane:'prof',     title:'Train Assets', tooltip:'Enable training/upgrading of asset worker resources'}, 
+        {scope: 'account', group: 'professionSettings', name:'smartLeadershipAssets',   type:'checkbox', pane:'prof', title:'Smart Asset allocation for leadership', tooltip:'Try to spread adn fill non-common assets and suplement with common if needed'},
+        {scope: 'account', group: 'professionSettings', name:'skipPatrolTask', type:'select', pane:'prof', title:'Skip Patrol task if > 10 claims', tooltip:'Skip \"Patrol the Mines\" leadership task if there are more than 10 mining claims in the inventory (Never, Always, On AD profile, if Leadership level is &gt;= 20, or both of the above )',
+            opts:[{name:'never',value:'never'},{name:'always',value:'always'},{name:'AD profile',value:'ad'},{name:'Leadership lvl 20',value:'ld20'},{name:'AD&Lvl20',value:'AD&Lvl20'}]},
+        {scope: 'account', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Altar Node Kit Stacks',  tooltip:'Limit skill kits stacks to 50/Altars80, vendor kits unusable by class, remove all if player has one bag or full bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorKitsAll',   type:'checkbox', pane:'vend',   title:'Vendor All Node Kits',   tooltip:'Sell ALL skill kits.'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorAltarsAll', type:'checkbox', pane:'vend',   title:'Vendor All Altar',       tooltip:'Sell ALL Altars.'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorProfResults',type:'checkbox',pane:'vend',   title:'Vendor/Maintain Prof Crafted Levelup Items',    tooltip:'Vendor off Tier 1 to 5 items produced and reused for leveling crafting professions.'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorPots1',     type:'checkbox', pane:'vend',   title:'Auto Vendor minor potions (lvl 1)',  tooltip:'Vendor all minor potions (lvl 1) found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorPots2',     type:'checkbox', pane:'vend',   title:'Auto Vendor lesser potions (lvl 15)',tooltip:'Vendor all lesser potions (lvl 15) found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorPots3',     type:'checkbox', pane:'vend',   title:'Auto Vendor potions (lvl 30)',       tooltip:'Vendor all potions (lvl 30) found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorPots4',     type:'checkbox', pane:'vend',   title:'Auto Vendor greater potions (lvl 45)',   tooltip:'Vendor all greater potions (lvl 45) found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
+        {scope: 'account', group: 'consolidationSettings', name:'consolidate',      type:'checkbox',pane:'bank',    title:'Consolidate AD via ZEX',     tooltip:'Automatically attempt to post, cancel and withdraw AD via ZEX and consolidate to designated character',border:true},
+        {scope: 'account', group: 'consolidationSettings', name:'bankchar',         type:'text',    pane:'bank',    title:'Character Name of Banker',   tooltip:'Enter name of the character to hold account AD'},
+        {scope: 'account', group: 'consolidationSettings', name:'minToTransfer',    type:'text',    pane:'bank',    title:'Min AD for Transfer',        tooltip:'Enter minimum AD limit for it to be cosidered for transfer off a character'},
+        {scope: 'account', group: 'consolidationSettings', name:'minCharBalance',   type:'text',    pane:'bank',    title:'Min Character balance',      tooltip:'Enter the amount of AD to always keep available on characters'},
+        {scope: 'account', group: 'consolidationSettings', name:'transferRate',     type:'text',    pane:'bank',    title:'AD per Zen Rate (in zen)',   tooltip:'Enter default rate to use for transfering through ZEX'},
 
-        {
-            name: 'optionals',
-            title: 'Fill Optional Assets',
-            def: true,
-            type: 'checkbox',
-            pane: 'prof',
-            tooltip: 'Enable to include selecting the optional assets of tasks'
-        }, {
-            name: 'autopurchase',
-            title: 'Auto Purchase Resources',
-            def: true,
-            type: 'checkbox',
-            pane: 'prof',
-            tooltip: 'Automatically purchase required resources from gateway shop (100 at a time)'
-        }, {
-            name: 'trainassets',
-            title: 'Train Assets',
-            def: true,
-            type: 'checkbox',
-            pane: 'prof',
-            tooltip: 'Enable training/upgrading of asset worker resources'
-        }, {
-            name: 'smartleadassets',
-            title: 'Smart Asset allocation for leadership',
-            def: true,
-            type: 'checkbox',
-            pane: 'prof',
-            tooltip: 'Try to spread adn fill non-common assets and suplement with common if needed'
-        }, {
-            name: 'skippatrol',
-            title: 'Skip Patrol task if > 10 claims',
-            def: 'AD&Lvl20',
-            type: 'select',
-            opts: [{
-                name: 'never',
-                path: 'never'
-            }, {
-                name: 'always',
-                path: 'always'
-            }, {
-                name: 'AD profile',
-                path: 'ad'
-            }, {
-                name: 'Leadership lvl 20',
-                path: 'ld20'
-            }, {
-                name: 'AD&Lvl20',
-                path: 'AD&Lvl20'
-            }],
-            pane: 'prof',
-            tooltip: 'Skip \"Patrol the Mines\" leadership task if there are more than 10 mining claims in the inventory (Never, Always, On AD profile, if Leadership level is &gt;= 20, or both of the above )'
-        },
-
-        {
-            name: 'autovendor_junk',
-            title: 'Auto Vendor junk..',
-            def: false,
-            type: 'checkbox',
-            pane: 'vend',
-            tooltip: 'Vendor all (currently) winterfest fireworks+lanterns'
-        }, //MAC-NW
-        {
-            name: 'autovendor_kits_altars_limit',
-            title: 'Vendor/Maintain Altar Node Kit Stacks',
-            def: false,
-            type: 'checkbox',
-            pane: 'vend',
-            tooltip: 'Limit skill kits stacks to 50/Altars80, vendor kits unusable by class, remove all if player has one bag or full bags'
-        }, // edited by RottenMind
-        {
-            name: 'autovendor_kits_all',
-            title: 'Vendor All Node Kits',
-            def: false,
-            type: 'checkbox',
-            pane: 'vend',
-            tooltip: 'Sell ALL skill kits.'
-        }, {
-            name: 'autovendor_altars_all',
-            title: 'Vendor All Altar',
-            def: false,
-            type: 'checkbox',
-            pane: 'vend',
-            tooltip: 'Sell ALL Altars.'
-        }, {
-            name: 'autovendor_profresults',
-            title: 'Vendor/Maintain Prof Crafted Levelup Items',
-            def: false,
-            type: 'checkbox',
-            pane: 'vend',
-            tooltip: 'Vendor off Tier 1 to 5 items produced and reused for leveling crafting professions.'
-        }, {
-            name: 'autovendor_pots1',
-            title: 'Auto Vendor minor potions (lvl 1)',
-            def: false,
-            type: 'checkbox',
-            pane: 'vend',
-            tooltip: 'Vendor all minor potions (lvl 1) found in player bags'
-        }, //MAC-NW
-        {
-            name: 'autovendor_pots2',
-            title: 'Auto Vendor lesser potions (lvl 15)',
-            def: false,
-            type: 'checkbox',
-            pane: 'vend',
-            tooltip: 'Vendor all lesser potions (lvl 15) found in player bags'
-        }, //MAC-NW
-        {
-            name: 'autovendor_pots3',
-            title: 'Auto Vendor potions (lvl 30)',
-            def: false,
-            type: 'checkbox',
-            pane: 'vend',
-            tooltip: 'Vendor all potions (lvl 30) found in player bags'
-        }, //MAC-NW
-        {
-            name: 'autovendor_pots4',
-            title: 'Auto Vendor greater potions (lvl 45)',
-            def: false,
-            type: 'checkbox',
-            pane: 'vend',
-            tooltip: 'Vendor all greater potions (lvl 45) found in player bags'
-        }, //MAC-NW
-        {
-            name: 'autovendor_rank1',
-            title: 'Auto Vendor enchants & runes Rank 1',
-            def: false,
-            type: 'checkbox',
-            pane: 'vend',
-            tooltip: 'Vendor all Rank 1 enchantments & runestones found in player bags'
-        }, //MAC-NW
-        {
-            name: 'autovendor_rank2',
-            title: 'Auto Vendor enchants & runes Rank 2',
-            def: false,
-            type: 'checkbox',
-            pane: 'vend',
-            tooltip: 'Vendor all Rank 2 enchantments & runestones found in player bags'
-        }, //MAC-NW
-        {
-            name: 'autovendor_rank3',
-            title: 'Auto Vendor enchants & runes Rank 3',
-            def: false,
-            type: 'checkbox',
-            pane: 'vend',
-            tooltip: 'Vendor all Rank 3 enchantments & runestones found in player bags'
-        }, // edited by RottenMind
-        // MAC-NW AD Consolidation
-        {
-            name: 'autoexchange',
-            title: 'Consolidate AD via ZEX',
-            def: false,
-            type: 'checkbox',
-            pane: 'bank',
-            tooltip: 'Automatically attempt to post, cancel and withdraw AD via ZEX and consolidate to designated character',
-            border: true
-        }, {
-            name: 'bankchar',
-            title: 'Character Name of Banker',
-            def: '',
-            type: 'text',
-            pane: 'bank',
-            tooltip: 'Enter name of the character to hold account AD'
-        }, {
-            name: 'banktransmin',
-            title: 'Min AD for Transfer',
-            def: '22000',
-            type: 'text',
-            pane: 'bank',
-            tooltip: 'Enter minimum AD limit for it to be cosidered for transfer off a character'
-        }, {
-            name: 'bankcharmin',
-            title: 'Min Character balance',
-            def: '8000',
-            type: 'text',
-            pane: 'bank',
-            tooltip: 'Enter the amount of AD to always keep available on characters'
-        }, {
-            name: 'banktransrate',
-            title: 'AD per Zen Rate (in zen)',
-            def: '300',
-            type: 'text',
-            pane: 'bank',
-            tooltip: 'Enter default rate to use for transfering through ZEX'
-        }, {
-            name: 'charcount',
-            title: 'Enter number of characters to use (Save and Apply to update settings form)',
-            def: '2',
-            type: 'text',
-            pane: 'main',
-            tooltip: 'Enter number of characters to use (Save and Apply to update settings form)',
-            border: true
-        },
-        // MAC-NW
+        {scope: 'char', group: 'general', name:'active',     type:'checkbox',    pane:'main',    title:'',   tooltip:''},
+        {scope: 'char', group: 'general', name:'overrideGlobalSettings',    type:'checkbox',    pane:'main',    title:'',   tooltip:''},
     ];
 
+    var tempScriptSettings;
+    try {
+        tempScriptSettings = JSON.parse(GM_getValue("settings__script", "{}"));
+    } catch (e) {
+        tempScriptSettings = null;
+    }
+    if (!tempScriptSettings) {
+        console.warn('Script settings couldn\'t be retrieved, loading defaults.');
+        tempScriptSettings = {};
+    };
+    scriptSettings = $.extend(true, {}, defaultScriptSettings, tempScriptSettings);
+
     // Load local settings cache (unsecured)
+    /*
     var settings = {};
     for (var i = 0; i < settingnames.length; i++) {
         // Ignore label types
@@ -2513,33 +2122,16 @@ function _select_Gateway() { // Check for Gateway used to
             settingnames[i].onsave(settings[settingnames[i].name], settings[settingnames[i].name]);
         }
     }
+*/
 
-    var delay_modifier = parseFloat(settings["incdelay"]);
-    delay.SHORT *= delay_modifier;
-    delay.MEDIUM *= delay_modifier;
-    delay.LONG *= delay_modifier;
-    //delay.MINS 
-    delay.DEFAULT *= delay_modifier;
-    delay.TIMEOUT *= delay_modifier;
+    var delay_modifier = parseFloat(scriptSettings.general.scriptDelayFactor);
+    delay.SHORT *= delay_modifier;      delay.MEDIUM *= delay_modifier;     delay.LONG *= delay_modifier; 
+    delay.MINS *= 1;                    delay.DEFAULT *= delay_modifier;    delay.TIMEOUT *= delay_modifier;
 
-    if (settings["charcount"] < 1) {
-        settings["charcount"] = 1;
-    }
-    if (settings["charcount"] > 99) {
-        settings["charcount"] = 99;
-    }
 
-    var priorityOptions = [{
-        name: 'high',
-        value: 0
-    }, {
-        name: 'medium',
-        value: 1
-    }, {
-        name: 'low',
-        value: 2
-    }];
+  //  var priorityOptions = [{name:'high',value:0},{name:'medium',value:1},{name:'low',value:2}];
 
+/*
     var charSettings = [];
     for (var i = 0; i < settings["charcount"]; i++) {
         charSettings.push({
@@ -2602,6 +2194,7 @@ function _select_Gateway() { // Check for Gateway used to
     for (var i = 0; i < charSettings.length; i++) {
         settings[charSettings[i].name] = GM_getValue(charSettings[i].name, charSettings[i].def);
     }
+    */
     /*
     var refineCounters = JSON.parse(GM_getValue("refineCounters", "{}"));
     if (!refineCounters) {
@@ -4151,66 +3744,115 @@ function _select_Gateway() { // Check for Gateway used to
     }
 
     function addSettings() {
-        if ($("#settingsButton").length)
-            return;
-        // Add the required CSS
-        AddCss("\
-            #settingsButton{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); display: block; position: fixed; overflow: auto; right: 0px; top: 0px; padding: 3px; z-index: 1000;}\
-            #pauseButton{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); display: block; position: fixed; overflow: auto; right: 23px; top: 0px; padding: 3px; z-index: 1000;}\
-            /* MAC-NW -- Put Panel at a higher layer than status window */ \
-            #settingsPanel{position: fixed; overflow: auto; right: 0px; top: 0px; width: 600px;max-height:100%;font: 12px sans-serif; text-align: left; display: block; z-index: 1001;}\
-            #settings_title{font-weight: bolder; background: none repeat scroll 0% 0% rgb(204, 204, 204); border-bottom: 1px solid rgb(102, 102, 102); padding: 3px;}\
-            #settingsPanelButtonContainer {background: none repeat scroll 0% 0% rgb(204, 204, 204); border-top: 1px solid rgb(102, 102, 102);padding: 3px;text-align:center} \
-            #settingsPanel label.purple {font-weight:bold;color:#7C37F6}\
-            #settingsPanel label.blue {font-weight:bold;color:#007EFF}\
-            #settingsPanel label.green {font-weight:bold;color:#8AFF00}\
-            #settingsPanel label.white {font-weight:bold;color:#FFFFFF}\
-            #charPanel {width:98%;max-height:550px;overflow:auto;display:block;padding:3px;}\
-            #charPanel div div ul li { display: inline-block; width: 48%; }\
-            .inventory-container {float: left; clear: none; width: 270px; margin-right: 20px;}\
-            #prinfopane {position: fixed; top: 5px; left: 200px; display: block; z-index: 1000;}\
-            .prh3 {padding: 5px; height: auto!important; width: auto!important; background-color: rgba(0, 0, 0, 0.7);}\
-            .custom-radio{width:16px;height:16px;display:inline-block;position:relative;z-index:1;top:3px;background-color:#fff;margin:0 4px 0 2px;}\
-            .custom-radio:hover{background-color:black;} .custom-radio.selected{background-color:red;} .custom-radio-selected-text{color:darkred;font-weight:500;}\
-            .custom-radio input[type='radio']{margin:1px;position:absolute;z-index:2;cursor:pointer;outline:none;opacity:0;_nofocusline:expression(this.hideFocus=true);-ms-filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=0);filter:alpha(opacity=0);-khtml-opacity:0;-moz-opacity:0}\
-            #settingsPanel input[type='button'].button-green,#settingsPanel input[type='button'].button-red,#settingsPanel input[type='button'].button-yellow,#settingsPanel input[type='button'].button-blue{color:#eff;border-radius:4px;text-shadow:0 1px 1px rgba(0,0,0,0.2);font-size:110%;font-weight:bold;}\
-            .pure-button{display:inline-block;*display:inline;zoom:1;line-height:normal;white-space:nowrap;vertical-align:baseline;text-align:center;cursor:pointer;-webkit-user-drag:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.pure-button::-moz-focus-inner{padding:0;border:0}.pure-button{font-family:inherit;font-size:100%;*font-size:90%;*overflow:visible;padding:.5em 1em;color:#444;color:rgba(0,0,0,.8);*color:#444;border:1px solid #999;border:0 rgba(0,0,0,0);background-color:#E6E6E6;text-decoration:none;border-radius:2px}.pure-button-hover,.pure-button:hover,.pure-button:focus{filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#1a000000', GradientType=0);background-image:-webkit-gradient(linear,0 0,0 100%,from(transparent),color-stop(40%,rgba(0,0,0,.05)),to(rgba(0,0,0,.1)));background-image:-webkit-linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));background-image:-moz-linear-gradient(top,rgba(0,0,0,.05) 0,rgba(0,0,0,.1));background-image:-o-linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1));background-image:linear-gradient(transparent,rgba(0,0,0,.05) 40%,rgba(0,0,0,.1))}.pure-button:focus{outline:0}.pure-button-active,.pure-button:active{box-shadow:0 0 0 1px rgba(0,0,0,.15) inset,0 0 6px rgba(0,0,0,.2) inset}.pure-button[disabled],.pure-button-disabled,.pure-button-disabled:hover,.pure-button-disabled:focus,.pure-button-disabled:active{border:0;background-image:none;filter:progid:DXImageTransform.Microsoft.gradient(enabled=false);filter:alpha(opacity=40);-khtml-opacity:.4;-moz-opacity:.4;opacity:.4;cursor:not-allowed;box-shadow:none}.pure-button-hidden{display:none}.pure-button::-moz-focus-inner{padding:0;border:0}.pure-button-primary,.pure-button-selected,a.pure-button-primary,a.pure-button-selected{background-color:#0078e7;color:#fff}\
-            #settingsPanel input[type='button'].button-green{background:#1cb841; margin: 2px 20px 2px 2px;}\
-            #settingsPanel input[type='button'].button-red{background:#ca3c3c; margin: 2px 2px 2px 2px;}\
-            #settingsPanel input[type='button'].button-yellow{background:#df7514; margin: 2px 2px 2px 2px;}\
-            #settingsPanel input[type='button'].button-blue{background:#42b8dd; margin: 2px 2px 2px 2px;}\
-            .charSettingsTab { overflow: auto; }\
-            .charSettingsTab div { overflow: auto; }\
-            #rcounters ul li span { display: inline-block; min-width: 125px; }\
-            #settingsPanel table { width: 100%; }\
-            .ranked:nth-child(6n+2) { color: purple; } .ranked:nth-child(6n+3) { color: blue; } .ranked:nth-child(6n+4) { color: green } \
-            .ranked2:nth-child(6n+1) { color: purple; } .ranked2:nth-child(6n+2) { color: blue; } .ranked2:nth-child(6n+3) { color: green } \
-            .tranked:nth-child(4n+2) { color: purple; } .tranked:nth-child(4n+3) { color: blue; } .tranked:nth-child(4n) { color: green } \
-            .tranked2:nth-child(4n+1) { color: purple; } .tranked2:nth-child(4n+2) { color: blue; } .tranked2:nth-child(4n+3) { color: green } \
-            table.professionRanks { border-collapse: collapse; } \
-            table.professionRanks td { height: 14px; } \
-            td.ranked2, td.tranked2 { border-bottom: solid 1px #555; border-top: dashed 1px #888 }\
-            table.professionLevels td.rotate, table.professionLevels th.rotate { height: 100px; } \
-            table.professionLevels td.rotate, table.professionLevels th.rotate > div { transform: translate(0, 30px) rotate(290deg); width: 30px; } \
-            table.professionLevels td.rotate, table.professionLevels th.rotate > div > span { border-bottom: 1px solid #ccc; padding: 5px 10px; } \
-            ");
+        
+        
+        if (!($("#settingsButton").length)) {
+            // Add the required CSS
+            AddCss("\
+                #settingsButton{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); display: block; position: fixed; overflow: auto; right: 0px; top: 0px; padding: 3px; z-index: 1000;}\
+                #pauseButton{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); display: block; position: fixed; overflow: auto; right: 23px; top: 0px; padding: 3px; z-index: 1000;}\
+                #settingsPanel{position: fixed; overflow: auto; right: 0px; top: 0px; width: 600px;max-height:100%;font: 12px sans-serif; text-align: left; display: block; z-index: 1001;}\
+                #settings_title{font-weight: bolder; background: none repeat scroll 0% 0% rgb(204, 204, 204); border-bottom: 1px solid rgb(102, 102, 102); padding: 3px;}\
+                #settingsPanelButtonContainer {background: none repeat scroll 0% 0% rgb(204, 204, 204); border-top: 1px solid rgb(102, 102, 102);padding: 3px;text-align:center} \
+                #charPanel {width:98%;max-height:550px;overflow:auto;display:block;padding:3px;}\
+                .inventory-container {float: left; clear: none; width: 270px; margin-right: 20px;}\
+                #prinfopane {position: fixed; top: 5px; left: 200px; display: block; z-index: 1000;}\
+                .prh3 {padding: 5px; height: auto!important; width: auto!important; background-color: rgba(0, 0, 0, 0.7);}\
+                .custom-radio{width:16px;height:16px;display:inline-block;position:relative;z-index:1;top:3px;background-color:#fff;margin:0 4px 0 2px;}\
+                .custom-radio:hover{background-color:black;} .custom-radio.selected{background-color:red;} .custom-radio-selected-text{color:darkred;font-weight:500;}\
+                .custom-radio input[type='radio']{margin:1px;position:absolute;z-index:2;cursor:pointer;outline:none;opacity:0;_nofocusline:expression(this.hideFocus=true);-ms-filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=0);filter:alpha(opacity=0);-khtml-opacity:0;-moz-opacity:0}\
+                .charSettingsTab { overflow: auto; }\
+                .charSettingsTab div { overflow: auto; }\
+                #rcounters ul li span { display: inline-block; min-width: 125px; }\
+                #settingsPanel table { width: 100%; }\
+                .ranked:nth-child(6n+2) { color: purple; } .ranked:nth-child(6n+3) { color: blue; } .ranked:nth-child(6n+4) { color: green } \
+                .ranked2:nth-child(6n+1) { color: purple; } .ranked2:nth-child(6n+2) { color: blue; } .ranked2:nth-child(6n+3) { color: green } \
+                .tranked:nth-child(4n+2) { color: purple; } .tranked:nth-child(4n+3) { color: blue; } .tranked:nth-child(4n) { color: green } \
+                .tranked2:nth-child(4n+1) { color: purple; } .tranked2:nth-child(4n+2) { color: blue; } .tranked2:nth-child(4n+3) { color: green } \
+                table.professionRanks { border-collapse: collapse; } \
+                table.professionRanks td { height: 14px; } \
+                td.ranked2, td.tranked2 { border-bottom: solid 1px #555; border-top: dashed 1px #888 }\
+                table.professionLevels td.rotate, table.professionLevels th.rotate { height: 100px; } \
+                table.professionLevels td.rotate, table.professionLevels th.rotate > div { transform: translate(0, 30px) rotate(290deg); width: 30px; } \
+                table.professionLevels td.rotate, table.professionLevels th.rotate > div > span { border-bottom: 1px solid #ccc; padding: 5px 10px; } \
+                input[type='checkbox'].settingsInput { margin 5px 10px; }\
+                input.settingsInput { margin 5px 10px; }\
+                label.settingsLabel { margin 5px 10px; width: 200px; display: inline-block; }\
+                ");
 
-        // Add settings panel to page body
-        $("body").append(
-            '<div id="settingsPanel" class="ui-widget-content">\
-            <div id="settings_title">\
-            <img src=' + image_prefs + ' style="float: left; vertical-align: text-bottom;"\>\
-            <img id="settings_close" src=' + image_close + ' title="Click to hide preferences" style="float: right; vertical-align: text-bottom; cursor: pointer; display: block;"\>\
-            <span style="margin:3px">Settings</span>\
-            </div>\
-            <form style="margin: 0px; padding: 0px">\
-            <div id="main_tabs">\
-            <ul style="background:none;border:none;border-bottom:1px solid #aed0ea;padding:0;">\
-            </ul>\
-            </div>\
-            </form>\
-            </div>');
+            // Add settings panel to page body
+            $("body").append(
+                '<div id="settingsPanel" class="ui-widget-content">\
+                <div id="settings_title">\
+                <span class="ui-icon ui-icon-wrench" style="float: left;"></span>\
+                <span id="settings_close" class="ui-icon ui-icon-closethick" title="Click to hide preferences" style="float: right; cursor: pointer; display: block;"\></span>\
+                <span style="margin:3px">Settings</span>\
+                </div>\
+                <div id="script_settings"><ul></ul></div>\
+                <div id="account_settings">\
+                    <div id="main_tabs"><ul></ul></div></div>\
+                <div id="account_info">\
+                    <div id="info_tabs"><ul></ul></div></div>\
+                <div id="char_settings"></div>\
+                </div>');
+        
+                // Add open settings button to page
+                $("body").append('<div id="settingsButton"><span class="ui-icon ui-icon-wrench" title="Click to show preferences" style="cursor: pointer; display: block;"></span></div>');
+                $("#settingsPanel").hide();
+                $("#settingsButton").click(function() {
+                    $("#settingsButton").hide();
+                    $("#pauseButton").hide();
+                    $("#settingsPanel").show();
+                });
 
+            // Add pause button to page
+             function displayPause() {
+                if (scriptSettings.general.scriptPaused) {
+                    $('#pauseButton').html('<span class="ui-icon ui-icon-play" title="Click to resume task script" style="cursor: pointer; display: block;"></span>');
+                }
+                else {
+                    $('#pauseButton').html('<span class="ui-icon ui-icon-pause" title="Click to pause task script" style="cursor: pointer; display: block;"></span>');
+                }
+            }
+            $("body").append('<div id="pauseButton"></div>');
+            displayPause();
+            $("#pauseButton").click( function () {
+                scriptSettings.general.scriptPaused = !scriptSettings.general.scriptPaused;
+                displayPause();
+                setTimeout(function() {
+                    GM_setValue("settings__script", JSON.stringify(scriptSettings));
+                }, 0);
+            });
+            
+            // Add info pane
+            $("body").append("<div id='prinfopane' class='header-newrelease'>");
+
+            $('#update-content-inventory-bags-0 .bag-header').waitUntilExists(function() {
+                if ($('#update-content-inventory-bags-0 .bag-header div').length && !$('#update-content-inventory-bags-0 .bag-header div.autovendor').length) {
+                    $('#update-content-inventory-bags-0 .bag-header').append('<div class="input-field button light autovendor"><div class="input-bg-left"></div><div class="input-bg-mid"></div><div class="input-bg-right"></div><button id="nwprofs-autovendor">Auto Vendor</button></div>');
+                    $("button#nwprofs-autovendor").on("click", vendorJunk);
+                }
+            });
+
+
+            $("#settings_close,settings_cancel").click(function() {
+                $("#settingsButton").show();
+                $("#pauseButton").show();
+                $("#settingsPanel").hide();
+            });
+                
+            
+            //$('#script_settings').html('');
+            var tab = addTab("#script_settings", "Script settings");
+            addInputsUL(tab, 'script', 'main');
+
+            tab = addTab("#script_settings", "Custom profiles");
+            tab.html("Custom profile import will be here");
+            $("#script_settings").tabs({ active: false, collapsible: true });
+        
+        // Refresh is not needed
+        if (UIaccount == loggedAccount) return;
+        
         $("div#main_tabs").tabs();
         var tabs = {
             main: 'General settings',
@@ -4229,7 +3871,7 @@ function _select_Gateway() { // Check for Gateway used to
             // Add each setting input
             var settingsList = $('<ul style="list-style: none outside none; min-height: 300px; max-height: 500px; overflow: auto; margin: 3px; padding: 0px;"></ul>');
             var settingListToAdd = settingnames.filter(function(element) {
-                return (element.pane == key);
+                return (element.pane == key && element.scope == 'script');
             });
 
             for (var i = 0; i < settingListToAdd.length; i++) {
@@ -4529,28 +4171,6 @@ function _select_Gateway() { // Check for Gateway used to
             $(".charSettingsTabs").tabs();
         });
 
-        // Add open settings button to page
-        $("body").append('<div id="settingsButton"><img src="' + image_prefs + '" title="Click to show preferences" style="cursor: pointer; display: block;"></div>');
-
-        // Add pause button to page
-        $("body").append('<div id="pauseButton"><img src="' + (settings["paused"] ? image_play : image_pause) + '" title="Click to ' + (settings["paused"] ? "resume" : "pause") + ' task script" style="cursor: pointer; display: block;"></div>');
-
-        // Add info pane
-        $("body").append("<div id='prinfopane' class='header-newrelease'>");
-
-        // Add the javascript
-        $("#settingsPanel").hide();
-        $("#settingsButton").click(function() {
-            $("#settingsButton").hide();
-            $("#pauseButton").hide();
-            $("#settingsPanel").show();
-        });
-        $("#settings_close,settings_cancel").click(function() {
-            $("#settingsButton").show();
-            $("#pauseButton").show();
-            $("#settingsPanel").hide();
-        });
-        $("#pauseButton").click(PauseSettings);
 
         // Use setTimeout to workaround permission issues when calling GM functions from main window
         $("#settings_save").click(function() {
@@ -4564,30 +4184,103 @@ function _select_Gateway() { // Check for Gateway used to
             processSwordCoastDailies();
         });
 
-        $('#update-content-inventory-bags-0 .bag-header').waitUntilExists(function() {
-            if ($('#update-content-inventory-bags-0 .bag-header div').length && !$('#update-content-inventory-bags-0 .bag-header div.autovendor').length) {
-                $('#update-content-inventory-bags-0 .bag-header').append('<div class="input-field button light autovendor"><div class="input-bg-left"></div><div class="input-bg-mid"></div><div class="input-bg-right"></div><button id="nwprofs-autovendor">Auto Vendor</button></div>');
-                $("button#nwprofs-autovendor").on("click", vendorJunk);
-            }
-        });
     }
 
-    function PauseSettings(_action) {
-        if (_action != "pause" || _action != "unpause")
-            _action = "toggle";
-        if (_action == "toggle")
-            settings["paused"] = !settings["paused"];
-        if (_action == "pause")
-            settings["paused"] = true;
-        if (_action == "unpause")
-            settings["paused"] = false;
-        setTimeout(function() {
-            GM_setValue("paused", settings["paused"]);
-        }, 0);
-        $("#settings_paused").prop("checked", settings["paused"]);
-        $("#pauseButton img").attr("src", (settings["paused"] ? image_play : image_pause));
-        $("#pauseButton img").attr("title", "Click to " + (settings["paused"] ? "resume" : "pause") + " task script");
+    // Helper function to create input elements
+    function createInput( settingsItem, name, input_css_classes, label_css_classes) {
+        var input;
+        var label;
+
+        var id_name; 
+        var value;
+        switch (settingsItem.scope) {
+            case 'script':
+                value = scriptSettings[settingsItem.group][settingsItem.name];
+                id_name = "setting__script__" + settingsItem.group + "__" +  settingsItem.name;
+                break;
+            case 'account':
+                value = accountSettings[settingsItem.group][settingsItem.name];
+                id_name = "setting__account__" + settingsItem.group + "__" +  settingsItem.name;
+                break;
+            case 'char':
+                value = charSettingsList[name][settingsItem.group][settingsItem.name];
+                id_name = "setting__char__" + name + "__" + settingsItem.group + "__" +  settingsItem.name;
+                break;
+        } 
+
+        switch (settingsItem.type) {
+            case 'checkbox':
+            case 'text':
+            case 'password':
+                input = $("<input type=\"" + settingsItem.type + "\" name=\"" + id_name + "\" id=\"" + id_name + "\" class=\"" + input_css_classes + "\" \>");
+                break;
+            case 'select':
+                input = $("<select name=\"" + id_name + "\" id=\"" + id_name + "\" class=\"" + input_css_classes + "\" >");
+                settingsItem.opts.forEach( function (option) {
+                   input.append($("<option value=\"" + option.value + "\">" + option.name + "</option>")); 
+                });
+                break;
+            case 'void':
+                break;
+            default:
+                break;
+
+        } 
+        input.val(value);
+        input.data('scope', settingsItem.scope);
+        input.data('group', settingsItem.group);
+        input.data('name', settingsItem.name);
+        if (name) input.data('charname', name);
+        label = $('<label class="' + label_css_classes + '" for="' + id_name + '">' + settingsItem.title + '</label>');
+        return { input: input, label: label };
     }
+
+
+    function addInputsUL(parentSelector, scope, pane) {
+
+        var settingListToAdd = settingnames.filter(function(element) {
+            return (element.scope == scope && element.pane == pane);
+        });
+
+        var ul = $("<ul></ul>");
+        settingListToAdd.forEach( function (setting) {
+            var to_add = createInput(setting, '', 'settingsInput', 'settingsLabel');
+            var li = $("<li>");
+            switch (setting.type) {
+                case 'checkbox':
+                    li.append(to_add.input);
+                    li.append(to_add.label);
+                    break;
+                case 'text':
+                case 'password':
+                case 'select':
+                case 'void':
+                default:
+                    li.append(to_add.label);
+                    li.append(to_add.input);
+                    break;
+            } 
+            ul.append(li);
+        })
+        $(parentSelector).append(ul);
+    }
+    
+    function addTab(parentSelector, tabTitle, tabId) {
+        if (!tabId) {
+            var tabs_num = $(parentSelector + " > ul > li").length + 1;
+            tabId = $(parentSelector).attr('id') + "_tab_" + tabs_num;
+        }
+        $(parentSelector + " > ul").append("<li><a href='#" + tabId + "'>" + tabTitle + "</a></li>");
+        var tab = $("<div id='" + tabId + "'></div>");
+        $(parentSelector).append(tab);
+        return tab;
+    }
+    
+    
+    
+}
+
+
 
     function SaveSettings() {
         var charcount = settings["charcount"];
@@ -4648,12 +4341,7 @@ function _select_Gateway() { // Check for Gateway used to
             GM_setValue(name, value);
         }
 
-        // If character numbers have changed reload page
-        if (charcount != settings["charcount"]) {
-            console.log("Reloading gateway to update character count");
-            unsafeWindow.location.href = current_Gateway; // edited by RottenMind
-            return;
-        }
+
 
         // Close the panel
         $("#settingsButton").show();
@@ -5017,6 +4705,6 @@ function _select_Gateway() { // Check for Gateway used to
     // Add the settings button and start a process timer
     addSettings();
     timerHandle = window.setTimeout(function() {
-        process();
+        //process();
     }, delay.SHORT);
 })();
