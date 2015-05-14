@@ -331,6 +331,7 @@ var chardiamonds = {};
 var zexdiamonds = 0;
 var chargold = {};
 var definedTask = {};
+var translation = {};
 var antiInfLoopTrap = {// without this script sometimes try to start the same task in infinite loop (lags?) 
     prevCharName: "unknown", // character name which recently launched a task
     prevTaskName: "unknown", // name of the task previously launched
@@ -494,6 +495,8 @@ function _select_Gateway() { // Check for Gateway used to
 })();
 
 (function() {
+
+    addTranslation();
 
     /**
      * Add a string of CSS to the main page
@@ -1875,7 +1878,6 @@ function _select_Gateway() { // Check for Gateway used to
         autoLoginPassword: "",
     };
 
-
     // Populated at login   
     var loggedAccount = null;
     var accountSettings = {};
@@ -2201,46 +2203,46 @@ function _select_Gateway() { // Check for Gateway used to
     // Load Settings
     var settingnames = [{
             name: 'paused',
-            title: 'Pause Script',
+            title: tr('settings.main.paused'),
             def: false,
             type: 'checkbox',
             pane: 'main',
-            tooltip: 'Disable All Automation'
+            tooltip: tr('settings.main.paused.tooltip')
         }, {
             name: 'debug',
-            title: 'Enable Debug',
+            title: tr('settings.main.debug'),
             def: false,
             type: 'checkbox',
             pane: 'main',
-            tooltip: 'Enable all debug output to console',
+            tooltip: tr('settings.main.debug.tooltip'),
             onsave: function(newValue, oldValue) {
                 console = newValue ? unsafeWindow.console || fouxConsole : fouxConsole;
             }
         }, {
             name: 'openrewards',
-            title: 'Open Reward Chests',
+            title: tr('settings.main.openrewards'),
             def: false,
             type: 'checkbox',
             pane: 'main',
-            tooltip: 'Enable opeing of leadership chests on character switch'
+            tooltip: tr('settings.main.openrewards.tooltip'),
         }, //MAC-NW
         {
             name: 'autoreload',
-            title: 'Auto Reload',
+            title: tr('settings.main.autoreload'),
             def: false,
             type: 'checkbox',
             pane: 'main',
-            tooltip: 'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)'
+            tooltip: tr('settings.main.autoreload.tooltip')
         }, {
             name: 'refinead',
-            title: 'Refine AD',
+            title: tr('settings.main.refinead'),
             def: true,
             type: 'checkbox',
             pane: 'main',
-            tooltip: 'Enable refining of AD on character switch'
+            tooltip: tr('settings.main.refinead.tooltip')
         }, {
             name: 'incdelay',
-            title: 'Increase script delays by',
+            title: tr('settings.main.incdelay'),
             def: 1,
             type: 'select',
             opts: [{
@@ -2260,29 +2262,46 @@ function _select_Gateway() { // Check for Gateway used to
                     path: '3'
                 }],
             pane: 'main',
-            tooltip: 'Increase the delays the script waits before attempting the actions.'
+            tooltip: tr('settings.main.incdelay.tooltip')
+        }, {
+            name: 'language',
+            title: tr('settings.main.language'),
+            def: 'en',
+            type: 'select',
+            opts: [{
+                    name: 'english',
+                    path: 'en',
+                }, {
+                    name: 'polski',
+                    path: 'pl',
+                }, {
+                    name: 'français',
+                    path: 'fr',
+                }],
+            pane: 'main',
+            tooltip: tr('settings.main.language.tooltip'), 
         }, {
             name: 'autologin',
-            title: 'Attempt to login automatically',
+            title: tr('settings.main.autologin'),
             def: false,
             type: 'checkbox',
             pane: 'main',
-            tooltip: 'Automatically attempt to login to the neverwinter gateway site',
+            tooltip: tr('settings.main.autologin.tooltip'),
             border: true
         }, {
             name: 'nw_username',
-            title: 'Neverwinter Username',
+            title: tr('settings.main.nw_username'),
             def: '',
             type: 'text',
             pane: 'main',
-            tooltip: ''
+            tooltip: tr('settings.main.nw_username.tooltip')
         }, {
             name: 'nw_password',
-            title: 'Neverwinter Password',
+            title: tr('settings.main.nw_password'),
             def: '',
             type: 'password',
             pane: 'main',
-            tooltip: ''
+            tooltip: tr('settings.main.nw_password.tooltip')
         },
         {
             name: 'optionals',
@@ -2476,11 +2495,11 @@ function _select_Gateway() { // Check for Gateway used to
             tooltip: 'Enter default rate to use for transfering through ZEX'
         }, {
             name: 'charcount',
-            title: 'Enter number of characters to use (Save and Apply to update settings form)',
+            title: tr('settings.main.charcount'),
             def: '2',
             type: 'text',
             pane: 'main',
-            tooltip: 'Enter number of characters to use (Save and Apply to update settings form)',
+            tooltip: tr('settings.main.charcount.tooltip'),
             border: true
         },
         // MAC-NW
@@ -4922,6 +4941,76 @@ function _select_Gateway() { // Check for Gateway used to
                 }, _sellWait);
             }
         }
+    }
+    
+    function addTranslation() {
+        translation = {
+            'en': {
+                'translation.needed': 'translation needed',
+                'settings.main.paused': 'Pause Script',
+                'settings.main.paused.tooltip': 'Disable All Automation',
+                'settings.main.debug': 'Enable Debug',
+                'settings.main.debug.tooltip': 'Enable all debug output to console',
+                'settings.main.openrewards': 'Open Reward Chests',
+                'settings.main.openrewards.tooltip': 'Enable opeing of leadership chests on character switch',
+                'settings.main.autoreload': 'Auto Reload',
+                'settings.main.autoreload.tooltip': 'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)',
+                'settings.main.refinead': 'Refine AD',
+                'settings.main.refinead.tooltip': 'Enable refining of AD on character switch',
+                'settings.main.incdelay': 'Increase script delays by',
+                'settings.main.incdelay.tooltip': 'Increase the delays the script waits before attempting the actions.',
+                'settings.main.language': 'Script language',
+                'settings.main.language.tooltip': 'Set GUI language of this script (change requires reloading the page)',
+                'settings.main.autologin': 'Attempt to login automatically',
+                'settings.main.autologin.tooltip': 'Automatically attempt to login to the neverwinter gateway site',
+                'settings.main.nw_username': 'Neverwinter Username',
+                'settings.main.nw_username.tooltip': '',
+                'settings.main.nw_password': 'Neverwinter Password',
+                'settings.main.nw_password.tooltip': '',
+                'settings.main.charcount': 'Enter number of characters to use (Save and Apply to update settings form)',
+                'settings.main.charcount.tooltip': 'Enter number of characters to use (Save and Apply to update settings form)',
+            },
+            'pl': {
+                'translation.needed': 'wymagane tłumaczenie',
+                'settings.main.paused': 'Zatrzymaj skrypt',
+                'settings.main.paused.tooltip': 'Wyłącz wszelką automatyzację',
+                'settings.main.debug': 'Włącz debugowanie',
+                'settings.main.debug.tooltip': 'Wyświetl wszystkie komunikaty na konsoli (Ctrl+Shift+i w Chrome/Chromium)',
+                'settings.main.openrewards': 'Otwieraj skrzynki',
+                'settings.main.openrewards.tooltip': 'Otwieraj skrzynki z zadań Przywództwa przy zmianie postaci',
+                'settings.main.autoreload': 'Automatyczne przeładowanie',
+                'settings.main.autoreload.tooltip': 'Włączenie tej opcji powoduje okresowe przeładowanie strony (Upewnij się, że Automatyczne logowanie jest włączone)',
+                'settings.main.refinead': 'Szlifuj diamenty',
+                'settings.main.refinead.tooltip': 'Przy zmianie postaci szlifuj diamenty astralne jeśli to możliwe',
+                'settings.main.incdelay': 'Zwiększ opóżnienia skryptu o...',
+                'settings.main.incdelay.tooltip': 'Zwiększenie opóźnień, gdy skrypt czeka przed próbą działania (pomocne przy wolnych połączeniach).',
+                'settings.main.language': 'Język skryptu',
+                'settings.main.language.tooltip': 'Język interfejsu tego skryptu (zmiana wymaga przeładowania strony)',
+                'settings.main.autologin': 'Próbuj logować automatycznie',
+                'settings.main.autologin.tooltip': 'Próbuj logować automatycznie do strony gateway',
+                'settings.main.nw_username': 'Nazwa użytkownika Neverwinter',
+                'settings.main.nw_username.tooltip': '',
+                'settings.main.nw_password': 'Hasło do Neverwinter',
+                'settings.main.nw_password.tooltip': '',
+                'settings.main.charcount': 'Wprowadź liczbę postaci (naciśnij "Save and Apply" aby odświerzyć formularz)',
+                'settings.main.charcount.tooltip': 'Wprowadź liczbę postaci (naciśnij "Save and Apply" aby odświerzyć formularz)',
+            },
+            'fr': {
+                'translation.needed': 'traduction nécessaire',
+           }
+        };
+    }
+
+    function tr(key) {
+        var lang = GM_getValue('language', 'en');
+        if (translation['en'][key] === undefined) {
+            console.log("translation: unknown key " + key);
+            return "unknown key: " + key;
+        }
+        if (translation[lang][key] === undefined) {
+            return translation[lang]['translation.needed'] + ": " + key;
+        }
+        return translation[lang][key];
     }
 
     /** Start, Helpers added by users.
