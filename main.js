@@ -340,7 +340,6 @@ jqUI_CssSrc = jqUI_CssSrc.replace(/url\(images\//g, "url(http://ajax.googleapis.
 jqUI_CssSrc = jqUI_CssSrc.replace(/font-size: 1\.1em/g, "font-size: 0.9em");
 GM_addStyle(jqUI_CssSrc);
 
-// RottenMind (start), multi Url support
 
 function _select_Gateway() { // Check for Gateway used to
     if (window.location.href.indexOf("gatewaytest") > -1) { // detect gatewaytest Url
@@ -354,7 +353,7 @@ function _select_Gateway() { // Check for Gateway used to
         return "http://gateway.playneverwinter.com";
     }
 }
-// RottenMind (END)
+
 
 (function() {
     var $ = unsafeWindow.$;
@@ -508,8 +507,10 @@ function _select_Gateway() { // Check for Gateway used to
     var $ = unsafeWindow.jQuery;
     var timerHandle = 0;
     var dfdNextRun = $.Deferred();
-    var charcurrent = 0; // current character counter
-    var charlast = charcurrent;
+    var curCharNum = 0; // current character counter
+    var lastCharNum = curCharNum;
+    var curCharName = '';
+    var curCharFullName = '';
     var chartimers = {};
     var delay = {
         SHORT: 1000,
@@ -1932,7 +1933,8 @@ function _select_Gateway() { // Check for Gateway used to
     var defaultScriptSettings = {
         general: {
             scriptPaused: false,
-            scriptDebugMode: false,
+            scriptDebugMode: true,
+            scriptAutoReload: false,
             autoLogin: false,
             autoLoginAccount: "",
             autoLoginPassword: "",
@@ -1967,7 +1969,7 @@ function _select_Gateway() { // Check for Gateway used to
             openRewards: false,
         },
         consolidationSettings: {
-            bankName: "",
+            bankCharName: "",
             transferRate: 100,
             consolidate: false,
             minCharBalance: 10000,
@@ -2013,7 +2015,6 @@ function _select_Gateway() { // Check for Gateway used to
             consolidate: false,
             minCharBalance: 10000,
             minToTransfer: 50000,
-            bankChar: '',
             transferRate: 300,
         },
         taskListSettigns: [],
@@ -2108,7 +2109,6 @@ function _select_Gateway() { // Check for Gateway used to
     scriptSettings = $.extend(true, {}, defaultScriptSettings, tempScriptSettings);
 
     // Load local settings cache (unsecured)
-    /*
     var settings = {};
     for (var i = 0; i < settingnames.length; i++) {
         // Ignore label types
@@ -2122,7 +2122,7 @@ function _select_Gateway() { // Check for Gateway used to
             settingnames[i].onsave(settings[settingnames[i].name], settings[settingnames[i].name]);
         }
     }
-*/
+    console = unsafeWindow.console;
 
     var delay_modifier = parseFloat(scriptSettings.general.scriptDelayFactor);
     delay.SHORT *= delay_modifier;      delay.MEDIUM *= delay_modifier;     delay.LONG *= delay_modifier; 
@@ -2234,14 +2234,18 @@ function _select_Gateway() { // Check for Gateway used to
     function page_LOGIN() {
         //if (!$("form > p.error:visible").length && settings["autologin"]) {
         // No previous log in error - attempt to log in
-        console.log("Setting username");
-        $("input#user").val(settings["nw_username"]);
-        console.log("Setting password");
-        $("input#pass").val(settings["nw_password"]);
-        console.log("Clicking Login Button");
-        $("div#login > input").click();
-        //}
+        
+        if (scriptSettings.general.autoLogin) {
+            console.log("Setting username");
+            $("input#user").val(scriptSettings.general.autoLoginAccount);
+            console.log("Setting password");
+            $("input#pass").val(scriptSettings.general.autoLoginPassword);
+            console.log("Clicking Login Button");
+            $("div#login > input").click();
+            //}
+        }
         dfdNextRun.resolve(delay.LONG);
+
     }
 
     /**
@@ -2286,7 +2290,7 @@ function _select_Gateway() { // Check for Gateway used to
                     return (settings[task.taskListName] > 0);
                 })
                 .sort(function(a, b) {
-                    return (settings[a.taskListName + '' + charcurrent + '_priority'] - settings[b.taskListName + charcurrent + '_priority']);
+                    return (settings[a.taskListName + '' + curCharNum + '_priority'] - settings[b.taskListName + curCharNum + '_priority']);
                 });
 
             console.log("Attempting to fill the slot.");
@@ -2308,13 +2312,13 @@ function _select_Gateway() { // Check for Gateway used to
         }
 
         // TODO: Add code to get next task finish time
-        chartimers[charcurrent] = getNextFinishedTask();
+        chartimers[curCharNum] = getNextFinishedTask();
 
         // Add diamond count
-        chardiamonds[charcurrent] = unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds;
-        console.log(settings["nw_charname" + charcurrent] + "'s", "Astral Diamonds:", chardiamonds[charcurrent]);
+        chardiamonds[curCharNum] = unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds;
+        console.log(settings["nw_charname" + curCharNum] + "'s", "Astral Diamonds:", chardiamonds[curCharNum]);
         // Add gold count
-        chargold[charcurrent] = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.gold);
+        chargold[curCharNum] = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.gold);
         return false;
     }
 
@@ -2425,7 +2429,7 @@ function _select_Gateway() { // Check for Gateway used to
             return entry.name == prof.taskName;
         })[0].currentrank;
         var profiles = prof.profiles.filter(function(profile) {
-            return profile.profileName == settings[prof.taskListName + charcurrent + '_profile'];
+            return profile.profileName == settings[prof.taskListName + curCharNum + '_profile'];
         });
         console.log('Selecting profile: ' + profiles[0].profileName);
         var list;
@@ -2818,7 +2822,7 @@ function _select_Gateway() { // Check for Gateway used to
                     usedCommon = countUsedResource("Crafting_Asset_Craftsman_Leadership_T3_Common") + countUsedResource("Crafting_Asset_Craftsman_Leadership_T2_Common") + countUsedResource("Crafting_Asset_Craftsman_Leadership_T1_Common_1"); //number of used mercenarys, guards and footmans
                 }
 
-                if (!(settings["smartleadassets"]) || (settings["smartleadassets"] && (T3_Epic + T3_Rare + T3_Uncommon + usedCommon < settings["Leadership" + charcurrent] * 2))) {
+                if (!(settings["smartleadassets"]) || (settings["smartleadassets"] && (T3_Epic + T3_Rare + T3_Uncommon + usedCommon < settings["Leadership" + curCharNum] * 2))) {
                     if (mercenarys.length) {
                         clicked = true;
                         mercenarys[0].click();
@@ -3221,7 +3225,7 @@ function _select_Gateway() { // Check for Gateway used to
 
     function switchChar() {
 
-        if (settings["refinead"]) {
+        if (accountSettings.generalSettings.refineAD) {
             var _currencies = unsafeWindow.client.dataModel.model.ent.main.currencies;
             if (_currencies.diamondsconvertleft && _currencies.roughdiamonds) {
                 var refined_diamonds;
@@ -3230,27 +3234,28 @@ function _select_Gateway() { // Check for Gateway used to
                 } else {
                     refined_diamonds = _currencies.roughdiamonds
                 }
-                chardiamonds[charcurrent] += refined_diamonds
-                console.log("Refining AD for", settings["nw_charname" + charcurrent] + ":", refined_diamonds);
-                console.log(settings["nw_charname" + charcurrent] + "'s", "Astral Diamonds:", chardiamonds[charcurrent]);
+                chardiamonds[curCharNum] += refined_diamonds
+                console.log("Refining AD for", curCharName + ":", refined_diamonds);
+                console.log(curCharName + "'s", "Astral Diamonds:", chardiamonds[curCharNum]);
                 unsafeWindow.client.sendCommand('Gateway_ConvertNumeric', 'Astral_Diamonds');
                 WaitForState("button.closeNotification").done(function() {
                     $("button.closeNotification").click();
                 });
-                charStatisticsList[settings["nw_charname" + charcurrent]].general.refineCounter += refined_diamonds;
+                charStatisticsList[curCharName].general.refineCounter += refined_diamonds;
 
             }
         }
 
         // MAC-NW -- AD Consolidation
-        if (settings["autoexchange"]) {
+        if (accountSettings.consolidationSettings.consolidate) {
 
             // Check that we dont take money from the character assigned as the banker // Zen Transfer / Listing
-            if (settings["bankchar"] != unsafeWindow.client.dataModel.model.ent.main.name) {
+            if (accountSettings.consolidationSettings.bankCharName != unsafeWindow.client.dataModel.model.ent.main.name) {
                 // Check the required min AD amount on character
-                if (settings["banktransmin"] && settings["bankcharmin"] && parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds) >= (parseInt(settings["banktransmin"]) + parseInt(settings["bankcharmin"]))) {
+                if (accountSettings.consolidationSettings.minToTransfer && 
+                        parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds) >= (parseInt(accountSettings.consolidationSettings.minToTransfer) + parseInt(accountSettings.consolidationSettings.minCharBalance))) {
                     // Check that the rate is not less than the min & max
-                    if (settings["banktransrate"] && parseInt(settings["banktransrate"]) >= 50 && parseInt(settings["banktransrate"]) <= 500) {
+                    if (accountSettings.consolidationSettings.transferRate && parseInt(accountSettings.consolidationSettings.transferRate) >= 50 && parseInt(accountSettings.consolidationSettings.transferRate) <= 500) {
                         window.setTimeout(postZexOffer, delay.SHORT);
                     } else {
                         console.log("Zen transfer rate does not meet the minimum (50) or maximum (500). Skipping Zex Posting..");
@@ -3264,7 +3269,7 @@ function _select_Gateway() { // Check for Gateway used to
             console.log("Zen Exchange AD transfer not enabled. Skipping Zex Posting..");
         }
 
-        if (settings["openrewards"]) {
+        if (accountSettings.generalSettings.openRewards) {
             var _pbags = unsafeWindow.client.dataModel.model.ent.main.inventory.playerbags;
             var _cRewardPat = /Reward_Item_Chest|Gateway_Rewardpack/;
             console.log("Opening Rewards");
@@ -3290,8 +3295,7 @@ function _select_Gateway() { // Check for Gateway used to
 
 
         // Updating statistics
-        var _curCharName = settings["nw_charname" + charcurrent];
-        var _stat = charStatisticsList[_curCharName].general;
+        var _stat = charStatisticsList[curCharName].general;
         var _chardata = unsafeWindow.client.dataModel.model.ent.main.currencies;
         _stat.gold = parseInt(_chardata.gold);
         _stat.rad = parseInt(_chardata.roughdiamonds);
@@ -3303,19 +3307,19 @@ function _select_Gateway() { // Check for Gateway used to
         _stat.activeSlots = unsafeWindow.client.dataModel.model.ent.main.itemassignments.active;
 
         //clearing
-        charStatisticsList[_curCharName].trackedResources = [];
-        $.each(charStatisticsList[_curCharName].tools, function(name, obj) {
+        charStatisticsList[curCharName].trackedResources = [];
+        $.each(charStatisticsList[curCharName].tools, function(name, obj) {
             obj.used = [];
             obj.unused = [];
         });
-        $.each(charStatisticsList[_curCharName].professions, function(name, obj) {
+        $.each(charStatisticsList[curCharName].professions, function(name, obj) {
             obj.workersUsed = [];
             obj.workersUnused = [];
             obj.level = 0;
         });
 
         trackResources.forEach(function(resource, ri) {
-            charStatisticsList[_curCharName].trackedResources[ri] = 0;
+            charStatisticsList[curCharName].trackedResources[ri] = 0;
         });
 
         // Counting tracked resources
@@ -3327,7 +3331,7 @@ function _select_Gateway() { // Check for Gateway used to
                 bag.slots.forEach(function(slot) {
                     trackResources.forEach(function(resource, ri) {
                         if (slot && slot.name === resource.name) {
-                            charStatisticsList[_curCharName].trackedResources[ri] += slot.count;
+                            charStatisticsList[curCharName].trackedResources[ri] += slot.count;
                         }
                     });
                 });
@@ -3335,7 +3339,7 @@ function _select_Gateway() { // Check for Gateway used to
 
         // Slot assignment
         unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.forEach(function(slot, ix) {
-            charStatisticsList[_curCharName].slotUse[ix] = slot.category;
+            charStatisticsList[curCharName].slotUse[ix] = slot.category;
         });
 
         // Workers and tools assignment and qty
@@ -3344,13 +3348,13 @@ function _select_Gateway() { // Check for Gateway used to
                 $.each(workerList, function(pName, pList) {
                     var index = pList.indexOf(item.name);
                     if (index > -1) {
-                        charStatisticsList[_curCharName].professions[pName].workersUsed[index] = item.count;
+                        charStatisticsList[curCharName].professions[pName].workersUsed[index] = item.count;
                     }
                 });
                 $.each(toolList, function(tName, tList) {
                     var index = tList.indexOf(item.name);
                     if (index > -1) {
-                        charStatisticsList[_curCharName].tools[tName].used[index] = item.count;
+                        charStatisticsList[curCharName].tools[tName].used[index] = item.count;
                     }
                 });
             });
@@ -3360,63 +3364,68 @@ function _select_Gateway() { // Check for Gateway used to
                 $.each(workerList, function(pName, pList) {
                     var index = pList.indexOf(item.name);
                     if (index > -1) {
-                        charStatisticsList[_curCharName].professions[pName].workersUnused[index] = item.count;
+                        charStatisticsList[curCharName].professions[pName].workersUnused[index] = item.count;
                     }
                 })
                 $.each(toolList, function(tName, tList) {
                     var index = tList.indexOf(item.name);
                     if (index > -1) {
-                        charStatisticsList[_curCharName].tools[tName].unused[index] = item.count;
+                        charStatisticsList[curCharName].tools[tName].unused[index] = item.count;
                     }
                 })
             });
 
         // getting profession levels from currentrank, model has displayname, name, and category, using displayname (platesmithing)
-        // Must match the names in charStatisticsList[_curCharName].professions
+        // Must match the names in charStatisticsList[curCharName].professions
         unsafeWindow.client.dataModel.model.ent.main.itemassignmentcategories.categories
             .forEach(function(prof) {
-                if (charStatisticsList[_curCharName].professions[prof.displayname]) {
-                    charStatisticsList[_curCharName].professions[prof.displayname].level = prof.currentrank;
+                if (charStatisticsList[curCharName].professions[prof.displayname]) {
+                    charStatisticsList[curCharName].professions[prof.displayname].level = prof.currentrank;
                 }
             });
 
-        GM_setValue("chars__statistics__" + _curCharName, JSON.stringify(charStatisticsList[_curCharName]));
+        GM_setValue("chars__statistics__" + curCharFullName , JSON.stringify(charStatisticsList[curCharName]));
         updateCounters(false);
 
 
 
-
-
         console.log("Switching Characters");
-        charlast = charcurrent;
+        lastCharNum = curCharNum;
 
         var chardelay,
             chardate = null,
             nowdate = new Date();
         nowdate = nowdate.getTime();
-        for (var cc = 0; cc < settings["charcount"]; cc++) {
-            if (chartimers[cc] != null) {
-                console.log("Date found for " + settings["nw_charname" + cc]);
-                if (!chardate || chartimers[cc] < chardate) {
-                    chardate = chartimers[cc];
-                    charcurrent = cc;
+        
+        charNameList.every( function (charName, idx) {
+            if (!charSettingsList[charName].active) return true;
+            if (chartimers[idx] != null) {
+                console.log("Date found for " + charName);
+                if (!chardate || chartimers[idx] < chardate) {
+                    chardate = chartimers[idx];
+                    curCharNum = idx;
                     chardelay = chardate.getTime() - nowdate - unsafeWindow.client.getServerOffsetSeconds() * 1000;
                     if (chardelay < delay.SHORT) {
                         chardelay = delay.SHORT;
                     }
                 }
-            } else {
-                charcurrent = cc;
-                chardelay = delay.SHORT;
-                chardate = null;
-                console.log("No date found for " + settings["nw_charname" + cc] + ", switching now.");
-                break;
-            }
-        }
+                return true;
+            } 
+            
+            curCharNum = idx;
+            chardelay = delay.SHORT;
+            chardate = null;
+            console.log("No date found for " + charName + ", switching now.");
+            return false; // = break; 
+        });
+        
+        curCharName = charNameList[curCharNum];
+        curCharFullName = curCharName + "@" + loggedAccount;
+        
 
-        if (settings["autoexchange"]) {
+        if (accountSettings.consolidationSettings.consolidate) {
             // Withdraw AD from the ZAX into the banker character
-            if (settings["bankchar"] == settings["nw_charname" + charcurrent]) {
+            if (accountSettings.consolidationSettings.bankCharName == curCharName) {
                 window.setTimeout(withdrawZexOffer, delay.SHORT);
             }
         }
@@ -3424,19 +3433,19 @@ function _select_Gateway() { // Check for Gateway used to
         // Count AD & Gold
         var curdiamonds = zexdiamonds;
         var curgold = 0;
-        for (var cc = 0; cc < settings["charcount"]; cc++) {
-            if (chardiamonds[cc] != null) {
-                curdiamonds += Math.floor(chardiamonds[cc] / 50) * 50;
+        charNameList.every( function (charName, idx) {
+            if (chardiamonds[idx] != null) {
+                curdiamonds += Math.floor(chardiamonds[idx] / 50) * 50;
             }
 
-            if (chargold[cc] != null) {
-                curgold += chargold[cc];
+            if (chargold[idx] != null) {
+                curgold += chargold[idx];
             }
-        }
+        });
 
-        console.log("Next run for " + settings["nw_charname" + charcurrent] + " in " + parseInt(chardelay / 1000) + " seconds.");
-        $("#prinfopane").empty().append("<h3 class='promo-image copy-top prh3'>Professions Robot<br />Next task for " + settings["nw_charname" + charcurrent] + "<br /><span data-timer='" + chardate + "' data-timer-length='2'></span><br />Diamonds: " + curdiamonds.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "<br />Gold: " + curgold + "</h3>");
-        GM_setValue("charcurrent", charcurrent);
+        console.log("Next run for " + curCharName + " in " + parseInt(chardelay / 1000) + " seconds.");
+        $("#prinfopane").empty().append("<h3 class='promo-image copy-top prh3'>Professions Robot<br />Next task for " + curCharName + "<br /><span data-timer='" + chardate + "' data-timer-length='2'></span><br />Diamonds: " + curdiamonds.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "<br />Gold: " + curgold + "</h3>");
+        GM_setValue("curCharNum", curCharNum);
         dfdNextRun.resolve(chardelay);
     }
     /**
@@ -3511,11 +3520,10 @@ function _select_Gateway() { // Check for Gateway used to
         addSettings();
 
         // Enable/Disable the unconditional page reload depending on settings
-        loading_reset = settings["autoreload"];
-
+        loading_reset = scriptSettings.general.scriptAutoReload;
         // Check if timer is paused
-        s_paused = settings["paused"]; // let the Page Reloading function know the pause state
-        if (settings["paused"]) {
+        s_paused =  scriptSettings.general.scriptPaused; // let the Page Reloading function know the pause state
+        if (s_paused) {
             // Just continue later - the deferred object is still set and nothing will resolve it until we get past this point
             var timerHandle = window.setTimeout(function() {
                 process();
@@ -3542,7 +3550,6 @@ function _select_Gateway() { // Check for Gateway used to
             page_GUARD();
             return;
         }
-
         window.setTimeout(function() {
             loginProcess();
         }, delay.SHORT);
@@ -3570,8 +3577,8 @@ function _select_Gateway() { // Check for Gateway used to
         }
 
         // Check if timer is paused again to avoid starting new task between timers
-        s_paused = settings["paused"]; // let the Page Reloading function know the pause state
-        if (settings["paused"]) {
+        s_paused =  scriptSettings.general.scriptPaused; // let the Page Reloading function know the pause state
+        if (s_paused) {
             // Just continue later - the deferred object is still set and nothing will resolve it until we get past this point
             var timerHandle = window.setTimeout(function() {
                 process();
@@ -3580,14 +3587,13 @@ function _select_Gateway() { // Check for Gateway used to
         }
 
         if (accountName) {
-
-            if (!loggedAccount) {
+            if (!loggedAccount || (loggedAccount != accountName)) {
                 loggedAccount = accountName;
                 console.log("Loading settings for " + accountName);
 
                 var tempAccountSetting;
                 try {
-                    tempAccountSetting = JSON.parse(GM_getValue("account__settings__" + accountName, "{}"));
+                    tempAccountSetting = JSON.parse(GM_getValue("settings__account__" + accountName, "{}"));
                 } catch (e) {
                     tempAccountSetting = null;
                 }
@@ -3595,7 +3601,9 @@ function _select_Gateway() { // Check for Gateway used to
                     console.log('Account settings couldn\'t be retrieved, loading defaults.');
                     tempAccountSetting = {};
                 };
+                console.log(tempAccountSetting);
                 accountSettings = $.extend(true, {}, defaultAccountSettings, tempAccountSetting);
+                console.log(accountSettings);
 
                 console.log("Loading character list");
                 charNameList = [];
@@ -3610,7 +3618,7 @@ function _select_Gateway() { // Check for Gateway used to
 
                     var tempCharsSetting;
                     try {
-                        tempCharsSetting = JSON.parse(GM_getValue("chars__settings__" + charName, "{}"));
+                        tempCharsSetting = JSON.parse(GM_getValue("settings__char__" + charName + "@" + accountName, "{}"));
                     } catch (e) {
                         tempCharsSetting = null;
                     }
@@ -3618,13 +3626,13 @@ function _select_Gateway() { // Check for Gateway used to
                         console.log('Character settings couldn\'t be retrieved, loading defaults.');
                         tempCharsSetting = {};
                     };
-                    charSettingsTest[charName] = $.extend(true, {}, defaultCharSettings, tempCharsSetting);
-                    charSettingsTest[charName].charName = charName; // for compatibility if charSettingsTest changed to simple array
+                    charSettingsList[charName] = $.extend(true, {}, defaultCharSettings, tempCharsSetting);
+                    charSettingsList[charName].charName = charName; // for compatibility if charSettingsTest changed to simple array
 
                     console.log("Loading saved statistics for " + charName);
                     var tempCharsStatistics;
                     try {
-                        tempCharsStatistics = JSON.parse(GM_getValue("chars__statistics__" + charName, "{}"));
+                        tempCharsStatistics = JSON.parse(GM_getValue("statistics__char__" + charName + "@" + accountName, "{}"));
                     } catch (e) {
                         tempCharsStatistics = null;
                     }
@@ -3635,27 +3643,29 @@ function _select_Gateway() { // Check for Gateway used to
                     charStatisticsList[charName] = $.extend(true, {}, defaultCharStatistics, tempCharsStatistics);
 
                 })
-
-                updateCounters(false); // updating the UI from saved list
+                
+                // Adding the Account and character settings / info to the UI
+                addSettings();
+                //updateCounters(false); // updating the UI from saved list
                 //if (JSON.stringify(accountSettings) !== GM_getValue("account_settings_" + accountName)) GM_setValue("account_settings_" + accountName, JSON.stringify(accountSettings));
                 //if (JSON.stringify(charSettingsTest) !== GM_getValue("chars_settings_" + accountName)) GM_setValue("chars_settings_" + accountName, JSON.stringify(charSettingsTest));                
             }
 
             // load current character position and values
-            charcurrent = GM_getValue("charcurrent", 0);
+            curCharNum = GM_getValue("curCharNum", 0);
+            /*
             for (var i = 0; i < (charSettings.length / settings["charcount"]); i++) {
-                j = i + (charcurrent * charSettings.length / settings["charcount"]);
-                settings[charSettings[j].name.replace(new RegExp(charcurrent + "$"), '')] = settings[charSettings[j].name];
+                j = i + (curCharNum * charSettings.length / settings["charcount"]);
+                settings[charSettings[j].name.replace(new RegExp(curCharNum + "$"), '')] = settings[charSettings[j].name];
             }
+*/
+            curCharName = charNameList[curCharNum];
+            curCharFullName = curCharName + '@' + accountName;
 
-            var charName = settings["nw_charname"];
-            var fullCharName = charName + '@' + accountName;
-
-            if (unsafeWindow.client.getCurrentCharAtName() != fullCharName) {
-                loadCharacter(fullCharName);
+            if (unsafeWindow.client.getCurrentCharAtName() != curCharFullName) {
+                loadCharacter(curCharFullName);
                 return;
             }
-
             // Try to start tasks
             if (processCharacter()) {
                 return;
@@ -3775,9 +3785,11 @@ function _select_Gateway() { // Check for Gateway used to
                 table.professionLevels td.rotate, table.professionLevels th.rotate { height: 100px; } \
                 table.professionLevels td.rotate, table.professionLevels th.rotate > div { transform: translate(0, 30px) rotate(290deg); width: 30px; } \
                 table.professionLevels td.rotate, table.professionLevels th.rotate > div > span { border-bottom: 1px solid #ccc; padding: 5px 10px; } \
-                input[type='checkbox'].settingsInput { margin 5px 10px; }\
-                input.settingsInput { margin 5px 10px; }\
-                label.settingsLabel { margin 5px 10px; width: 200px; display: inline-block; }\
+                input[type='checkbox'].settingsInput { margin: 5px 10px 5px 5px;  }\
+                input.settingsInput { margin: 5px 5px; }\
+                label.settingsLabel { margin: 5px 5px; min-width: 150px; display: inline-block; }\
+                .inputSaved { color: #66FF66; }\
+                .inputSaved:after { content: \"\"; width: 8px; height: 8px; display: inline-block; background-color: #66FF66; position:relative; right: 10px; }\
                 ");
 
             // Add settings panel to page body
@@ -3845,88 +3857,172 @@ function _select_Gateway() { // Check for Gateway used to
             //$('#script_settings').html('');
             var tab = addTab("#script_settings", "Script settings");
             addInputsUL(tab, 'script', 'main');
+            
+            tab = addTab("#script_settings", "Advanced");
+            tab.html("will also delete character names <br /><button id='reset_settings_btn'>Reset ALL Settings</button>");
+
+            $('#reset_settings_btn').button();
+            $('#reset_settings_btn').click(function() {
+                window.setTimeout(function() {
+                    var keys = GM_listValues();
+                    for (i = 0; i < keys.length; i++) {
+                        var key = keys[i];
+                        GM_deleteValue(key);
+                    }
+                    window.setTimeout(function() {
+                        unsafeWindow.location.href = current_Gateway;
+                    }, 0);
+                }, 0);
+            });
 
             tab = addTab("#script_settings", "Custom profiles");
             tab.html("Custom profile import will be here");
             $("#script_settings").tabs({ active: false, collapsible: true });
         
-        // Refresh is not needed
-        if (UIaccount == loggedAccount) return;
-        
-        $("div#main_tabs").tabs();
-        var tabs = {
-            main: 'General settings',
-            prof: 'Professions',
-            vend: 'Vendor options',
-            bank: 'AD Consolidation'
-        };
-        for (var key in tabs) {
-            var tabs_num = $("div#main_tabs > ul > li").length + 1;
-            $("div#main_tabs > ul").append(
-                "<li><a href='#main_tab" + tabs_num + "'>" + tabs[key] + "</a></li>");
+        }
+        // Refresh is needed / Loading all the info (account, statistics and chars)
+        if (UIaccount != loggedAccount) {
+            UIaccount = loggedAccount;
 
-            var tab = $("<div id='main_tab" + tabs_num + "'></div>");
-            $("div#main_tabs").append(tab);
+            var tabs = {
+                main: 'General settings',
+                prof: 'Professions',
+                vend: 'Vendor options',
+                bank: 'AD Consolidation'
+            };
+
+            for (var key in tabs) {
+                var temp_tab = addTab("#main_tabs", tabs[key]);
+                addInputsUL(temp_tab, 'account', key);
+            }
+            $("div#main_tabs").tabs({ active: false, collapsible: true });                
+
+        }
+        
+        
+        
+        function saveSetting(elm) {
+            var scope = $(elm).data('scope');
+            var group = $(elm).data('group');
+            var name =  $(elm).data('name');
+
+            var value;
+            if ($(elm).type == 'checkbox') value = $(elm).checked;
+            else value = $(elm).val();
+            
+            switch (scope) {
+                case 'script':
+                    scriptSettings[group][name] = value;
+                    setTimeout(function() {
+                        GM_setValue("settings__script", JSON.stringify(scriptSettings));
+                        console.log("Saved script setting: " + scope + "." + group + "." + name);
+                        $(elm).addClass("inputSaved");
+                        setTimeout(function() {
+                            $(elm).removeClass("inputSaved");
+                        },1500);
+                    }, 0);
+                    break;
+                case 'account':
+                    accountSettings[group][name] = value;
+                    setTimeout(function() {
+                        GM_setValue("settings__account__" + loggedAccount, JSON.stringify(accountSettings));
+                        console.log("Saved account setting: " + scope + "." + group + "." + name + " For: " + loggedAccount);
+                        $(elm).addClass("inputSaved");
+                        setTimeout(function() {
+                            $(elm).removeClass("inputSaved");
+                        },1500);
+                        
+                    }, 0);
+                    break;
+                case 'char':
+                    var c_name = $(elm).data('charName');
+                    if (c_name && charNameList[c_name]) {
+                        charSettingsList[c_name][group][name] = value;
+                        setTimeout(function() {
+                            GM_setValue("settings__char__" + c_name + "@" + loggedAccount, JSON.stringify(charSettingsList[c_name]));
+                            console.log("Saved char setting: " + scope + "." + group + "." + name + " For: " + c_name);
+                            $(elm).addClass("inputSaved");
+                            setTimeout(function() {
+                                $(elm).removeClass("inputSaved");
+                            },1500);
+                        }, 0);
+                    }
+                    break;
+           }
+        }
+        
+        $("#settingsPanel input[type='checkbox'], #settingsPanel select").change(function (evt) {
+            saveSetting(evt.target);
+        });
+        $("#settingsPanel input[type='text'], #settingsPanel input[type='password']").on('input', function (evt) {
+            var value = $(evt.target).val();
+            setTimeout(function(value) {
+                if ($(evt.target).val() !== value) return;
+                saveSetting(evt.target);
+            }, 1000, value);
+        });
+
 
             // Add each setting input
-            var settingsList = $('<ul style="list-style: none outside none; min-height: 300px; max-height: 500px; overflow: auto; margin: 3px; padding: 0px;"></ul>');
-            var settingListToAdd = settingnames.filter(function(element) {
-                return (element.pane == key && element.scope == 'script');
-            });
-
-            for (var i = 0; i < settingListToAdd.length; i++) {
-                var id = 'settings_' + settingListToAdd[i].name;
-                var indent = (countLeadingSpaces(settingListToAdd[i].title) >= 1) ? 1 : 0;
-                /*if ((settingnames[i].type == 'text' && settingnames[i-1].type == 'checkbox') || (settingnames[i-1] && settingnames[i].type == 'checkbox' && settingnames[i-1].type == 'text'))
-                settingsList.append('<li style="margin-left:0em; width: 48%; display: inline-block;"/>&nbsp;</li>')*/
-                var border = "";
-                if (settingListToAdd[i].border)
-                    border = "border-top: #000 solid 1px;"
-                switch (settingListToAdd[i].type) {
-                    case "checkbox":
-                        var _checkWidth = "48%";
-                        /*
-                            if (i < 9)
-                            _checkWidth = "31%";
-                             */
-                        if (settingListToAdd[i].border)
-                            _checkWidth = "98%";
-                        settingsList.append('<li title="' + settingListToAdd[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; width: ' + _checkWidth + '; display: inline-block;"><input style="margin:4px" name="' + id + '" id="' + id + '" type="checkbox" /><label class="' + settingListToAdd[i].class + '" for="' + id + '">' + settingListToAdd[i].title + '</label></li>')
-                        settingsList.find('#' + id).prop('checked', settings[settingListToAdd[i].name]);
-                        break;
-                    case "text":
-                        if (settingListToAdd[i].border)
-                            _inputkWidth = "95%; padding: 10px 0";
-                        else
-                            _inputkWidth = "46%";
-                        settingsList.append('<li title="' + settingListToAdd[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; margin-top:1em; width: ' + _inputkWidth + '; display: inline-block;"<label class="' + settingListToAdd[i].class + '" for="' + id + '">' + settingListToAdd[i].title + '</label><input style="margin:4px; padding: 2px; min-width: 80%;" name="' + id + '" id="' + id + '" type="text" /></li>')
-                        settingsList.find('#' + id).val(settings[settingListToAdd[i].name]);
-                        break;
-                    case "password":
-                        settingsList.append('<li title="' + settingListToAdd[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; margin-top:1em; width: 46%; display: inline-block;"' + settingListToAdd[i].class + '" for="' + id + '">' + settingListToAdd[i].title + '</label><input style="margin:4px; padding: 2px; min-width: 80%;" name="' + id + '" id="' + id + '" type="password" /></li>')
-                        settingsList.find('#' + id).val(settings[settingListToAdd[i].name]);
-                        break;
-                    case "select":
-                        var li = $('<li title="' + settingListToAdd[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; width: 48%; display: inline-block;"' + settingListToAdd[i].class + '" style="padding-left:4px" for="' + id + '">' + settingListToAdd[i].title + '</label></li>');
-                        var select = $('<select style="margin:4px" name="' + id + '" id="' + id + '" />');
-                        var options = settingListToAdd[i].opts;
-                        for (var j = 0; j < options.length; j++) {
-                            if (settings[settingListToAdd[i].name] == options[j].path)
-                                select.append('<option value="' + options[j].path + '" selected="selected">' + options[j].name + '</option>');
-                            else
-                                select.append('<option value="' + options[j].path + '">' + options[j].name + '</option>');
-                        }
-                        li.append(select);
-                        settingsList.append(li);
-                        break;
-                    case "label":
-                        settingsList.append('<li title="' + settingListToAdd[i].tooltip + '" style="' + border + 'margin-left:' + indent + 'em;><label class="' + settingListToAdd[i].class + '">' + settingListToAdd[i].title + '</label></li>')
-                        break;
-                }
-            }
-            $(tab).append(settingsList);
-        };
-
+//            
+//            var settingsList = $('<ul style="list-style: none outside none; min-height: 300px; max-height: 500px; overflow: auto; margin: 3px; padding: 0px;"></ul>');
+//            var settingListToAdd = settingnames.filter(function(element) {
+//                return (element.pane == key && element.scope == 'script');
+//            });
+//
+//            for (var i = 0; i < settingListToAdd.length; i++) {
+//                var id = 'settings_' + settingListToAdd[i].name;
+//                var indent = (countLeadingSpaces(settingListToAdd[i].title) >= 1) ? 1 : 0;
+//                /*if ((settingnames[i].type == 'text' && settingnames[i-1].type == 'checkbox') || (settingnames[i-1] && settingnames[i].type == 'checkbox' && settingnames[i-1].type == 'text'))
+//                settingsList.append('<li style="margin-left:0em; width: 48%; display: inline-block;"/>&nbsp;</li>')*/
+//                var border = "";
+//                if (settingListToAdd[i].border)
+//                    border = "border-top: #000 solid 1px;"
+//                switch (settingListToAdd[i].type) {
+//                    case "checkbox":
+//                        var _checkWidth = "48%";
+//                        /*
+//                            if (i < 9)
+//                            _checkWidth = "31%";
+//                             */
+//                        if (settingListToAdd[i].border)
+//                            _checkWidth = "98%";
+//                        settingsList.append('<li title="' + settingListToAdd[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; width: ' + _checkWidth + '; display: inline-block;"><input style="margin:4px" name="' + id + '" id="' + id + '" type="checkbox" /><label class="' + settingListToAdd[i].class + '" for="' + id + '">' + settingListToAdd[i].title + '</label></li>')
+//                        settingsList.find('#' + id).prop('checked', settings[settingListToAdd[i].name]);
+//                        break;
+//                    case "text":
+//                        if (settingListToAdd[i].border)
+//                            _inputkWidth = "95%; padding: 10px 0";
+//                        else
+//                            _inputkWidth = "46%";
+//                        settingsList.append('<li title="' + settingListToAdd[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; margin-top:1em; width: ' + _inputkWidth + '; display: inline-block;"<label class="' + settingListToAdd[i].class + '" for="' + id + '">' + settingListToAdd[i].title + '</label><input style="margin:4px; padding: 2px; min-width: 80%;" name="' + id + '" id="' + id + '" type="text" /></li>')
+//                        settingsList.find('#' + id).val(settings[settingListToAdd[i].name]);
+//                        break;
+//                    case "password":
+//                        settingsList.append('<li title="' + settingListToAdd[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; margin-top:1em; width: 46%; display: inline-block;"' + settingListToAdd[i].class + '" for="' + id + '">' + settingListToAdd[i].title + '</label><input style="margin:4px; padding: 2px; min-width: 80%;" name="' + id + '" id="' + id + '" type="password" /></li>')
+//                        settingsList.find('#' + id).val(settings[settingListToAdd[i].name]);
+//                        break;
+//                    case "select":
+//                        var li = $('<li title="' + settingListToAdd[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; width: 48%; display: inline-block;"' + settingListToAdd[i].class + '" style="padding-left:4px" for="' + id + '">' + settingListToAdd[i].title + '</label></li>');
+//                        var select = $('<select style="margin:4px" name="' + id + '" id="' + id + '" />');
+//                        var options = settingListToAdd[i].opts;
+//                        for (var j = 0; j < options.length; j++) {
+//                            if (settings[settingListToAdd[i].name] == options[j].path)
+//                                select.append('<option value="' + options[j].path + '" selected="selected">' + options[j].name + '</option>');
+//                            else
+//                                select.append('<option value="' + options[j].path + '">' + options[j].name + '</option>');
+//                        }
+//                        li.append(select);
+//                        settingsList.append(li);
+//                        break;
+//                    case "label":
+//                        settingsList.append('<li title="' + settingListToAdd[i].tooltip + '" style="' + border + 'margin-left:' + indent + 'em;><label class="' + settingListToAdd[i].class + '">' + settingListToAdd[i].title + '</label></li>')
+//                        break;
+//                }
+//            }
+//            $(tab).append(settingsList);
+//        };
+/*
         var tabs_num = $("div#main_tabs > ul > li").length + 1;
         $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Other</a></li>");
         var tab = $("<div id='main_tab" + tabs_num + "'><div id='other'>will also delete character names <br /><button id='reset_settings_btn'>Reset ALL Settings</button><br />Should be used after login only, and can reset all characters<br /><button id='load_names_btn'>Load Names</button></div></div>");
@@ -4183,8 +4279,7 @@ function _select_Gateway() { // Check for Gateway used to
             unsafeWindow.location.hash = unsafeWindow.location.hash.replace(/\)\/.+/, ')' + "/adventures");
             processSwordCoastDailies();
         });
-
-    }
+*/
 
     // Helper function to create input elements
     function createInput( settingsItem, name, input_css_classes, label_css_classes) {
@@ -4226,7 +4321,8 @@ function _select_Gateway() { // Check for Gateway used to
                 break;
 
         } 
-        input.val(value);
+        if (settingsItem.type == 'checkbox') input.prop('checked', value);
+        else input.val(value);
         input.data('scope', settingsItem.scope);
         input.data('group', settingsItem.group);
         input.data('name', settingsItem.name);
@@ -4255,7 +4351,6 @@ function _select_Gateway() { // Check for Gateway used to
                 case 'password':
                 case 'select':
                 case 'void':
-                default:
                     li.append(to_add.label);
                     li.append(to_add.input);
                     break;
@@ -4705,6 +4800,6 @@ function _select_Gateway() { // Check for Gateway used to
     // Add the settings button and start a process timer
     addSettings();
     timerHandle = window.setTimeout(function() {
-        //process();
+        process();
     }, delay.SHORT);
 })();
