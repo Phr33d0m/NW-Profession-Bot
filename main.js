@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Neverwinter gateway - Professions Robot
 // @description Automatically selects professions for empty slots
-// @namespace https://greasyfork.org/scripts/7061-neverwinter-gateway-professions-robot/
+// @namespace https://greasyfork.org/scripts/9812-neverwinter-gateway-professions-robot/
 // @include http://gateway*.playneverwinter.com/*
 // @include https://gateway*.playneverwinter.com/*
 // @include http://gateway.*.perfectworld.eu/*
@@ -3352,15 +3352,19 @@ function _select_Gateway() { // Check for Gateway used to
             // Check that there is atleast 1 free zex order slot
             if(unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length < 5) {
                 // Place the order
+                var exchangeDiamonds = parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
+                if (exchangeDiamonds > 0) {
+                    console.log("AD in exchange: " + exchangeDiamonds);
+                }  
                 // Domino effect: this new order will post all the gathered diamonds until now
                 var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
                 var ZenRate = parseInt(settings["banktransrate"]);
-                var ZenQty = Math.floor((charDiamonds - parseInt(settings["bankcharmin"])) / ZenRate);
+                var ZenQty = Math.floor((charDiamonds + exchangeDiamonds - parseInt(settings["bankcharmin"])) / ZenRate);
                 ZenQty = (ZenQty > 5000) ? 5000 : ZenQty;
-                console.log("Posting Zex buy listing for " + ZenQty + " ZEN at the rate of " + ZenRate + " AD/ZEN. AD remainder: " + charDiamonds + " - " + (ZenRate * ZenQty) + " = " + (charDiamonds - (ZenRate * ZenQty)));
+                console.log("Posting Zex buy listing for " + ZenQty + " ZEN at the rate of " + ZenRate + " AD/ZEN. AD remainder: " + charDiamonds + " - " + ((ZenRate * ZenQty) - exchangeDiamonds) + " = " + (charDiamonds - (ZenRate * ZenQty) + exchangeDiamonds));
                 unsafeWindow.client.createBuyOrder(ZenQty, ZenRate);
                 // set moved ad to the ad counter zex log
-                var ADTotal = ZenRate * ZenQty;
+                var ADTotal = ZenRate * ZenQty - exchangeDiamonds;
                 if(ADTotal > 0) {
                     console.log("AD moved to ZEX from", settings["nw_charname" + charlast] + ":", ADTotal);
                     chardiamonds[charlast] -= ADTotal;
@@ -3378,11 +3382,11 @@ function _select_Gateway() { // Check for Gateway used to
 
     // Function used to check exchange data model and withdraw listed orders that use the settings zen transfer rate
 
-    function withdrawZexOffer() {
+    function cancelZexOffer() {
         // Make sure the exchange data is loaded to model
         if(unsafeWindow.client.dataModel.model.exchangeaccountdata) {
             if(unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length >= 1) {
-                console.log("Withdrawing ZEX orders");
+                console.log("Canceling ZEX orders");
 
                 var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
                 var ZenRate = parseInt(settings["banktransrate"]);
@@ -3393,13 +3397,9 @@ function _select_Gateway() { // Check for Gateway used to
                     if(parseInt(item.price) == ZenRate && item.ordertype == "Buy") {
                         // cancel/withdraw the order
                         client.withdrawOrder(item.orderid);
-                        console.log("Withdrawing Zex listing for " + item.quantity + " ZEN at the rate of " + item.price + " . Total value in AD: " + item.totaltc);
+                        console.log("Canceling Zex offer for " + item.quantity + " ZEN at the rate of " + item.price + " . Total value in AD: " + item.totaltc);
                     }
                 });
-
-                // Withdraw the balance from exchange
-                claimZexOffer();
-
             } else {
                 console.log("No listings found on Zex. Skipping Zex Withrdaw..");
             }
@@ -3748,7 +3748,7 @@ function _select_Gateway() { // Check for Gateway used to
         if(settings["autoexchange"]) {
             // Withdraw AD from the ZAX into the banker character
             if(settings["bankchar"] == settings["nw_charname" + charcurrent]) {
-                window.setTimeout(withdrawZexOffer, delay.SHORT);
+                window.setTimeout(cancelZexOffer, delay.SHORT);
             }
         }
 
@@ -4044,7 +4044,7 @@ function _select_Gateway() { // Check for Gateway used to
             // Domino effect: first check if we're out of space for new offers
             if(unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length == 5) {
                 // Domino effect: then withdraw as much offers as we can and claim the diamonds
-                window.setTimeout(withdrawZexOffer, delay.SHORT);
+                window.setTimeout(cancelZexOffer, delay.SHORT);
             }
 
             WaitForState("button.closeNotification").done(function() {
