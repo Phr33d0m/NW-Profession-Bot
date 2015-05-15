@@ -922,7 +922,9 @@ function _select_Gateway() { // Check for Gateway used to
                 "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank", //Prelate's Exquisite Elemental Chainmail
                 "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank", //Prelate's Exquisite Elemental Chausses 
 
-                "Crafted_Med_Armorsmithing_Scale_T4_Green_Pants_Dps"//Berserker's Elemental Chausses
+                "Crafted_Med_Armorsmithing_Scale_T4_Green_Pants_Dps",//Berserker's Elemental Chausses
+                "Med_Armorsmithing_Tier3_Refine_Basic"
+
             ],
         },
     });
@@ -942,7 +944,8 @@ function _select_Gateway() { // Check for Gateway used to
                 "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank", //Prelate's Exquisite Elemental Chainmail
                 "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank", //Prelate's Exquisite Elemental Chausses 
 
-                "Crafted_Med_Armorsmithing_Scale_T4_Green_Pants_Tank"//Soldier's Elemental Chausses
+                "Crafted_Med_Armorsmithing_Scale_T4_Green_Pants_Tank",//Soldier's Elemental Chausses
+                "Med_Armorsmithing_Tier3_Refine_Basic"
             ],
         },
     });
@@ -962,7 +965,8 @@ function _select_Gateway() { // Check for Gateway used to
                 "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank", //Prelate's Exquisite Elemental Chainmail
                 "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank", //Prelate's Exquisite Elemental Chausses 
 
-                "Crafted_Med_Armorsmithing_Scale_T4_Green_Shirt_Tank"//Soldier's Elemental Chainmail
+                "Crafted_Med_Armorsmithing_Scale_T4_Green_Shirt_Tank",//Soldier's Elemental Chainmail
+                "Med_Armorsmithing_Tier3_Refine_Basic"
             ],
         },
     });
@@ -982,7 +986,8 @@ function _select_Gateway() { // Check for Gateway used to
                 "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank", //Prelate's Exquisite Elemental Chainmail
                 "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank", //Prelate's Exquisite Elemental Chausses 
 
-                "Crafted_Med_Armorsmithing_Scale_T4_Green_Shirt_Dps"//Berserker's Elemental Chainmail
+                "Crafted_Med_Armorsmithing_Scale_T4_Green_Shirt_Dps",//Berserker's Elemental Chainmail
+                "Med_Armorsmithing_Tier3_Refine_Basic"
             ],
         },
     });
@@ -1003,7 +1008,8 @@ function _select_Gateway() { // Check for Gateway used to
                 "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps", //Berserker's Exquisite Elemental Chausses
                 "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank", //Berserker's Exquisite Elemental Chainmail
 
-                "Crafted_Med_Armorsmithing_Chain_T4_Green_Pants_Dps"//Berserker's Elemental Chainmail
+                "Crafted_Med_Armorsmithing_Chain_T4_Green_Pants_Dps",//Berserker's Elemental Chainmail
+                "Med_Armorsmithing_Tier3_Refine_Basic"
             ],
         },
     });
@@ -1024,7 +1030,8 @@ function _select_Gateway() { // Check for Gateway used to
                 "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps", //Berserker's Exquisite Elemental Chausses
                 "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank", //Berserker's Exquisite Elemental Chainmail
 
-                "Crafted_Med_Armorsmithing_Chain_T4_Green_Shirt_Dps"//Zealot's Elemental Chainmail
+                "Crafted_Med_Armorsmithing_Chain_T4_Green_Shirt_Dps",//Zealot's Elemental Chainmail
+                "Med_Armorsmithing_Tier3_Refine_Basic"
             ],
         },
     });
@@ -1045,7 +1052,8 @@ function _select_Gateway() { // Check for Gateway used to
                 "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps", //Berserker's Exquisite Elemental Chausses
                 "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank", //Berserker's Exquisite Elemental Chainmail
 
-                "Crafted_Med_Armorsmithing_Chain_T4_Green_Shirt_Tank"//Prelate's Elemental Chainmail
+                "Crafted_Med_Armorsmithing_Chain_T4_Green_Shirt_Tank",//Prelate's Elemental Chainmail
+                "Med_Armorsmithing_Tier3_Refine_Basic"
             ],
         },
     });
@@ -1066,7 +1074,8 @@ function _select_Gateway() { // Check for Gateway used to
                 "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps", //Berserker's Exquisite Elemental Chausses
                 "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank", //Berserker's Exquisite Elemental Chainmail
 
-                "Crafted_Med_Armorsmithing_Chain_T4_Green_Pants_Tank"//Prelate's Elemental Chainmail
+                "Crafted_Med_Armorsmithing_Chain_T4_Green_Pants_Tank",//Prelate's Elemental Chainmail
+                "Med_Armorsmithing_Tier3_Refine_Basic"
             ]
         },
     });
@@ -1254,6 +1263,7 @@ function _select_Gateway() { // Check for Gateway used to
                 'Leatherworking_Tier4_Leather_Pants_Special_2_Set2', //Exquisite Elemental Trousers
                 'Leatherworking_Tier4_Leather_Pants_Special_2', //Exquisite Elemental Pants
                 'Leatherworking_Tier4_Leather_Shirt2', //Elemental Leather Shirt 
+                "Leatherworking_Tier3_Gather_Basic"
             ]
         }
     });
@@ -1267,6 +1277,7 @@ function _select_Gateway() { // Check for Gateway used to
                 'Leatherworking_Tier4_Leather_Pants_Special_2_Set2', //Exquisite Elemental Trousers
                 'Leatherworking_Tier4_Leather_Pants_Special_2', //Exquisite Elemental Pants
                 'Leatherworking_Tier4_Leather_Shirt2_Set2', //Elemental Leather Tunic 
+                'Leatherworking_Tier3_Gather_Basic'
             ]
         }
     });
@@ -1280,6 +1291,7 @@ function _select_Gateway() { // Check for Gateway used to
                 'Leatherworking_Tier4_Leather_Shirt_Special_2_Set2', //Exquisite Elemental Tunic
                 'Leatherworking_Tier4_Leather_Shirt_Special_2', //Exquisite Elemental Shirt
                 'Leatherworking_Tier4_Leather_Pants2_Set2', //Elemental Leather Trousers 
+                'Leatherworking_Tier3_Gather_Basic'
             ]
         }
     });
@@ -1293,6 +1305,7 @@ function _select_Gateway() { // Check for Gateway used to
                 'Leatherworking_Tier4_Leather_Shirt_Special_2_Set2', //Exquisite Elemental Tunic
                 'Leatherdeworking_Tier4_Leather_Shirt_Special_2', //Exquisite Elemental Shirt
                 'Leatherworking_Tier4_Leather_Pants2', //Elemental Leather Trousers 
+                'Leatherworking_Tier3_Gather_Basic'
             ]
         }
     });
