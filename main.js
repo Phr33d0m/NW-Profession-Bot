@@ -3880,7 +3880,7 @@ function _select_Gateway() { // Check for Gateway used to
             <div id="settings_title">\
             <img src=' + image_prefs + ' style="float: left; vertical-align: text-bottom;"\>\
             <img id="settings_close" src=' + image_close + ' title="Click to hide preferences" style="float: right; vertical-align: text-bottom; cursor: pointer; display: block;"\>\
-            <span style="margin:3px">Settings</span>\
+            <span style="margin:3px">'+tr('static.settings')+'</span>\
             </div>\
             <form style="margin: 0px; padding: 0px">\
             <div id="main_tabs">\
@@ -3892,10 +3892,10 @@ function _select_Gateway() { // Check for Gateway used to
 
         $("div#main_tabs").tabs();
         var tabs = {
-            main: 'General settings',
-            prof: 'Professions',
-            vend: 'Vendor options',
-            bank: 'AD Consolidation'
+            main: tr('tab.general'),
+            prof: tr('tab.professions'),
+            vend: tr('tab.vendor'),
+            bank: tr('tab.consolidation')
         };
         for(var key in tabs) {
             var tabs_num = $("div#main_tabs > ul > li").length + 1;
@@ -3966,7 +3966,7 @@ function _select_Gateway() { // Check for Gateway used to
         ;
 
         var tabs_num = $("div#main_tabs > ul > li").length + 1;
-        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Other</a></li>");
+        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>"+tr('tab.other')+"</a></li>");
         var tab = $("<div id='main_tab" + tabs_num + "'><div id='other'>will also delete character names <br /><button id='reset_settings_btn'>Reset ALL Settings</button><br />Should be used after login only, and can reset all characters<br /><button id='load_names_btn'>Load Names</button></div></div>");
         $("div#main_tabs").append(tab);
 
@@ -3995,32 +3995,32 @@ function _select_Gateway() { // Check for Gateway used to
 
 
         var tabs_num = $("div#main_tabs > ul > li").length + 1;
-        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Refine Counters</a></li>");
+        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>"+tr('tab.counters')+"</a></li>");
         var tab = $("<div id='main_tab" + tabs_num + "'><div id='rcounters'>Loaded on login.</div></div>");
         $("div#main_tabs").append(tab);
 
         tabs_num = $("div#main_tabs > ul > li").length + 1;
-        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Workers</a></li>");
+        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>"+tr('tab.workers')+"</a></li>");
         tab = $("<div id='main_tab" + tabs_num + "'><div id='worker_overview'>Loaded on login.</div></div>");
         $("div#main_tabs").append(tab);
 
         tabs_num = $("div#main_tabs > ul > li").length + 1;
-        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Tools</a></li>");
+        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>"+tr('tab.tools')+"</a></li>");
         tab = $("<div id='main_tab" + tabs_num + "'><div id='tools_overview'>Loaded on login.</div></div>");
         $("div#main_tabs").append(tab);
 
         tabs_num = $("div#main_tabs > ul > li").length + 1;
-        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Resource Tracker</a></li>");
+        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>"+tr('tab.resources')+"</a></li>");
         tab = $("<div id='main_tab" + tabs_num + "'><div id='resource_tracker'>Loaded on login.</div></div>");
         $("div#main_tabs").append(tab);
 
         tabs_num = $("div#main_tabs > ul > li").length + 1;
-        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Prof levels</a></li>");
+        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>"+tr('tab.levels')+"</a></li>");
         tab = $("<div id='main_tab" + tabs_num + "'><div id='profession_levels'>Loaded on login.</div></div>");
         $("div#main_tabs").append(tab);
 
         tabs_num = $("div#main_tabs > ul > li").length + 1;
-        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Slots</a></li>");
+        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>"+tr('tab.slots')+"</a></li>");
         tab = $("<div id='main_tab" + tabs_num + "'><div id='slot_tracker'>Loaded on login.</div></div>");
         $("div#main_tabs").append(tab);
 
@@ -4193,9 +4193,9 @@ function _select_Gateway() { // Check for Gateway used to
         // Add save/cancel buttons to panel
         $("#settingsPanel form").append('\
             <div id="settingsPanelButtonContainer">\
-            <input id="settings_save" class="button-blue pure-button" type="button" value="Save and Apply">\
-            <input id="settings_close" class="button-yellow pure-button" type="button" value="Close">\
-            <input id="settings_sca" class="button-red pure-button" type="button" value="Cycle SCA">\
+            <input id="settings_save" class="button-blue pure-button" type="button" value="'+tr('button.save&apply')+'">\
+            <input id="settings_close" class="button-yellow pure-button" type="button" value="'+tr('button.close')+'">\
+            <input id="settings_sca" class="button-red pure-button" type="button" value="'+tr('button.cycle')+'">\
             </div>');
 
         $(function() {
@@ -4681,6 +4681,21 @@ function _select_Gateway() { // Check for Gateway used to
         translation = {
             'en': {
                 'translation.needed': 'translation needed',
+                'tab.general': 'General settings',
+                'tab.professions': 'Professions',
+                'tab.vendor': 'Vendor options',
+                'tab.consolidation': 'AD Consolidation',
+                'tab.other': 'Other',
+                'tab.counters': 'Refine Counters',
+                'tab.workers': 'Workers',
+                'tab.tools': 'Tools',
+                'tab.resources': 'Resource Tracker',
+                'tab.levels': 'Prof levels',
+                'tab.slots': 'Slots',
+                'static.settings': 'Settings',
+                'button.save&apply': 'Save and Apply',
+                'button.close': 'Close',
+                'button.cycle': 'Cycle SCA',
                 'settings.main.paused': 'Pause Script',
                 'settings.main.paused.tooltip': 'Disable All Automation',
                 'settings.main.debug': 'Enable Debug',
@@ -4706,6 +4721,21 @@ function _select_Gateway() { // Check for Gateway used to
             },
             'pl': {
                 'translation.needed': 'wymagane tłumaczenie',
+                'tab.general': 'Ogólne',
+                'tab.professions': 'Profesje',
+                'tab.vendor': 'Kupiec',
+                'tab.consolidation': 'Konsolidacja AD',
+                'tab.other': 'Pozostałe',
+                'tab.counters': 'Liczniki szlifowania',
+                'tab.workers': 'Pracownicy',
+                'tab.tools': 'Narzędzia',
+                'tab.resources': 'Surowce',
+                'tab.levels': 'Poziomy prof.',
+                'tab.slots': 'Sloty',
+                'static.settings': 'Ustawienia',
+                'button.save&apply': 'Zapisz i zastosuj',
+                'button.close': 'Zamknij',
+                'button.cycle': 'Runda SCA',
                 'settings.main.paused': 'Zatrzymaj skrypt',
                 'settings.main.paused.tooltip': 'Wyłącz wszelką automatyzację',
                 'settings.main.debug': 'Włącz debugowanie',
@@ -4726,7 +4756,7 @@ function _select_Gateway() { // Check for Gateway used to
                 'settings.main.nw_username.tooltip': '',
                 'settings.main.nw_password': 'Hasło do Neverwinter',
                 'settings.main.nw_password.tooltip': '',
-                'settings.main.charcount': 'Wprowadź liczbę postaci (naciśnij "Save and Apply" aby odświerzyć formularz)',
+                'settings.main.charcount': 'Wprowadź liczbę postaci (naciśnij "Zapisz i zastosuj" aby odświerzyć formularz)',
                 'settings.main.charcount.tooltip': 'Wprowadź liczbę postaci (naciśnij "Save and Apply" aby odświerzyć formularz)',
             },
             'fr': {
@@ -4742,7 +4772,8 @@ function _select_Gateway() { // Check for Gateway used to
             return "unknown key: " + key;
         }
         if (translation[lang][key] === undefined) {
-            return translation[lang]['translation.needed'] + ": " + key;
+            console.log('translation needed: lang: ' + lang + ", key: " + key);
+            return '/-/ ' + translation['en'][key] + ' /-/';
         }
         return translation[lang][key];
     }
