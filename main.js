@@ -1748,7 +1748,7 @@ function _select_Gateway() { // Check for Gateway used to
     var scriptSettings = {};
     var accountSettings = {};
     var charSettingsList = [];
-    var charNameList = [];
+    var charNamesList = [];
     var charStatisticsList = []; // array of char names with the charStatistics for each char.
 
     var defaultCharStatistics = {
@@ -1769,56 +1769,16 @@ function _select_Gateway() { // Check for Gateway used to
         },
         professions: {
             // Names must match unsafeWindow.client.dataModel.model.ent.main.itemassignmentcategories.categories.displayname
-            "Leadership": {
-                level: 0,
-                workersUsed: [],
-                workersUnused: []
-            },
-            "Alchemy": {
-                level: 0,
-                workersUsed: [],
-                workersUnused: []
-            },
-            "Jewelcrafting": {
-                level: 0,
-                workersUsed: [],
-                workersUnused: []
-            },
-            "Weaponsmithing": {
-                level: 0,
-                workersUsed: [],
-                workersUnused: []
-            },
-            "Artificing": {
-                level: 0,
-                workersUsed: [],
-                workersUnused: []
-            },
-            "Mailsmithing": {
-                level: 0,
-                workersUsed: [],
-                workersUnused: []
-            },
-            "Platesmithing": {
-                level: 0,
-                workersUsed: [],
-                workersUnused: []
-            },
-            "Leatherworking": {
-                level: 0,
-                workersUsed: [],
-                workersUnused: []
-            },
-            "Tailoring": {
-                level: 0,
-                workersUsed: [],
-                workersUnused: []
-            },
-            "Black Ice Shaping": {
-                level: 0,
-                workersUsed: [],
-                workersUnused: []
-            },
+            "Leadership": { level: 0, workersUsed: [], workersUnused: [] },
+            "Alchemy": { level: 0, workersUsed: [], workersUnused: [] },
+            "Jewelcrafting": { level: 0, workersUsed: [], workersUnused: [] },
+            "Weaponsmithing": { level: 0,workersUsed: [], workersUnused: [] },
+            "Artificing": { level: 0, workersUsed: [], workersUnused: [] },
+            "Mailsmithing": { level: 0, workersUsed: [], workersUnused: []},
+            "Platesmithing": { level: 0, workersUsed: [], workersUnused: [] },
+            "Leatherworking": { level: 0, workersUsed: [], workersUnused: [] },
+            "Tailoring": { level: 0, workersUsed: [], workersUnused: [] },
+            "Black Ice Shaping": { level: 0, workersUsed: [], workersUnused: [] },
             /*
             "Winter Event":     { level: 0, workersUsed: [], workersUnused: [] },
             "Siege Event":      { level: 0, workersUsed: [], workersUnused: [] },
@@ -1847,67 +1807,9 @@ function _select_Gateway() { // Check for Gateway used to
     /*  For searching unsafeWindow.client.dataModel.model.ent.main.inventory.assignedslots / unsafeWindow.client.dataModel.model.ent.main.inventory.notassignedslots  
     This needs some design change. */
 
-    // purple, blue, green, t3, t2, t1
-    var workerList = {
-        "Leadership": ["Crafting_Asset_Craftsman_Leadership_T3_Epic", "Crafting_Asset_Craftsman_Leadership_T3_Rare", "Crafting_Asset_Craftsman_Leadership_T3_Uncommon",
-            "Crafting_Asset_Craftsman_Leadership_T3_Common", "Crafting_Asset_Craftsman_Leadership_T2_Common", "Crafting_Asset_Craftsman_Leadership_T1_Common_1"
-        ],
-        "Alchemy": ["Asset_Craftsman_Alchemy_T3_Epic", "Asset_Craftsman_Alchemy_T3_Rare", "Asset_Craftsman_Alchemy_T3_Uncommon",
-            "Asset_Craftsman_Alchemy_T3_Common", "Asset_Craftsman_Alchemy_T2_Common", "Asset_Craftsman_Alchemy_T1_Common"
-        ],
-        "Jewelcrafting": ["Crafting_Asset_Craftsman_Jewelcrafter_T3_Epic", "Crafting_Asset_Craftsman_Jewelcrafter_T3_Rare", "Crafting_Asset_Craftsman_Jewelcrafter_T3_Uncommon",
-            "Crafting_Asset_Craftsman_Jewelcrafter_T3_Common", "Crafting_Asset_Craftsman_Jewelcrafter_T2_Common", "Crafting_Asset_Craftsman_Jewelcrafter_T1_Common"
-        ],
-        "Weaponsmithing": ["Crafting_Asset_Craftsman_Weaponsmith_T3_Epic", "Crafting_Asset_Craftsman_Weaponsmith_T3_Rare", "Crafting_Asset_Craftsman_Weaponsmith_T3_Uncommon",
-            "Crafting_Asset_Craftsman_Weaponsmith_T3_Common", "Crafting_Asset_Craftsman_Weaponsmith_T2_Common", "Crafting_Asset_Craftsman_Weaponsmith_T1_Common"
-        ],
-        "Artificing": ["Crafting_Asset_Craftsman_Artificing_T3_Epic", "Crafting_Asset_Craftsman_Artificing_T3_Rare", "Crafting_Asset_Craftsman_Artificing_T3_Uncommon",
-            "Crafting_Asset_Craftsman_Artificing_T3_Common", "Crafting_Asset_Craftsman_Artificing_T2_Common", "Crafting_Asset_Craftsman_Artificing_T1_Common"
-        ],
-        "Mailsmithing": ["Crafting_Asset_Craftsman_Armorsmithing_Med_T3_Epic", "Crafting_Asset_Craftsman_Armorsmithing_Med_T3_Rare", "Crafting_Asset_Craftsman_Armorsmithing_Med_T3_Uncommon",
-            "Crafting_Asset_Craftsman_Armorsmithing_Med_T3_Common", "Crafting_Asset_Craftsman_Armorsmithing_Med_T2_Common", "Crafting_Asset_Craftsman_Armorsmithing_Med_T1_Common"
-        ],
-        "Platesmithing": ["Crafting_Asset_Craftsman_Armorsmithing_Hvy_T3_Epic", "Crafting_Asset_Craftsman_Armorsmithing_Hvy_T3_Rare", "Crafting_Asset_Craftsman_Armorsmithing_Hvy_T3_Uncommon",
-            "Crafting_Asset_Craftsman_Armorsmithing_Hvy_T3_Common", "Crafting_Asset_Craftsman_Armorsmithing_Hvy_T2_Common", "Crafting_Asset_Craftsman_Armorsmithing_Hvy_T1_Common"
-        ],
-        "Leatherworking": ["Crafting_Asset_Craftsman_Leatherworking_T3_Epic", "Crafting_Asset_Craftsman_Leatherworking_T3_Rare", "Crafting_Asset_Craftsman_Leatherworking_T3_Uncommon",
-            "Crafting_Asset_Craftsman_Leatherworking_T3_Common", "Crafting_Asset_Craftsman_Leatherworking_T2_Common", "Crafting_Asset_Craftsman_Leatherworking_T1_Common"
-        ],
-        "Tailoring": ["Crafting_Asset_Craftsman_Tailoring_T3_Epic", "Crafting_Asset_Craftsman_Tailoring_T3_Rare", "Crafting_Asset_Craftsman_Tailoring_T3_Uncommon",
-            "Crafting_Asset_Craftsman_Tailoring_T3_Common", "Crafting_Asset_Craftsman_Tailoring_T2_Common", "Crafting_Asset_Craftsman_Tailoring_T1_Common"
-        ],
-        "Black Ice Shaping": ["Crafting_Asset_Craftsman_Blackice_T3_Epic", "Crafting_Asset_Craftsman_Blackice_T3_Rare", "Crafting_Asset_Craftsman_Blackice_T3_Uncommon",
-            "Crafting_Asset_Craftsman_Blackice_T3_Common"
-        ],
-        /*
-            "Winter Event":     ["Crafting_Asset_Craftsman_Winter_Event_T1_Common"],
-            "Siege Event":      [],
-            */
-    }
-
-    var toolList = {
-        "Awl": ["Crafting_Asset_Tool_Awl_Epic", "Crafting_Asset_Tool_Awl_Rare", "Crafting_Asset_Tool_Awl_Uncommon", "Crafting_Asset_Tool_Awl_Common"],
-        "Shears": ["Crafting_Asset_Tool_Shears_Epic", "Crafting_Asset_Tool_Shears_Rare", "Crafting_Asset_Tool_Shears_Uncommon", "Crafting_Asset_Tool_Shears_Common"],
-        "Hammer": ["Crafting_Asset_Tool_Hammer_Epic", "Crafting_Asset_Tool_Hammer_Rare", "Crafting_Asset_Tool_Shears_Uncommon", "Crafting_Asset_Tool_Hammer_Common", ],
-        "Needle": ["Crafting_Asset_Tool_Needle_Epic", "Crafting_Asset_Tool_Needle_Rare", "Crafting_Asset_Tool_Needle_Uncommon", "Crafting_Asset_Tool_Needle_Common", ],
-        "Bellows": ["Crafting_Asset_Tool_Bellows_Epic", "Crafting_Asset_Tool_Bellows_Rare", "Crafting_Asset_Tool_Bellows_Uncommon", "Crafting_Asset_Tool_Bellows_Common"],
-        "Bezelpusher": ["Crafting_Asset_Tool_Bezelpusher_Epic", "Crafting_Asset_Tool_Bezelpusher_Rare", "Crafting_Asset_Tool_Bezelpusher_Uncommon", "Crafting_Asset_Tool_Bezelpusher_Common"],
-        "Mortar": ["Asset_Tool_Mortar_Epic", "Asset_Tool_Mortar_Rare", "Asset_Tool_Mortar_Uncommon", "Asset_Tool_Mortar_Common"],
-        "Anvil": ["Crafting_Asset_Tool_Anvil_Epic", "Crafting_Asset_Tool_Anvil_Rare", "Crafting_Asset_Tool_Anvil_Uncommon", "Crafting_Asset_Tool_Anvil_Common", ],
-        "Grindstone": ["Crafting_Asset_Tool_Grindstone_Epic", "Crafting_Asset_Tool_Grindstone_Rare", "Crafting_Asset_Tool_Grindstone_Uncommon", "Crafting_Asset_Tool_Grindstone_Common", ],
-        "Philosophersstone": ["Asset_Tool_Philosophersstone_Epic", "Asset_Tool_Philosophersstone_Rare", "Asset_Tool_Philosophersstone_Uncommon", "Asset_Tool_Philosophersstone_Common"],
-        "Loupe": ["Crafting_Asset_Tool_Loupe_Epic", "Crafting_Asset_Tool_Loupe_Rare", "Crafting_Asset_Tool_Loupe_Uncommon", "Crafting_Asset_Tool_Loupe_Common", ],
-        "Graver": ["Crafting_Asset_Tool_Graver_Epic", "Crafting_Asset_Tool_Graver_Rare", "Crafting_Asset_Tool_Graver_Uncommon", "Crafting_Asset_Tool_Graver_Common", ],
-        "Crucible": ["Asset_Tool_Crucible_Epic", "Asset_Tool_Crucible_Rare", "Asset_Tool_Crucible_Uncommon", "Asset_Tool_Crucible_Common", ],
-        "Tongs": ["Crafting_Asset_Tool_Tongs_Epic", "Crafting_Asset_Tool_Tongs_Rare", "Crafting_Asset_Tool_Tongs_Uncommon", "Crafting_Asset_Tool_Tongs_Common", ],
-    }
-
-    /*
-    "Crafting_Asset_Tool_Leatherworking_T1_Epic",
-    "Crafting_Asset_Tool_Gauntlets_Common"
-    "Crafting_Asset_Tool_Leadership_T3_Common","Crafting_Asset_Tool_Leadership_T2_Common"
-    */
-
+    // The definitions themselves are at the bottom of the script
+    var workerList = workerDefinition();
+    var toolList = toolListDefinition();
 
     var trackResources = [{
         fname: 'Aqua Regia',
@@ -2017,8 +1919,8 @@ function _select_Gateway() { // Check for Gateway used to
             minToTransfer: 50000,
             transferRate: 300,
         },
-        taskListSettigns: [],
-        taskListSettingsAdvanced: [],
+        taskListSettings: {},
+        taskListSettingsManual: [],
     };
 
     //Adding taskList defaults.
@@ -2030,21 +1932,58 @@ function _select_Gateway() { // Check for Gateway used to
                 value: profile.profileName
             });
         });
-        defaultCharSettings.taskListSettigns[task.taskListName] = {};
-        defaultCharSettings.taskListSettigns[task.taskListName].taskSlots = task.taskDefaultSlotNum;
-        defaultCharSettings.taskListSettigns[task.taskListName].taskProfile = profileNames[0].value;
-        defaultCharSettings.taskListSettigns[task.taskListName].taskPriority = task.taskDefaultPriority;
+        defaultCharSettings.taskListSettings[task.taskListName] = {};
+        defaultCharSettings.taskListSettings[task.taskListName].taskSlots = task.taskDefaultSlotNum;
+        defaultCharSettings.taskListSettings[task.taskListName].taskProfile = profileNames[0].value;
+        defaultCharSettings.taskListSettings[task.taskListName].taskPriority = task.taskDefaultPriority;
     });
 
     for (var i = 0; i < 9; i++) {
-        defaultCharSettings.taskListSettingsAdvanced[i] = {};
-        defaultCharSettings.taskListSettingsAdvanced[i].Profession = tasklist[0].taskListName;
-        defaultCharSettings.taskListSettingsAdvanced[i].Profile = tasklist[0].profiles[0].profileName;
-        defaultCharSettings.taskListSettingsAdvanced[i].fillAssets = 0;
+        defaultCharSettings.taskListSettingsManual[i] = {};
+        defaultCharSettings.taskListSettingsManual[i].Profession = tasklist[0].taskListName;
+        defaultCharSettings.taskListSettingsManual[i].Profile = tasklist[0].profiles[0].profileName;
+        defaultCharSettings.taskListSettingsManual[i].fillAssets = 0;
     }
     // 0 - default, 1 - do not fill, 2 - people (white to purple), 3 - people (purple to white), 4 - tools
     var charSlotsFillAssetsOptions = ['default', 'Do not fill', 'people (white to purple)', 'people (purple to white)', 'tools'];
 
+    // Usable only after login (return account or char settings, depending on override and match)
+    function getSetting(group, name) {
+        var override = false;
+        if (typeof(charSettingsList[curCharName]) !== undefined && typeof(charSettingsList[curCharName].general) !== undefined) 
+            override = charSettingsList[curCharName].general.overrideGlobalSettings;
+        else console.warn("overrideGlobalSettings could not been reached." )
+
+        if (override && 
+            typeof(charSettingsList[curCharName][group]) !== undefined &&
+            typeof(charSettingsList[curCharName][group][name]) !== undefined)
+                return charSettingsList[curCharName][group][name];
+        else console.warn("charSetting path could not been reached." )
+        
+        if (typeof(accountSettings[group]) !== undefined &&
+            typeof(accountSettings[group][name]) !== undefined) 
+                return accountSettings[group][name];
+        else console.warn("accountSettings path could not been reached." )
+        return null;
+    }
+
+
+    // Loading script settings
+    var tempScriptSettings;
+    try {
+        tempScriptSettings = JSON.parse(GM_getValue("settings__script", "{}"));
+    } catch (e) {
+        tempScriptSettings = null;
+    }
+    if (!tempScriptSettings) {
+        console.warn('Script settings couldn\'t be retrieved, loading defaults.');
+        tempScriptSettings = {};
+    };
+    scriptSettings = $.extend(true, {}, defaultScriptSettings, tempScriptSettings);
+
+    var delay_modifier = parseFloat(scriptSettings.general.scriptDelayFactor);
+    delay.SHORT *= delay_modifier;      delay.MEDIUM *= delay_modifier;     delay.LONG *= delay_modifier; 
+    delay.MINS *= 1;                    delay.DEFAULT *= delay_modifier;    delay.TIMEOUT *= delay_modifier;
 
     // Load Settings
     var settingnames = [
@@ -2092,23 +2031,41 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'account', group: 'consolidationSettings', name:'minCharBalance',   type:'text',    pane:'bank',    title:'Min Character balance',      tooltip:'Enter the amount of AD to always keep available on characters'},
         {scope: 'account', group: 'consolidationSettings', name:'transferRate',     type:'text',    pane:'bank',    title:'AD per Zen Rate (in zen)',   tooltip:'Enter default rate to use for transfering through ZEX'},
 
-        {scope: 'char', group: 'general', name:'active',     type:'checkbox',    pane:'main',    title:'',   tooltip:''},
-        {scope: 'char', group: 'general', name:'overrideGlobalSettings',    type:'checkbox',    pane:'main',    title:'',   tooltip:''},
+        {scope: 'char', group: 'general', name: 'active',     type:'checkbox',    pane: 'main_not_tab',    title: 'Active',   tooltip: 'The char will be processed by the script'},
+        {scope: 'char', group: 'general', name:'overrideGlobalSettings',    type:'checkbox',    pane:'main_not_tab',    title:'Override account settings for this char',   tooltip:''},
+        
+        {scope: 'char', group: 'generalSettings', name: 'openRewards', title: 'Open Reward Chests',  type: 'checkbox', pane: 'main', tooltip: 'Enable opeing of leadership chests on character switch' },
+        {scope: 'char', group: 'generalSettings', name: 'refineAD',    title: 'Refine AD',           type: 'checkbox', pane: 'main', tooltip: 'Enable refining of AD on character switch'},
+        {scope: 'char', group: 'professionSettings', name: 'fillOptionals',   type: 'checkbox', pane: 'prof',    title: 'Fill Optional Assets',  tooltip: 'Enable to include selecting the optional assets of tasks'},
+        {scope: 'char', group: 'professionSettings', name: 'autoPurchaseRes', type: 'checkbox', pane: 'prof',    title: 'Auto Purchase Resources', tooltip: 'Automatically purchase required resources from gateway shop (100 at a time)'}, 
+        {scope: 'char', group: 'professionSettings', name:'trainAssets',      type:'checkbox',  pane:'prof',     title:'Train Assets', tooltip:'Enable training/upgrading of asset worker resources'}, 
+        {scope: 'char', group: 'professionSettings', name:'smartLeadershipAssets',   type:'checkbox', pane:'prof', title:'Smart Asset allocation for leadership', tooltip:'Try to spread adn fill non-common assets and suplement with common if needed'},
+        {scope: 'char', group: 'professionSettings', name:'skipPatrolTask', type:'select', pane:'prof', title:'Skip Patrol task if > 10 claims', tooltip:'Skip \"Patrol the Mines\" leadership task if there are more than 10 mining claims in the inventory (Never, Always, On AD profile, if Leadership level is &gt;= 20, or both of the above )',
+            opts:[{name:'never',value:'never'},{name:'always',value:'always'},{name:'AD profile',value:'ad'},{name:'Leadership lvl 20',value:'ld20'},{name:'AD&Lvl20',value:'AD&Lvl20'}]},
+        {scope: 'char', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Altar Node Kit Stacks',  tooltip:'Limit skill kits stacks to 50/Altars80, vendor kits unusable by class, remove all if player has one bag or full bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorKitsAll',   type:'checkbox', pane:'vend',   title:'Vendor All Node Kits',   tooltip:'Sell ALL skill kits.'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorAltarsAll', type:'checkbox', pane:'vend',   title:'Vendor All Altar',       tooltip:'Sell ALL Altars.'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorProfResults',type:'checkbox',pane:'vend',   title:'Vendor/Maintain Prof Crafted Levelup Items',    tooltip:'Vendor off Tier 1 to 5 items produced and reused for leveling crafting professions.'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorPots1',     type:'checkbox', pane:'vend',   title:'Auto Vendor minor potions (lvl 1)',  tooltip:'Vendor all minor potions (lvl 1) found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorPots2',     type:'checkbox', pane:'vend',   title:'Auto Vendor lesser potions (lvl 15)',tooltip:'Vendor all lesser potions (lvl 15) found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorPots3',     type:'checkbox', pane:'vend',   title:'Auto Vendor potions (lvl 30)',       tooltip:'Vendor all potions (lvl 30) found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorPots4',     type:'checkbox', pane:'vend',   title:'Auto Vendor greater potions (lvl 45)',   tooltip:'Vendor all greater potions (lvl 45) found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
+        {scope: 'char', group: 'consolidationSettings', name:'consolidate',      type:'checkbox',pane:'bank',    title:'Consolidate AD via ZEX',     tooltip:'Automatically attempt to post, cancel and withdraw AD via ZEX and consolidate to designated character',border:true},
+        {scope: 'char', group: 'consolidationSettings', name:'bankchar',         type:'text',    pane:'bank',    title:'Character Name of Banker',   tooltip:'Enter name of the character to hold account AD'},
+        {scope: 'char', group: 'consolidationSettings', name:'minToTransfer',    type:'text',    pane:'bank',    title:'Min AD for Transfer',        tooltip:'Enter minimum AD limit for it to be cosidered for transfer off a character'},
+        {scope: 'char', group: 'consolidationSettings', name:'minCharBalance',   type:'text',    pane:'bank',    title:'Min Character balance',      tooltip:'Enter the amount of AD to always keep available on characters'},
+        {scope: 'char', group: 'consolidationSettings', name:'transferRate',     type:'text',    pane:'bank',    title:'AD per Zen Rate (in zen)',   tooltip:'Enter default rate to use for transfering through ZEX'},
+        
+        
+        
     ];
 
-    var tempScriptSettings;
-    try {
-        tempScriptSettings = JSON.parse(GM_getValue("settings__script", "{}"));
-    } catch (e) {
-        tempScriptSettings = null;
-    }
-    if (!tempScriptSettings) {
-        console.warn('Script settings couldn\'t be retrieved, loading defaults.');
-        tempScriptSettings = {};
-    };
-    scriptSettings = $.extend(true, {}, defaultScriptSettings, tempScriptSettings);
-
-    // Load local settings cache (unsecured)
+/*
+    // TODO: delete
     var settings = {};
     for (var i = 0; i < settingnames.length; i++) {
         // Ignore label types
@@ -2122,86 +2079,11 @@ function _select_Gateway() { // Check for Gateway used to
             settingnames[i].onsave(settings[settingnames[i].name], settings[settingnames[i].name]);
         }
     }
+    */
     console = unsafeWindow.console;
 
-    var delay_modifier = parseFloat(scriptSettings.general.scriptDelayFactor);
-    delay.SHORT *= delay_modifier;      delay.MEDIUM *= delay_modifier;     delay.LONG *= delay_modifier; 
-    delay.MINS *= 1;                    delay.DEFAULT *= delay_modifier;    delay.TIMEOUT *= delay_modifier;
 
 
-  //  var priorityOptions = [{name:'high',value:0},{name:'medium',value:1},{name:'low',value:2}];
-
-/*
-    var charSettings = [];
-    for (var i = 0; i < settings["charcount"]; i++) {
-        charSettings.push({
-            name: 'nw_charname' + i,
-            title: 'Character',
-            def: 'Character ' + (i + 1),
-            type: 'text',
-            tooltip: 'Characters Name'
-        });
-        tasklist.forEach(function(task) {
-            var profileNames = [];
-            task.profiles.forEach(function(profile) {
-                if (profile.isProfileActive) profileNames.push({
-                    name: profile.profileName,
-                    value: profile.profileName
-                });
-            });
-            //charSettings.push({name: task["taskListName"] + i, title: task["taskListName"], profileNames: profileNames,  def: task["taskDefaultSlotNum"] , type: 'text', tooltip: 'Number of slots to assign to ' + task["taskListName"]});
-            charSettings.push({
-                name: task.taskListName + i,
-                title: task.taskListName,
-                def: task.taskDefaultSlotNum,
-                type: 'text',
-                type2: 'task',
-                tooltip: 'Number of slots to assign to ' + task.taskListName,
-                pane: "tasks"
-            });
-            charSettings.push({
-                name: task.taskListName + i + '_profile',
-                title: task.taskListName + '_profile',
-                options: profileNames,
-                def: profileNames[0].value,
-                type: 'select',
-                type2: 'task-property',
-                tooltip: '',
-                pane: "tasks"
-            });
-            charSettings.push({
-                name: task.taskListName + i + '_priority',
-                title: task.taskListName + '_priority',
-                options: priorityOptions,
-                def: task.taskDefaultPriority,
-                type: 'select',
-                type2: 'task-property',
-                tooltip: '',
-                pane: "tasks"
-            });
-        });
-
-        charSettings.push({
-            name: 'test' + i,
-            title: 'test',
-            def: 1,
-            type: 'text',
-            tooltip: 'test',
-            pane: "settings"
-        });
-    }
-
-    for (var i = 0; i < charSettings.length; i++) {
-        settings[charSettings[i].name] = GM_getValue(charSettings[i].name, charSettings[i].def);
-    }
-    */
-    /*
-    var refineCounters = JSON.parse(GM_getValue("refineCounters", "{}"));
-    if (!refineCounters) {
-        console.log('refineCounters couldn\'t be retrieved, reseting.');
-        refineCounters = {};
-    };
-*/
     // Page Settings
     var PAGES = Object.freeze({
         LOGIN: {
@@ -2287,10 +2169,10 @@ function _select_Gateway() { // Check for Gateway used to
             console.log("Prioritizing task lists.");
             var charTaskList = tasklist
                 .filter(function(task) {
-                    return (settings[task.taskListName] > 0);
+                    return (charSettingsList[curCharName].taskListSettings[task.taskListName].slots > 0);
                 })
                 .sort(function(a, b) {
-                    return (settings[a.taskListName + '' + curCharNum + '_priority'] - settings[b.taskListName + curCharNum + '_priority']);
+                    return (charSettingsList[curCharName].taskListSettings[a.taskListName].priority - charSettingsList[curCharName].taskListSettings[b.taskListName].priority);
                 });
 
             console.log("Attempting to fill the slot.");
@@ -2298,7 +2180,7 @@ function _select_Gateway() { // Check for Gateway used to
                 var currentTasks = unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.filter(function(entry) {
                     return entry.category == charTaskList[i].taskName;
                 });
-                if (currentTasks.length < settings[charTaskList[i].taskListName]) {
+                if (currentTasks.length < charSettingsList[curCharName].taskListSettings[charTaskList[i].taskListName].slots) {
                     unsafeWindow.client.professionFetchTaskList('craft_' + charTaskList[i].taskName);
                     window.setTimeout(function() {
                         createNextTask(charTaskList[i], 0);
@@ -2316,7 +2198,7 @@ function _select_Gateway() { // Check for Gateway used to
 
         // Add diamond count
         chardiamonds[curCharNum] = unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds;
-        console.log(settings["nw_charname" + curCharNum] + "'s", "Astral Diamonds:", chardiamonds[curCharNum]);
+        console.log(curCharName + "'s", "Astral Diamonds:", chardiamonds[curCharNum]);
         // Add gold count
         chargold[curCharNum] = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.gold);
         return false;
@@ -2328,12 +2210,12 @@ function _select_Gateway() { // Check for Gateway used to
 
     function processSwordCoastDailies(_charStartIndex) {
         var _accountName = unsafeWindow.client.dataModel.model.loginInfo.publicaccountname;
-        var _charIndex = (!_charStartIndex || parseInt(_charStartIndex) > (charSettings.length + 1) || parseInt(_charStartIndex) < 0) ? 0 : parseInt(_charStartIndex);
-        var _fullCharName = settings["nw_charname" + _charIndex] + '@' + _accountName;
+        var _charIndex = (!_charStartIndex || parseInt(_charStartIndex) > (charNamesList.length + 1) || parseInt(_charStartIndex) < 0) ? 0 : parseInt(_charStartIndex);
+        var _fullCharName = charNamesList[_charIndex] + '@' + _accountName;
         var _hasLoginDaily = 0;
         var _isLastChar = false;
         var _scaHashMatch = /\/adventures$/;
-        if (!settings["paused"])
+        if (!scriptSettings.paused)
             PauseSettings("pause");
 
         // Switch to professions page to show task progression
@@ -2343,7 +2225,7 @@ function _select_Gateway() { // Check for Gateway used to
             unsafeWindow.location.hash = "#char(" + encodeURI(_fullCharName) + ")/adventures";
         }
 
-        if (settings["nw_charname" + (_charIndex + 1)] === undefined)
+        if (_charIndex >= (charNamesList.length -1))
             _isLastChar = true;
 
         WaitForState("").done(function() {
@@ -2429,7 +2311,7 @@ function _select_Gateway() { // Check for Gateway used to
             return entry.name == prof.taskName;
         })[0].currentrank;
         var profiles = prof.profiles.filter(function(profile) {
-            return profile.profileName == settings[prof.taskListName + curCharNum + '_profile'];
+            return profile.profileName == charSettingsList[curCharName].taskListSettings[prof.taskListName].taskProfile;
         });
         console.log('Selecting profile: ' + profiles[0].profileName);
         var list;
@@ -2452,7 +2334,7 @@ function _select_Gateway() { // Check for Gateway used to
         console.log("Searching for task:", taskName);
 
         // Search for task to start
-        var task = searchForTask(taskName, prof.taskName, profiles[0].profileName, level);
+        var task = searchForTask(taskName, prof.taskName, profiles[0], level);
 
         /** TODO: Use this  code once below can be replaced properly
         if (task === null) {
@@ -2485,7 +2367,9 @@ function _select_Gateway() { // Check for Gateway used to
                 // Click all buttons and select an item to use in the slot
                 var def = $.Deferred();
                 var buttonList = $('.taskdetails-assets:eq(1)').find("button");
-                if (buttonList.length && settings["optionals"]) {
+                if (buttonList.length && 
+                    ((charSettingsList[curCharName].general.overrideGlobalSettings && charSettingsList[curCharName].professionSettings.fillOptionals) || 
+                    (!charSettingsList[curCharName].general.overrideGlobalSettings && accountSettings.professionSettings.fillOptionals) )) {
                     SelectItemFor(buttonList, 0, def, prof);
                 } else {
                     def.resolve();
@@ -2573,12 +2457,15 @@ function _select_Gateway() { // Check for Gateway used to
      * @param {Deferred} dfd Deferred object to process on return
      */
 
-    function searchForTask(taskname, profname, profileName, professionLevel) {
+    function searchForTask(taskname, profname, profile, professionLevel) {
         // Return first object that matches exact craft name
         // edited by WloBeb - start Patrol the Mines task only if char has less than 10 Mining Claims
-        if (taskname == "Leadership_Tier3_13_Patrol" && (settings["skippatrol"] == 'always' ||
-            (settings["skippatrol"] == 'ad' && profileName == "AD") || (settings["skippatrol"] == 'ld20' && professionLevel >= 20) ||
-            (settings["skippatrol"] == 'AD&Lvl20' && professionLevel >= 20 && profileName == "AD"))) {
+        var skip_setting = (charSettingsList[curCharName].general.overrideGlobalSettings) ? 
+            charSettingsList[curCharName].professionSettings.skipPatrolTask : accountSettings.professionSettings.skipPatrolTask;
+            
+        if (taskname == "Leadership_Tier3_13_Patrol" && (skip_setting == 'always' ||
+            (skip_setting == 'ad' && profile.profileName == "AD") || (skip_setting == 'ld20' && professionLevel >= 20) ||
+            (skip_setting == 'AD&Lvl20' && professionLevel >= 20 && profile.profileName == "AD"))) {
             if (countResource("Crafting_Resource_Mining_Claim") >= 10) {
                 console.log("Too many Mining Claims: skiping");
                 return false;
@@ -2610,7 +2497,10 @@ function _select_Gateway() { // Check for Gateway used to
         var searchAsset = false;
 
         // Check for and buy missing armor & weapon leadership assets
-        if (thisTask.failsresourcesrequirements && profname == "Leadership" && settings["autopurchase"]) {
+        var purchase_setting = (charSettingsList[curCharName].general.overrideGlobalSettings) ? 
+            charSettingsList[curCharName].professionSettings.autoPurchaseRes : accountSettings.professionSettings.autoPurchaseRes;
+
+        if (thisTask.failsresourcesrequirements && profname == "Leadership" && purchase_setting) {
             var failedAssets = thisTask.required.filter(function(entry) {
                 return !entry.fillsrequirements;
             });
@@ -2659,7 +2549,7 @@ function _select_Gateway() { // Check for Gateway used to
                 });
 
                 // Train Assets
-                if (failedCrafter.length && settings["trainassets"]) {
+                if (failedCrafter.length && getSetting('professionSettings','trainAssets')) {
                     console.log("Found required asset:", failedCrafter[0].icon);
                     searchItem = failedCrafter[0].icon;
                     searchAsset = true;
@@ -2681,12 +2571,12 @@ function _select_Gateway() { // Check for Gateway used to
                 var itemName = failedResources[0].hdef.match(/\[(\w+)\]/)[1];
 
                 // Buy purchasable resources if auto-purchase setting is enabled
-                if (settings["autopurchase"] && itemName.match(/^Crafting_Resource_(Charcoal|Rocksalt|Spool_Thread|Porridge|Solvent|Brimstone|Coal|Moonseasalt|Quicksilver|Spool_Threadsilk)$/)) {
+                if (getSetting('professionSettings','autoPurchaseRes') && itemName.match(/^Crafting_Resource_(Charcoal|Rocksalt|Spool_Thread|Porridge|Solvent|Brimstone|Coal|Moonseasalt|Quicksilver|Spool_Threadsilk)$/)) {
                     // returns null if successful (task will try again) and false if unsuccessful (task will be skipped)
                     return buyResource(itemName);
                 }
                 // Matched profession auto-purchase item found but auto-purchase is not enabled
-                else if (!settings["autopurchase"] && itemName.match(/^Crafting_Resource_(Charcoal|Rocksalt|Spool_Thread|Porridge|Solvent|Brimstone|Coal|Moonseasalt|Quicksilver|Spool_Threadsilk)$/)) {
+                else if (!getSetting('professionSettings','autoPurchaseRes') && itemName.match(/^Crafting_Resource_(Charcoal|Rocksalt|Spool_Thread|Porridge|Solvent|Brimstone|Coal|Moonseasalt|Quicksilver|Spool_Threadsilk)$/)) {
                     console.log("Purchasable resource required:", itemName, "for task:", taskname, ". Recommend enabling Auto Purchase Resources.");
                     return false;
                 }
@@ -2764,7 +2654,7 @@ function _select_Gateway() { // Check for Gateway used to
         // Should really only be one result now but lets iterate through anyway.
         for (var i = 0; i < taskList.length; i++) {
             console.log("Attempting search for ingredient task:", taskList[i].def.name);
-            var task = searchForTask(taskList[i].def.name, profname, profileName, professionLevel);
+            var task = searchForTask(taskList[i].def.name, profname, profile, professionLevel);
             if (task === null || task) {
                 return task;
             }
@@ -2815,14 +2705,16 @@ function _select_Gateway() { // Check for Gateway used to
                 var T3_Rare = 0;
                 var T3_Uncommon = 0;
                 var usedCommon;
-                if (settings["smartleadassets"]) {
+                
+                var _enableSmartLeadership = getSetting('professionSettings','smartLeadershipAssets'); 
+                if (_enableSmartLeadership) {
                     T3_Epic = countResource("Crafting_Asset_Craftsman_Leadership_T3_Epic"); // number of heroes in inventory
                     T3_Rare = countResource("Crafting_Asset_Craftsman_Leadership_T3_Rare"); // number of adventurers in inventory
                     T3_Uncommon = countResource("Crafting_Asset_Craftsman_Leadership_T3_Uncommon"); // number of man-at-arms in inventory
                     usedCommon = countUsedResource("Crafting_Asset_Craftsman_Leadership_T3_Common") + countUsedResource("Crafting_Asset_Craftsman_Leadership_T2_Common") + countUsedResource("Crafting_Asset_Craftsman_Leadership_T1_Common_1"); //number of used mercenarys, guards and footmans
                 }
 
-                if (!(settings["smartleadassets"]) || (settings["smartleadassets"] && (T3_Epic + T3_Rare + T3_Uncommon + usedCommon < settings["Leadership" + curCharNum] * 2))) {
+                if (!(_enableSmartLeadership) || (_enableSmartLeadership && (T3_Epic + T3_Rare + T3_Uncommon + usedCommon < parseInt(charSettingsList[curCharName].taskListSettings["Leadership"].taskSlots) * 2))) {
                     if (mercenarys.length) {
                         clicked = true;
                         mercenarys[0].click();
@@ -3018,17 +2910,18 @@ function _select_Gateway() { // Check for Gateway used to
                 // Place the order
                 // Domino effect: this new order will post all the gathered diamonds until now
                 var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
-                var ZenRate = parseInt(settings["banktransrate"]);
-                var ZenQty = Math.floor((charDiamonds - parseInt(settings["bankcharmin"])) / ZenRate);
+                var ZenRate = parseInt(getSetting('consolidationSettings','transferRate'));
+                if (!ZenRate) return;
+                var ZenQty = Math.floor((charDiamonds - parseInt(getSetting('consolidationSettings','minCharBalance'))) / ZenRate);
                 ZenQty = (ZenQty > 5000) ? 5000 : ZenQty;
                 console.log("Posting Zex buy listing for " + ZenQty + " ZEN at the rate of " + ZenRate + " AD/ZEN. AD remainder: " + charDiamonds + " - " + (ZenRate * ZenQty) + " = " + (charDiamonds - (ZenRate * ZenQty)));
                 unsafeWindow.client.createBuyOrder(ZenQty, ZenRate);
                 // set moved ad to the ad counter zex log
                 var ADTotal = ZenRate * ZenQty;
                 if (ADTotal > 0) {
-                    console.log("AD moved to ZEX from", settings["nw_charname" + charlast] + ":", ADTotal);
-                    chardiamonds[charlast] -= ADTotal;
-                    console.log(settings["nw_charname" + charlast] + "'s", "Astral Diamonds:", chardiamonds[charlast]);
+                    console.log("AD moved to ZEX from", charNamesList[lastCharNum] + ":", ADTotal);
+                    chardiamonds[lastCharNum] -= ADTotal;
+                    console.log(charNamesList[lastCharNum] + "'s", "Astral Diamonds:", chardiamonds[lastCharNum]);
                     zexdiamonds += ADTotal;
                     console.log("Astral Diamonds on the ZEX:", zexdiamonds);
                 }
@@ -3049,7 +2942,7 @@ function _select_Gateway() { // Check for Gateway used to
                 console.log("Withdrawing ZEX orders");
 
                 var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
-                var ZenRate = parseInt(settings["banktransrate"]);
+                var ZenRate = parseInt(getSetting('consolidationSettings','transferRate'));
 
                 // cycle through the zex listings
                 unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.forEach(function(item) {
@@ -3104,7 +2997,7 @@ function _select_Gateway() { // Check for Gateway used to
         // Pattern for items to leave out of auto vendoring (safeguard)
         var _excludeItems = /(Gemfood|Gem_Upgrade_Resource|Artifact|Hoard|Coffer|Fuse|Ward|Preservation|Armor_Enhancement|Weapon_Enhancement|T[5-9]_Enchantment|T[5-9]_Runestones|T10_Enchantment|T10_Runestones|4c_Personal|Item_Potion_Companion_Xp|Gateway_Rewardpack|Consumable_Id_Scroll|Dungeon_Delve_Key)/; // edited by RottenMind 17.01.2015
 
-        if (settings["autovendor_profresults"]) {
+        if (getSetting('vendorSettings', 'vendorProfResults')) {
             /** Profession leveling result item cleanup logic for T1-4 crafted results
              * Created by RM on 14.1.2015.
              * List contains crafted_items, based "Mustex/Bunta NW robot 1.05.0.1L crafting list, can be used making list for items what are "Auto_Vendored".
@@ -3154,7 +3047,7 @@ function _select_Gateway() { // Check for Gateway used to
                 }
                 // Match everything else
                 else {
-                    if (settings["autovendor_profresults"]) {
+                    if (getSetting('vendorSettings', 'vendorProfResults')) {
                         for (i = 0; i < _profitems.length; i++) {
                             if (_profitems[i].pattern.test(slot.name))
                                 _profitems[i].count++;
@@ -3166,7 +3059,7 @@ function _select_Gateway() { // Check for Gateway used to
             });
         });
 
-        if (settings["autovendor_profresults"]) {
+        if (getSetting('vendorSettings', 'vendorProfResults')) {
             _tmpBag.forEach(function(slot) {
                 for (i = 0; i < _profitems.length; i++) { // edited by RottenMind
                     if (slot && _profitems[i].pattern.test(slot.name) && Inventory_bagspace() <= 7) { // !slot.bound && _profitems[i].count > 3 &&, edited by RottenMind
@@ -3191,7 +3084,7 @@ function _select_Gateway() { // Check for Gateway used to
                 var _Limit = (parseInt(_items[i].limit) > 99) ? 99 : _items[i].limit;
                 if (slot && _items[i].pattern.test(slot.name) && !slot.bound) {
                     // Node Kits vendor logic for restricted bag space
-                    if (settings["autovendor_kits_altars_limit"] && /^Item_Consumable_Skill/.test(slot.name)) {
+                    if (getSetting('vendorSettings', 'vendorKitsLimit') && /^Item_Consumable_Skill/.test(slot.name)) {
                         if (_bagCount < 2 || _bagUnused < 6 ||
                             (slot.name == "Item_Consumable_Skill_Dungeoneering" && (_classType == "Player_Guardian" || _classType == "Player_Greatweapon")) ||
                             (slot.name == "Item_Consumable_Skill_Arcana" && (_classType == "Player_Controller" || _classType == "Player_Scourge")) ||
@@ -3397,7 +3290,7 @@ function _select_Gateway() { // Check for Gateway used to
             nowdate = new Date();
         nowdate = nowdate.getTime();
         
-        charNameList.every( function (charName, idx) {
+        charNamesList.every( function (charName, idx) {
             if (!charSettingsList[charName].active) return true;
             if (chartimers[idx] != null) {
                 console.log("Date found for " + charName);
@@ -3419,7 +3312,7 @@ function _select_Gateway() { // Check for Gateway used to
             return false; // = break; 
         });
         
-        curCharName = charNameList[curCharNum];
+        curCharName = charNamesList[curCharNum];
         curCharFullName = curCharName + "@" + loggedAccount;
         
 
@@ -3433,7 +3326,7 @@ function _select_Gateway() { // Check for Gateway used to
         // Count AD & Gold
         var curdiamonds = zexdiamonds;
         var curgold = 0;
-        charNameList.every( function (charName, idx) {
+        charNamesList.every( function (charName, idx) {
             if (chardiamonds[idx] != null) {
                 curdiamonds += Math.floor(chardiamonds[idx] / 50) * 50;
             }
@@ -3601,19 +3494,17 @@ function _select_Gateway() { // Check for Gateway used to
                     console.log('Account settings couldn\'t be retrieved, loading defaults.');
                     tempAccountSetting = {};
                 };
-                console.log(tempAccountSetting);
                 accountSettings = $.extend(true, {}, defaultAccountSettings, tempAccountSetting);
-                console.log(accountSettings);
 
                 console.log("Loading character list");
-                charNameList = [];
+                charNamesList = [];
                 client.dataModel.model.loginInfo.choices.forEach(function(char) {
                     if (char.shardname == "Dungeon") return;
-                    charNameList.push(char.name);
+                    charNamesList.push(char.name);
                 });                
-                console.log("Found names: " + charNameList);
+                console.log("Found names: " + charNamesList);
 
-                charNameList.forEach(function(charName) {
+                charNamesList.forEach(function(charName) {
                     console.log("Loading settings for " + charName);
 
                     var tempCharsSetting;
@@ -3627,7 +3518,7 @@ function _select_Gateway() { // Check for Gateway used to
                         tempCharsSetting = {};
                     };
                     charSettingsList[charName] = $.extend(true, {}, defaultCharSettings, tempCharsSetting);
-                    charSettingsList[charName].charName = charName; // for compatibility if charSettingsTest changed to simple array
+                    charSettingsList[charName].charName = charName; // for compatibility 
 
                     console.log("Loading saved statistics for " + charName);
                     var tempCharsStatistics;
@@ -3659,7 +3550,7 @@ function _select_Gateway() { // Check for Gateway used to
                 settings[charSettings[j].name.replace(new RegExp(curCharNum + "$"), '')] = settings[charSettings[j].name];
             }
 */
-            curCharName = charNameList[curCharNum];
+            curCharName = charNamesList[curCharNum];
             curCharFullName = curCharName + '@' + accountName;
 
             if (unsafeWindow.client.getCurrentCharAtName() != curCharFullName) {
@@ -3694,7 +3585,7 @@ function _select_Gateway() { // Check for Gateway used to
         }
 
         // MAC-NW -- AD Consolidation -- Banker Withdraw Section
-        if (settings["autoexchange"]) {
+        if (accountSettings.consolidationSettings.consolidate) {
 
             unsafeWindow.client.dataModel.fetchExchangeAccountData();
 
@@ -3818,22 +3709,10 @@ function _select_Gateway() { // Check for Gateway used to
                 });
 
             // Add pause button to page
-             function displayPause() {
-                if (scriptSettings.general.scriptPaused) {
-                    $('#pauseButton').html('<span class="ui-icon ui-icon-play" title="Click to resume task script" style="cursor: pointer; display: block;"></span>');
-                }
-                else {
-                    $('#pauseButton').html('<span class="ui-icon ui-icon-pause" title="Click to pause task script" style="cursor: pointer; display: block;"></span>');
-                }
-            }
             $("body").append('<div id="pauseButton"></div>');
             displayPause();
             $("#pauseButton").click( function () {
-                scriptSettings.general.scriptPaused = !scriptSettings.general.scriptPaused;
-                displayPause();
-                setTimeout(function() {
-                    GM_setValue("settings__script", JSON.stringify(scriptSettings));
-                }, 0);
+                PauseSettings();
             });
             
             // Add info pane
@@ -3878,6 +3757,20 @@ function _select_Gateway() { // Check for Gateway used to
             tab = addTab("#script_settings", "Custom profiles");
             tab.html("Custom profile import will be here");
             $("#script_settings").tabs({ active: false, collapsible: true });
+            
+
+            // Adding the save events
+            $("#settingsPanel input[type='checkbox'], #settingsPanel select").change(function (evt) {
+                saveSetting(evt.target);
+            });
+            $("#settingsPanel input[type='text'], #settingsPanel input[type='password']").on('input', function (evt) {
+                var value = $(evt.target).val();
+                setTimeout(function(value) {
+                    if ($(evt.target).val() !== value) return;
+                    saveSetting(evt.target);
+                }, 1000, value);
+            });
+            
         
         }
         // Refresh is needed / Loading all the info (account, statistics and chars)
@@ -3897,210 +3790,126 @@ function _select_Gateway() { // Check for Gateway used to
             }
             $("div#main_tabs").tabs({ active: false, collapsible: true });                
 
-        }
-        
-        
-        
-        function saveSetting(elm) {
-            var scope = $(elm).data('scope');
-            var group = $(elm).data('group');
-            var name =  $(elm).data('name');
 
-            var value;
-            if ($(elm).type == 'checkbox') value = $(elm).checked;
-            else value = $(elm).val();
+            //Statisitcs Tabs
+            var temp_tab = addTab("#info_tabs", "Refine Counters");
+            temp_tab.append("<div id='rcounters'></div>");
             
-            switch (scope) {
-                case 'script':
-                    scriptSettings[group][name] = value;
-                    setTimeout(function() {
-                        GM_setValue("settings__script", JSON.stringify(scriptSettings));
-                        console.log("Saved script setting: " + scope + "." + group + "." + name);
-                        $(elm).addClass("inputSaved");
-                        setTimeout(function() {
-                            $(elm).removeClass("inputSaved");
-                        },1500);
-                    }, 0);
-                    break;
-                case 'account':
-                    accountSettings[group][name] = value;
-                    setTimeout(function() {
-                        GM_setValue("settings__account__" + loggedAccount, JSON.stringify(accountSettings));
-                        console.log("Saved account setting: " + scope + "." + group + "." + name + " For: " + loggedAccount);
-                        $(elm).addClass("inputSaved");
-                        setTimeout(function() {
-                            $(elm).removeClass("inputSaved");
-                        },1500);
-                        
-                    }, 0);
-                    break;
-                case 'char':
-                    var c_name = $(elm).data('charName');
-                    if (c_name && charNameList[c_name]) {
-                        charSettingsList[c_name][group][name] = value;
-                        setTimeout(function() {
-                            GM_setValue("settings__char__" + c_name + "@" + loggedAccount, JSON.stringify(charSettingsList[c_name]));
-                            console.log("Saved char setting: " + scope + "." + group + "." + name + " For: " + c_name);
-                            $(elm).addClass("inputSaved");
-                            setTimeout(function() {
-                                $(elm).removeClass("inputSaved");
-                            },1500);
-                        }, 0);
-                    }
-                    break;
-           }
-        }
-        
-        $("#settingsPanel input[type='checkbox'], #settingsPanel select").change(function (evt) {
-            saveSetting(evt.target);
-        });
-        $("#settingsPanel input[type='text'], #settingsPanel input[type='password']").on('input', function (evt) {
-            var value = $(evt.target).val();
-            setTimeout(function(value) {
-                if ($(evt.target).val() !== value) return;
-                saveSetting(evt.target);
-            }, 1000, value);
-        });
+            temp_tab = addTab("#info_tabs", "SCA & Visits");
+            temp_tab.append("<div id='sca_v'></div>");
+            temp_tab.append("<button id='settings_sca'>Cycle SCA</button>");
+            
+            temp_tab = addTab("#info_tabs", "Workers");
+            temp_tab.append("<div id='worker_overview'></div>");
+            
+            temp_tab = addTab("#info_tabs", "Tools");
+            temp_tab.append("<div id='tools_overview'></div>");
+            
+            temp_tab = addTab("#info_tabs", "Resource Tracker");
+            temp_tab.append("<div id='resource_tracker'></div>");
+            
+            temp_tab = addTab("#info_tabs", "Prof levels");
+            temp_tab.append("<div id='profession_levels'></div>");
+            
+            temp_tab = addTab("#info_tabs", "Slots");
+            temp_tab.append("<div id='slot_tracker'></div>");
+            $("#info_tabs").tabs({ active: false, collapsible: true });                
+            
+            //$("div#main_tabs").tabs("refresh");
+            
+            $('#settings_sca').button();
+            $("#settings_sca").click(function() {
+                $("#settings_close").trigger("click");
+                unsafeWindow.location.hash = unsafeWindow.location.hash.replace(/\)\/.+/, ')' + "/adventures");
+                processSwordCoastDailies();
+            });
+
+            
+            // Adding per char settings UI
+            
+            var wrp = $('<div id="charSettingsAccordion">');
+            $("#char_settings").append(wrp);
+            charNamesList.forEach( function(charName, idx) {
+                wrp.append('<h3>' + charName + '</h3>');
+                var wrp2 = $('<div id="charContainer' + idx + '">');
+                wrp.append(wrp2);
+                addInputsUL(wrp2[0], 'char', 'main_not_tab', charName);
+                
+                var char_tabs = $('<div class="charSettingsTabs" id="char_tabs_' + idx + '"><ul></ul></div>');
+                wrp2.append(char_tabs);
+                
+                var task_tab = addTab(char_tabs[0], "Tasks");
+                //task_tab.append("<div id='char_tasks_" + idx + "' ></div>");
 
 
-            // Add each setting input
-//            
-//            var settingsList = $('<ul style="list-style: none outside none; min-height: 300px; max-height: 500px; overflow: auto; margin: 3px; padding: 0px;"></ul>');
-//            var settingListToAdd = settingnames.filter(function(element) {
-//                return (element.pane == key && element.scope == 'script');
-//            });
-//
-//            for (var i = 0; i < settingListToAdd.length; i++) {
-//                var id = 'settings_' + settingListToAdd[i].name;
-//                var indent = (countLeadingSpaces(settingListToAdd[i].title) >= 1) ? 1 : 0;
-//                /*if ((settingnames[i].type == 'text' && settingnames[i-1].type == 'checkbox') || (settingnames[i-1] && settingnames[i].type == 'checkbox' && settingnames[i-1].type == 'text'))
-//                settingsList.append('<li style="margin-left:0em; width: 48%; display: inline-block;"/>&nbsp;</li>')*/
-//                var border = "";
-//                if (settingListToAdd[i].border)
-//                    border = "border-top: #000 solid 1px;"
-//                switch (settingListToAdd[i].type) {
-//                    case "checkbox":
-//                        var _checkWidth = "48%";
-//                        /*
-//                            if (i < 9)
-//                            _checkWidth = "31%";
-//                             */
-//                        if (settingListToAdd[i].border)
-//                            _checkWidth = "98%";
-//                        settingsList.append('<li title="' + settingListToAdd[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; width: ' + _checkWidth + '; display: inline-block;"><input style="margin:4px" name="' + id + '" id="' + id + '" type="checkbox" /><label class="' + settingListToAdd[i].class + '" for="' + id + '">' + settingListToAdd[i].title + '</label></li>')
-//                        settingsList.find('#' + id).prop('checked', settings[settingListToAdd[i].name]);
-//                        break;
-//                    case "text":
-//                        if (settingListToAdd[i].border)
-//                            _inputkWidth = "95%; padding: 10px 0";
-//                        else
-//                            _inputkWidth = "46%";
-//                        settingsList.append('<li title="' + settingListToAdd[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; margin-top:1em; width: ' + _inputkWidth + '; display: inline-block;"<label class="' + settingListToAdd[i].class + '" for="' + id + '">' + settingListToAdd[i].title + '</label><input style="margin:4px; padding: 2px; min-width: 80%;" name="' + id + '" id="' + id + '" type="text" /></li>')
-//                        settingsList.find('#' + id).val(settings[settingListToAdd[i].name]);
-//                        break;
-//                    case "password":
-//                        settingsList.append('<li title="' + settingListToAdd[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; margin-top:1em; width: 46%; display: inline-block;"' + settingListToAdd[i].class + '" for="' + id + '">' + settingListToAdd[i].title + '</label><input style="margin:4px; padding: 2px; min-width: 80%;" name="' + id + '" id="' + id + '" type="password" /></li>')
-//                        settingsList.find('#' + id).val(settings[settingListToAdd[i].name]);
-//                        break;
-//                    case "select":
-//                        var li = $('<li title="' + settingListToAdd[i].tooltip + '" style="' + border + 'padding-left:' + indent + 'em; width: 48%; display: inline-block;"' + settingListToAdd[i].class + '" style="padding-left:4px" for="' + id + '">' + settingListToAdd[i].title + '</label></li>');
-//                        var select = $('<select style="margin:4px" name="' + id + '" id="' + id + '" />');
-//                        var options = settingListToAdd[i].opts;
-//                        for (var j = 0; j < options.length; j++) {
-//                            if (settings[settingListToAdd[i].name] == options[j].path)
-//                                select.append('<option value="' + options[j].path + '" selected="selected">' + options[j].name + '</option>');
-//                            else
-//                                select.append('<option value="' + options[j].path + '">' + options[j].name + '</option>');
-//                        }
-//                        li.append(select);
-//                        settingsList.append(li);
-//                        break;
-//                    case "label":
-//                        settingsList.append('<li title="' + settingListToAdd[i].tooltip + '" style="' + border + 'margin-left:' + indent + 'em;><label class="' + settingListToAdd[i].class + '">' + settingListToAdd[i].title + '</label></li>')
-//                        break;
-//                }
-//            }
-//            $(tab).append(settingsList);
-//        };
+                // Creating the Tasks custom tab
+                var tableHTML = $('<table><thead><tr><th>Task name</th><th># of slots</th><th>profile</th><th>priority</th></tr></thead><tbody>');
+                
+                var _slotOptions = [];
+                for (var i = 0; i < 10; i++) 
+                    _slotOptions.push({
+                        name: i,
+                        value: i
+                    });
+                var _priorityOptions = [{name:'high',value:0},{name:'medium',value:1},{name:'low',value:2}];
+
+                tasklist.forEach(function(task) {
+                    if (!task.taskActive) return;
+                    var _profileNames = [];
+                    task.profiles.forEach(function(profile) {
+                        if (profile.isProfileActive) _profileNames.push({
+                            name: profile.profileName,
+                            value: profile.profileName
+                        });
+                    });
+                    var _slots = {scope: 'char_task', group: 'taskListSettings', name: task.taskListName, sub_name: 'taskSlots', opts: _slotOptions ,title: task.taskListName, type: 'select', pane: 'tasks1', tooltip: 'Number of slots to assign to ' + task.taskListName};
+                    var _profile = {scope: 'char_task', group: 'taskListSettings', name: task.taskListName, sub_name: 'taskProfile', opts: _profileNames ,title: task.taskListName, type: 'select', pane: 'tasks1', tooltip: ''};
+                    var _priority = {scope: 'char_task', group: 'taskListSettings', name: task.taskListName, sub_name: 'taskPriority', opts: _priorityOptions ,title: task.taskListName, type: 'select', pane: 'tasks1', tooltip: ''};
+
+                    var _slt = createInput(_slots, charName, 'settingsInput', 'settingsLabel');
+                    var _prf = createInput(_profile, charName, 'settingsInput', 'settingsLabel');
+                    var _pr = createInput(_priority, charName, 'settingsInput', 'settingsLabel');
+                    var tr = $("<tr>");
+                    $("<td>").append(_slt.label).appendTo(tr);
+                    $("<td>").append(_slt.input).appendTo(tr);
+                    $("<td>").append(_prf.input).appendTo(tr);
+                    $("<td>").append(_pr.input).appendTo(tr);
+                    tr.appendTo(tableHTML);
+                });
+                task_tab.append(tableHTML);
+                
+                
+                // Updating the event handlers
+                
+                $("#settingsPanel input[type='checkbox'], #settingsPanel select").unbind("change");
+                $("#settingsPanel input[type='checkbox'], #settingsPanel select").change(function (evt) {
+                    saveSetting(evt.target);
+                });
+                $("#settingsPanel input[type='checkbox'], #settingsPanel select").unbind("input");
+                $("#settingsPanel input[type='text'], #settingsPanel input[type='password']").on('input', function (evt) {
+                    var value = $(evt.target).val();
+                    setTimeout(function(value) {
+                        if ($(evt.target).val() !== value) return;
+                        saveSetting(evt.target);
+                    }, 1000, value);
+                });
+                
+                
+                
+            }); 
+            
+            
+
+            $("#charSettingsAccordion").accordion({
+                heightStyle: "content",
+                autoHeight: false,
+                clearStyle: true,
+                active: false,
+                collapsible: true,
+            });
+            $(".charSettingsTabs").tabs();
+  
 /*
-        var tabs_num = $("div#main_tabs > ul > li").length + 1;
-        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Other</a></li>");
-        var tab = $("<div id='main_tab" + tabs_num + "'><div id='other'>will also delete character names <br /><button id='reset_settings_btn'>Reset ALL Settings</button><br />Should be used after login only, and can reset all characters<br /><button id='load_names_btn'>Load Names</button></div></div>");
-        $("div#main_tabs").append(tab);
-
-        $('#reset_settings_btn').button();
-        $('#reset_settings_btn').click(function() {
-            var keys = GM_listValues();
-            for (i = 0; i < keys.length; i++) {
-                var key = keys[i];
-                GM_deleteValue(key);
-            }
-            window.setTimeout(function() {
-                unsafeWindow.location.href = current_Gateway;
-            }, delay.MINS);
-        });
-
-        $('#load_names_btn').button();
-        $('#load_names_btn').click(function() {
-            GM_setValue("charcount", charNameList.length);
-            charNameList.forEach(function(name, i) {
-                GM_setValue("nw_charname" + i, name);
-            })
-            window.setTimeout(function() {
-                unsafeWindow.location.href = current_Gateway;
-            }, delay.MINS);
-        });
-
-
-        var tabs_num = $("div#main_tabs > ul > li").length + 1;
-        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Refine Counters</a></li>");
-        var tab = $("<div id='main_tab" + tabs_num + "'><div id='rcounters'>Loaded on login.</div></div>");
-        $("div#main_tabs").append(tab);
-
-        tabs_num = $("div#main_tabs > ul > li").length + 1;
-        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Workers</a></li>");
-        tab = $("<div id='main_tab" + tabs_num + "'><div id='worker_overview'>Loaded on login.</div></div>");
-        $("div#main_tabs").append(tab);
-
-        tabs_num = $("div#main_tabs > ul > li").length + 1;
-        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Tools</a></li>");
-        tab = $("<div id='main_tab" + tabs_num + "'><div id='tools_overview'>Loaded on login.</div></div>");
-        $("div#main_tabs").append(tab);
-
-        tabs_num = $("div#main_tabs > ul > li").length + 1;
-        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Resource Tracker</a></li>");
-        tab = $("<div id='main_tab" + tabs_num + "'><div id='resource_tracker'>Loaded on login.</div></div>");
-        $("div#main_tabs").append(tab);
-
-        tabs_num = $("div#main_tabs > ul > li").length + 1;
-        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Prof levels</a></li>");
-        tab = $("<div id='main_tab" + tabs_num + "'><div id='profession_levels'>Loaded on login.</div></div>");
-        $("div#main_tabs").append(tab);
-
-        tabs_num = $("div#main_tabs > ul > li").length + 1;
-        $("div#main_tabs > ul").append("<li><a href='#main_tab" + tabs_num + "'>Slots</a></li>");
-        tab = $("<div id='main_tab" + tabs_num + "'><div id='slot_tracker'>Loaded on login.</div></div>");
-        $("div#main_tabs").append(tab);
-
-
-        $("div#main_tabs").tabs("refresh");
-        $("div#main_tabs").tabs("option", "active", 0);
-
-        // Add character settings for each char
-
-
-        var addText = '<div id="charSettingsAccordion">';
-        for (var i = 0; i < settings["charcount"]; i++) {
-
-            addText += [
-                '<h3>' + settings["nw_charname" + i] + '</h3>',
-                '<div id="charContainer' + i + '">',
-            ].join('');
-
-            var k = 0 + (i * charSettings.length / settings["charcount"]);
-            var id = 'settings_' + charSettings[k].name;
-            addText += '<span title="' + charSettings[k].tooltip + '"><input style="margin:4px; padding: 2px;" name="' + id + '" id="' + id + '" type="text" /></span>';
-
             addText += [
                 '<div class="charSettingsTabs">',
                 '<ul>',
@@ -4113,10 +3922,6 @@ function _select_Gateway() { // Check for Gateway used to
             ].join('');
 
             // tasks
-            setPerChar = (charSettings.length / settings["charcount"]);
-            charTaskSettings = charSettings.slice(i * setPerChar, (i + 1) * setPerChar).filter(function(element) {
-                return element.pane == 'tasks';
-            });
             var k = 0;
             while (k < (charTaskSettings.length)) {
                 if (charTaskSettings[k].type2 == 'task') {
@@ -4241,210 +4046,217 @@ function _select_Gateway() { // Check for Gateway used to
         });
         $(".taskSelectA").change();
 
-
-        // Add values to character input fields
-        for (var i = 0; i < charSettings.length; i++) {
-            var id = 'settings_' + charSettings[i].name;
-            $('#' + id).val(settings[charSettings[i].name]);
-        }
-
-        // Add save/cancel buttons to panel
-        $("#settingsPanel form").append('\
-            <div id="settingsPanelButtonContainer">\
-            <input id="settings_save" class="button-blue pure-button" type="button" value="Save and Apply">\
-            <input id="settings_close" class="button-yellow pure-button" type="button" value="Close">\
-            <input id="settings_sca" class="button-red pure-button" type="button" value="Cycle SCA">\
-            </div>');
-
-        $(function() {
-            $("#charSettingsAccordion").accordion({
-                heightStyle: "content",
-                autoHeight: false,
-                clearStyle: true,
-                active: false,
-                collapsible: true,
-            });
-            $(".charSettingsTabs").tabs();
-        });
-
-
-        // Use setTimeout to workaround permission issues when calling GM functions from main window
-        $("#settings_save").click(function() {
-            setTimeout(function() {
-                SaveSettings();
-            }, 0)
-        });
-        $("#settings_sca").click(function() {
-            $("#settings_close").trigger("click");
-            unsafeWindow.location.hash = unsafeWindow.location.hash.replace(/\)\/.+/, ')' + "/adventures");
-            processSwordCoastDailies();
-        });
 */
+        
+            updateCounters(false);
+        }
+        
+        
+        
+        function saveSetting(elm) {
+            var scope = $(elm).data('scope');
+            var group = $(elm).data('group');
+            var name =  $(elm).data('name');
 
-    // Helper function to create input elements
-    function createInput( settingsItem, name, input_css_classes, label_css_classes) {
-        var input;
-        var label;
-
-        var id_name; 
-        var value;
-        switch (settingsItem.scope) {
-            case 'script':
-                value = scriptSettings[settingsItem.group][settingsItem.name];
-                id_name = "setting__script__" + settingsItem.group + "__" +  settingsItem.name;
-                break;
-            case 'account':
-                value = accountSettings[settingsItem.group][settingsItem.name];
-                id_name = "setting__account__" + settingsItem.group + "__" +  settingsItem.name;
-                break;
-            case 'char':
-                value = charSettingsList[name][settingsItem.group][settingsItem.name];
-                id_name = "setting__char__" + name + "__" + settingsItem.group + "__" +  settingsItem.name;
-                break;
-        } 
-
-        switch (settingsItem.type) {
-            case 'checkbox':
-            case 'text':
-            case 'password':
-                input = $("<input type=\"" + settingsItem.type + "\" name=\"" + id_name + "\" id=\"" + id_name + "\" class=\"" + input_css_classes + "\" \>");
-                break;
-            case 'select':
-                input = $("<select name=\"" + id_name + "\" id=\"" + id_name + "\" class=\"" + input_css_classes + "\" >");
-                settingsItem.opts.forEach( function (option) {
-                   input.append($("<option value=\"" + option.value + "\">" + option.name + "</option>")); 
-                });
-                break;
-            case 'void':
-                break;
-            default:
-                break;
-
-        } 
-        if (settingsItem.type == 'checkbox') input.prop('checked', value);
-        else input.val(value);
-        input.data('scope', settingsItem.scope);
-        input.data('group', settingsItem.group);
-        input.data('name', settingsItem.name);
-        if (name) input.data('charname', name);
-        label = $('<label class="' + label_css_classes + '" for="' + id_name + '">' + settingsItem.title + '</label>');
-        return { input: input, label: label };
-    }
-
-
-    function addInputsUL(parentSelector, scope, pane) {
-
-        var settingListToAdd = settingnames.filter(function(element) {
-            return (element.scope == scope && element.pane == pane);
-        });
-
-        var ul = $("<ul></ul>");
-        settingListToAdd.forEach( function (setting) {
-            var to_add = createInput(setting, '', 'settingsInput', 'settingsLabel');
-            var li = $("<li>");
-            switch (setting.type) {
-                case 'checkbox':
-                    li.append(to_add.input);
-                    li.append(to_add.label);
+            var value;
+            if ($(elm).prop('type') === 'checkbox') value = !!($(elm).checked);
+            else value = $(elm).val();
+            
+            switch (scope) {
+                case 'script':
+                    scriptSettings[group][name] = value;
+                    setTimeout(function() {
+                        GM_setValue("settings__script", JSON.stringify(scriptSettings));
+                        console.log("Saved script setting: " + scope + "." + group + "." + name);
+                        $(elm).addClass("inputSaved");
+                        setTimeout(function() {
+                            $(elm).removeClass("inputSaved");
+                        },1500);
+                    }, 0);
                     break;
+                case 'account':
+                    accountSettings[group][name] = value;
+                    setTimeout(function() {
+                        GM_setValue("settings__account__" + loggedAccount, JSON.stringify(accountSettings));
+                        console.log("Saved account setting: " + scope + "." + group + "." + name + " For: " + loggedAccount);
+                        $(elm).addClass("inputSaved");
+                        setTimeout(function() {
+                            $(elm).removeClass("inputSaved");
+                        },1500);
+                        
+                    }, 0);
+                    break;
+                case 'char':
+                    var c_name = $(elm).data('charName');
+                    if (c_name && charSettingsList[c_name]) {
+                        charSettingsList[c_name][group][name] = value;
+                        setTimeout(function() {
+                            GM_setValue("settings__char__" + c_name + "@" + loggedAccount, JSON.stringify(charSettingsList[c_name]));
+                            console.log("Saved char setting: " + scope + "." + group + "." + name + " For: " + c_name);
+                            $(elm).addClass("inputSaved");
+                            setTimeout(function() {
+                                $(elm).removeClass("inputSaved");
+                            },1500);
+                        }, 0);
+                    }
+                    break;
+                case 'char_task':
+                    var sub_name = $(elm).data('sub_name');
+                    var c_name = $(elm).data('charName');
+                    if (c_name && charSettingsList[c_name]) {
+                        charSettingsList[c_name][group][name][sub_name] = value;
+                        setTimeout(function() {
+                            GM_setValue("settings__char__" + c_name + "@" + loggedAccount, JSON.stringify(charSettingsList[c_name]));
+                            console.log("Saved char_task setting: " + scope + "." + group + "." + name + "." + sub_name + " For: " + c_name);
+                            $(elm).addClass("inputSaved");
+                            setTimeout(function() {
+                                $(elm).removeClass("inputSaved");
+                            },1500);
+                        }, 0);
+                    }
+                    break;
+           }
+        }
+        
+
+        // Helper function to create input elements
+        function createInput( settingsItem, charName , input_css_classes, label_css_classes) {
+            var input;
+            var label;
+
+            var id_name; 
+            var value;
+            switch (settingsItem.scope) {
+                case 'script':
+                    value = scriptSettings[settingsItem.group][settingsItem.name];
+                    id_name = "setting__script__" + settingsItem.group + "__" +  settingsItem.name;
+                    break;
+                case 'account':
+                    value = accountSettings[settingsItem.group][settingsItem.name];
+                    id_name = "setting__account__" + settingsItem.group + "__" +  settingsItem.name;
+                    break;
+                case 'char':
+                    value = charSettingsList[charName][settingsItem.group][settingsItem.name];
+                    id_name = "setting__char__" + charName + "__" + settingsItem.group + "__" +  settingsItem.name;
+                    break;
+                case 'char_task':
+                    value = charSettingsList[charName][settingsItem.group][settingsItem.name][settingsItem.sub_name];
+                    id_name = "setting__char__" + charName + "__" + settingsItem.group + "__" +  settingsItem.name+ "__" +  settingsItem.sub_name;
+                    break;
+
+            } 
+
+            switch (settingsItem.type) {
+                case 'checkbox':
                 case 'text':
                 case 'password':
+                    input = $("<input type=\"" + settingsItem.type + "\" name=\"" + id_name + "\" id=\"" + id_name + "\" class=\"" + input_css_classes + "\" \>");
+                    break;
                 case 'select':
+                    input = $("<select name=\"" + id_name + "\" id=\"" + id_name + "\" class=\"" + input_css_classes + "\" >");
+                    settingsItem.opts.forEach( function (option) {
+                       input.append($("<option value=\"" + option.value + "\">" + option.name + "</option>")); 
+                    });
+                    break;
                 case 'void':
-                    li.append(to_add.label);
-                    li.append(to_add.input);
                     break;
+                default:
+                    break;
+
             } 
-            ul.append(li);
-        })
-        $(parentSelector).append(ul);
-    }
-    
-    function addTab(parentSelector, tabTitle, tabId) {
-        if (!tabId) {
-            var tabs_num = $(parentSelector + " > ul > li").length + 1;
-            tabId = $(parentSelector).attr('id') + "_tab_" + tabs_num;
-        }
-        $(parentSelector + " > ul").append("<li><a href='#" + tabId + "'>" + tabTitle + "</a></li>");
-        var tab = $("<div id='" + tabId + "'></div>");
-        $(parentSelector).append(tab);
-        return tab;
-    }
-    
-    
-    
-}
-
-
-
-    function SaveSettings() {
-        var charcount = settings["charcount"];
-
-        // Delete all saved settings
-        var keys = GM_listValues();
-        for (i = 0; i < keys.length; i++) {
-            var key = keys[i];
-            GM_deleteValue(key);
-        }
-
-        // Get each value from the UI
-        for (var i = 0; i < settingnames.length; i++) {
-            var name = settingnames[i].name;
-            var el = $('#settings_' + name);
-            var value = false;
-            switch (settingnames[i].type) {
-                case "checkbox":
-                    value = el.prop("checked");
-                    break;
-                case "text":
-                    value = el.val();
-                    break;
-                case "password":
-                    value = el.val();
-                    break;
-                case "select":
-                    value = el.val();
-                    break;
-                case "label": // Labels don't have values
-                    continue;
-            }
-            if (typeof(settingnames[i].onsave) === "function") {
-                console.log("Calling 'onsave' for", name);
-                settingnames[i].onsave(value, settings[name]);
-            }
-            // Save to local cache
-            if (settings[name] !== value) {
-                settings[name] = value;
-            }
-            // Save to GM cache
-            GM_setValue(name, value);
-        }
-
-        // Get character settings from UI
-        for (var i = 0; i < charSettings.length; i++) {
-            if (charSettings[i].type == 'void') {
-                continue;
-            }
-            var name = charSettings[i].name;
-            var el = $('#settings_' + name);
-            var value = el.val();
-            // Save to local cache
-            if (settings[name] !== value) {
-                settings[name] = value;
-            }
-            // Save to GM cache
-            GM_setValue(name, value);
+            if (settingsItem.type == 'checkbox') input.prop('checked', value);
+            else input.val(value);
+            input.data('scope', settingsItem.scope);
+            input.data('group', settingsItem.group);
+            input.data('name', settingsItem.name);
+            if (settingsItem.sub_name) input.data('sub_name', settingsItem.sub_name);
+            if (charName) input.data('charName', charName);
+            label = $('<label class="' + label_css_classes + '" for="' + id_name + '">' + settingsItem.title + '</label>');
+            return { input: input, label: label };
         }
 
 
+        function addInputsUL(parentSelector, scope, pane, charName) {
 
+            var settingListToAdd = settingnames.filter(function(element) {
+                return (element.scope == scope && element.pane == pane);
+            });
+
+            if (!charName) charName = '';
+            var ul = $("<ul></ul>");
+            settingListToAdd.forEach( function (setting) {
+                var to_add = createInput(setting, charName, 'settingsInput', 'settingsLabel');
+                var li = $("<li>");
+                switch (setting.type) {
+                    case 'checkbox':
+                        li.append(to_add.input);
+                        li.append(to_add.label);
+                        break;
+                    case 'text':
+                    case 'password':
+                    case 'select':
+                    case 'void':
+                        li.append(to_add.label);
+                        li.append(to_add.input);
+                        break;
+                } 
+                ul.append(li);
+            })
+            $(parentSelector).append(ul);
+        }
+
+        function addTab(parentSelector, tabTitle, tabId) {
+            if (!tabId) {
+                var tabs_num = $(" > ul > li", parentSelector).length + 1;
+                tabId = $(parentSelector).attr('id') + "_tab_" + tabs_num;
+            }
+            $(" > ul", parentSelector).append("<li><a href='#" + tabId + "'>" + tabTitle + "</a></li>");
+            var tab = $("<div id='" + tabId + "'></div>");
+            $(parentSelector).append(tab);
+            return tab;
+        }
+    
         // Close the panel
+        /*
         $("#settingsButton").show();
         $("#pauseButton img").attr("src", (settings["paused"] ? image_play : image_pause));
         $("#pauseButton img").attr("title", "Click to " + (settings["paused"] ? "resume" : "pause") + " task script");
         $("#pauseButton").show();
         $("#settingsPanel").hide();
+        */
     }
+
+    
+    function displayPause() {
+       if (scriptSettings.general.scriptPaused) {
+           $('#pauseButton').html('<span class="ui-icon ui-icon-play" title="Click to resume task script" style="cursor: pointer; display: block;"></span>');
+       }
+       else {
+           $('#pauseButton').html('<span class="ui-icon ui-icon-pause" title="Click to pause task script" style="cursor: pointer; display: block;"></span>');
+       }
+    }
+    
+    
+    function PauseSettings(_action) {
+        switch (_action) {
+            case true:
+            case "pause":
+                scriptSettings.general.scriptPaused = true;
+                break;
+            case false:
+            case 'unpause':
+                scriptSettings.general.scriptPaused = false;
+                break;
+            default:
+                scriptSettings.general.scriptPaused = !scriptSettings.general.scriptPaused;
+                break;
+        }
+        setTimeout(function() {
+            GM_setValue("settings__script", JSON.stringify(scriptSettings));
+        }, 0);        
+        displayPause();        
+    }
+
 
     function updateCounters(reset) {
 
@@ -4462,13 +4274,13 @@ function _select_Gateway() { // Check for Gateway used to
         html += "<th>RAD</th><th>AD</th><th>gold</th><th>rBI</th><th>BI</th><th>R.today<th></th><th>R.left</th></tr>";
 
         if (reset) {
-            charNameList.forEach(function(charName) {
+            charNamesList.forEach(function(charName) {
                 charStatisticsList[charName].general.refineCounter = 0;
                 charStatisticsList[charName].general.refineCounterReset = Date.now();
             });
         };
 
-        charNameList.forEach(function(charName) {
+        charNamesList.forEach(function(charName) {
             var counterTime = (Date.now() - charStatisticsList[charName].general.refineCounterReset) / 1000 / 60 / 60; // in hours.
             var radh = 0;
             if (counterTime > 0) radh = charStatisticsList[charName].general.refineCounter / counterTime;
@@ -4505,7 +4317,7 @@ function _select_Gateway() { // Check for Gateway used to
         html += "<tr><th>Char name</th>";
         var options = "";
         var workerTabSelects = ["Leadership", "Alchemy", "Leadership"];
-        $.each(charStatisticsList[charNameList[0]].professions, function(profession) {
+        $.each(charStatisticsList[charNamesList[0]].professions, function(profession) {
             options += "<option value='" + profession + "'>" + profession + "</option>";
         })
 
@@ -4516,7 +4328,7 @@ function _select_Gateway() { // Check for Gateway used to
             temp += "<th>p</th><th>b</th><th>g</th><th>t3</th><th>t2</th><th>t1</th>";
         }
         html += "</tr><tr><th></th>" + temp + "</tr>";
-        charNameList.forEach(function(charName) {
+        charNamesList.forEach(function(charName) {
             temp = "";
             html += "<tr><td rowspan=2>" + charName + "</td>";
             for (var i = 0; i < 3; i++) {
@@ -4552,7 +4364,7 @@ function _select_Gateway() { // Check for Gateway used to
         html += "<tr><th>Char name</th>";
         var options = "";
         var toolsTabSelects = ["Crucible", "Mortar", "Philosophersstone", "Graver"];
-        $.each(charStatisticsList[charNameList[0]].tools, function(tool) {
+        $.each(charStatisticsList[charNamesList[0]].tools, function(tool) {
             options += "<option value='" + tool + "'>" + tool + "</option>";
         })
 
@@ -4563,7 +4375,7 @@ function _select_Gateway() { // Check for Gateway used to
             temp += "<th>p</th><th>b</th><th>g</th><th>w</th>";
         }
         html += "</tr><tr><th></th>" + temp + "</tr>";
-        charNameList.forEach(function(charName) {
+        charNamesList.forEach(function(charName) {
             temp = "";
             html += "<tr><td rowspan=2>" + charName + "</td>";
             for (var i = 0; i < 4; i++) {
@@ -4592,7 +4404,7 @@ function _select_Gateway() { // Check for Gateway used to
             html += "<th>" + item.fname + "</th>";
         })
         html += '</tr>';
-        charNameList.forEach(function(charName) {
+        charNamesList.forEach(function(charName) {
             html += '<tr><td>' + charName + '</td>';
             charStatisticsList[charName].trackedResources.forEach(function(count) {
                 html += '<td>' + count + '</td>';
@@ -4607,11 +4419,11 @@ function _select_Gateway() { // Check for Gateway used to
         html = '<table class="professionLevels">';
         html += "<tr><th class='rotate'><div><span>Character Name</div></span></th>";
         html += "<th class='rotate'><div><span>#slots</div></span></th>";
-        $.each(charStatisticsList[charNameList[0]].professions, function(profession) {
+        $.each(charStatisticsList[charNamesList[0]].professions, function(profession) {
             html += "<th class='rotate'><div><span>" + profession + "</div></span></th>";
         });
         html += "</tr>";
-        charNameList.forEach(function(charName) {
+        charNamesList.forEach(function(charName) {
             html += "<tr>";
             html += "<td>" + charName + "</td>";
             html += "<td>" + charStatisticsList[charName].general.activeSlots + "</td>";
@@ -4631,7 +4443,7 @@ function _select_Gateway() { // Check for Gateway used to
         }
         html += "</tr>";
 
-        charNameList.forEach(function(charName) {
+        charNamesList.forEach(function(charName) {
             html += "<tr>";
             html += "<td>" + charName + "</td>";
             for (var i = 0; i < 9; i++) {
@@ -4641,36 +4453,38 @@ function _select_Gateway() { // Check for Gateway used to
         });
         html += "</table>";
         $('#slot_tracker').html(html);
-
-
     }
 
     function vendorJunk(evnt) {
         var _vendorItems = [];
         var _sellCount = 0;
-        if (settings["autovendor_kits_altars_limit"]) {
+        var _setting = false;
+        
+        if (getSetting('vendorSettings', 'vendorKitsLimit')) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Item_Consumable_Skill/,
                 limit: 50
             };
+        }
+        if (getSetting('vendorSettings', 'vendorAltarsLimit')) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Item_Portable_Altar$/,
                 limit: 80
             };
         }
-        if (settings["autovendor_kits_all"]) {
+        if (getSetting('vendorSettings', 'vendorKitsAll')) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Item_Consumable_Skill/,
                 limit: 0
             };
         }
-        if (settings["autovendor_altars_all"]) {
+        if (getSetting('vendorSettings', 'vendorAltarsAll')) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Item_Portable_Altar$/,
                 limit: 0
             };
         }
-        if (settings["autovendor_rank1"]) {
+        if (getSetting('vendorSettings', 'vendorEnchR1')) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^T1_Enchantment/,
                 limit: 0
@@ -4680,7 +4494,7 @@ function _select_Gateway() { // Check for Gateway used to
                 limit: 0
             };
         }
-        if (settings["autovendor_rank2"]) {
+        if (getSetting('vendorSettings', 'vendorEnchR2')) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^T2_Enchantment/,
                 limit: 0
@@ -4690,7 +4504,7 @@ function _select_Gateway() { // Check for Gateway used to
                 limit: 0
             };
         }
-        if (settings["autovendor_rank3"]) {
+        if (getSetting('vendorSettings', 'vendorEnchR3')) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^T3_Enchantment/,
                 limit: 0
@@ -4700,31 +4514,31 @@ function _select_Gateway() { // Check for Gateway used to
                 limit: 0
             };
         }
-        if (settings["autovendor_pots1"]) {
+        if (getSetting('vendorSettings', 'vendorPots1')) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)$/,
                 limit: 0
             };
         }
-        if (settings["autovendor_pots2"]) {
+        if (getSetting('vendorSettings', 'vendorPots2')) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_2$/,
                 limit: 0
             };
         }
-        if (settings["autovendor_pots3"]) {
+        if (getSetting('vendorSettings', 'vendorPots3')) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_3$/,
                 limit: 0
             };
         }
-        if (settings["autovendor_pots4"]) {
+        if (getSetting('vendorSettings', 'vendorPots4')) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_4$/,
                 limit: 0
             };
         }
-        if (settings["autovendor_junk"]) {
+        if (getSetting('vendorSettings', 'vendorJunk')) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Item_Snowworks_/,
                 limit: 0
@@ -4754,14 +4568,14 @@ function _select_Gateway() { // Check for Gateway used to
                 limit: 0
             }; // Unidentified Green Gear
         }
-        // edited by RottenMind
-        if (settings["autovendor_profresults"]) {
+        
+        if (getSetting('vendorSettings', 'vendorProfResults')) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Crafted_(Jewelcrafting_Waist_Offense_3|Jewelcrafting_Neck_Defense_3|Jewelcrafting_Waist_Defense_3|Med_Armorsmithing_T3_Chain_Armor_Set_1|Med_Armorsmithing_T3_Chain_Pants2|Med_Armorsmithing_T3_Chain_Shirt2|Med_Armorsmithing_T3_Chain_Helm_Set_1|Med_Armorsmithing_T3_Chain_Pants|Med_Armorsmithing_T3_Chain_Boots_Set_1|Hvy_Armorsmithing_T3_Plate_Armor_Set_1|Hvy_Armorsmithing_T3_Plate_Pants2|Hvy_Armorsmithing_T3_Plate_Shirt2|Hvy_Armorsmithing_T3_Plate_Helm_Set_1|Hvy_Armorsmithing_T3_Plate_Boots_Set_1|Leatherworking_T3_Leather_Armor_Set_1|Leatherworking_T3_Leather_Pants2|Leatherworking_T3_Leather_Shirt2|Leatherworking_T3_Leather_Helm_Set_1|Leatherworking_T3_Leather_Boots_Set_1|Tailoring_T3_Cloth_Armor_Set_3|Tailoring_T3_Cloth_Armor_Set_2|Tailoring_T3_Cloth_Armor_Set_1|Tailoring_T3_Cloth_Pants2_Set2|Tailoring_T3_Cloth_Shirt2|Tailoring_T3_Cloth_Helm_Set_1|Artificing_T3_Pactblade_Temptation_5|Artificing_T3_Icon_Virtuous_5|Weaponsmithing_T3_Dagger_4)$/,
                 limit: 0
             };
         }
-        // edited by RottenMind
+        
         if (_vendorItems.length > 0) {
             console.log("Attempting to vendor selected items...");
             _sellCount = vendorItemsLimited(_vendorItems);
@@ -4803,3 +4617,71 @@ function _select_Gateway() { // Check for Gateway used to
         process();
     }, delay.SHORT);
 })();
+
+
+
+
+function workerDefinition() {
+    return {
+        // purple, blue, green, t3, t2, t1
+        "Leadership": ["Crafting_Asset_Craftsman_Leadership_T3_Epic", "Crafting_Asset_Craftsman_Leadership_T3_Rare", "Crafting_Asset_Craftsman_Leadership_T3_Uncommon",
+            "Crafting_Asset_Craftsman_Leadership_T3_Common", "Crafting_Asset_Craftsman_Leadership_T2_Common", "Crafting_Asset_Craftsman_Leadership_T1_Common_1"
+        ],
+        "Alchemy": ["Asset_Craftsman_Alchemy_T3_Epic", "Asset_Craftsman_Alchemy_T3_Rare", "Asset_Craftsman_Alchemy_T3_Uncommon",
+            "Asset_Craftsman_Alchemy_T3_Common", "Asset_Craftsman_Alchemy_T2_Common", "Asset_Craftsman_Alchemy_T1_Common"
+        ],
+        "Jewelcrafting": ["Crafting_Asset_Craftsman_Jewelcrafter_T3_Epic", "Crafting_Asset_Craftsman_Jewelcrafter_T3_Rare", "Crafting_Asset_Craftsman_Jewelcrafter_T3_Uncommon",
+            "Crafting_Asset_Craftsman_Jewelcrafter_T3_Common", "Crafting_Asset_Craftsman_Jewelcrafter_T2_Common", "Crafting_Asset_Craftsman_Jewelcrafter_T1_Common"
+        ],
+        "Weaponsmithing": ["Crafting_Asset_Craftsman_Weaponsmith_T3_Epic", "Crafting_Asset_Craftsman_Weaponsmith_T3_Rare", "Crafting_Asset_Craftsman_Weaponsmith_T3_Uncommon",
+            "Crafting_Asset_Craftsman_Weaponsmith_T3_Common", "Crafting_Asset_Craftsman_Weaponsmith_T2_Common", "Crafting_Asset_Craftsman_Weaponsmith_T1_Common"
+        ],
+        "Artificing": ["Crafting_Asset_Craftsman_Artificing_T3_Epic", "Crafting_Asset_Craftsman_Artificing_T3_Rare", "Crafting_Asset_Craftsman_Artificing_T3_Uncommon",
+            "Crafting_Asset_Craftsman_Artificing_T3_Common", "Crafting_Asset_Craftsman_Artificing_T2_Common", "Crafting_Asset_Craftsman_Artificing_T1_Common"
+        ],
+        "Mailsmithing": ["Crafting_Asset_Craftsman_Armorsmithing_Med_T3_Epic", "Crafting_Asset_Craftsman_Armorsmithing_Med_T3_Rare", "Crafting_Asset_Craftsman_Armorsmithing_Med_T3_Uncommon",
+            "Crafting_Asset_Craftsman_Armorsmithing_Med_T3_Common", "Crafting_Asset_Craftsman_Armorsmithing_Med_T2_Common", "Crafting_Asset_Craftsman_Armorsmithing_Med_T1_Common"
+        ],
+        "Platesmithing": ["Crafting_Asset_Craftsman_Armorsmithing_Hvy_T3_Epic", "Crafting_Asset_Craftsman_Armorsmithing_Hvy_T3_Rare", "Crafting_Asset_Craftsman_Armorsmithing_Hvy_T3_Uncommon",
+            "Crafting_Asset_Craftsman_Armorsmithing_Hvy_T3_Common", "Crafting_Asset_Craftsman_Armorsmithing_Hvy_T2_Common", "Crafting_Asset_Craftsman_Armorsmithing_Hvy_T1_Common"
+        ],
+        "Leatherworking": ["Crafting_Asset_Craftsman_Leatherworking_T3_Epic", "Crafting_Asset_Craftsman_Leatherworking_T3_Rare", "Crafting_Asset_Craftsman_Leatherworking_T3_Uncommon",
+            "Crafting_Asset_Craftsman_Leatherworking_T3_Common", "Crafting_Asset_Craftsman_Leatherworking_T2_Common", "Crafting_Asset_Craftsman_Leatherworking_T1_Common"
+        ],
+        "Tailoring": ["Crafting_Asset_Craftsman_Tailoring_T3_Epic", "Crafting_Asset_Craftsman_Tailoring_T3_Rare", "Crafting_Asset_Craftsman_Tailoring_T3_Uncommon",
+            "Crafting_Asset_Craftsman_Tailoring_T3_Common", "Crafting_Asset_Craftsman_Tailoring_T2_Common", "Crafting_Asset_Craftsman_Tailoring_T1_Common"
+        ],
+        "Black Ice Shaping": ["Crafting_Asset_Craftsman_Blackice_T3_Epic", "Crafting_Asset_Craftsman_Blackice_T3_Rare", "Crafting_Asset_Craftsman_Blackice_T3_Uncommon",
+            "Crafting_Asset_Craftsman_Blackice_T3_Common"
+        ],
+        /*
+            "Winter Event":     ["Crafting_Asset_Craftsman_Winter_Event_T1_Common"],
+            "Siege Event":      [],
+            */
+    }
+}
+
+function toolListDefinition() {
+    return {
+        "Awl": ["Crafting_Asset_Tool_Awl_Epic", "Crafting_Asset_Tool_Awl_Rare", "Crafting_Asset_Tool_Awl_Uncommon", "Crafting_Asset_Tool_Awl_Common"],
+        "Shears": ["Crafting_Asset_Tool_Shears_Epic", "Crafting_Asset_Tool_Shears_Rare", "Crafting_Asset_Tool_Shears_Uncommon", "Crafting_Asset_Tool_Shears_Common"],
+        "Hammer": ["Crafting_Asset_Tool_Hammer_Epic", "Crafting_Asset_Tool_Hammer_Rare", "Crafting_Asset_Tool_Shears_Uncommon", "Crafting_Asset_Tool_Hammer_Common", ],
+        "Needle": ["Crafting_Asset_Tool_Needle_Epic", "Crafting_Asset_Tool_Needle_Rare", "Crafting_Asset_Tool_Needle_Uncommon", "Crafting_Asset_Tool_Needle_Common", ],
+        "Bellows": ["Crafting_Asset_Tool_Bellows_Epic", "Crafting_Asset_Tool_Bellows_Rare", "Crafting_Asset_Tool_Bellows_Uncommon", "Crafting_Asset_Tool_Bellows_Common"],
+        "Bezelpusher": ["Crafting_Asset_Tool_Bezelpusher_Epic", "Crafting_Asset_Tool_Bezelpusher_Rare", "Crafting_Asset_Tool_Bezelpusher_Uncommon", "Crafting_Asset_Tool_Bezelpusher_Common"],
+        "Mortar": ["Asset_Tool_Mortar_Epic", "Asset_Tool_Mortar_Rare", "Asset_Tool_Mortar_Uncommon", "Asset_Tool_Mortar_Common"],
+        "Anvil": ["Crafting_Asset_Tool_Anvil_Epic", "Crafting_Asset_Tool_Anvil_Rare", "Crafting_Asset_Tool_Anvil_Uncommon", "Crafting_Asset_Tool_Anvil_Common", ],
+        "Grindstone": ["Crafting_Asset_Tool_Grindstone_Epic", "Crafting_Asset_Tool_Grindstone_Rare", "Crafting_Asset_Tool_Grindstone_Uncommon", "Crafting_Asset_Tool_Grindstone_Common", ],
+        "Philosophersstone": ["Asset_Tool_Philosophersstone_Epic", "Asset_Tool_Philosophersstone_Rare", "Asset_Tool_Philosophersstone_Uncommon", "Asset_Tool_Philosophersstone_Common"],
+        "Loupe": ["Crafting_Asset_Tool_Loupe_Epic", "Crafting_Asset_Tool_Loupe_Rare", "Crafting_Asset_Tool_Loupe_Uncommon", "Crafting_Asset_Tool_Loupe_Common", ],
+        "Graver": ["Crafting_Asset_Tool_Graver_Epic", "Crafting_Asset_Tool_Graver_Rare", "Crafting_Asset_Tool_Graver_Uncommon", "Crafting_Asset_Tool_Graver_Common", ],
+        "Crucible": ["Asset_Tool_Crucible_Epic", "Asset_Tool_Crucible_Rare", "Asset_Tool_Crucible_Uncommon", "Asset_Tool_Crucible_Common", ],
+        "Tongs": ["Crafting_Asset_Tool_Tongs_Epic", "Crafting_Asset_Tool_Tongs_Rare", "Crafting_Asset_Tool_Tongs_Uncommon", "Crafting_Asset_Tool_Tongs_Common", ],
+        /*
+        "Crafting_Asset_Tool_Leatherworking_T1_Epic",
+        "Crafting_Asset_Tool_Gauntlets_Common"
+        "Crafting_Asset_Tool_Leadership_T3_Common","Crafting_Asset_Tool_Leadership_T2_Common"
+        */
+    }
+}
+
