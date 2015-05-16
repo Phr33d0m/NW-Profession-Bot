@@ -1710,20 +1710,24 @@ function _select_Gateway() { // Check for Gateway used to
     // Usable only after login (return account or char settings, depending on override and match)
     function getSetting(group, name) {
         var override = false;
-        if (typeof(charSettingsList[curCharName]) !== undefined && typeof(charSettingsList[curCharName].general) !== undefined) 
+        if (typeof(charSettingsList[curCharName]) !== undefined && typeof(charSettingsList[curCharName].general) !== undefined) { 
             override = charSettingsList[curCharName].general.overrideGlobalSettings;
-        else console.warn("overrideGlobalSettings could not been reached." )
+        }
+        else console.warn("overrideGlobalSettings could not been reached." );
 
-        if (override && 
-            typeof(charSettingsList[curCharName][group]) !== undefined &&
-            typeof(charSettingsList[curCharName][group][name]) !== undefined)
-                return charSettingsList[curCharName][group][name];
-        else console.warn("charSetting path could not been reached for " + group + " " + name);
+        if (override) {
+            if (typeof(charSettingsList[curCharName][group]) !== undefined &&
+                typeof(charSettingsList[curCharName][group][name]) !== undefined) {
+                    return charSettingsList[curCharName][group][name];
+            }
+            else console.warn("charSetting value could not been reached for " + group + " " + name);
+        }
         
         if (typeof(accountSettings[group]) !== undefined &&
-            typeof(accountSettings[group][name]) !== undefined) 
+            typeof(accountSettings[group][name]) !== undefined) {
                 return accountSettings[group][name];
-        else console.warn("accountSettings path could not been reached for " + group + " " + name);
+            }
+        else console.warn("accountSettings value could not been reached for " + group + " " + name);
         return null;
     }
 
