@@ -1852,6 +1852,7 @@ function _select_Gateway() { // Check for Gateway used to
         generalSettings: {
             refineAD: false,
             openRewards: false,
+            runSCA: 'free',
         },
         consolidationSettings: {
             bankCharName: "",
@@ -1896,6 +1897,7 @@ function _select_Gateway() { // Check for Gateway used to
         generalSettings: {
             refineAD: false,
             openRewards: false,
+            runSCA: 'free',
         },
         consolidationSettings: {
             consolidate: false,
@@ -1992,7 +1994,7 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'script', group: 'general', name: 'language', title: tr('settings.main.language'), type: 'select', pane: 'main', tooltip: tr('settings.main.language.tooltip'), 
             opts: [ { name: 'english',  value: 'en'},
                     { name: 'polski',   value: 'pl'},
-                    { name: 'français', value: 'fr'}],
+                    { name: 'fran?ais', value: 'fr'}],
         },
         {scope: 'script', group: 'general', name: 'scriptDebugMode',  title: 'Enable Debug', type: 'checkbox', pane: 'main', tooltip: 'Enable all debug output to console',
             onsave: function(newValue, oldValue) {
@@ -2013,6 +2015,11 @@ function _select_Gateway() { // Check for Gateway used to
         
         {scope: 'account', group: 'generalSettings', name: 'openRewards', title: 'Open Reward Chests',  type: 'checkbox', pane: 'main', tooltip: 'Enable opeing of leadership chests on character switch' },
         {scope: 'account', group: 'generalSettings', name: 'refineAD',    title: 'Refine AD',           type: 'checkbox', pane: 'main', tooltip: 'Enable refining of AD on character switch'},
+        {scope: 'account', group: 'generalSettings', name: 'runSCA',    title: 'Run SCA',               type: 'select',   pane: 'main', tooltip: 'Running SCA adventures reward after professions',
+            opts: [ { name: 'never',        value: 'never'}, 
+                    { name: 'free time',    value: 'free'}, 
+                    { name: 'always',       value: 'always'}],
+            },        
         {scope: 'account', group: 'professionSettings', name: 'fillOptionals',   type: 'checkbox', pane: 'prof',    title: 'Fill Optional Assets',  tooltip: 'Enable to include selecting the optional assets of tasks'},
         {scope: 'account', group: 'professionSettings', name: 'autoPurchaseRes', type: 'checkbox', pane: 'prof',    title: 'Auto Purchase Resources', tooltip: 'Automatically purchase required resources from gateway shop (100 at a time)'}, 
         {scope: 'account', group: 'professionSettings', name:'trainAssets',      type:'checkbox',  pane:'prof',     title:'Train Assets', tooltip:'Enable training/upgrading of asset worker resources'}, 
@@ -2043,6 +2050,12 @@ function _select_Gateway() { // Check for Gateway used to
         
         {scope: 'char', group: 'generalSettings', name: 'openRewards', title: 'Open Reward Chests',  type: 'checkbox', pane: 'main', tooltip: 'Enable opeing of leadership chests on character switch' },
         {scope: 'char', group: 'generalSettings', name: 'refineAD',    title: 'Refine AD',           type: 'checkbox', pane: 'main', tooltip: 'Enable refining of AD on character switch'},
+        {scope: 'char', group: 'generalSettings', name: 'runSCA',    title: 'Run SCA',               type: 'select',   pane: 'main', tooltip: 'Running SCA adventures reward after professions',
+            opts: [ { name: 'never',        value: 'never'}, 
+                    { name: 'free time',    value: 'free'}, 
+                    { name: 'always',       value: 'always'}],
+            },        
+        
         {scope: 'char', group: 'professionSettings', name: 'fillOptionals',   type: 'checkbox', pane: 'prof',    title: 'Fill Optional Assets',  tooltip: 'Enable to include selecting the optional assets of tasks'},
         {scope: 'char', group: 'professionSettings', name: 'autoPurchaseRes', type: 'checkbox', pane: 'prof',    title: 'Auto Purchase Resources', tooltip: 'Automatically purchase required resources from gateway shop (100 at a time)'}, 
         {scope: 'char', group: 'professionSettings', name: 'trainAssets',      type:'checkbox',  pane:'prof',     title:'Train Assets', tooltip:'Enable training/upgrading of asset worker resources'}, 
@@ -2208,6 +2221,68 @@ function _select_Gateway() { // Check for Gateway used to
         return false;
     }
 
+
+
+    // Running SCA for a single Char (based on CycleSCA)
+    function processCharSCA(charIdx) {
+        var _hasLoginDaily = 0;
+        var _scaHashMatch = /\/adventures$/;
+        var _charName = charNamesList[charIdx];
+        var _fullCharName = _charName + "@" + loggedAccount;
+       /*
+       if (!scriptSettings.paused)
+            PauseSettings("pause");
+*/
+        if (!_scaHashMatch.test(unsafeWindow.location.hash)) {
+            return;
+        } else if (unsafeWindow.location.hash != "#char(" + encodeURI(_fullCharName) + ")/adventures") {
+            unsafeWindow.location.hash = "#char(" + encodeURI(_fullCharName) + ")/adventures";
+        }
+
+        WaitForState("").done(function() {
+            try {
+                _hasLoginDaily = client.dataModel.model.gatewaygamedata.dailies.left.logins;
+            } catch (e) {
+                window.setTimeout(function() {
+                    processCharSCA(charIdx);
+                }, delay.SHORT);
+                return;
+            }
+
+            console.log("Checking SCA Dialy for " + _charName );
+
+            // Do SCA daily dice roll if the button comes up
+            WaitForState(".daily-dice-intro").done(function() {
+                $(".daily-dice-intro button").trigger('click');
+                WaitForState(".daily-awards-button").done(function() {
+                    $(".daily-awards-button button").trigger('click');
+                });
+            });
+            
+            //console.log("after dice");
+            WaitForNotState(".modal-window.daily-dice").done(function() {
+                charStatisticsList[_charName].general.lastSCAVisit = Date.now();
+                GM_setValue("chars__statistics__" + _fullCharName , JSON.stringify(charStatisticsList[_charName]));
+                updateCounters(false);
+
+                //Adjusting for the time the SCA took
+                var chardelay;
+                if (chartimers[curCharNum] != null) {
+                    chardelay = (chartimers[curCharNum]).getTime() - (new Date()).getTime() - unsafeWindow.client.getServerOffsetSeconds() * 1000;
+                    if (chardelay < delay.SHORT) {
+                        chardelay = delay.SHORT;
+                    }
+                }
+                else chardelay = delay.SHORT;
+                if (chardelay > (delay.SHORT * 3)) unsafeWindow.location.hash = "#char(" + encodeURI(_fullCharName) + ")/professions";
+                console.log("Finished SCA check for " + charNamesList[charIdx] + " delay " + chardelay);
+                dfdNextRun.resolve(chardelay);
+            });
+        });
+    }
+
+
+
     /**
      * Switch to a character's swordcoast adventures and collect the daily reward
      */
@@ -2255,6 +2330,9 @@ function _select_Gateway() { // Check for Gateway used to
 
             // If Dice roll dialog is non existant
             WaitForNotState(".modal-window.daily-dice").done(function() {
+                charStatisticsList[charNamesList[_charIndex]].general.lastSCAVisit = Date.now();
+                GM_setValue("chars__statistics__" + _fullCharName , JSON.stringify(charStatisticsList[charNamesList[_charIndex]]));
+                updateCounters(false);
                 if (_isLastChar) {
                     window.setTimeout(function() {
                         PauseSettings("unpause");
@@ -3284,6 +3362,19 @@ function _select_Gateway() { // Check for Gateway used to
             console.warn("No Active chars found!");
         }
         GM_setValue("curCharNum", curCharNum);
+        
+        
+        var runSCAtime = !charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit || ((charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit + (1000*60*60*24)) < Date.now());
+        var sca_setting = getSetting('generalSettings','runSCA'); 
+        var runSCA = (runSCAtime && (sca_setting !== 'never'));
+        runSCA = runSCA && (sca_setting === 'always' || (sca_setting === 'free' && chardelay > 7000)); // More than 7 seconds for the next char swap
+        console.log("Check if need to run SCA for " + charNamesList[lastCharNum] + ":  " + sca_setting + " " + runSCAtime);                
+        
+        if (runSCA) {
+            unsafeWindow.location.hash = unsafeWindow.location.hash.replace(/\)\/.+/, ')' + "/adventures");
+            processCharSCA(lastCharNum);
+            return;
+        }
         dfdNextRun.resolve(chardelay);
     }
     /**
@@ -3741,7 +3832,6 @@ function _select_Gateway() { // Check for Gateway used to
             
             temp_tab = addTab("#info_tabs", "SCA & Visits");
             temp_tab.append("<div id='sca_v'></div>");
-            temp_tab.append("<button id='settings_sca'>Cycle SCA</button>");
             
             temp_tab = addTab("#info_tabs", "Workers");
             temp_tab.append("<div id='worker_overview'></div>");
@@ -3758,19 +3848,9 @@ function _select_Gateway() { // Check for Gateway used to
             temp_tab = addTab("#info_tabs", "Slots");
             temp_tab.append("<div id='slot_tracker'></div>");
             $("#info_tabs").tabs({ active: false, collapsible: true });                
-            
-            //$("div#main_tabs").tabs("refresh");
-            
-            $('#settings_sca').button();
-            $("#settings_sca").click(function() {
-                $("#settings_close").trigger("click");
-                unsafeWindow.location.hash = unsafeWindow.location.hash.replace(/\)\/.+/, ')' + "/adventures");
-                processSwordCoastDailies();
-            });
 
             
             // Adding per char settings UI
-            
             var wrp = $('<div id="charSettingsAccordion">');
             $("#char_settings").append(wrp);
             charNamesList.forEach( function(charName, idx) {
@@ -4407,6 +4487,47 @@ function _select_Gateway() { // Check for Gateway used to
         });
         html += "</table>";
         $('#slot_tracker').html(html);
+        
+        
+        // Visit times and SCA tab
+        html = '<table>';
+        html += "<tr><th></th><th>Character Name</th><th>Next Profession</th><th>Last SCA</th>";
+        charNamesList.forEach(function(charName, idx) {
+            html += "<tr>";
+            html += '<td><button class=" visitReset " value=' + (idx + 1) + '>reset</button></td>';
+            html += "<td>" + charName + "</td>";
+
+            if (!chartimers[idx]) html += "<td>No data</td>";
+            else    html += "<td><span data-timer='" + chartimers[idx] + "' data-timer-length='2'></span></td>";
+            if (!charStatisticsList[charName].general.lastSCAVisit) html += "<td>No data</td>";
+            else html += "<td>" + Date(charStatisticsList[charName].general.lastSCAVisit).toLocaleString() + "</td>";
+            html += "</tr>";
+        });
+        html += "</table>";
+        $('#sca_v').html(html);
+        $('#sca_v').append("<br /><br /><button id='settings_sca'>Cycle SCA</button>");
+        
+        $('#settings_sca').button();
+        $("#settings_sca").click(function() {
+            $("#settings_close").trigger("click");
+            unsafeWindow.location.hash = unsafeWindow.location.hash.replace(/\)\/.+/, ')' + "/adventures");
+            processSwordCoastDailies();
+        });
+
+        $('.visitReset').button();
+        $(".visitReset").click(function() {
+            var value = $(this).val();
+            if (value) { 
+                console.log("Reseting for " + charNamesList[value-1]) 
+                chartimers[parseInt(value)-1] = null;
+                updateCounters(false);
+                clearTimeout(timerHandle);
+                timerHandle = window.setTimeout(function() {
+                    process();
+                }, delay.SHORT);
+            } 
+            
+        });
     }
 
     function vendorJunk(evnt) {
@@ -4575,32 +4696,32 @@ function _select_Gateway() { // Check for Gateway used to
                 'settings.main.charcount.tooltip': 'Enter number of characters to use (Save and Apply to update settings form)',
             },
             'pl': {
-                'translation.needed': 'wymagane tłumaczenie',
+                'translation.needed': 'wymagane t?umaczenie',
                 'settings.main.paused': 'Zatrzymaj skrypt',
-                'settings.main.paused.tooltip': 'Wyłącz wszelką automatyzację',
-                'settings.main.debug': 'Włącz debugowanie',
-                'settings.main.debug.tooltip': 'Wyświetl wszystkie komunikaty na konsoli (Ctrl+Shift+i w Chrome/Chromium)',
+                'settings.main.paused.tooltip': 'Wy??cz wszelk? automatyzacj?',
+                'settings.main.debug': 'W??cz debugowanie',
+                'settings.main.debug.tooltip': 'Wy?wietl wszystkie komunikaty na konsoli (Ctrl+Shift+i w Chrome/Chromium)',
                 'settings.main.openrewards': 'Otwieraj skrzynki',
-                'settings.main.openrewards.tooltip': 'Otwieraj skrzynki z zadań Przywództwa przy zmianie postaci',
-                'settings.main.autoreload': 'Automatyczne przeładowanie',
-                'settings.main.autoreload.tooltip': 'Włączenie tej opcji powoduje okresowe przeładowanie strony (Upewnij się, że Automatyczne logowanie jest włączone)',
+                'settings.main.openrewards.tooltip': 'Otwieraj skrzynki z zada? Przyw?dztwa przy zmianie postaci',
+                'settings.main.autoreload': 'Automatyczne prze?adowanie',
+                'settings.main.autoreload.tooltip': 'W??czenie tej opcji powoduje okresowe prze?adowanie strony (Upewnij si?, ?e Automatyczne logowanie jest w??czone)',
                 'settings.main.refinead': 'Szlifuj diamenty',
-                'settings.main.refinead.tooltip': 'Przy zmianie postaci szlifuj diamenty astralne jeśli to możliwe',
-                'settings.main.incdelay': 'Zwiększ opóżnienia skryptu o...',
-                'settings.main.incdelay.tooltip': 'Zwiększenie opóźnień, gdy skrypt czeka przed próbą działania (pomocne przy wolnych połączeniach).',
-                'settings.main.language': 'Język skryptu',
-                'settings.main.language.tooltip': 'Język interfejsu tego skryptu (zmiana wymaga przeładowania strony)',
-                'settings.main.autologin': 'Próbuj logować automatycznie',
-                'settings.main.autologin.tooltip': 'Próbuj logować automatycznie do strony gateway',
-                'settings.main.nw_username': 'Nazwa użytkownika Neverwinter',
+                'settings.main.refinead.tooltip': 'Przy zmianie postaci szlifuj diamenty astralne je?li to mo?liwe',
+                'settings.main.incdelay': 'Zwi?ksz op??nienia skryptu o...',
+                'settings.main.incdelay.tooltip': 'Zwi?kszenie op??nie?, gdy skrypt czeka przed pr?b? dzia?ania (pomocne przy wolnych po??czeniach).',
+                'settings.main.language': 'J?zyk skryptu',
+                'settings.main.language.tooltip': 'J?zyk interfejsu tego skryptu (zmiana wymaga prze?adowania strony)',
+                'settings.main.autologin': 'Pr?buj logowa? automatycznie',
+                'settings.main.autologin.tooltip': 'Pr?buj logowa? automatycznie do strony gateway',
+                'settings.main.nw_username': 'Nazwa u?ytkownika Neverwinter',
                 'settings.main.nw_username.tooltip': '',
-                'settings.main.nw_password': 'Hasło do Neverwinter',
+                'settings.main.nw_password': 'Has?o do Neverwinter',
                 'settings.main.nw_password.tooltip': '',
-                'settings.main.charcount': 'Wprowadź liczbę postaci (naciśnij "Save and Apply" aby odświerzyć formularz)',
-                'settings.main.charcount.tooltip': 'Wprowadź liczbę postaci (naciśnij "Save and Apply" aby odświerzyć formularz)',
+                'settings.main.charcount': 'Wprowad? liczb? postaci (naci?nij "Save and Apply" aby od?wierzy? formularz)',
+                'settings.main.charcount.tooltip': 'Wprowad? liczb? postaci (naci?nij "Save and Apply" aby od?wierzy? formularz)',
             },
             'fr': {
-                'translation.needed': 'traduction nécessaire',
+                'translation.needed': 'traduction n?cessaire',
            }
         };
     }
