@@ -3475,7 +3475,7 @@ function _select_Gateway() { // Check for Gateway used to
                 td.ranked2, td.tranked2 { border-bottom: solid 1px #555; border-top: dashed 1px #888 }\
                 table.professionLevels td.rotate, table.professionLevels th.rotate { height: 100px; } \
                 table.professionLevels td.rotate, table.professionLevels th.rotate > div { transform: translate(0, 30px) rotate(290deg); width: 30px; } \
-                table.professionLevels td.rotate, table.professionLevels th.rotate > div > span { border-bottom: 1px solid #ccc; padding: 5px 10px; } \
+                table.professionLevels td.rotate, table.professionLevels th.rotate > div > span { border-bottom: 1px solid #ccc; padding: 5px 10px; white-space: nowrap; } \
                 input[type='checkbox'].settingsInput { margin: 5px 10px 5px 5px;  }\
                 input.settingsInput { margin: 5px 5px; }\
                 label.settingsLabel { margin: 5px 5px; min-width: 150px; display: inline-block; }\
