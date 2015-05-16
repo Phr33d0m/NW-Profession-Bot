@@ -1677,7 +1677,6 @@ function _select_Gateway() { // Check for Gateway used to
             consolidate: false,
             minCharBalance: 10000,
             minToTransfer: 50000,
-            transferRate: 300,
         },
         taskListSettings: {},
         taskListSettingsManual: [],
@@ -1856,7 +1855,6 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'char', group: 'consolidationSettings', name:'consolidate',      type:'checkbox',pane:'bank',    title:'Consolidate AD via ZEX',     tooltip:'Automatically attempt to post, cancel and withdraw AD via ZEX and consolidate to designated character',border:true},
         {scope: 'char', group: 'consolidationSettings', name:'minToTransfer',    type:'text',    pane:'bank',    title:'Min AD for Transfer',        tooltip:'Enter minimum AD limit for it to be cosidered for transfer off a character'},
         {scope: 'char', group: 'consolidationSettings', name:'minCharBalance',   type:'text',    pane:'bank',    title:'Min Character balance',      tooltip:'Enter the amount of AD to always keep available on characters'},
-        {scope: 'char', group: 'consolidationSettings', name:'transferRate',     type:'text',    pane:'bank',    title:'AD per Zen Rate (in zen)',   tooltip:'Enter default rate to use for transfering through ZEX'},
         
         
         
@@ -2299,7 +2297,7 @@ function _select_Gateway() { // Check for Gateway used to
     function searchForTask(taskname, profname, profile, professionLevel) {
         // Return first object that matches exact craft name
         // edited by WloBeb - start Patrol the Mines task only if char has less than 10 Mining Claims
-        var skip_setting = getSetting('general', 'skipPatrolTask');
+        var skip_setting = getSetting('professionSettings', 'skipPatrolTask');
             
         if (taskname == "Leadership_Tier3_13_Patrol" && (skip_setting == 'always' ||
             (skip_setting == 'ad' && profile.profileName == "AD") || (skip_setting == 'ld20' && professionLevel >= 20) ||
@@ -2932,12 +2930,12 @@ function _select_Gateway() { // Check for Gateway used to
         // MAC-NW -- AD Consolidation
         //if (accountSettings.consolidationSettings.consolidate) {
         if (getSetting('consolidationSettings','consolidate')) {
-
             // Check that we dont take money from the character assigned as the banker // Zen Transfer / Listing
-            if (accountSettings.consolidationSettings.bankCharName != unsafeWindow.client.dataModel.model.ent.main.name) {
+            console.log("bank: " + accountSettings.consolidationSettings.bankCharName + " model: " + unsafeWindow.client.dataModel.model.ent.main.name);
+            if (accountSettings.consolidationSettings.bankCharName !== unsafeWindow.client.dataModel.model.ent.main.name) {
                 // Check the required min AD amount on character
-                if (accountSettings.consolidationSettings.minToTransfer && 
-                        parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds) >= (parseInt(accountSettings.consolidationSettings.minToTransfer) + parseInt(accountSettings.consolidationSettings.minCharBalance))) {
+                if (getSetting('consolidationSettings','minToTransfer') && 
+                        parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds) >= (parseInt(getSetting('consolidationSettings','minToTransfer')) + parseInt(getSetting('consolidationSettings','minCharBalance')))) {
                     // Check that the rate is not less than the min & max
                     if (accountSettings.consolidationSettings.transferRate && parseInt(accountSettings.consolidationSettings.transferRate) >= 50 && parseInt(accountSettings.consolidationSettings.transferRate) <= 500) {
                         window.setTimeout(postZexOffer, delay.SHORT);
