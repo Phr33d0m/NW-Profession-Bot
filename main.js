@@ -1601,9 +1601,9 @@ function _select_Gateway() { // Check for Gateway used to
 
     var defaultAccountSettings = {
         vendorSettings: {
-            vendorJunk: false,
-            vendorKitsLimit: false,
-            vendorAltarsLimit: false,
+            vendorJunk: true,
+            vendorKitsLimit: true,
+            vendorAltarsLimit: true,
             vendorKitsAll: false,
             vendorAltarsAll: false,
             vendorProfResults: false,
@@ -1617,15 +1617,15 @@ function _select_Gateway() { // Check for Gateway used to
             vendorEnchR3: false,
         },
         professionSettings: {
-            fillOptionals: false,
-            autoPurchaseRes: false,
-            trainAssets: false,
+            fillOptionals: true,
+            autoPurchaseRes: true,
+            trainAssets: true,
             smartLeadershipAssets: true,
             skipPatrolTask: 'AD&Lvl20',
         },
         generalSettings: {
-            refineAD: false,
-            openRewards: false,
+            refineAD: true,
+            openRewards: true,
             runSCA: 'free',
         },
         consolidationSettings: {
@@ -1646,9 +1646,9 @@ function _select_Gateway() { // Check for Gateway used to
             manualTaskSlots: false,
         },
         vendorSettings: {
-            vendorJunk: false,
-            vendorKitsLimit: false,
-            vendorAltarsLimit: false,
+            vendorJunk: true,
+            vendorKitsLimit: true,
+            vendorAltarsLimit: true,
             vendorKitsAll: false,
             vendorAltarsAll: false,
             vendorProfResults: false,
@@ -1662,15 +1662,15 @@ function _select_Gateway() { // Check for Gateway used to
             vendorEnchR3: false,
         },
         professionSettings: {
-            fillOptionals: false,
-            autoPurchaseRes: false,
-            trainAssets: false,
+            fillOptionals: true,
+            autoPurchaseRes: true,
+            trainAssets: true,
             skipPatrolTask: 'AD&Lvl20',
             smartLeadershipAssets: true,
         },
         generalSettings: {
-            refineAD: false,
-            openRewards: false,
+            refineAD: true,
+            openRewards: true,
             runSCA: 'free',
         },
         consolidationSettings: {
@@ -1769,9 +1769,9 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'script', group: 'general', name: 'language', title: tr('settings.main.language'), type: 'select', pane: 'main', tooltip: tr('settings.main.language.tooltip'), 
             opts: [ { name: 'english',  value: 'en'},
                     { name: 'polski',   value: 'pl'},
-                    { name: 'fran?ais', value: 'fr'}],
+                    { name: 'français', value: 'fr'}],
         },
-        {scope: 'script', group: 'general', name: 'scriptDebugMode',  title: 'Enable Debug', type: 'checkbox', pane: 'main', tooltip: 'Enable all debug output to console',
+        {scope: 'script', group: 'general', name: 'scriptDebugMode',  title: tr('settings.main.debug'), type: 'checkbox', pane: 'main', tooltip: tr('settings.main.debug.tooltip'),
             onsave: function(newValue, oldValue) {
                 console = newValue ? unsafeWindow.console || fouxConsole : fouxConsole;
             }
@@ -1867,6 +1867,8 @@ function _select_Gateway() { // Check for Gateway used to
         }
     }
     */
+   
+   // TODO: Fix the debug setting on save so the setting actually works.
     console = unsafeWindow.console;
 
 
@@ -2202,9 +2204,7 @@ function _select_Gateway() { // Check for Gateway used to
                 // Click all buttons and select an item to use in the slot
                 var def = $.Deferred();
                 var buttonList = $('.taskdetails-assets:eq(1)').find("button");
-                if (buttonList.length && 
-                    ((charSettingsList[curCharName].general.overrideGlobalSettings && charSettingsList[curCharName].professionSettings.fillOptionals) || 
-                    (!charSettingsList[curCharName].general.overrideGlobalSettings && accountSettings.professionSettings.fillOptionals) )) {
+                if (buttonList.length && getSetting('general','fillOptionals')) {
                     SelectItemFor(buttonList, 0, def, prof);
                 } else {
                     def.resolve();
@@ -2295,8 +2295,7 @@ function _select_Gateway() { // Check for Gateway used to
     function searchForTask(taskname, profname, profile, professionLevel) {
         // Return first object that matches exact craft name
         // edited by WloBeb - start Patrol the Mines task only if char has less than 10 Mining Claims
-        var skip_setting = (charSettingsList[curCharName].general.overrideGlobalSettings) ? 
-            charSettingsList[curCharName].professionSettings.skipPatrolTask : accountSettings.professionSettings.skipPatrolTask;
+        var skip_setting = getSetting('general', 'skipPatrolTask');
             
         if (taskname == "Leadership_Tier3_13_Patrol" && (skip_setting == 'always' ||
             (skip_setting == 'ad' && profile.profileName == "AD") || (skip_setting == 'ld20' && professionLevel >= 20) ||
@@ -2427,7 +2426,7 @@ function _select_Gateway() { // Check for Gateway used to
             return false;
         }
 
-        var massTaskAllowed = ((profile.useMassTask !== undefined) && (profile.useMassTask === true));            
+        var massTaskAllowed = ((profile !== undefined) && (profile.useMassTask !== undefined) && (profile.useMassTask === true));            
 
         // Generate list of available tasks to search ingredients/assets from
         console.log("Searching ingredient tasks for:", profname);
@@ -2732,7 +2731,7 @@ function _select_Gateway() { // Check for Gateway used to
 
     // Function used to check exchange data model and withdraw listed orders that use the settings zen transfer rate
 
-    function withdrawZexOffer() {
+    function cancelZexOffer() {
         // Make sure the exchange data is loaded to model
         if(unsafeWindow.client.dataModel.model.exchangeaccountdata) {
             if(unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length >= 1) {
@@ -3110,7 +3109,7 @@ function _select_Gateway() { // Check for Gateway used to
         if (accountSettings.consolidationSettings.consolidate) {
             // Withdraw AD from the ZAX into the banker character
             if (accountSettings.consolidationSettings.bankCharName == curCharName) {
-                window.setTimeout(withdrawZexOffer, delay.SHORT);
+                window.setTimeout(cancelZexOffer, delay.SHORT);
             }
         }
 
@@ -4483,15 +4482,15 @@ function _select_Gateway() { // Check for Gateway used to
                 'settings.main.charcount.tooltip': 'Enter number of characters to use (Save and Apply to update settings form)',
             },
             'pl': {
-                'translation.needed': 'wymagane t?umaczenie',
-                'tab.general': 'Og?lne',
+                'translation.needed': 'wymagane tłumaczenie',
+                'tab.general': 'Ogólne',
                 'tab.professions': 'Profesje',
                 'tab.vendor': 'Kupiec',
                 'tab.consolidation': 'Konsolidacja AD',
-                'tab.other': 'Pozosta?e',
+                'tab.other': 'Pozostałe',
                 'tab.counters': 'Liczniki szlifowania',
                 'tab.workers': 'Pracownicy',
-                'tab.tools': 'Narz?dzia',
+                'tab.tools': 'Narzędzia',
                 'tab.resources': 'Surowce',
                 'tab.levels': 'Poziomy prof.',
                 'tab.slots': 'Sloty',
@@ -4500,30 +4499,30 @@ function _select_Gateway() { // Check for Gateway used to
                 'button.close': 'Zamknij',
                 'button.cycle': 'Runda SCA',
                 'settings.main.paused': 'Zatrzymaj skrypt',
-                'settings.main.paused.tooltip': 'Wy??cz wszelk? automatyzacj?',
-                'settings.main.debug': 'W??cz debugowanie',
-                'settings.main.debug.tooltip': 'Wy?wietl wszystkie komunikaty na konsoli (Ctrl+Shift+i w Chrome/Chromium)',
+                'settings.main.paused.tooltip': 'Wyłącz wszelką automatyzację',
+                'settings.main.debug': 'Włącz debugowanie',
+                'settings.main.debug.tooltip': 'Wyświetl wszystkie komunikaty na konsoli (Ctrl+Shift+i w Chrome/Chromium)',
                 'settings.main.openrewards': 'Otwieraj skrzynki',
-                'settings.main.openrewards.tooltip': 'Otwieraj skrzynki z zada? Przyw?dztwa przy zmianie postaci',
-                'settings.main.autoreload': 'Automatyczne prze?adowanie',
-                'settings.main.autoreload.tooltip': 'W??czenie tej opcji powoduje okresowe prze?adowanie strony (Upewnij si?, ?e Automatyczne logowanie jest w??czone)',
+                'settings.main.openrewards.tooltip': 'Otwieraj skrzynki z zadań Przywództwa przy zmianie postaci',
+                'settings.main.autoreload': 'Automatyczne przeładowanie',
+                'settings.main.autoreload.tooltip': 'Włączenie tej opcji powoduje okresowe przeładowanie strony (Upewnij się, że Automatyczne logowanie jest włączone)',
                 'settings.main.refinead': 'Szlifuj diamenty',
-                'settings.main.refinead.tooltip': 'Przy zmianie postaci szlifuj diamenty astralne je?li to mo?liwe',
-                'settings.main.incdelay': 'Zwi?ksz op??nienia skryptu o...',
-                'settings.main.incdelay.tooltip': 'Zwi?kszenie op??nie?, gdy skrypt czeka przed pr?b? dzia?ania (pomocne przy wolnych po??czeniach).',
-                'settings.main.language': 'J?zyk skryptu',
-                'settings.main.language.tooltip': 'J?zyk interfejsu tego skryptu (zmiana wymaga prze?adowania strony)',
-                'settings.main.autologin': 'Pr?buj logowa? automatycznie',
-                'settings.main.autologin.tooltip': 'Pr?buj logowa? automatycznie do strony gateway',
-                'settings.main.nw_username': 'Nazwa u?ytkownika Neverwinter',
+                'settings.main.refinead.tooltip': 'Przy zmianie postaci szlifuj diamenty astralne jeśli to możliwe',
+                'settings.main.incdelay': 'Zwiększ opóżnienia skryptu o...',
+                'settings.main.incdelay.tooltip': 'Zwiększenie opóźnień, gdy skrypt czeka przed próbą działania (pomocne przy wolnych połączeniach).',
+                'settings.main.language': 'Język skryptu',
+                'settings.main.language.tooltip': 'Język interfejsu tego skryptu (zmiana wymaga przeładowania strony)',
+                'settings.main.autologin': 'Próbuj logować automatycznie',
+                'settings.main.autologin.tooltip': 'Próbuj logować automatycznie do strony gateway',
+                'settings.main.nw_username': 'Nazwa użytkownika Neverwinter',
                 'settings.main.nw_username.tooltip': '',
-                'settings.main.nw_password': 'Has?o do Neverwinter',
+                'settings.main.nw_password': 'Hasło do Neverwinter',
                 'settings.main.nw_password.tooltip': '',
-                'settings.main.charcount': 'Wprowad? liczb? postaci (naci?nij "Zapisz i zastosuj" aby od?wierzy? formularz)',
-                'settings.main.charcount.tooltip': 'Wprowad? liczb? postaci (naci?nij "Save and Apply" aby od?wierzy? formularz)',
+                'settings.main.charcount': 'Wprowadź liczbę postaci (naciśnij "Zapisz i zastosuj" aby odświerzyć formularz)',
+                'settings.main.charcount.tooltip': 'Wprowadź liczbę postaci (naciśnij "Save and Apply" aby odświerzyć formularz)',
             },
             'fr': {
-                'translation.needed': 'traduction n?cessaire',
+                'translation.needed': 'traduction nécessaire',
            }
         };
     }
