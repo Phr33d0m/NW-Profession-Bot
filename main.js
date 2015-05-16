@@ -60,6 +60,10 @@ Check Changelog.txt for the full changelog.
  */
 
 // Make sure it's running on the main page, no frames
+
+var scriptVersion = 3.5;
+var forceSettingsResetOnUpgrade = true;
+
 if(window.self !== window.top) {
     throw "";
 }
@@ -1744,17 +1748,17 @@ function _select_Gateway() { // Check for Gateway used to
 
     // Forcing settings clear !
     var ver = GM_getValue("script_version", 0);
-    if ((ver < 3.5) && true) {
+    if ((ver < scriptVersion) && forceSettingsResetOnUpgrade) {
         window.setTimeout(function() {
             var keys = GM_listValues();
             for (i = 0; i < keys.length; i++) {
                 var key = keys[i];
                 GM_deleteValue(key);
             }
-            GM_setValue("script_version", 3.5);
+            GM_setValue("script_version", scriptVersion);
             window.setTimeout(function() {
                 unsafeWindow.location.href = current_Gateway;
-            }, 500);
+            }, 50);
         }, 0);
         return;
     }
@@ -3550,6 +3554,7 @@ function _select_Gateway() { // Check for Gateway used to
                         var key = keys[i];
                         GM_deleteValue(key);
                     }
+                    GM_setValue("script_version", scriptVersion);
                     window.setTimeout(function() {
                         unsafeWindow.location.href = current_Gateway;
                     }, 0);
