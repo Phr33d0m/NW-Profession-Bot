@@ -1818,7 +1818,7 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'consolidationSettings', name:'consolidate',      type:'checkbox',pane:'bank',    title:'Consolidate AD via ZEX',     tooltip:'Automatically attempt to post, cancel and withdraw AD via ZEX and consolidate to designated character',border:true},
-        {scope: 'account', group: 'consolidationSettings', name:'bankchar',         type:'text',    pane:'bank',    title:'Character Name of Banker',   tooltip:'Enter name of the character to hold account AD'},
+        {scope: 'account', group: 'consolidationSettings', name:'bankCharName',         type:'text',    pane:'bank',    title:'Character Name of Banker',   tooltip:'Enter name of the character to hold account AD'},
         {scope: 'account', group: 'consolidationSettings', name:'minToTransfer',    type:'text',    pane:'bank',    title:'Min AD for Transfer',        tooltip:'Enter minimum AD limit for it to be cosidered for transfer off a character'},
         {scope: 'account', group: 'consolidationSettings', name:'minCharBalance',   type:'text',    pane:'bank',    title:'Min Character balance',      tooltip:'Enter the amount of AD to always keep available on characters'},
         {scope: 'account', group: 'consolidationSettings', name:'transferRate',     type:'text',    pane:'bank',    title:'AD per Zen Rate (in zen)',   tooltip:'Enter default rate to use for transfering through ZEX'},
@@ -2931,8 +2931,7 @@ function _select_Gateway() { // Check for Gateway used to
         //if (accountSettings.consolidationSettings.consolidate) {
         if (getSetting('consolidationSettings','consolidate')) {
             // Check that we dont take money from the character assigned as the banker // Zen Transfer / Listing
-            console.log("bank: " + accountSettings.consolidationSettings.bankCharName + " model: " + unsafeWindow.client.dataModel.model.ent.main.name);
-            if (accountSettings.consolidationSettings.bankCharName !== unsafeWindow.client.dataModel.model.ent.main.name) {
+            if ((accountSettings.consolidationSettings.bankCharName) && (accountSettings.consolidationSettings.bankCharName !== unsafeWindow.client.dataModel.model.ent.main.name)) {
                 // Check the required min AD amount on character
                 if (getSetting('consolidationSettings','minToTransfer') && 
                         parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds) >= (parseInt(getSetting('consolidationSettings','minToTransfer')) + parseInt(getSetting('consolidationSettings','minCharBalance')))) {
