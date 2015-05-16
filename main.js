@@ -6,8 +6,8 @@
 // @include https://gateway*.playneverwinter.com/*
 // @include http://gateway.*.perfectworld.eu/*
 // @include https://gateway.*.perfectworld.eu/*
-// @require http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js
-// @resource jqUI_CSS http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/cupertino/jquery-ui.css
+// @require https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js
+// @resource jqUI_CSS https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/cupertino/jquery-ui.css
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
@@ -97,8 +97,8 @@ var s_paused = false; // extend the paused setting to the Page Reloading functio
 
 // Include JqueryUI CSS
 var jqUI_CssSrc = GM_getResourceText("jqUI_CSS");
-/*jqUI_CssSrc = jqUI_CssSrc.replace (/url\(images\//g, "url(http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/dark-hive/images/");*/
-jqUI_CssSrc = jqUI_CssSrc.replace(/url\(images\//g, "url(http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/cupertino/images/");
+/*jqUI_CssSrc = jqUI_CssSrc.replace (/url\(images\//g, "url(https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/dark-hive/images/");*/
+jqUI_CssSrc = jqUI_CssSrc.replace(/url\(images\//g, "url(https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/cupertino/images/");
 jqUI_CssSrc = jqUI_CssSrc.replace(/font-size: 1\.1em/g, "font-size: 0.9em");
 GM_addStyle(jqUI_CssSrc);
 
@@ -3982,7 +3982,7 @@ function _select_Gateway() { // Check for Gateway used to
             input.data('name', settingsItem.name);
             if (settingsItem.sub_name) input.data('sub_name', settingsItem.sub_name);
             if (charName) input.data('charName', charName);
-            label = $('<label class="' + label_css_classes + '" for="' + id_name + '">' + settingsItem.title + '</label>');
+            label = $('<label title="' + settingsItem.tooltip + '" class="' + label_css_classes + '" for="' + id_name + '">' + settingsItem.title + '</label>');
             return { input: input, label: label };
         }
 
