@@ -1,4 +1,17 @@
 RELEASE NOTES
+3.5
+- Settings are saved per account / char.
+- Settings are saved via event - should fix the freeze (save button removed).
+- Chars always loaded from the model.
+- Settings UI updated on log in.
+- UI functions add for easier refactoring
+- Per char setting override.
+- Per char automatic daily SCA.
+- Profession next visit tab + reset added.
+- Inital support for multiple tab run in the same browser.
+- Translation support (thanks WloBeb)
+- Profile adjustments
+- addProfile() for easier profiles (thanks WloBeb, dlebedynskyi)
 3.1
 - A lot of backend changes
 - Added mass refining profiles for some professions
