@@ -2206,7 +2206,7 @@ function _select_Gateway() { // Check for Gateway used to
                 // Click all buttons and select an item to use in the slot
                 var def = $.Deferred();
                 var buttonList = $('.taskdetails-assets:eq(1)').find("button");
-                if (buttonList.length && getSetting('general','fillOptionals')) {
+                if (buttonList.length && getSetting('professionSettings','fillOptionals')) {
                     SelectItemFor(buttonList, 0, def, prof);
                 } else {
                     def.resolve();
