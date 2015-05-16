@@ -1744,19 +1744,20 @@ function _select_Gateway() { // Check for Gateway used to
 
     // Forcing settings clear !
     var ver = GM_getValue("script_version", 0);
-    if ((ver < 3.5) && true) 
+    if ((ver < 3.5) && true) {
         window.setTimeout(function() {
             var keys = GM_listValues();
             for (i = 0; i < keys.length; i++) {
                 var key = keys[i];
                 GM_deleteValue(key);
-                GM_setValue("script_version", 3.5);
             }
+            GM_setValue("script_version", 3.5);
             window.setTimeout(function() {
                 unsafeWindow.location.href = current_Gateway;
-            }, 0);
+            }, 500);
         }, 0);
-
+        return;
+    }
 
     // Load Settings
     var settingnames = [
@@ -4477,15 +4478,15 @@ function _select_Gateway() { // Check for Gateway used to
                 'settings.main.charcount.tooltip': 'Enter number of characters to use (Save and Apply to update settings form)',
             },
             'pl': {
-                'translation.needed': 'wymagane tłumaczenie',
-                'tab.general': 'Ogólne',
+                'translation.needed': 'wymagane t?umaczenie',
+                'tab.general': 'Og?lne',
                 'tab.professions': 'Profesje',
                 'tab.vendor': 'Kupiec',
                 'tab.consolidation': 'Konsolidacja AD',
-                'tab.other': 'Pozostałe',
+                'tab.other': 'Pozosta?e',
                 'tab.counters': 'Liczniki szlifowania',
                 'tab.workers': 'Pracownicy',
-                'tab.tools': 'Narzędzia',
+                'tab.tools': 'Narz?dzia',
                 'tab.resources': 'Surowce',
                 'tab.levels': 'Poziomy prof.',
                 'tab.slots': 'Sloty',
@@ -4494,30 +4495,30 @@ function _select_Gateway() { // Check for Gateway used to
                 'button.close': 'Zamknij',
                 'button.cycle': 'Runda SCA',
                 'settings.main.paused': 'Zatrzymaj skrypt',
-                'settings.main.paused.tooltip': 'Wyłącz wszelką automatyzację',
-                'settings.main.debug': 'Włącz debugowanie',
-                'settings.main.debug.tooltip': 'Wyświetl wszystkie komunikaty na konsoli (Ctrl+Shift+i w Chrome/Chromium)',
+                'settings.main.paused.tooltip': 'Wy??cz wszelk? automatyzacj?',
+                'settings.main.debug': 'W??cz debugowanie',
+                'settings.main.debug.tooltip': 'Wy?wietl wszystkie komunikaty na konsoli (Ctrl+Shift+i w Chrome/Chromium)',
                 'settings.main.openrewards': 'Otwieraj skrzynki',
-                'settings.main.openrewards.tooltip': 'Otwieraj skrzynki z zadań Przywództwa przy zmianie postaci',
-                'settings.main.autoreload': 'Automatyczne przeładowanie',
-                'settings.main.autoreload.tooltip': 'Włączenie tej opcji powoduje okresowe przeładowanie strony (Upewnij się, że Automatyczne logowanie jest włączone)',
+                'settings.main.openrewards.tooltip': 'Otwieraj skrzynki z zada? Przyw?dztwa przy zmianie postaci',
+                'settings.main.autoreload': 'Automatyczne prze?adowanie',
+                'settings.main.autoreload.tooltip': 'W??czenie tej opcji powoduje okresowe prze?adowanie strony (Upewnij si?, ?e Automatyczne logowanie jest w??czone)',
                 'settings.main.refinead': 'Szlifuj diamenty',
-                'settings.main.refinead.tooltip': 'Przy zmianie postaci szlifuj diamenty astralne jeśli to możliwe',
-                'settings.main.incdelay': 'Zwiększ opóżnienia skryptu o...',
-                'settings.main.incdelay.tooltip': 'Zwiększenie opóźnień, gdy skrypt czeka przed próbą działania (pomocne przy wolnych połączeniach).',
-                'settings.main.language': 'Język skryptu',
-                'settings.main.language.tooltip': 'Język interfejsu tego skryptu (zmiana wymaga przeładowania strony)',
-                'settings.main.autologin': 'Próbuj logować automatycznie',
-                'settings.main.autologin.tooltip': 'Próbuj logować automatycznie do strony gateway',
-                'settings.main.nw_username': 'Nazwa użytkownika Neverwinter',
+                'settings.main.refinead.tooltip': 'Przy zmianie postaci szlifuj diamenty astralne je?li to mo?liwe',
+                'settings.main.incdelay': 'Zwi?ksz op??nienia skryptu o...',
+                'settings.main.incdelay.tooltip': 'Zwi?kszenie op??nie?, gdy skrypt czeka przed pr?b? dzia?ania (pomocne przy wolnych po??czeniach).',
+                'settings.main.language': 'J?zyk skryptu',
+                'settings.main.language.tooltip': 'J?zyk interfejsu tego skryptu (zmiana wymaga prze?adowania strony)',
+                'settings.main.autologin': 'Pr?buj logowa? automatycznie',
+                'settings.main.autologin.tooltip': 'Pr?buj logowa? automatycznie do strony gateway',
+                'settings.main.nw_username': 'Nazwa u?ytkownika Neverwinter',
                 'settings.main.nw_username.tooltip': '',
-                'settings.main.nw_password': 'Hasło do Neverwinter',
+                'settings.main.nw_password': 'Has?o do Neverwinter',
                 'settings.main.nw_password.tooltip': '',
-                'settings.main.charcount': 'Wprowadź liczbę postaci (naciśnij "Zapisz i zastosuj" aby odświerzyć formularz)',
-                'settings.main.charcount.tooltip': 'Wprowadź liczbę postaci (naciśnij "Save and Apply" aby odświerzyć formularz)',
+                'settings.main.charcount': 'Wprowad? liczb? postaci (naci?nij "Zapisz i zastosuj" aby od?wierzy? formularz)',
+                'settings.main.charcount.tooltip': 'Wprowad? liczb? postaci (naci?nij "Save and Apply" aby od?wierzy? formularz)',
             },
             'fr': {
-                'translation.needed': 'traduction nécessaire',
+                'translation.needed': 'traduction n?cessaire',
            }
         };
     }
