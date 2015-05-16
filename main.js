@@ -796,7 +796,9 @@ function _select_Gateway() { // Check for Gateway used to
                 "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank", //Prelate's Exquisite Elemental Chainmail
                 "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank", //Prelate's Exquisite Elemental Chausses 
 
-                  "Crafted_Med_Armorsmithing_Scale_T4_Green_Pants_Dps"//Berserker's Elemental Chausses
+                "Crafted_Med_Armorsmithing_Scale_T4_Green_Pants_Dps",//Berserker's Elemental Chausses
+                "Med_Armorsmithing_Tier3_Refine_Basic"
+
             ],
         },
     });
@@ -816,7 +818,8 @@ function _select_Gateway() { // Check for Gateway used to
                 "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank", //Prelate's Exquisite Elemental Chainmail
                 "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank", //Prelate's Exquisite Elemental Chausses 
 
-                      "Crafted_Med_Armorsmithing_Scale_T4_Green_Pants_Tank"//Soldier's Elemental Chausses
+                "Crafted_Med_Armorsmithing_Scale_T4_Green_Pants_Tank",//Soldier's Elemental Chausses
+                "Med_Armorsmithing_Tier3_Refine_Basic"
                 ],
             },
         });
@@ -836,7 +839,8 @@ function _select_Gateway() { // Check for Gateway used to
                 "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank", //Prelate's Exquisite Elemental Chainmail
                 "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank", //Prelate's Exquisite Elemental Chausses 
 
-                      "Crafted_Med_Armorsmithing_Scale_T4_Green_Shirt_Tank"//Soldier's Elemental Chainmail
+                "Crafted_Med_Armorsmithing_Scale_T4_Green_Shirt_Tank",//Soldier's Elemental Chainmail
+                "Med_Armorsmithing_Tier3_Refine_Basic"
                 ],
             },
         });
@@ -856,7 +860,8 @@ function _select_Gateway() { // Check for Gateway used to
                 "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank", //Prelate's Exquisite Elemental Chainmail
                 "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank", //Prelate's Exquisite Elemental Chausses 
 
-                      "Crafted_Med_Armorsmithing_Scale_T4_Green_Shirt_Dps"//Berserker's Elemental Chainmail
+                "Crafted_Med_Armorsmithing_Scale_T4_Green_Shirt_Dps",//Berserker's Elemental Chainmail
+                "Med_Armorsmithing_Tier3_Refine_Basic"
                 ],
             },
         });
@@ -877,7 +882,8 @@ function _select_Gateway() { // Check for Gateway used to
                 "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps", //Berserker's Exquisite Elemental Chausses
                 "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank", //Berserker's Exquisite Elemental Chainmail
 
-                      "Crafted_Med_Armorsmithing_Chain_T4_Green_Pants_Dps"//Berserker's Elemental Chainmail
+                "Crafted_Med_Armorsmithing_Chain_T4_Green_Pants_Dps",//Berserker's Elemental Chainmail
+                "Med_Armorsmithing_Tier3_Refine_Basic"
                 ],
             },
         });
@@ -898,7 +904,8 @@ function _select_Gateway() { // Check for Gateway used to
                 "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps", //Berserker's Exquisite Elemental Chausses
                 "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank", //Berserker's Exquisite Elemental Chainmail
 
-                      "Crafted_Med_Armorsmithing_Chain_T4_Green_Shirt_Dps"//Zealot's Elemental Chainmail
+                "Crafted_Med_Armorsmithing_Chain_T4_Green_Shirt_Dps",//Zealot's Elemental Chainmail
+                "Med_Armorsmithing_Tier3_Refine_Basic"
                 ],
             },
         });
@@ -919,7 +926,8 @@ function _select_Gateway() { // Check for Gateway used to
                 "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps", //Berserker's Exquisite Elemental Chausses
                 "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank", //Berserker's Exquisite Elemental Chainmail
 
-                      "Crafted_Med_Armorsmithing_Chain_T4_Green_Shirt_Tank"//Prelate's Elemental Chainmail
+                "Crafted_Med_Armorsmithing_Chain_T4_Green_Shirt_Tank",//Prelate's Elemental Chainmail
+                "Med_Armorsmithing_Tier3_Refine_Basic"
                 ],
             },
         });
@@ -940,7 +948,8 @@ function _select_Gateway() { // Check for Gateway used to
                 "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps", //Berserker's Exquisite Elemental Chausses
                 "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank", //Berserker's Exquisite Elemental Chainmail
 
-                      "Crafted_Med_Armorsmithing_Chain_T4_Green_Pants_Tank"//Prelate's Elemental Chainmail
+                "Crafted_Med_Armorsmithing_Chain_T4_Green_Pants_Tank",//Prelate's Elemental Chainmail
+                "Med_Armorsmithing_Tier3_Refine_Basic"
                 ]
             },
         });
@@ -1111,9 +1120,9 @@ function _select_Gateway() { // Check for Gateway used to
         profileName: "craft purples only",
         level: {
             //purples  first. shirts > tunics > pants.
-            25 : ["Leatherworking_Tier4_Leather_Shirt_Special_2",//Exquisite Elemental Shirt
-                  "Leatherworking_Tier4_Leather_Shirt_Special_2_Set2",//Exquisite Elemental Tunic
-                  "Leatherworking_Tier4_Leather_Pants_Special_2_Set2",//Exquisite Elemental Trousers
+            25: ["Leatherworking_Tier4_Leather_Shirt_Special_2", //Exquisite Elemental Shirt
+                "Leatherworking_Tier4_Leather_Shirt_Special_2_Set2", //Exquisite Elemental Tunic
+                "Leatherworking_Tier4_Leather_Pants_Special_2_Set2", //Exquisite Elemental Trousers
                   "Leatherworking_Tier4_Leather_Pants_Special_2", //Exquisite Elemental Pants
                   "Leatherworking_Tier3_Gather_Basic"]
         }
@@ -1123,11 +1132,12 @@ function _select_Gateway() { // Check for Gateway used to
         profileName: "craft  Elemental Shirts",
         level: {
             //purples  first. shirts > tunics > pants.
-            25 : ['Leatherworking_Tier4_Leather_Shirt_Special_2',//Exquisite Elemental Shirt
-                  'Leatherworking_Tier4_Leather_Shirt_Special_2_Set2',//Exquisite Elemental Tunic
-                  'Leatherworking_Tier4_Leather_Pants_Special_2_Set2',//Exquisite Elemental Trousers
+            25: ['Leatherworking_Tier4_Leather_Shirt_Special_2', //Exquisite Elemental Shirt
+                'Leatherworking_Tier4_Leather_Shirt_Special_2_Set2', //Exquisite Elemental Tunic
+                'Leatherworking_Tier4_Leather_Pants_Special_2_Set2', //Exquisite Elemental Trousers
                   'Leatherworking_Tier4_Leather_Pants_Special_2', //Exquisite Elemental Pants
-                  'Leatherworking_Tier4_Leather_Shirt2',//Elemental Leather Shirt 
+                'Leatherworking_Tier4_Leather_Shirt2', //Elemental Leather Shirt 
+                "Leatherworking_Tier3_Gather_Basic"
                     ]
         }
     });
@@ -1136,11 +1146,12 @@ function _select_Gateway() { // Check for Gateway used to
         profileName: "craft  Elemental Tunic",
         level: {
             //purples  first. shirts > tunics > pants.
-            25 : ['Leatherworking_Tier4_Leather_Shirt_Special_2_Set2',//Exquisite Elemental Tunic
-                  'Leatherworking_Tier4_Leather_Shirt_Special_2',//Exquisite Elemental Shirt
-                  'Leatherworking_Tier4_Leather_Pants_Special_2_Set2',//Exquisite Elemental Trousers
+            25: ['Leatherworking_Tier4_Leather_Shirt_Special_2_Set2', //Exquisite Elemental Tunic
+                'Leatherworking_Tier4_Leather_Shirt_Special_2', //Exquisite Elemental Shirt
+                'Leatherworking_Tier4_Leather_Pants_Special_2_Set2', //Exquisite Elemental Trousers
                   'Leatherworking_Tier4_Leather_Pants_Special_2', //Exquisite Elemental Pants
-                  'Leatherworking_Tier4_Leather_Shirt2_Set2',//Elemental Leather Tunic 
+                'Leatherworking_Tier4_Leather_Shirt2_Set2', //Elemental Leather Tunic 
+                'Leatherworking_Tier3_Gather_Basic'
                     ]
         }
     });
@@ -1149,11 +1160,12 @@ function _select_Gateway() { // Check for Gateway used to
         profileName: "craft  Elemental Trousers(?)",
         level: {
             //purples  first. shirts > tunics > pants.
-            25 : ['Leatherworking_Tier4_Leather_Pants_Special_2_Set2',//Exquisite Elemental Trousers
+            25: ['Leatherworking_Tier4_Leather_Pants_Special_2_Set2', //Exquisite Elemental Trousers
                   'Leatherworking_Tier4_Leather_Pants_Special_2', //Exquisite Elemental Pants
-                  'Leatherworking_Tier4_Leather_Shirt_Special_2_Set2',//Exquisite Elemental Tunic
-                  'Leatherworking_Tier4_Leather_Shirt_Special_2',//Exquisite Elemental Shirt
-                  'Leatherworking_Tier4_Leather_Pants2_Set2',//Elemental Leather Trousers 
+                'Leatherworking_Tier4_Leather_Shirt_Special_2_Set2', //Exquisite Elemental Tunic
+                'Leatherworking_Tier4_Leather_Shirt_Special_2', //Exquisite Elemental Shirt
+                'Leatherworking_Tier4_Leather_Pants2_Set2', //Elemental Leather Trousers 
+                'Leatherworking_Tier3_Gather_Basic'
                     ]
         }
     });
@@ -1162,11 +1174,12 @@ function _select_Gateway() { // Check for Gateway used to
         profileName: "craft  Elemental Pants",
         level: {
             //purples  first. shirts > tunics > pants.
-            25 : ['Leatherworking_Tier4_Leather_Pants_Special_2', //Exquisite Elemental Pants
-                  'Leatherworking_Tier4_Leather_Pants_Special_2_Set2',//Exquisite Elemental Trousers
-                  'Leatherworking_Tier4_Leather_Shirt_Special_2_Set2',//Exquisite Elemental Tunic
-                  'Leatherdeworking_Tier4_Leather_Shirt_Special_2',//Exquisite Elemental Shirt
-                  'Leatherworking_Tier4_Leather_Pants2',//Elemental Leather Trousers 
+            25: ['Leatherworking_Tier4_Leather_Pants_Special_2', //Exquisite Elemental Pants
+                'Leatherworking_Tier4_Leather_Pants_Special_2_Set2', //Exquisite Elemental Trousers
+                'Leatherworking_Tier4_Leather_Shirt_Special_2_Set2', //Exquisite Elemental Tunic
+                'Leatherdeworking_Tier4_Leather_Shirt_Special_2', //Exquisite Elemental Shirt
+                'Leatherworking_Tier4_Leather_Pants2', //Elemental Leather Trousers 
+                'Leatherworking_Tier3_Gather_Basic'
                     ]
         }
     });
@@ -2019,7 +2032,7 @@ function _select_Gateway() { // Check for Gateway used to
             //console.log("after dice");
             WaitForNotState(".modal-window.daily-dice").done(function() {
                 charStatisticsList[_charName].general.lastSCAVisit = Date.now();
-                GM_setValue("chars__statistics__" + _fullCharName , JSON.stringify(charStatisticsList[_charName]));
+                GM_setValue("statistics__char__" + _fullCharName , JSON.stringify(charStatisticsList[_charName]));
                 updateCounters(false);
 
                 //Adjusting for the time the SCA took
@@ -2088,7 +2101,7 @@ function _select_Gateway() { // Check for Gateway used to
             // If Dice roll dialog is non existant
             WaitForNotState(".modal-window.daily-dice").done(function() {
                 charStatisticsList[charNamesList[_charIndex]].general.lastSCAVisit = Date.now();
-                GM_setValue("chars__statistics__" + _fullCharName , JSON.stringify(charStatisticsList[charNamesList[_charIndex]]));
+                GM_setValue("statistics__char__" + _fullCharName , JSON.stringify(charStatisticsList[charNamesList[_charIndex]]));
                 updateCounters(false);
                 if (_isLastChar) {
                     window.setTimeout(function() {
@@ -3047,7 +3060,7 @@ function _select_Gateway() { // Check for Gateway used to
                 }
             });
 
-        GM_setValue("chars__statistics__" + curCharFullName , JSON.stringify(charStatisticsList[curCharName]));
+        GM_setValue("statistics__char__" + curCharFullName , JSON.stringify(charStatisticsList[curCharName]));
         updateCounters(false);
 
 
@@ -3119,7 +3132,6 @@ function _select_Gateway() { // Check for Gateway used to
             console.warn("No Active chars found!");
         }
         GM_setValue("curCharNum", curCharNum);
-        
         
         var runSCAtime = !charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit || ((charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit + (1000*60*60*24)) < Date.now());
         var sca_setting = getSetting('generalSettings','runSCA'); 
@@ -3326,7 +3338,6 @@ function _select_Gateway() { // Check for Gateway used to
                         tempCharsStatistics = {};
                     };
                     charStatisticsList[charName] = $.extend(true, {}, defaultCharStatistics, tempCharsStatistics);
-
                 })
                 
                 // Adding the Account and character settings / info to the UI
@@ -4248,16 +4259,14 @@ function _select_Gateway() { // Check for Gateway used to
         
         // Visit times and SCA tab
         html = '<table>';
-        html += "<tr><th></th><th>Character Name</th><th>Next Profession</th><th>Last SCA</th>";
+        html += "<tr><th>Character Name</th><th>Next Profession</th><th>Last SCA</th>";
         charNamesList.forEach(function(charName, idx) {
             html += "<tr>";
-            html += '<td><button class=" visitReset " value=' + (idx + 1) + '>reset</button></td>';
             html += "<td>" + charName + "</td>";
-
             if (!chartimers[idx]) html += "<td>No data</td>";
-            else    html += "<td><span data-timer='" + chartimers[idx] + "' data-timer-length='2'></span></td>";
+            else    html += "<td><button class=' visitReset ' value=" + (idx + 1) + ">reset</button><span data-timer='" + chartimers[idx] + "' data-timer-length='2'></span></td>";
             if (!charStatisticsList[charName].general.lastSCAVisit) html += "<td>No data</td>";
-            else html += "<td>" + Date(charStatisticsList[charName].general.lastSCAVisit).toLocaleString() + "</td>";
+            else html += "<td>" +  (new Date(charStatisticsList[charName].general.lastSCAVisit)).toLocaleString() + "</td>";
             html += "</tr>";
         });
         html += "</table>";
@@ -4429,6 +4438,21 @@ function _select_Gateway() { // Check for Gateway used to
         translation = {
             'en': {
                 'translation.needed': 'translation needed',
+                'tab.general': 'General settings',
+                'tab.professions': 'Professions',
+                'tab.vendor': 'Vendor options',
+                'tab.consolidation': 'AD Consolidation',
+                'tab.other': 'Other',
+                'tab.counters': 'Refine Counters',
+                'tab.workers': 'Workers',
+                'tab.tools': 'Tools',
+                'tab.resources': 'Resource Tracker',
+                'tab.levels': 'Prof levels',
+                'tab.slots': 'Slots',
+                'static.settings': 'Settings',
+                'button.save&apply': 'Save and Apply',
+                'button.close': 'Close',
+                'button.cycle': 'Cycle SCA',
                 'settings.main.paused': 'Pause Script',
                 'settings.main.paused.tooltip': 'Disable All Automation',
                 'settings.main.debug': 'Enable Debug',
@@ -4453,32 +4477,47 @@ function _select_Gateway() { // Check for Gateway used to
                 'settings.main.charcount.tooltip': 'Enter number of characters to use (Save and Apply to update settings form)',
             },
             'pl': {
-                'translation.needed': 'wymagane t?umaczenie',
+                'translation.needed': 'wymagane tłumaczenie',
+                'tab.general': 'Ogólne',
+                'tab.professions': 'Profesje',
+                'tab.vendor': 'Kupiec',
+                'tab.consolidation': 'Konsolidacja AD',
+                'tab.other': 'Pozostałe',
+                'tab.counters': 'Liczniki szlifowania',
+                'tab.workers': 'Pracownicy',
+                'tab.tools': 'Narzędzia',
+                'tab.resources': 'Surowce',
+                'tab.levels': 'Poziomy prof.',
+                'tab.slots': 'Sloty',
+                'static.settings': 'Ustawienia',
+                'button.save&apply': 'Zapisz i zastosuj',
+                'button.close': 'Zamknij',
+                'button.cycle': 'Runda SCA',
                 'settings.main.paused': 'Zatrzymaj skrypt',
-                'settings.main.paused.tooltip': 'Wy??cz wszelk? automatyzacj?',
-                'settings.main.debug': 'W??cz debugowanie',
-                'settings.main.debug.tooltip': 'Wy?wietl wszystkie komunikaty na konsoli (Ctrl+Shift+i w Chrome/Chromium)',
+                'settings.main.paused.tooltip': 'Wyłącz wszelką automatyzację',
+                'settings.main.debug': 'Włącz debugowanie',
+                'settings.main.debug.tooltip': 'Wyświetl wszystkie komunikaty na konsoli (Ctrl+Shift+i w Chrome/Chromium)',
                 'settings.main.openrewards': 'Otwieraj skrzynki',
-                'settings.main.openrewards.tooltip': 'Otwieraj skrzynki z zada? Przyw?dztwa przy zmianie postaci',
-                'settings.main.autoreload': 'Automatyczne prze?adowanie',
-                'settings.main.autoreload.tooltip': 'W??czenie tej opcji powoduje okresowe prze?adowanie strony (Upewnij si?, ?e Automatyczne logowanie jest w??czone)',
+                'settings.main.openrewards.tooltip': 'Otwieraj skrzynki z zadań Przywództwa przy zmianie postaci',
+                'settings.main.autoreload': 'Automatyczne przeładowanie',
+                'settings.main.autoreload.tooltip': 'Włączenie tej opcji powoduje okresowe przeładowanie strony (Upewnij się, że Automatyczne logowanie jest włączone)',
                 'settings.main.refinead': 'Szlifuj diamenty',
-                'settings.main.refinead.tooltip': 'Przy zmianie postaci szlifuj diamenty astralne je?li to mo?liwe',
-                'settings.main.incdelay': 'Zwi?ksz op??nienia skryptu o...',
-                'settings.main.incdelay.tooltip': 'Zwi?kszenie op??nie?, gdy skrypt czeka przed pr?b? dzia?ania (pomocne przy wolnych po??czeniach).',
-                'settings.main.language': 'J?zyk skryptu',
-                'settings.main.language.tooltip': 'J?zyk interfejsu tego skryptu (zmiana wymaga prze?adowania strony)',
-                'settings.main.autologin': 'Pr?buj logowa? automatycznie',
-                'settings.main.autologin.tooltip': 'Pr?buj logowa? automatycznie do strony gateway',
-                'settings.main.nw_username': 'Nazwa u?ytkownika Neverwinter',
+                'settings.main.refinead.tooltip': 'Przy zmianie postaci szlifuj diamenty astralne jeśli to możliwe',
+                'settings.main.incdelay': 'Zwiększ opóżnienia skryptu o...',
+                'settings.main.incdelay.tooltip': 'Zwiększenie opóźnień, gdy skrypt czeka przed próbą działania (pomocne przy wolnych połączeniach).',
+                'settings.main.language': 'Język skryptu',
+                'settings.main.language.tooltip': 'Język interfejsu tego skryptu (zmiana wymaga przeładowania strony)',
+                'settings.main.autologin': 'Próbuj logować automatycznie',
+                'settings.main.autologin.tooltip': 'Próbuj logować automatycznie do strony gateway',
+                'settings.main.nw_username': 'Nazwa użytkownika Neverwinter',
                 'settings.main.nw_username.tooltip': '',
-                'settings.main.nw_password': 'Has?o do Neverwinter',
+                'settings.main.nw_password': 'Hasło do Neverwinter',
                 'settings.main.nw_password.tooltip': '',
-                'settings.main.charcount': 'Wprowad? liczb? postaci (naci?nij "Save and Apply" aby od?wierzy? formularz)',
-                'settings.main.charcount.tooltip': 'Wprowad? liczb? postaci (naci?nij "Save and Apply" aby od?wierzy? formularz)',
+                'settings.main.charcount': 'Wprowadź liczbę postaci (naciśnij "Zapisz i zastosuj" aby odświerzyć formularz)',
+                'settings.main.charcount.tooltip': 'Wprowadź liczbę postaci (naciśnij "Save and Apply" aby odświerzyć formularz)',
             },
             'fr': {
-                'translation.needed': 'traduction n?cessaire',
+                'translation.needed': 'traduction nécessaire',
            }
         };
     }
@@ -4490,7 +4529,8 @@ function _select_Gateway() { // Check for Gateway used to
             return "unknown key: " + key;
         }
         if (translation[lang][key] === undefined) {
-            return translation[lang]['translation.needed'] + ": " + key;
+            console.log('translation needed: lang: ' + lang + ", key: " + key);
+            return '/-/ ' + translation['en'][key] + ' /-/';
         }
         return translation[lang][key];
     }
