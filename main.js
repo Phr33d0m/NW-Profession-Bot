@@ -1611,7 +1611,7 @@ function _select_Gateway() { // Check for Gateway used to
             vendorPots2: false,
             vendorPots3: false,
             vendorPots4: false,
-            vendorPots4: false,
+            vendorPots5: false,
             vendorEnchR1: false,
             vendorEnchR2: false,
             vendorEnchR3: false,
@@ -4458,7 +4458,18 @@ function _select_Gateway() { // Check for Gateway used to
     }
 
     function addTranslation() {
+        var lang = 'en';
+        var scriptSettings;
+        try {
+            scriptSettings = JSON.parse(GM_getValue("settings__script", "{}"));
+        } catch (e) {
+            scriptSettings = null;
+        }
+        if (scriptSettings !== undefined || scriptSettings.general !== undefined || scriptSettings.general.language !== undefined) {
+            lang = scriptSettings.general.language;
+        }
         translation = {
+            'currLang': lang,
             'en': {
                 'translation.needed': 'translation needed',
                 'tab.general': 'General settings',
@@ -4546,7 +4557,7 @@ function _select_Gateway() { // Check for Gateway used to
     }
 
     function tr(key) {
-        var lang = GM_getValue('language', 'en');
+        var lang = translation['currLang'];
         if (translation['en'][key] === undefined) {
             console.log("translation: unknown key " + key);
             return "unknown key: " + key;
