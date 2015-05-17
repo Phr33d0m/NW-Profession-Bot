@@ -3153,7 +3153,10 @@ function _select_Gateway() { // Check for Gateway used to
             ptext.append("<div class='h_warning'>No Active chars found!</div>");
             console.warn("No Active chars found!");
         }
-        GM_setValue("curCharNum", curCharNum);
+        
+        GM_setValue("curCharNum_" + loggedAccount, curCharNum);
+        
+                
         
         var runSCAtime = !charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit || ((charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit + (1000*60*60*24)) < Date.now());
         var sca_setting = getSetting('generalSettings','runSCA'); 
@@ -3370,7 +3373,7 @@ function _select_Gateway() { // Check for Gateway used to
             }
 
             // load current character position and values
-            curCharNum = GM_getValue("curCharNum", 0);
+            curCharNum = GM_getValue("curCharNum_" + accountName, 0);
             curCharName = charNamesList[curCharNum];
             curCharFullName = curCharName + '@' + accountName;
 
