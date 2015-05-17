@@ -1601,9 +1601,9 @@ function _select_Gateway() { // Check for Gateway used to
 
     var defaultAccountSettings = {
         vendorSettings: {
-            vendorJunk: true,
-            vendorKitsLimit: true,
-            vendorAltarsLimit: true,
+            vendorJunk: false,
+            vendorKitsLimit: false,
+            vendorAltarsLimit: false,
             vendorKitsAll: false,
             vendorAltarsAll: false,
             vendorProfResults: false,
@@ -1646,9 +1646,9 @@ function _select_Gateway() { // Check for Gateway used to
             manualTaskSlots: false,
         },
         vendorSettings: {
-            vendorJunk: true,
-            vendorKitsLimit: true,
-            vendorAltarsLimit: true,
+            vendorJunk: false,
+            vendorKitsLimit: false,
+            vendorAltarsLimit: false,
             vendorKitsAll: false,
             vendorAltarsAll: false,
             vendorProfResults: false,
@@ -1751,18 +1751,33 @@ function _select_Gateway() { // Check for Gateway used to
 
     // Forcing settings clear !
     var ver = GM_getValue("script_version", 0);
+    
     if ((ver < scriptVersion) && forceSettingsResetOnUpgrade) {
-        window.setTimeout(function() {
-            var keys = GM_listValues();
-            for (i = 0; i < keys.length; i++) {
-                var key = keys[i];
-                GM_deleteValue(key);
-            }
-            GM_setValue("script_version", scriptVersion);
-            window.setTimeout(function() {
-                unsafeWindow.location.href = current_Gateway;
-            }, 50);
-        }, 0);
+        var str = "Detected an upgrade from old version or fresh install.<br />Procceding will wipe all saved settings.<br />Please set characters to active after log in.";  
+        $('<div id="dialog-confirm" title="Setting wipe confirm">' + str + '</div>').dialog({
+              resizable: true,
+              width: 500,
+              modal: false,
+              buttons: {
+                "Continue": function() {
+                    $( this ).dialog( "close" );
+                    window.setTimeout(function() {
+                        var keys = GM_listValues();
+                        for (i = 0; i < keys.length; i++) {
+                            var key = keys[i];
+                            GM_deleteValue(key);
+                        }
+                        GM_setValue("script_version", scriptVersion);
+                        window.setTimeout(function() {
+                            unsafeWindow.location.href = current_Gateway;
+                        }, 50);
+                    }, 0);
+                },
+                Cancel: function() {
+                  $( this ).dialog( "close" );
+                }
+              }
+            });        
         return;
     }
 
@@ -1805,7 +1820,8 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'account', group: 'professionSettings', name:'skipPatrolTask', type:'select', pane:'prof', title:'Skip Patrol task if > 10 claims', tooltip:'Skip \"Patrol the Mines\" leadership task if there are more than 10 mining claims in the inventory (Never, Always, On AD profile, if Leadership level is &gt;= 20, or both of the above )',
             opts:[{name:'never',value:'never'},{name:'always',value:'always'},{name:'AD profile',value:'ad'},{name:'Leadership lvl 20',value:'ld20'},{name:'AD&Lvl20',value:'AD&Lvl20'}]},
         {scope: 'account', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Altar Node Kit Stacks',  tooltip:'Limit skill kits stacks to 50/Altars80, vendor kits unusable by class, remove all if player has one bag or full bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Node Kit Stacks',  tooltip:'Limit skill kits stacks to 50, vendor kits unusable by class, remove all if player has one bag or full bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorAltarsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Altar Stacks',  tooltip:'Limit Altars to 80,remove all if player has one bag or full bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorKitsAll',   type:'checkbox', pane:'vend',   title:'Vendor All Node Kits',   tooltip:'Sell ALL skill kits.'},
         {scope: 'account', group: 'vendorSettings', name:'vendorAltarsAll', type:'checkbox', pane:'vend',   title:'Vendor All Altar',       tooltip:'Sell ALL Altars.'},
         {scope: 'account', group: 'vendorSettings', name:'vendorProfResults',type:'checkbox',pane:'vend',   title:'Vendor/Maintain Prof Crafted Levelup Items',    tooltip:'Vendor off Tier 1 to 5 items produced and reused for leveling crafting professions.'},
@@ -1842,6 +1858,7 @@ function _select_Gateway() { // Check for Gateway used to
             opts:[{name:'never',value:'never'},{name:'always',value:'always'},{name:'AD profile',value:'ad'},{name:'Leadership lvl 20',value:'ld20'},{name:'AD&Lvl20',value:'AD&Lvl20'}]},
         {scope: 'char', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
         {scope: 'char', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Altar Node Kit Stacks',  tooltip:'Limit skill kits stacks to 50/Altars80, vendor kits unusable by class, remove all if player has one bag or full bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorAltarsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Altar Stacks',  tooltip:'Limit Altars to 80,remove all if player has one bag or full bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorKitsAll',   type:'checkbox', pane:'vend',   title:'Vendor All Node Kits',   tooltip:'Sell ALL skill kits.'},
         {scope: 'char', group: 'vendorSettings', name:'vendorAltarsAll', type:'checkbox', pane:'vend',   title:'Vendor All Altar',       tooltip:'Sell ALL Altars.'},
         {scope: 'char', group: 'vendorSettings', name:'vendorProfResults',type:'checkbox',pane:'vend',   title:'Vendor/Maintain Prof Crafted Levelup Items',    tooltip:'Vendor off Tier 1 to 5 items produced and reused for leveling crafting professions.'},
