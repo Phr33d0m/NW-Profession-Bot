@@ -1788,9 +1788,12 @@ function _select_Gateway() { // Check for Gateway used to
             opts: [ { name: 'english',  value: 'en'},
                     { name: 'polski',   value: 'pl'},
                     { name: 'français', value: 'fr'}],
+            onchange : function(newValue) {
+                GM_setValue('language', newValue);
+            }
         },
         {scope: 'script', group: 'general', name: 'scriptDebugMode',  title: tr('settings.main.debug'), type: 'checkbox', pane: 'main', tooltip: tr('settings.main.debug.tooltip'),
-            onsave: function(newValue, oldValue) {
+            onchange: function(newValue) {
                 console = newValue ? unsafeWindow.console || fouxConsole : fouxConsole;
             }
         },
@@ -3887,6 +3890,13 @@ function _select_Gateway() { // Check for Gateway used to
             if ($(elm).prop('type') === 'checkbox') value = $(elm).prop('checked');
             else value = $(elm).val();
             
+            var setting = settingnames.filter(function(elem) {
+                return elem.scope == scope && elem.group == group && elem.name == name;
+            });
+            if (setting.length > 0 && setting[0].onchange != undefined) {
+                setting[0].onchange(value);
+            }
+
             switch (scope) {
                 case 'script':
                     scriptSettings[group][name] = value;
@@ -4458,16 +4468,7 @@ function _select_Gateway() { // Check for Gateway used to
     }
 
     function addTranslation() {
-        var lang = 'en';
-        var scriptSettings;
-        try {
-            scriptSettings = JSON.parse(GM_getValue("settings__script", "{}"));
-        } catch (e) {
-            scriptSettings = null;
-        }
-        if (scriptSettings !== undefined || scriptSettings.general !== undefined || scriptSettings.general.language !== undefined) {
-            lang = scriptSettings.general.language;
-        }
+        var lang = GM_getValue('language', 'en');
         translation = {
             'currLang': lang,
             'en': {
