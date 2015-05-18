@@ -1587,6 +1587,7 @@ function _select_Gateway() { // Check for Gateway used to
 
     var defaultScriptSettings = {
         general: {
+            saveCharNextTime: true,
             scriptPaused: false,
             language: 'en',
             scriptDebugMode: true,
@@ -1808,6 +1809,7 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'script', group: 'general', name: 'autoLogin', title: 'Attempt to login automatically', type: 'checkbox', pane: 'main', tooltip: 'Automatically attempt to login to the neverwinter gateway site'},
         {scope: 'script', group: 'general', name: 'autoLoginAccount',  title: 'Neverwinter Username',   type: 'text',     pane: 'main', tooltip: ''},
         {scope: 'script', group: 'general', name: 'autoLoginPassword', title: 'Neverwinter Password',   type: 'password', pane: 'main', tooltip: ''},
+        {scope: 'script', group: 'general', name: 'saveCharNextTime', title: 'Save next process times',   type: 'checkbox', pane: 'main', tooltip: 'Save the next proffesion times persistently'},
         
         {scope: 'account', group: 'generalSettings', name: 'openRewards', title: 'Open Reward Chests',  type: 'checkbox', pane: 'main', tooltip: 'Enable opeing of leadership chests on character switch' },
         {scope: 'account', group: 'generalSettings', name: 'refineAD',    title: 'Refine AD',           type: 'checkbox', pane: 'main', tooltip: 'Enable refining of AD on character switch'},
@@ -1890,11 +1892,6 @@ function _select_Gateway() { // Check for Gateway used to
     }
     */
    
-   // TODO: Fix the debug setting on save so the setting actually works.
-    console = unsafeWindow.console;
-
-
-
     // Page Settings
     var PAGES = Object.freeze({
         LOGIN: {
@@ -3085,6 +3082,7 @@ function _select_Gateway() { // Check for Gateway used to
                 }
             });
 
+        charStatisticsList[curCharName].general.nextTask = chartimers[curCharNum];
         GM_setValue("statistics__char__" + curCharFullName , JSON.stringify(charStatisticsList[curCharName]));
         updateCounters(false);
 
@@ -3367,6 +3365,15 @@ function _select_Gateway() { // Check for Gateway used to
                     };
                     charStatisticsList[charName] = $.extend(true, {}, defaultCharStatistics, tempCharsStatistics);
                 })
+                
+                
+                if (scriptSettings.general.saveCharNextTime)
+                    charNamesList.forEach( function(name, idx) {
+                        chartimers[idx] = (new Date(charStatisticsList[name].general.nextTask));
+                    });
+                
+                
+                
                 
                 // Adding the Account and character settings / info to the UI
                 addSettings();
@@ -3892,14 +3899,22 @@ function _select_Gateway() { // Check for Gateway used to
             var value;
             if ($(elm).prop('type') === 'checkbox') value = $(elm).prop('checked');
             else value = $(elm).val();
+
+            var fun = $(elm).data('onchange');
+            if (typeof fun === 'function') {
+                var retval = fun(value);
+                if (retval === false ) return;  // Allowing the onchange function to stop the save
+            }
             
+            /*
             var setting = settingnames.filter(function(elem) {
                 return elem.scope == scope && elem.group == group && elem.name == name;
             });
             if (setting.length > 0 && setting[0].onchange != undefined) {
                 setting[0].onchange(value);
             }
-
+            */
+           
             switch (scope) {
                 case 'script':
                     scriptSettings[group][name] = value;
@@ -4009,6 +4024,7 @@ function _select_Gateway() { // Check for Gateway used to
             input.data('name', settingsItem.name);
             if (settingsItem.sub_name) input.data('sub_name', settingsItem.sub_name);
             if (charName) input.data('charName', charName);
+            if (settingsItem.onchange) input.data('onchange', settingsItem.onchange);
             label = $('<label title="' + settingsItem.tooltip + '" class="' + label_css_classes + '" for="' + id_name + '">' + settingsItem.title + '</label>');
             return { input: input, label: label };
         }
