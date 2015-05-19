@@ -1627,7 +1627,7 @@ function _select_Gateway() { // Check for Gateway used to
         },
         generalSettings: {
             refineAD: true,
-            openRewards: true,
+            openRewards: false,
             runSCA: 'free',
         },
         consolidationSettings: {
@@ -1672,7 +1672,7 @@ function _select_Gateway() { // Check for Gateway used to
         },
         generalSettings: {
             refineAD: true,
-            openRewards: true,
+            openRewards: false,
             runSCA: 'free',
         },
         consolidationSettings: {
