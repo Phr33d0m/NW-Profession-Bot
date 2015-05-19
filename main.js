@@ -1796,6 +1796,7 @@ function _select_Gateway() { // Check for Gateway used to
         },
         {scope: 'script', group: 'general', name: 'scriptDebugMode', title: tr('settings.main.debug'), type: 'checkbox', pane: 'main', tooltip: tr('settings.main.debug.tooltip'),
             onchange: function(newValue) {
+                unsafeWindow.console.log('DebugMode set to: ' + newValue);
                 console = newValue ? unsafeWindow.console || fouxConsole : fouxConsole;
             }
         },
@@ -3250,7 +3251,7 @@ function _select_Gateway() { // Check for Gateway used to
         s_paused =  scriptSettings.general.scriptPaused; // let the Page Reloading function know the pause state
         if (s_paused) {
             // Just continue later - the deferred object is still set and nothing will resolve it until we get past this point
-            var timerHandle = window.setTimeout(function() {
+            timerHandle = window.setTimeout(function() {
                 process();
             }, delay.DEFAULT);
             return;
@@ -3287,6 +3288,7 @@ function _select_Gateway() { // Check for Gateway used to
                 process();
             }, typeof delayTimer !== 'undefined' ? delayTimer : delay.DEFAULT);
         });
+        //console.log("Process Timer Handle: " + timerHandle);
     }
 
     function loginProcess() {
@@ -3306,7 +3308,7 @@ function _select_Gateway() { // Check for Gateway used to
         s_paused =  scriptSettings.general.scriptPaused; // let the Page Reloading function know the pause state
         if (s_paused) {
             // Just continue later - the deferred object is still set and nothing will resolve it until we get past this point
-            var timerHandle = window.setTimeout(function() {
+            timerHandle = window.setTimeout(function() {
                 process();
             }, delay.DEFAULT);
             return;
@@ -3575,7 +3577,7 @@ function _select_Gateway() { // Check for Gateway used to
             addInputsUL(tab, 'script', 'main');
             
             tab = addTab("#script_settings", "Advanced");
-            tab.html("will also delete character names <br /><button id='reset_settings_btn'>Reset ALL Settings</button>");
+            tab.html("<button id='reset_settings_btn'>Reset ALL Settings</button>");
 
             $('#reset_settings_btn').button();
             $('#reset_settings_btn').click(function() {
@@ -4125,8 +4127,8 @@ function _select_Gateway() { // Check for Gateway used to
 
         var total = 0;
         var html = '<table>';
-        html += "<tr><th>Character Name</th><th>#slots</th><th>R.Counter</th><th>~rad/h</th>";
-        html += "<th>RAD</th><th>AD</th><th>gold</th><th>rBI</th><th>BI</th><th>R.today<th></th><th>R.left</th></tr>";
+        html += "<tr><th>Character Name</th><th>#slots</th><th>R.Counter</th><th>~ad/h</th>";
+        html += "<th>RAD</th><th>AD</th><th>gold</th><th>rBI</th><th>BI</th><th>R.today<th></th></tr>";
 
         if (reset) {
             charNamesList.forEach(function(charName) {
@@ -4153,7 +4155,7 @@ function _select_Gateway() { // Check for Gateway used to
             html += "<td>" + formatNum(charStatisticsList[charName].general.rBI) + "</td>";
             html += "<td>" + formatNum(charStatisticsList[charName].general.BI) + "</td>";
             html += "<td>" + formatNum(charStatisticsList[charName].general.refined) + "</td>";
-            html += "<td>" + formatNum(charStatisticsList[charName].general.refineLimitLeft) + "</td>";
+            //html += "<td>" + formatNum(charStatisticsList[charName].general.refineLimitLeft) + "</td>";
             html += "</tr>";
         });
         html += "</table>";
@@ -4341,6 +4343,7 @@ function _select_Gateway() { // Check for Gateway used to
                 chartimers[parseInt(value)-1] = null;
                 updateCounters(false);
                 clearTimeout(timerHandle);
+                curCharNum = GM_setValue("curCharNum_" + loggedAccount, parseInt(value)-1);
                 timerHandle = window.setTimeout(function() {
                     process();
                 }, delay.SHORT);
