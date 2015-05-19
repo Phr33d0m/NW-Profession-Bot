@@ -1794,27 +1794,27 @@ function _select_Gateway() { // Check for Gateway used to
                 GM_setValue('language', newValue);
             }
         },
-        {scope: 'script', group: 'general', name: 'scriptDebugMode',  title: tr('settings.main.debug'), type: 'checkbox', pane: 'main', tooltip: tr('settings.main.debug.tooltip'),
+        {scope: 'script', group: 'general', name: 'scriptDebugMode', title: tr('settings.main.debug'), type: 'checkbox', pane: 'main', tooltip: tr('settings.main.debug.tooltip'),
             onchange: function(newValue) {
                 console = newValue ? unsafeWindow.console || fouxConsole : fouxConsole;
             }
         },
-        {scope: 'script', group: 'general', name: 'autoReload', title: 'Auto Reload', type: 'checkbox', pane: 'main', tooltip: 'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)'},
-        {scope: 'script', group: 'general', name: 'scriptDelayFactor',    title: 'Increase script delays by', type: 'select', pane: 'main', tooltip: 'Increase the delays the script waits before attempting the actions.',
+        {scope: 'script', group: 'general', name: 'autoReload', title: tr('settings.main.autoreload'), type: 'checkbox', pane: 'main', tooltip: tr('settings.main.autoreload.tooltip')},
+        {scope: 'script', group: 'general', name: 'scriptDelayFactor', title: tr('settings.main.incdelay'), type: 'select', pane: 'main', tooltip: tr('settings.main.incdelay.tooltip'),
             opts: [ { name: 'default - 1',  value: '1'}, 
                     { name: '1.5',          value: '1.5'}, 
                     { name: '2',            value: '2'},
                     { name: '2.5',          value: '2.5'},
                     { name: '3',            value: '3'}],
         }, 
-        {scope: 'script', group: 'general', name: 'autoLogin', title: 'Attempt to login automatically', type: 'checkbox', pane: 'main', tooltip: 'Automatically attempt to login to the neverwinter gateway site'},
-        {scope: 'script', group: 'general', name: 'autoLoginAccount',  title: 'Neverwinter Username',   type: 'text',     pane: 'main', tooltip: ''},
-        {scope: 'script', group: 'general', name: 'autoLoginPassword', title: 'Neverwinter Password',   type: 'password', pane: 'main', tooltip: ''},
-        {scope: 'script', group: 'general', name: 'saveCharNextTime', title: 'Save next process times',   type: 'checkbox', pane: 'main', tooltip: 'Save the next proffesion times persistently'},
+        {scope: 'script', group: 'general', name: 'autoLogin', title: tr('settings.main.autologin'), type: 'checkbox', pane: 'main', tooltip: tr('settings.main.autologin.tooltip')},
+        {scope: 'script', group: 'general', name: 'autoLoginAccount', title: tr('settings.main.nw_username'),   type: 'text',     pane: 'main', tooltip: tr('settings.main.nw_username.tooltip')},
+        {scope: 'script', group: 'general', name: 'autoLoginPassword', title: tr('settings.main.nw_password'),   type: 'password', pane: 'main', tooltip: tr('settings.main.nw_password.tooltip')},
+        {scope: 'script', group: 'general', name: 'saveCharNextTime', title: tr('settings.main.savenexttime'),   type: 'checkbox', pane: 'main', tooltip: tr('settings.main.savenexttime.tooltip')},
         
-        {scope: 'account', group: 'generalSettings', name: 'openRewards', title: 'Open Reward Chests',  type: 'checkbox', pane: 'main', tooltip: 'Enable opeing of leadership chests on character switch' },
-        {scope: 'account', group: 'generalSettings', name: 'refineAD',    title: 'Refine AD',           type: 'checkbox', pane: 'main', tooltip: 'Enable refining of AD on character switch'},
-        {scope: 'account', group: 'generalSettings', name: 'runSCA',    title: 'Run SCA',               type: 'select',   pane: 'main', tooltip: 'Running SCA adventures reward after professions',
+        {scope: 'account', group: 'generalSettings', name: 'openRewards', title: tr('settings.account.openrewards'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.account.openrewards.tooltip')},
+        {scope: 'account', group: 'generalSettings', name: 'refineAD', title: tr('settings.account.refinead'),           type: 'checkbox', pane: 'main', tooltip: tr('settings.account.refinead.tooltip')},
+        {scope: 'account', group: 'generalSettings', name: 'runSCA', title: tr('settings.account.runSCA'),               type: 'select',   pane: 'main', tooltip: tr('settings.account.runSCA.tooltip'),
             opts: [ { name: 'never',        value: 'never'}, 
                     { name: 'free time',    value: 'free'}, 
                     { name: 'always',       value: 'always'}],
@@ -3618,10 +3618,10 @@ function _select_Gateway() { // Check for Gateway used to
             UIaccount = loggedAccount;
 
             var tabs = {
-                main: 'General settings',
-                prof: 'Professions',
-                vend: 'Vendor options',
-                bank: 'AD Consolidation'
+                main: tr('tab.general'),
+                prof: tr('tab.professions'),
+                vend: tr('tab.vendor'),
+                bank: tr('tab.consolidation')
             };
 
             for (var key in tabs) {
@@ -3632,25 +3632,25 @@ function _select_Gateway() { // Check for Gateway used to
 
 
             //Statisitcs Tabs
-            var temp_tab = addTab("#info_tabs", "Refine Counters");
+            var temp_tab = addTab("#info_tabs", tr('tab.counters'));
             temp_tab.append("<div id='rcounters'></div>");
             
-            temp_tab = addTab("#info_tabs", "SCA & Visits");
+            temp_tab = addTab("#info_tabs", tr('tab.visits'));
             temp_tab.append("<div id='sca_v'></div>");
             
-            temp_tab = addTab("#info_tabs", "Workers");
+            temp_tab = addTab("#info_tabs", tr('tab.workers'));
             temp_tab.append("<div id='worker_overview'></div>");
             
-            temp_tab = addTab("#info_tabs", "Tools");
+            temp_tab = addTab("#info_tabs", tr('tab.tools'));
             temp_tab.append("<div id='tools_overview'></div>");
             
-            temp_tab = addTab("#info_tabs", "Resource Tracker");
+            temp_tab = addTab("#info_tabs", tr('tab.resources'));
             temp_tab.append("<div id='resource_tracker'></div>");
             
-            temp_tab = addTab("#info_tabs", "Prof levels");
+            temp_tab = addTab("#info_tabs", tr('tab.levels'));
             temp_tab.append("<div id='profession_levels'></div>");
             
-            temp_tab = addTab("#info_tabs", "Slots");
+            temp_tab = addTab("#info_tabs", tr('tab.slots'));
             temp_tab.append("<div id='slot_tracker'></div>");
             $("#info_tabs").tabs({ active: false, collapsible: true });                
 
@@ -4337,7 +4337,7 @@ function _select_Gateway() { // Check for Gateway used to
         $(".visitReset").click(function() {
             var value = $(this).val();
             if (value) { 
-                console.log("Reseting for " + charNamesList[value-1]) 
+                console.log("Reseting for " + charNamesList[value-1]);
                 chartimers[parseInt(value)-1] = null;
                 updateCounters(false);
                 clearTimeout(timerHandle);
@@ -4499,6 +4499,7 @@ function _select_Gateway() { // Check for Gateway used to
                 'tab.consolidation': 'AD Consolidation',
                 'tab.other': 'Other',
                 'tab.counters': 'Refine Counters',
+                'tab.visits': 'SCA & Visits',
                 'tab.workers': 'Workers',
                 'tab.tools': 'Tools',
                 'tab.resources': 'Resource Tracker',
@@ -4508,16 +4509,12 @@ function _select_Gateway() { // Check for Gateway used to
                 'button.save&apply': 'Save and Apply',
                 'button.close': 'Close',
                 'button.cycle': 'Cycle SCA',
-                'settings.main.paused': 'Pause Script',
-                'settings.main.paused.tooltip': 'Disable All Automation',
+                //'settings.main.paused': 'Pause Script',
+                //'settings.main.paused.tooltip': 'Disable All Automation',
                 'settings.main.debug': 'Enable Debug',
                 'settings.main.debug.tooltip': 'Enable all debug output to console',
-                'settings.main.openrewards': 'Open Reward Chests',
-                'settings.main.openrewards.tooltip': 'Enable opeing of leadership chests on character switch',
                 'settings.main.autoreload': 'Auto Reload',
                 'settings.main.autoreload.tooltip': 'Enabling this will reload the gateway periodically. (Ensure Auto Login is enabled)',
-                'settings.main.refinead': 'Refine AD',
-                'settings.main.refinead.tooltip': 'Enable refining of AD on character switch',
                 'settings.main.incdelay': 'Increase script delays by',
                 'settings.main.incdelay.tooltip': 'Increase the delays the script waits before attempting the actions.',
                 'settings.main.language': 'Script language',
@@ -4528,8 +4525,16 @@ function _select_Gateway() { // Check for Gateway used to
                 'settings.main.nw_username.tooltip': '',
                 'settings.main.nw_password': 'Neverwinter Password',
                 'settings.main.nw_password.tooltip': '',
-                'settings.main.charcount': 'Enter number of characters to use (Save and Apply to update settings form)',
-                'settings.main.charcount.tooltip': 'Enter number of characters to use (Save and Apply to update settings form)',
+                'settings.main.savenexttime': 'Save next process times',
+                'settings.main.savenexttime.tooltip': 'Save the next proffesion times persistently',
+                //'settings.main.charcount': 'Enter number of characters to use (Save and Apply to update settings form)',
+                //'settings.main.charcount.tooltip': 'Enter number of characters to use (Save and Apply to update settings form)',
+                'settings.account.openrewards': 'Open Reward Chests',
+                'settings.account.openrewards.tooltip': 'Enable opening of leadership chests on character switch',
+                'settings.account.refinead': 'Refine AD',
+                'settings.account.refinead.tooltip': 'Enable refining of AD on character switch',
+                'settings.account.runSCA': 'Run SCA',
+                'settings.account.runSCA.tooltip': 'Running SCA adventures reward after professions',
             },
             'pl': {
                 'translation.needed': 'wymagane tłumaczenie',
@@ -4539,6 +4544,7 @@ function _select_Gateway() { // Check for Gateway used to
                 'tab.consolidation': 'Konsolidacja AD',
                 'tab.other': 'Pozostałe',
                 'tab.counters': 'Liczniki szlifowania',
+                'tab.visits': 'Nast.zadanie i SCA',
                 'tab.workers': 'Pracownicy',
                 'tab.tools': 'Narzędzia',
                 'tab.resources': 'Surowce',
@@ -4548,16 +4554,12 @@ function _select_Gateway() { // Check for Gateway used to
                 'button.save&apply': 'Zapisz i zastosuj',
                 'button.close': 'Zamknij',
                 'button.cycle': 'Runda SCA',
-                'settings.main.paused': 'Zatrzymaj skrypt',
-                'settings.main.paused.tooltip': 'Wyłącz wszelką automatyzację',
+                //'settings.main.paused': 'Zatrzymaj skrypt',
+                //'settings.main.paused.tooltip': 'Wyłącz wszelką automatyzację',
                 'settings.main.debug': 'Włącz debugowanie',
                 'settings.main.debug.tooltip': 'Wyświetl wszystkie komunikaty na konsoli (Ctrl+Shift+i w Chrome/Chromium)',
-                'settings.main.openrewards': 'Otwieraj skrzynki',
-                'settings.main.openrewards.tooltip': 'Otwieraj skrzynki z zadań Przywództwa przy zmianie postaci',
                 'settings.main.autoreload': 'Automatyczne przeładowanie',
                 'settings.main.autoreload.tooltip': 'Włączenie tej opcji powoduje okresowe przeładowanie strony (Upewnij się, że Automatyczne logowanie jest włączone)',
-                'settings.main.refinead': 'Szlifuj diamenty',
-                'settings.main.refinead.tooltip': 'Przy zmianie postaci szlifuj diamenty astralne jeśli to możliwe',
                 'settings.main.incdelay': 'Zwiększ opóżnienia skryptu o...',
                 'settings.main.incdelay.tooltip': 'Zwiększenie opóźnień, gdy skrypt czeka przed próbą działania (pomocne przy wolnych połączeniach).',
                 'settings.main.language': 'Język skryptu',
@@ -4568,8 +4570,16 @@ function _select_Gateway() { // Check for Gateway used to
                 'settings.main.nw_username.tooltip': '',
                 'settings.main.nw_password': 'Hasło do Neverwinter',
                 'settings.main.nw_password.tooltip': '',
-                'settings.main.charcount': 'Wprowadź liczbę postaci (naciśnij "Zapisz i zastosuj" aby odświerzyć formularz)',
-                'settings.main.charcount.tooltip': 'Wprowadź liczbę postaci (naciśnij "Save and Apply" aby odświerzyć formularz)',
+                'settings.main.savenexttime': 'Zapisuj czas następnego zadania',
+                'settings.main.savenexttime.tooltip': 'Zapisuj czas następnego zadania w danych międzysesyjnych',
+                //'settings.main.charcount': 'Wprowadź liczbę postaci (naciśnij "Zapisz i zastosuj" aby odświerzyć formularz)',
+                //'settings.main.charcount.tooltip': 'Wprowadź liczbę postaci (naciśnij "Save and Apply" aby odświerzyć formularz)',
+                'settings.account.openrewards': 'Otwieraj skrzynki',
+                'settings.account.openrewards.tooltip': 'Otwieraj skrzynki z zadań Przywództwa przy zmianie postaci',
+                'settings.account.refinead': 'Szlifuj diamenty',
+                'settings.account.refinead.tooltip': 'Przy zmianie postaci szlifuj diamenty astralne jeśli to możliwe',
+                'settings.account.runSCA': 'Uruchom Wybrzeże Mieczy',
+                'settings.account.runSCA.tooltip': 'Uruchom Wybrzeże Mieczy po wybraniu zadań profesji',
             },
             'fr': {
                 'translation.needed': 'traduction nécessaire',
