@@ -56,8 +56,8 @@ RELEASE NOTES
 - Logic change at how we add new profession profiles
 - Added autovendor option for major potions
 
-Check Changelog.txt for the full changelog.
-https://raw.githubusercontent.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
+Check Changelog.txt for the full changelog:
+http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
  */
 
 // Make sure it's running on the main page, no frames
