@@ -1819,7 +1819,7 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'account', group: 'generalSettings', name: 'runSCA', title: tr('settings.account.runSCA'),               type: 'select',   pane: 'main', tooltip: tr('settings.account.runSCA.tooltip'),
             opts: [ { name: 'never',        value: 'never'}, 
                     { name: 'free time',    value: 'free'}, 
-                    { name: 'after server reset',   value: 'once'},
+                    { name: 'reset detection (testing purpose)',   value: 'once'},
                     { name: 'always',       value: 'always'}],
             },        
         {scope: 'account', group: 'professionSettings', name: 'fillOptionals',   type: 'checkbox', pane: 'prof',    title: 'Fill Optional Assets',  tooltip: 'Enable to include selecting the optional assets of tasks'},
@@ -1856,7 +1856,7 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'char', group: 'generalSettings', name: 'runSCA',    title: 'Run SCA',               type: 'select',   pane: 'main', tooltip: 'Running SCA adventures reward after professions',
             opts: [ { name: 'never',        value: 'never'}, 
                     { name: 'free time',    value: 'free'}, 
-                    { name: 'after server reset',   value: 'once'},
+                    { name: 'reset detection (testing purpose)',   value: 'once'},
                     { name: 'always',       value: 'always'}],
             },        
         
