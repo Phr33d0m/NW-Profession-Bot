@@ -2932,6 +2932,7 @@ function _select_Gateway() { // Check for Gateway used to
         if (newRefineToday < oldRefineToday) {
 			if (accountSettings.generalSettings.SCADailyReset < Date.now() - 16*60*60*1000) {
 				accountSettings.generalSettings.SCADailyReset = Date.now();
+				GM_setValue("settings__account__" + loggedAccount, JSON.stringify(accountSettings));
 			}
 		}
 
