@@ -2928,6 +2928,15 @@ function _select_Gateway() { // Check for Gateway used to
 
     function switchChar() {
 
+        // detect if daily reset occurs (no more frequently than every 16 hours)
+        var oldRefineToday = charStatisticsList[curCharName].general.refined | 0;
+        var newRefineToday = unsafeWindow.client.dataModel.model.ent.main.currencies.diamondsconverted | 0;
+        if (newRefineToday < oldRefineToday) {
+			if (accountSettings.generalSettings.SCADailyReset < Date.now() - 16*60*60*1000) {
+				accountSettings.generalSettings.SCADailyReset = Date.now();
+			}
+		}
+
         if (getSetting('generalSettings', 'refineAD')) {
             var _currencies = unsafeWindow.client.dataModel.model.ent.main.currencies;
             if (_currencies.diamondsconvertleft && _currencies.roughdiamonds) {
@@ -2995,15 +3004,6 @@ function _select_Gateway() { // Check for Gateway used to
         vendorJunk();
 
         // MAC-NW (endchanges)
-
-        // detect when daily reset occurs (no more frequently than every 16 hours)
-        var oldRefineToday = charStatisticsList[curCharName].general.refined | 0;
-        var newRefineToday = unsafeWindow.client.dataModel.model.ent.main.currencies.diamondsconverted | 0;
-        if (newRefineToday < oldRefineToday) {
-			if (accountSettings.generalSettings.SCADailyReset < Date.now() - 16*60*60*1000) {
-				accountSettings.generalSettings.SCADailyReset = Date.now();
-			}
-		}
 
         // Updating statistics
         var _stat = charStatisticsList[curCharName].general;
