@@ -1819,7 +1819,6 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'account', group: 'generalSettings', name: 'runSCA', title: tr('settings.account.runSCA'),               type: 'select',   pane: 'main', tooltip: tr('settings.account.runSCA.tooltip'),
             opts: [ { name: 'never',        value: 'never'}, 
                     { name: 'free time',    value: 'free'}, 
-                    { name: 'reset detection (testing purpose)',   value: 'once'},
                     { name: 'always',       value: 'always'}],
             },        
         {scope: 'account', group: 'professionSettings', name: 'fillOptionals',   type: 'checkbox', pane: 'prof',    title: 'Fill Optional Assets',  tooltip: 'Enable to include selecting the optional assets of tasks'},
@@ -1856,7 +1855,6 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'char', group: 'generalSettings', name: 'runSCA',    title: 'Run SCA',               type: 'select',   pane: 'main', tooltip: 'Running SCA adventures reward after professions',
             opts: [ { name: 'never',        value: 'never'}, 
                     { name: 'free time',    value: 'free'}, 
-                    { name: 'reset detection (testing purpose)',   value: 'once'},
                     { name: 'always',       value: 'always'}],
             },        
         
@@ -3172,12 +3170,12 @@ function _select_Gateway() { // Check for Gateway used to
         
                 
         
-        var runSCAtime = !charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit || ((charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit + (1000*60*60*24)) < Date.now());
-        var scaNotToday = charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit < accountSettings.generalSettings.SCADailyReset;
+        var runSCAtime = !charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit 
+                      || ((charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit + (1000*60*60*24)) < Date.now())
+                      || (charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit < accountSettings.generalSettings.SCADailyReset);
         var sca_setting = getSetting('generalSettings','runSCA'); 
         var runSCA = (runSCAtime && (sca_setting !== 'never'));
         runSCA = runSCA && (sca_setting === 'always' || (sca_setting === 'free' && chardelay > 7000)); // More than 7 seconds for the next char swap
-        runSCA = runSCA || (sca_setting === "once" && scaNotToday);
         console.log("Check if need to run SCA for " + charNamesList[lastCharNum] + ":  " + sca_setting + " " + runSCAtime);                
         
         if (runSCA) {
