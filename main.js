@@ -1629,6 +1629,7 @@ function _select_Gateway() { // Check for Gateway used to
             refineAD: true,
             openRewards: false,
             runSCA: 'free',
+            SCADailyReset: Date.now() - 24*60*60*1000,
         },
         consolidationSettings: {
             bankCharName: "",
@@ -2925,6 +2926,16 @@ function _select_Gateway() { // Check for Gateway used to
 
     function switchChar() {
 
+        // detect if daily reset occurs (no more frequently than every 16 hours)
+        var oldRefineToday = charStatisticsList[curCharName].general.refined | 0;
+        var newRefineToday = unsafeWindow.client.dataModel.model.ent.main.currencies.diamondsconverted | 0;
+        if (newRefineToday < oldRefineToday) {
+			if (accountSettings.generalSettings.SCADailyReset < Date.now() - 16*60*60*1000) {
+				accountSettings.generalSettings.SCADailyReset = Date.now();
+				GM_setValue("settings__account__" + loggedAccount, JSON.stringify(accountSettings));
+			}
+		}
+
         if (getSetting('generalSettings', 'refineAD')) {
             var _currencies = unsafeWindow.client.dataModel.model.ent.main.currencies;
             if (_currencies.diamondsconvertleft && _currencies.roughdiamonds) {
@@ -2992,7 +3003,6 @@ function _select_Gateway() { // Check for Gateway used to
         vendorJunk();
 
         // MAC-NW (endchanges)
-
 
         // Updating statistics
         var _stat = charStatisticsList[curCharName].general;
@@ -3161,7 +3171,9 @@ function _select_Gateway() { // Check for Gateway used to
         
                 
         
-        var runSCAtime = !charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit || ((charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit + (1000*60*60*24)) < Date.now());
+        var runSCAtime = !charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit 
+                      || ((charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit + (1000*60*60*24)) < Date.now())
+                      || (charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit < accountSettings.generalSettings.SCADailyReset);
         var sca_setting = getSetting('generalSettings','runSCA'); 
         var runSCA = (runSCAtime && (sca_setting !== 'never'));
         runSCA = runSCA && (sca_setting === 'always' || (sca_setting === 'free' && chardelay > 7000)); // More than 7 seconds for the next char swap
@@ -4325,6 +4337,7 @@ function _select_Gateway() { // Check for Gateway used to
             html += "</tr>";
         });
         html += "</table>";
+        html += "<div style='margin: 5px 0;'> Last SCA reset: " + (new Date(accountSettings.generalSettings.SCADailyReset)).toLocaleString() + "</div>";
         $('#sca_v').html(html);
         $('#sca_v').append("<br /><br /><button id='settings_sca'>Cycle SCA</button>");
         
