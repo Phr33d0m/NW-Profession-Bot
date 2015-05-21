@@ -286,6 +286,41 @@ function _select_Gateway() { // Check for Gateway used to
         TIMEOUT: 60000, // delay for cycle processing timeout
     };
 
+    var lastDailyResetTime = null;
+
+
+    // Forcing settings clear !
+    var ver = GM_getValue("script_version", 0);
+    
+    if ((ver < scriptVersion) && forceSettingsResetOnUpgrade) {
+        var str = "Detected an upgrade from old version or fresh install.<br />Procceding will wipe all saved settings.<br />Please set characters to active after log in.";  
+        $('<div id="dialog-confirm" title="Setting wipe confirm">' + str + '</div>').dialog({
+              resizable: true,
+              width: 500,
+              modal: false,
+              buttons: {
+                "Continue": function() {
+                    $( this ).dialog( "close" );
+                    window.setTimeout(function() {
+                        var keys = GM_listValues();
+                        for (i = 0; i < keys.length; i++) {
+                            var key = keys[i];
+                            GM_deleteValue(key);
+                        }
+                        GM_setValue("script_version", scriptVersion);
+                        window.setTimeout(function() {
+                            unsafeWindow.location.href = current_Gateway;
+                        }, 50);
+                    }, 0);
+                },
+                Cancel: function() {
+                  $( this ).dialog( "close" );
+                }
+              }
+            });        
+        return;
+    }
+
     /*
      adds new profession and new profile to task list.
      
@@ -1496,10 +1531,12 @@ function _select_Gateway() { // Check for Gateway used to
         definedTask["Siege Event"],
     ];
 
+    var customProfiles = [];  // [ { taskName: 'name', baseProfile: 'profileName' / null, profile: JSON.parsed_from_input }, { } ....]
+    var scriptSettings = {};
+
     // Populated at login   
     var loggedAccount = null;
     var UIaccount = null;
-    var scriptSettings = {};
     var accountSettings = {};
     var charSettingsList = [];
     var charNamesList = [];
@@ -1600,6 +1637,40 @@ function _select_Gateway() { // Check for Gateway used to
             scriptDelayFactor: 1,
         }
     };
+
+
+    // Loading script settings.
+    var tempScriptSettings;
+    try {
+        tempScriptSettings = JSON.parse(GM_getValue("settings__script", "{}"));
+    } catch (e) {
+        tempScriptSettings = null;
+    }
+    if (!tempScriptSettings) {
+        console.warn('Script settings couldn\'t be retrieved, loading defaults.');
+        tempScriptSettings = {};
+    };
+    scriptSettings = $.extend(true, {}, defaultScriptSettings, tempScriptSettings);
+    
+    // Loading custom profiles.
+    try {
+        customProfiles = JSON.parse(GM_getValue("custom_profiles", null));
+    } catch (e) {
+        customProfiles = null;
+    }
+    if (!customProfiles) {
+        console.warn('Custom profiles couldn\'t be retrieved.');
+        customProfiles = [];
+    };
+    customProfiles.forEach(function (cProfile, idx) {
+        addProfile(cProfile.taskName, cProfile.profile, cProfile.baseProfile);
+    });
+    
+
+    var delay_modifier = parseFloat(scriptSettings.general.scriptDelayFactor);
+    delay.SHORT *= delay_modifier;      delay.MEDIUM *= delay_modifier;     delay.LONG *= delay_modifier; 
+    delay.MINS *= 1;                    delay.DEFAULT *= delay_modifier;    delay.TIMEOUT *= delay_modifier;
+
 
     var defaultAccountSettings = {
         vendorSettings: {
@@ -1734,57 +1805,7 @@ function _select_Gateway() { // Check for Gateway used to
     }
 
 
-    // Loading script settings
-    var tempScriptSettings;
-    try {
-        tempScriptSettings = JSON.parse(GM_getValue("settings__script", "{}"));
-    } catch (e) {
-        tempScriptSettings = null;
-    }
-    if (!tempScriptSettings) {
-        console.warn('Script settings couldn\'t be retrieved, loading defaults.');
-        tempScriptSettings = {};
-    };
-    scriptSettings = $.extend(true, {}, defaultScriptSettings, tempScriptSettings);
-
-    var delay_modifier = parseFloat(scriptSettings.general.scriptDelayFactor);
-    delay.SHORT *= delay_modifier;      delay.MEDIUM *= delay_modifier;     delay.LONG *= delay_modifier; 
-    delay.MINS *= 1;                    delay.DEFAULT *= delay_modifier;    delay.TIMEOUT *= delay_modifier;
-
-
-    // Forcing settings clear !
-    var ver = GM_getValue("script_version", 0);
-    
-    if ((ver < scriptVersion) && forceSettingsResetOnUpgrade) {
-        var str = "Detected an upgrade from old version or fresh install.<br />Procceding will wipe all saved settings.<br />Please set characters to active after log in.";  
-        $('<div id="dialog-confirm" title="Setting wipe confirm">' + str + '</div>').dialog({
-              resizable: true,
-              width: 500,
-              modal: false,
-              buttons: {
-                "Continue": function() {
-                    $( this ).dialog( "close" );
-                    window.setTimeout(function() {
-                        var keys = GM_listValues();
-                        for (i = 0; i < keys.length; i++) {
-                            var key = keys[i];
-                            GM_deleteValue(key);
-                        }
-                        GM_setValue("script_version", scriptVersion);
-                        window.setTimeout(function() {
-                            unsafeWindow.location.href = current_Gateway;
-                        }, 50);
-                    }, 0);
-                },
-                Cancel: function() {
-                  $( this ).dialog( "close" );
-                }
-              }
-            });        
-        return;
-    }
-
-    // Load Settings
+    // UI Settings 
     var settingnames = [
         //{scope: 'script', group: 'general', name: 'scriptPaused',     title: 'Pause Script', type: 'checkbox', pane: 'main', tooltip: 'Disable All Automation'},
         {scope: 'script', group: 'general', name: 'language', title: tr('settings.main.language'), type: 'select', pane: 'main', tooltip: tr('settings.main.language.tooltip'), 
@@ -3168,12 +3189,13 @@ function _select_Gateway() { // Check for Gateway used to
         }
         
         GM_setValue("curCharNum_" + loggedAccount, curCharNum);
-        
-                
-        
+
+
         var runSCAtime = !charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit 
                       || ((charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit + (1000*60*60*24)) < Date.now())
-                      || (charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit < accountSettings.generalSettings.SCADailyReset);
+                      || (charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit < accountSettings.generalSettings.SCADailyReset)
+                      || (charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit < lastDailyResetTime.getTime());
+       
         var sca_setting = getSetting('generalSettings','runSCA'); 
         var runSCA = (runSCAtime && (sca_setting !== 'never'));
         runSCA = runSCA && (sca_setting === 'always' || (sca_setting === 'free' && chardelay > 7000)); // More than 7 seconds for the next char swap
@@ -3254,6 +3276,13 @@ function _select_Gateway() { // Check for Gateway used to
      */
 
     function process() {
+
+        // Calculating last daily reset time
+        var today = new Date();
+        var todayRest = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 10,0,0));
+        if (today > todayRest) lastDailyResetTime = todayRest;
+        else lastDailyResetTime = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()-1, 10,0,0));  
+        
         // Make sure the settings button exists
         addSettings();
 
@@ -3496,6 +3525,7 @@ function _select_Gateway() { // Check for Gateway used to
 
     function addSettings() {
         
+        var setEventHandlers = false;
         
         if (!($("#settingsButton").length)) {
             // Add the required CSS
@@ -3532,7 +3562,12 @@ function _select_Gateway() { // Check for Gateway used to
                 .inputSaved { color: #66FF66; }\
                 .inputSaved:after { content: \"\"; width: 8px; height: 8px; display: inline-block; background-color: #66FF66; position:relative; right: 10px; }\
                 .h_warning { color: red !important; }\
+                label.customProfiles {min-width: 150px; }\
+                select.customProfiles { margin: 10px }\
+                textarea.customProfiles { width: 500px; height: 350px; margin: 10px 0; }\
+                .custom_profiles_delete { height: 16px; }\
                 ");
+            
 
             // Add settings panel to page body
             $("body").append(
@@ -3594,6 +3629,10 @@ function _select_Gateway() { // Check for Gateway used to
             $('#reset_settings_btn').button();
             $('#reset_settings_btn').click(function() {
                 window.setTimeout(function() {
+                    GM_setValue("settings__char__" + c_name + "@" + loggedAccount, JSON.stringify(charSettingsList[c_name]));
+                    console.log("Saved char_task setting: " + scope + "." + group + "." + name + "." + sub_name + " For: " + c_name);
+                    
+                    
                     var keys = GM_listValues();
                     for (i = 0; i < keys.length; i++) {
                         var key = keys[i];
@@ -3606,27 +3645,97 @@ function _select_Gateway() { // Check for Gateway used to
                 }, 0);
             });
 
-            /*
+            
+            // Custom profiles
             tab = addTab("#script_settings", "Custom profiles");
-            tab.html("Custom profile import will be here");
-            */
-            $("#script_settings").tabs({ active: false, collapsible: true });
+            var temp_html = '';
+            temp_html += '<div><label class="customProfiles">Task name: </label><select class=" custom_input customProfiles " id="custom_profiles_taskname">';
+            tasklist.forEach(function(task) {
+                if (!task.taskActive) return;
+                temp_html += '<option value="' + task.taskListName + '">' + task.taskListName + '</option>';
+            })
+            temp_html += '</select>';
+            temp_html += '<label class="customProfiles">Base Profile: </label><select class=" custom_input customProfiles " id="custom__profiles__baseprofile"></select>';
+            temp_html += '</div>';
+            temp_html += 'Input must be valid JSON: double quotes on property names & no trailing commas. <br /> Use any online validator to easily find errors. <br /> like: http://jsonformatter.curiousconcept.com/ <br /> http://json.parser.online.fr/';
+            temp_html += '<div><textarea id="custom_profile_textarea" class=" custom_input customProfiles ">';
+            temp_html += '{ \n "profileName": "Example", \n "isProfileActive": true,\n "level": { \n  "1": ["Alchemy_Tier1_Refine_Basic", "Alchemy_Tier1_Gather_Components"] \n } \n }';
+            temp_html += '</textarea></div>';
+            temp_html += '<div><button id="custom__profiles__import_btn">Import</button></div>';
+            temp_html += '<table><tr><th>#</th><th>Task Name</th><th>Base Profile</th><th>Profile Name</th><th><th></tr>';
             
+            customProfiles.forEach(function (cProfile, idx) {
+                temp_html += '<tr><td>' + (idx+1) + '</td>';
+                temp_html += '<td>' + cProfile.taskName + '</td>';
+                temp_html += '<td>' + cProfile.baseProfile + '</td>';
+                if (typeof cProfile.profile === 'object')
+                    temp_html += '<td>' + cProfile.profile.profileName + '</td>';
+                temp_html += '<td><button class="custom_profiles_delete" value=' + idx + '></button></td>';
+            });
+            temp_html += '</ul>';
+            tab.html(temp_html);
+            
+            $( ".custom_profiles_delete" ).button({
+                icons: {
+                    primary: "ui-icon-trash"
+                },
+                text: false
+            });
+            $( ".custom_profiles_delete" ).click( function(e) {
+                var pidx = $(this).val();                    
+                customProfiles.splice(pidx,1);
+                GM_setValue("custom_profiles", JSON.stringify(customProfiles));
+                console.log('Deleted custom profile ' + pidx);
+                window.setTimeout(function() {
+                    unsafeWindow.location.href = current_Gateway;
+                }, 0);
+            });
+            
+            // Set up the advanced slot selects 
+            $("#custom_profiles_taskname").change(function(e) {
+                var _taskname = $(this).val();
+                var _profiles = tasklist.filter(function(task) {
+                    return task.taskListName == _taskname;
+                })[0].profiles.filter(function(profile) {
+                    return profile.isProfileActive
+                });
+                var profileSelect = $("#custom__profiles__baseprofile").html("");
+                profileSelect.append($("<option />").val(null).text("new"));
+                _profiles.forEach(function(profile) {
+                    profileSelect.append($("<option />").val(profile.profileName).text(profile.profileName));
+                });
+            });
+            $("#custom_profiles_taskname").change();
 
-            // Adding the save events
-            $("#settingsPanel input[type='checkbox'], #settingsPanel select").change(function (evt) {
-                saveSetting(evt.target);
-            });
-            $("#settingsPanel input[type='text'], #settingsPanel input[type='password']").on('input', function (evt) {
-                var value = $(evt.target).val();
-                setTimeout(function(value) {
-                    if ($(evt.target).val() !== value) return;
-                    saveSetting(evt.target);
-                }, 1000, value);
+            $('#custom__profiles__import_btn').button();
+            $('#custom__profiles__import_btn').click(function() {
+                window.setTimeout(function() {
+                    var taskName = $("#custom_profiles_taskname").val();
+                    var baseProfile = $("#custom__profiles__baseprofile").val();
+                    var profile;
+                    try {
+                        profile = JSON.parse($('#custom_profile_textarea').val());
+                    }
+                    catch (e) {
+                        alert("Failed to parse custom profile. JSON not valid.");
+                        return;
+                    }
+                    customProfiles.push({ taskName: taskName, baseProfile: baseProfile, profile: profile });
+                    GM_setValue("custom_profiles", JSON.stringify(customProfiles));
+                    window.setTimeout(function() {
+                        unsafeWindow.location.href = current_Gateway;
+                    }, 0);
+                }, 0);
             });
             
-        
+           
+           
+            $("#script_settings").tabs({ active: false, collapsible: true });
+            setEventHandlers = true;
         }
+        
+        
+        
         // Refresh is needed / Loading all the info (account, statistics and chars)
         if (UIaccount != loggedAccount) {
             UIaccount = loggedAccount;
@@ -3730,29 +3839,8 @@ function _select_Gateway() { // Check for Gateway used to
                     var temp_tab = addTab(char_tabs[0], tabs_c[key]);
                     addInputsUL(temp_tab, 'char', key, charName);
                 }
-                
-                
-                // Updating the event handlers
-                
-                $("#settingsPanel input[type='checkbox'], #settingsPanel select").unbind("change");
-                $("#settingsPanel input[type='checkbox'], #settingsPanel select").change(function (evt) {
-                    saveSetting(evt.target);
-                });
-                $("#settingsPanel input[type='checkbox'], #settingsPanel select").unbind("input");
-                $("#settingsPanel input[type='text'], #settingsPanel input[type='password']").on('input', function (evt) {
-                    var value = $(evt.target).val();
-                    setTimeout(function(value) {
-                        if ($(evt.target).val() !== value) return;
-                        saveSetting(evt.target);
-                    }, 1000, value);
-                });
-                
-                
-                
             }); 
             
-            
-
             $("#charSettingsAccordion").accordion({
                 heightStyle: "content",
                 autoHeight: false,
@@ -3763,53 +3851,6 @@ function _select_Gateway() { // Check for Gateway used to
             $(".charSettingsTabs").tabs();
   
 /*
-            addText += [
-                '<div class="charSettingsTabs">',
-                '<ul>',
-                '<li><a href="#charSettingsTab-1-' + i + '">Tasks</a></li>',
-                '<li><a href="#charSettingsTab-2-' + i + '">Manual Task Settings</a></li>',
-                '<li><a href="#charSettingsTab-3-' + i + '">Char Settings</a></li>',
-                '</ul>',
-                '<div id="charSettingsTab-1-' + i + '" class="charSettingsTab">',
-                '<table><thead><tr><th>Task name</th><th># of slots</th><th>profile</th><th>priority</th></tr></thead><tbody>'
-            ].join('');
-
-            // tasks
-            var k = 0;
-            while (k < (charTaskSettings.length)) {
-                if (charTaskSettings[k].type2 == 'task') {
-                    addText += '<tr>';
-                }
-                do {
-                    id = 'settings_' + charTaskSettings[k].name;
-                    switch (charTaskSettings[k].type) {
-                        case "checkbox":
-                            continue;
-                            break;
-                        case "text":
-                            addText += '<td>';
-                            addText += '<label style=" overflow:hidden; min-width: 100px; display: inline-block; " class="' + charTaskSettings[k].class + '" for="' + id + '">' + charTaskSettings[k].title + '</label>';
-                            addText += '</td><td><input maxlength="2" size="1" style="margin: 4px; padding: 2px;" name="' + id + '" id="' + id + '" type="text" /></td>';
-                            break;
-                        case "select":
-                            addText += '<td><select style="margin: 4px; padding: 2px;" name="' + id + '" id="' + id + '">';
-                            charTaskSettings[k].options.forEach(function(option) {
-                                addText += '<option value = "' + option.value + '" ' + ((settings[charTaskSettings[k].name] == option.value) ? ' selected="selected" ' : '') + '>' + option.name + '</option>';
-                            });
-                            addText += '</select></td>';
-                            break;
-                        case "label":
-                            break;
-                        default:
-                            break;
-
-                    }
-                    k++;
-                } while (k < charTaskSettings.length && (charTaskSettings[k].type2 != 'task'));
-                addText += '</tr>';
-            }
-            addText += '</tbody></table>\
-                            </div>';
 
             // Manual Slots allocation tab
             addText += '<div id="charSettingsTab-2-' + i + '" class="charSettingsTab" >';
@@ -3835,43 +3876,6 @@ function _select_Gateway() { // Check for Gateway used to
                 addText += '</tr>';
             }
             addText += '</tbody></table></div>';
-
-
-            // Settings Tab
-            addText += '<div id="charSettingsTab-3-' + i + '" class="charSettingsTab" >';
-            setPerChar = (charSettings.length / settings["charcount"]);
-            charTaskSettings = charSettings.slice(i * setPerChar, (i + 1) * setPerChar).filter(function(element) {
-                return element.pane == 'settings';
-            });
-
-            for (var k = 0; k < (charTaskSettings.length); k++) {
-                id = 'settings_' + charTaskSettings[k].name;
-                switch (charTaskSettings[k].type) {
-                    case "checkbox":
-                        continue;
-                        break;
-                    case "text":
-                        addText += '<li><label style=" overflow:hidden; min-width: 100px; display: inline-block; " class="' + charTaskSettings[k].class + '" for="' + id + '">' + charTaskSettings[k].title + '</label>';
-                        addText += '<input maxlength="2" size="1" style="margin: 4px; padding: 2px;" name="' + id + '" id="' + id + '" type="text" /></li>';
-                        break;
-                    case "select":
-                        addText += '<li><label style=" overflow:hidden; min-width: 100px; display: inline-block; " class="' + charTaskSettings[k].class + '" for="' + id + '">' + charTaskSettings[k].title + '</label>';
-                        addText += '<select style="margin: 4px; padding: 2px;" name="' + id + '" id="' + id + '">';
-                        charTaskSettings[k].options.forEach(function(option) {
-                            addText += '<option value = "' + option.value + '" ' + ((settings[charTaskSettings[k].name] == option.value) ? ' selected="selected" ' : '') + '>' + option.name + '</option>';
-                        });
-                        addText += '</select></li>';
-                        break;
-                    case "label":
-                        break;
-                    default:
-                        break;
-
-                }
-            }
-            addText += '</ul></div>'; // settings tab ';
-
-            addText += '</div>'; // charSettingsTabs
             addText += '</div>'; // charContainer
         }
         addText += '\
@@ -3900,11 +3904,25 @@ function _select_Gateway() { // Check for Gateway used to
         $(".taskSelectA").change();
 
 */
-        
+            setEventHandlers = true;
             updateCounters(false);
         }
-        
-        
+
+        // Adding the save events
+        if (setEventHandlers) {
+            $("#settingsPanel input[type='checkbox'], #settingsPanel select").not(".custom_input").unbind("change");
+            $("#settingsPanel input[type='checkbox'], #settingsPanel select").change(function (evt) {
+                saveSetting(evt.target);
+            });
+            $("#settingsPanel input[type='text'], #settingsPanel input[type='password']").not(".custom_input").unbind("input");
+            $("#settingsPanel input[type='text'], #settingsPanel input[type='password']").on('input', function (evt) {
+                var value = $(evt.target).val();
+                setTimeout(function(value) {
+                    if ($(evt.target).val() !== value) return;
+                    saveSetting(evt.target);
+                }, 1000, value);
+            });
+        }
         
         function saveSetting(elm) {
             var scope = $(elm).data('scope');
@@ -4337,7 +4355,8 @@ function _select_Gateway() { // Check for Gateway used to
             html += "</tr>";
         });
         html += "</table>";
-        html += "<div style='margin: 5px 0;'> Last SCA reset: " + (new Date(accountSettings.generalSettings.SCADailyReset)).toLocaleString() + "</div>";
+        html += "<div style='margin: 5px 0;'> Last SCA reset (test #1): " + (new Date(accountSettings.generalSettings.SCADailyReset)).toLocaleString() + "</div>";
+        html += "<div style='margin: 5px 0;'> Last SCA reset (test #2): " + (new Date(lastDailyResetTime)).toLocaleString() + "</div>";
         $('#sca_v').html(html);
         $('#sca_v').append("<br /><br /><button id='settings_sca'>Cycle SCA</button>");
         
