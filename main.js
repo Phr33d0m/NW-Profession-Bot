@@ -57,7 +57,7 @@ RELEASE NOTES
 - Added autovendor option for major potions
 
 Check Changelog.txt for the full changelog.
-https://raw.githubusercontent.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
+http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
  */
 
 // Make sure it's running on the main page, no frames
@@ -3179,9 +3179,22 @@ function _select_Gateway() { // Check for Gateway used to
         
         GM_setValue("curCharNum_" + loggedAccount, curCharNum);
         
-                
+
+        var today = new Date();
+        var todayRest = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 10,0,0));
+
+        var lastReset;
+        if (today > todayRest) lastReset = todayRest;
+        else lastReset = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()-1, 10,0,0));        
+        
         
         var runSCAtime = !charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit || ((charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit + (1000*60*60*24)) < Date.now());
+        
+/*
+var runSCAtime = !charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit || ((charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit + (1000*60*60*24)) < Date.now() ||
+charStatisticsList[charNamesList[lastCharNum]].general.lastSCAVisit < lastReset.getTime()
+ );
+ */        
         var sca_setting = getSetting('generalSettings','runSCA'); 
         var runSCA = (runSCAtime && (sca_setting !== 'never'));
         runSCA = runSCA && (sca_setting === 'always' || (sca_setting === 'free' && chardelay > 7000)); // More than 7 seconds for the next char swap
