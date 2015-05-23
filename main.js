@@ -38,6 +38,7 @@ Developers & Contributors
 
 RELEASE NOTES
 3.5
+- Per slot task & profile allocation tab (functional)
 - Settings are saved per account / char.
 - Settings are saved via event - should fix the freeze (save button removed).
 - Chars always loaded from the model.
