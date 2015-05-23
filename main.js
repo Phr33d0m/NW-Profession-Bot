@@ -38,7 +38,6 @@ Developers & Contributors
 
 RELEASE NOTES
 3.5
-- Per slot task & profile allocation tab (functional)
 - Settings are saved per account / char.
 - Settings are saved via event - should fix the freeze (save button removed).
 - Chars always loaded from the model.
@@ -2111,7 +2110,7 @@ function _select_Gateway() { // Check for Gateway used to
             WaitForNotState(".modal-window.daily-dice").done(function() {
                 charStatisticsList[_charName].general.lastSCAVisit = Date.now();
                 GM_setValue("statistics__char__" + _fullCharName , JSON.stringify(charStatisticsList[_charName]));
-                updateCounters(false);
+                updateCounters();
 
                 //Adjusting for the time the SCA took
                 var chardelay;
@@ -2180,7 +2179,7 @@ function _select_Gateway() { // Check for Gateway used to
             WaitForNotState(".modal-window.daily-dice").done(function() {
                 charStatisticsList[charNamesList[_charIndex]].general.lastSCAVisit = Date.now();
                 GM_setValue("statistics__char__" + _fullCharName , JSON.stringify(charStatisticsList[charNamesList[_charIndex]]));
-                updateCounters(false);
+                updateCounters();
                 if (_isLastChar) {
                     window.setTimeout(function() {
                         PauseSettings("unpause");
@@ -3141,7 +3140,7 @@ function _select_Gateway() { // Check for Gateway used to
 
         charStatisticsList[curCharName].general.nextTask = chartimers[curCharNum];
         GM_setValue("statistics__char__" + curCharFullName , JSON.stringify(charStatisticsList[curCharName]));
-        updateCounters(false);
+        updateCounters();
 
 
         console.log("Switching Characters");
@@ -3445,9 +3444,6 @@ function _select_Gateway() { // Check for Gateway used to
                 
                 // Adding the Account and character settings / info to the UI
                 addSettings();
-                //updateCounters(false); // updating the UI from saved list
-                //if (JSON.stringify(accountSettings) !== GM_getValue("account_settings_" + accountName)) GM_setValue("account_settings_" + accountName, JSON.stringify(accountSettings));
-                //if (JSON.stringify(charSettingsTest) !== GM_getValue("chars_settings_" + accountName)) GM_setValue("chars_settings_" + accountName, JSON.stringify(charSettingsTest));                
             }
 
             // load current character position and values
@@ -3852,32 +3848,6 @@ function _select_Gateway() { // Check for Gateway used to
                 });
                 task_tab.append(tableHTML);
 
-            
-            //addText += '<input type="checkbox" name="settings__char__' + i + '__tasksOverride" /><label> Use advanced slot allocations -- NOT FULLY IMPLEMENTED YET </label>';
-            
-
-
-/*
-        // Set up the advanced slot selects 
-        $(".taskSelectA").change(function(e) {
-            var _taskname = $(this).val();
-            var _profiles = tasklist.filter(function(task) {
-                return task.taskListName == _taskname;
-            })[0].profiles.filter(function(profile) {
-                return profile.isProfileActive
-            });
-
-            var _options = "";
-            //tasklist[" .profiles.forEach( function(profile) { if (profile.isProfileActive) profileNames.push({name: profile.profileName, value: profile.profileName}); } ); 
-
-            var profileSelect = $("#" + this.id + "__profile").html("");
-            _profiles.forEach(function(profile) {
-                profileSelect.append($("<option />").val(profile.profileName).text(profile.profileName));
-            });
-        });
-        $(".taskSelectA").change();
-*/
-
                 // Manual Slots allocation tab
                 var task2_tab = addTab(char_tabs[0], "Manual Tasks");
                 
@@ -3931,7 +3901,7 @@ function _select_Gateway() { // Check for Gateway used to
                 }
                 task2_tab.append(tableHTML2);
 
-
+                // Char settings tabs
                 var tabs_c = {
                     main: 'General settings',
                     prof: 'Professions',
@@ -3955,7 +3925,7 @@ function _select_Gateway() { // Check for Gateway used to
             $(".charSettingsTabs").tabs();
   
             setEventHandlers = true;
-            updateCounters(false);
+            updateCounters();
         }
 
         // Adding the save events
@@ -3989,15 +3959,6 @@ function _select_Gateway() { // Check for Gateway used to
                 if (retval === false ) return;  // Allowing the onchange function to stop the save
             }
             
-            /*
-            var setting = settingnames.filter(function(elem) {
-                return elem.scope == scope && elem.group == group && elem.name == name;
-            });
-            if (setting.length > 0 && setting[0].onchange != undefined) {
-                setting[0].onchange(value);
-            }
-            */
-           
             switch (scope) {
                 case 'script':
                     scriptSettings[group][name] = value;
@@ -4195,7 +4156,7 @@ function _select_Gateway() { // Check for Gateway used to
     }
 
 
-    function updateCounters(reset) {
+    function updateCounters() {
 
         function formatNum(num) {
             if ((num / 1000000) > 1)
@@ -4210,12 +4171,6 @@ function _select_Gateway() { // Check for Gateway used to
         html += "<tr><th>Character Name</th><th>#slots</th><th>R.Counter</th><th>~ad/h</th>";
         html += "<th>RAD</th><th>AD</th><th>gold</th><th>rBI</th><th>BI</th><th>R.today<th></th></tr>";
 
-        if (reset) {
-            charNamesList.forEach(function(charName) {
-                charStatisticsList[charName].general.refineCounter = 0;
-                charStatisticsList[charName].general.refineCounterReset = Date.now();
-            });
-        };
 
         charNamesList.forEach(function(charName) {
             var counterTime = (Date.now() - charStatisticsList[charName].general.refineCounterReset) / 1000 / 60 / 60; // in hours.
@@ -4245,7 +4200,13 @@ function _select_Gateway() { // Check for Gateway used to
 
         $('#rcounters button').button();
         $('#rcounters button').click(function() {
-            updateCounters(true);
+            charNamesList.forEach(function(charName) {
+                charStatisticsList[charName].general.refineCounter = 0;
+                charStatisticsList[charName].general.refineCounterReset = Date.now();
+                // !! This can couse a freeze on slow computers.                
+                GM_setValue("statistics__char__" + curCharFullName , JSON.stringify(charStatisticsList[charName]));
+            });
+            updateCounters();
         });
 
         // Worker tab update.
@@ -4291,7 +4252,7 @@ function _select_Gateway() { // Check for Gateway used to
         for (var i = 0; i < 3; i++) {
             $('#setting__worker__tab__p' + i).val(workerTabSelects[i]);
             $('#setting__worker__tab__p' + i).change(function() {
-                updateCounters(false);
+                updateCounters();
             });
         }
 
@@ -4330,7 +4291,7 @@ function _select_Gateway() { // Check for Gateway used to
         for (var i = 0; i < 4; i++) {
             $('#setting__tools__tab__p' + i).val(toolsTabSelects[i]);
             $('#setting__tools__tab__p' + i).change(function() {
-                updateCounters(false);
+                updateCounters();
             });
         }
 
@@ -4423,7 +4384,7 @@ function _select_Gateway() { // Check for Gateway used to
             if (value) { 
                 console.log("Reseting for " + charNamesList[value-1]);
                 chartimers[parseInt(value)-1] = null;
-                updateCounters(false);
+                updateCounters();
                 clearTimeout(timerHandle);
                 curCharNum = GM_setValue("curCharNum_" + loggedAccount, parseInt(value)-1);
                 timerHandle = window.setTimeout(function() {
