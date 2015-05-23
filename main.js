@@ -1667,6 +1667,8 @@ function _select_Gateway() { // Check for Gateway used to
         addProfile(cProfile.taskName, cProfile.profile, cProfile.baseProfile);
     });
     
+    unsafeWindow.console.log('DebugMode set to: ' + scriptSettings.general.scriptDebugMode);
+    console = scriptSettings.general.scriptDebugMode ? unsafeWindow.console || fouxConsole : fouxConsole;
 
     var delay_modifier = parseFloat(scriptSettings.general.scriptDelayFactor);
     delay.SHORT *= delay_modifier;      delay.MEDIUM *= delay_modifier;     delay.LONG *= delay_modifier; 
