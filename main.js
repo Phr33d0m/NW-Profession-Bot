@@ -2776,7 +2776,7 @@ function _select_Gateway() { // Check for Gateway used to
                 }  
                 // Domino effect: this new order will post all the gathered diamonds until now
                 var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
-                var ZenRate = parseInt(getSetting('consolidationSettings','transferRate'));
+                var ZenRate = parseInt(accountSettings.consolidationSettings.transferRate);
                 if (!ZenRate) return;
                 var ZenQty = Math.floor((charDiamonds + exchangeDiamonds - parseInt(getSetting('consolidationSettings','minCharBalance'))) / ZenRate);
                 ZenQty = (ZenQty > 5000) ? 5000 : ZenQty;
@@ -3023,7 +3023,9 @@ function _select_Gateway() { // Check for Gateway used to
                     console.log("Character does not have minimum AD balance to do funds transfer. Skipping Zex Posting..");
                 }
             }
-
+            else {
+                console.log("Bank char not set or bank char, skipping posting.");
+            }
         } else {
             console.log("Zen Exchange AD transfer not enabled. Skipping Zex Posting..");
         }
