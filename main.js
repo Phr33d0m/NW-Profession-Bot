@@ -1546,6 +1546,7 @@ function _select_Gateway() { // Check for Gateway used to
     var defaultCharStatistics = {
         general: {
             nextTask: null,
+            lastVisit: null,
             lastSCAVisit: null,
             refineCounter: 0,
             refineCounterReset: Date.now(),
@@ -3054,6 +3055,7 @@ function _select_Gateway() { // Check for Gateway used to
         // Updating statistics
         var _stat = charStatisticsList[curCharName].general;
         var _chardata = unsafeWindow.client.dataModel.model.ent.main.currencies;
+        _stat.lastVisit = Date.now();
         _stat.gold = parseInt(_chardata.gold);
         _stat.rad = parseInt(_chardata.roughdiamonds);
         _stat.diamonds = parseInt(_chardata.diamonds);
@@ -4181,11 +4183,12 @@ function _select_Gateway() { // Check for Gateway used to
             var counterTime = (Date.now() - charStatisticsList[charName].general.refineCounterReset) / 1000 / 60 / 60; // in hours.
             var radh = 0;
             if (counterTime > 0) radh = charStatisticsList[charName].general.refineCounter / counterTime;
+            var outdated = (charStatisticsList[charName].general.lastVisit < lastDailyResetTime);
 
             total[0] += charStatisticsList[charName].general.refineCounter;
             total[1] += charStatisticsList[charName].general.diamonds;
             total[2] += charStatisticsList[charName].general.gold;
-            total[3] += charStatisticsList[charName].general.refined;
+            total[3] += outdated ? 0 : charStatisticsList[charName].general.refined;
 
             html += "<tr>";
             html += "<td>" + charName + "</td>";
@@ -4197,7 +4200,7 @@ function _select_Gateway() { // Check for Gateway used to
             html += "<td>" + formatNum(charStatisticsList[charName].general.gold) + "</td>";
             html += "<td>" + formatNum(charStatisticsList[charName].general.rBI) + "</td>";
             html += "<td>" + formatNum(charStatisticsList[charName].general.BI) + "</td>";
-            html += "<td>" + formatNum(charStatisticsList[charName].general.refined) + "</td>";
+            html += "<td>" + (outdated ? "0*" : formatNum(charStatisticsList[charName].general.refined)) + "</td>";
             //html += "<td>" + formatNum(charStatisticsList[charName].general.refineLimitLeft) + "</td>";
             html += "</tr>";
         });
@@ -4206,6 +4209,7 @@ function _select_Gateway() { // Check for Gateway used to
         html += "<td></td><td></td><td>" + formatNum(total[3]) + "<td></td></tr>";
         html += "</table>";
         html += "<button>Reset Refined Counter</button>";
+        html += "*No info for this reset yet.";
         $('#rcounters').html(html);
 
         $('#rcounters button').button();
