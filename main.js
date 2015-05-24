@@ -38,6 +38,7 @@ Developers & Contributors
 
 RELEASE NOTES
 3.5
+- Per slot task & profile allocation tab (functional)
 - Settings are saved per account / char.
 - Settings are saved via event - should fix the freeze (save button removed).
 - Chars always loaded from the model.
@@ -1666,6 +1667,8 @@ function _select_Gateway() { // Check for Gateway used to
         addProfile(cProfile.taskName, cProfile.profile, cProfile.baseProfile);
     });
     
+    unsafeWindow.console.log('DebugMode set to: ' + scriptSettings.general.scriptDebugMode);
+    console = scriptSettings.general.scriptDebugMode ? unsafeWindow.console || fouxConsole : fouxConsole;
 
     var delay_modifier = parseFloat(scriptSettings.general.scriptDelayFactor);
     delay.SHORT *= delay_modifier;      delay.MEDIUM *= delay_modifier;     delay.LONG *= delay_modifier; 
@@ -1870,6 +1873,7 @@ function _select_Gateway() { // Check for Gateway used to
 
         {scope: 'char', group: 'general', name: 'active',     type:'checkbox',    pane: 'main_not_tab',    title: 'Active',   tooltip: 'The char will be processed by the script'},
         {scope: 'char', group: 'general', name:'overrideGlobalSettings',    type:'checkbox',    pane:'main_not_tab',    title:'Override account settings for this char',   tooltip:''},
+        {scope: 'char', group: 'general', name:'manualTaskSlots',    type:'checkbox',    pane:'main_not_tab',    title:'Use manual task allocation tab',   tooltip:'Per slot profile allocation'},
         
         {scope: 'char', group: 'generalSettings', name: 'openRewards', title: 'Open Reward Chests',  type: 'checkbox', pane: 'main', tooltip: 'Enable opeing of leadership chests on character switch' },
         {scope: 'char', group: 'generalSettings', name: 'refineAD',    title: 'Refine AD',           type: 'checkbox', pane: 'main', tooltip: 'Enable refining of AD on character switch'},
@@ -1895,6 +1899,7 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'char', group: 'vendorSettings', name:'vendorPots2',     type:'checkbox', pane:'vend',   title:'Auto Vendor lesser potions (lvl 15)',tooltip:'Vendor all lesser potions (lvl 15) found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorPots3',     type:'checkbox', pane:'vend',   title:'Auto Vendor potions (lvl 30)',       tooltip:'Vendor all potions (lvl 30) found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorPots4',     type:'checkbox', pane:'vend',   title:'Auto Vendor greater potions (lvl 45)',   tooltip:'Vendor all greater potions (lvl 45) found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorPots5',     type:'checkbox', pane:'vend',   title:'Auto Vendor major potions (lvl 60)',     tooltip:'Auto Vendor major potions (lvl 60)'},        
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
@@ -1999,32 +2004,57 @@ function _select_Gateway() { // Check for Gateway used to
 
         // Check for available slots and start new task
         console.log("Looking for empty slots.");
-        if (unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.filter(function(entry) {
+        var slots = unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.filter(function(entry) {
             return (!entry.islockedslot && !entry.uassignmentid);
-        }).length) {
-            // Go through the professions to assign tasks until specified slots filled
-            console.log("Prioritizing task lists.");
-            var charTaskList = tasklist
-                .filter(function(task) {
-                    return (charSettingsList[curCharName].taskListSettings[task.taskListName].taskSlots > 0);
-                })
-                .sort(function(a, b) {
-                    return (charSettingsList[curCharName].taskListSettings[a.taskListName].taskPriority - charSettingsList[curCharName].taskListSettings[b.taskListName].taskPriority);
-                });
+        });
+        if (slots.length) {
+            if (charSettingsList[curCharName].general.manualTaskSlots) {
+                var slotIndex = slots[0].slotindex;
+                var _task = tasklist.filter(function(task) {
+                    return task.taskListName === charSettingsList[curCharName].taskListSettingsManual[slotIndex].Profession;
+                })[0];
+                
+                var _profile = _task.profiles.filter(function(profile) {
+                    return profile.profileName === charSettingsList[curCharName].taskListSettingsManual[slotIndex].Profile;
+                })[0];
 
-            console.log("Attempting to fill the slot.");
-            for (var i = 0; i < charTaskList.length; i++) {
-                var currentTasks = unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.filter(function(entry) {
-                    return entry.category == charTaskList[i].taskName;
-                });
-                if (currentTasks.length < charSettingsList[curCharName].taskListSettings[charTaskList[i].taskListName].taskSlots) {
-                    unsafeWindow.client.professionFetchTaskList('craft_' + charTaskList[i].taskName);
-                    window.setTimeout(function() {
-                        createNextTask(charTaskList[i], 0);
-                    }, delay.SHORT);
-                    return true;
-                }
+                console.log("Allocating per slot. For slot #" + slotIndex + " profession: " + _task.taskListName + " profile: " +  _profile.profileName);
+                unsafeWindow.client.professionFetchTaskList('craft_' + _task.taskName);
+                window.setTimeout(function() {
+                    createNextTask(_task, _profile, 0);
+                }, delay.SHORT);
+                return true;
             }
+            else {
+                // Go through the professions to assign tasks until specified slots filled
+                console.log("Prioritizing task lists.");
+                var charTaskList = tasklist
+                    .filter(function(task) {
+                        return (charSettingsList[curCharName].taskListSettings[task.taskListName].taskSlots > 0);
+                    })
+                    .sort(function(a, b) {
+                        return (charSettingsList[curCharName].taskListSettings[a.taskListName].taskPriority - charSettingsList[curCharName].taskListSettings[b.taskListName].taskPriority);
+                    });
+
+                console.log("Attempting to fill the slot.");
+                for (var i = 0; i < charTaskList.length; i++) {
+                    var currentTasks = unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.filter(function(entry) {
+                        return entry.category == charTaskList[i].taskName;
+                    });
+                    if (currentTasks.length < charSettingsList[curCharName].taskListSettings[charTaskList[i].taskListName].taskSlots) {
+                        unsafeWindow.client.professionFetchTaskList('craft_' + charTaskList[i].taskName);
+                        var profile = charTaskList[i].profiles.filter(function(profile) {
+                            return profile.profileName == charSettingsList[curCharName].taskListSettings[charTaskList[i].taskListName].taskProfile;
+                        })[0];
+                        console.log('Selecting profile: ' + profile.profileName);
+
+                        window.setTimeout(function() {
+                            createNextTask(charTaskList[i], profile, 0);
+                        }, delay.SHORT);
+                        return true;
+                    }
+                }
+            };
             console.log("All task counts assigned");
         } else {
             console.log("No available task slots");
@@ -2083,7 +2113,7 @@ function _select_Gateway() { // Check for Gateway used to
             WaitForNotState(".modal-window.daily-dice").done(function() {
                 charStatisticsList[_charName].general.lastSCAVisit = Date.now();
                 GM_setValue("statistics__char__" + _fullCharName , JSON.stringify(charStatisticsList[_charName]));
-                updateCounters(false);
+                updateCounters();
 
                 //Adjusting for the time the SCA took
                 var chardelay;
@@ -2152,7 +2182,7 @@ function _select_Gateway() { // Check for Gateway used to
             WaitForNotState(".modal-window.daily-dice").done(function() {
                 charStatisticsList[charNamesList[_charIndex]].general.lastSCAVisit = Date.now();
                 GM_setValue("statistics__char__" + _fullCharName , JSON.stringify(charStatisticsList[charNamesList[_charIndex]]));
-                updateCounters(false);
+                updateCounters();
                 if (_isLastChar) {
                     window.setTimeout(function() {
                         PauseSettings("unpause");
@@ -2198,12 +2228,12 @@ function _select_Gateway() { // Check for Gateway used to
      * @param {int} i The current task number being attempted
      */
 
-    function createNextTask(prof, i) {
+    function createNextTask(prof, profile, i) {
         // TODO: Use callback function
         if (!unsafeWindow.client.dataModel.model.craftinglist || unsafeWindow.client.dataModel.model.craftinglist === null || !unsafeWindow.client.dataModel.model.craftinglist['craft_' + prof.taskName] || unsafeWindow.client.dataModel.model.craftinglist['craft_' + prof.taskName] === null) {
             console.log('Task list not loaded for:', prof.taskName);
             window.setTimeout(function() {
-                createNextTask(prof, i);
+                createNextTask(prof, profile, i);
             }, delay.SHORT);
             return false;
         }
@@ -2212,11 +2242,7 @@ function _select_Gateway() { // Check for Gateway used to
         var level = unsafeWindow.client.dataModel.model.ent.main.itemassignmentcategories.categories.filter(function(entry) {
             return entry.name == prof.taskName;
         })[0].currentrank;
-        var profiles = prof.profiles.filter(function(profile) {
-            return profile.profileName == charSettingsList[curCharName].taskListSettings[prof.taskListName].taskProfile;
-        });
-        console.log('Selecting profile: ' + profiles[0].profileName);
-        var list = profiles[0].level[level];
+        var list = profile.level[level];
         if(list.length <= i) {
             console.log("Nothing Found");
             switchChar();
@@ -2229,7 +2255,7 @@ function _select_Gateway() { // Check for Gateway used to
         console.log("Searching for task:", taskName);
 
         // Search for task to start
-        var task = searchForTask(taskName, prof.taskName, profiles[0], level);
+        var task = searchForTask(taskName, prof.taskName, profile, level);
 
         // Finish createNextTask function
         if (task === null) {
@@ -2283,14 +2309,14 @@ function _select_Gateway() { // Check for Gateway used to
                         WaitForState("").done(function() {
                             // continue with the next one
                             console.log('Finding next task');
-                            createNextTask(prof, i + 1);
+                            createNextTask(prof, profile, i + 1);
                         });
                     }
                 });
             });
         } else {
             console.log('Finding next task');
-            createNextTask(prof, i + 1);
+            createNextTask(prof, profile, i + 1);
         }
     }
     /** Count resouce in bags
@@ -3117,7 +3143,7 @@ function _select_Gateway() { // Check for Gateway used to
 
         charStatisticsList[curCharName].general.nextTask = chartimers[curCharNum];
         GM_setValue("statistics__char__" + curCharFullName , JSON.stringify(charStatisticsList[curCharName]));
-        updateCounters(false);
+        updateCounters();
 
 
         console.log("Switching Characters");
@@ -3421,9 +3447,6 @@ function _select_Gateway() { // Check for Gateway used to
                 
                 // Adding the Account and character settings / info to the UI
                 addSettings();
-                //updateCounters(false); // updating the UI from saved list
-                //if (JSON.stringify(accountSettings) !== GM_getValue("account_settings_" + accountName)) GM_setValue("account_settings_" + accountName, JSON.stringify(accountSettings));
-                //if (JSON.stringify(charSettingsTest) !== GM_getValue("chars_settings_" + accountName)) GM_setValue("chars_settings_" + accountName, JSON.stringify(charSettingsTest));                
             }
 
             // load current character position and values
@@ -3532,7 +3555,7 @@ function _select_Gateway() { // Check for Gateway used to
             AddCss("\
                 #settingsButton{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); display: block; position: fixed; overflow: auto; right: 0px; top: 0px; padding: 3px; z-index: 1000;}\
                 #pauseButton{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); display: block; position: fixed; overflow: auto; right: 23px; top: 0px; padding: 3px; z-index: 1000;}\
-                #settingsPanel{position: fixed; overflow: auto; right: 0px; top: 0px; width: 600px;max-height:100%;font: 12px sans-serif; text-align: left; display: block; z-index: 1001;}\
+                #settingsPanel{position: fixed; overflow: auto; right: 0px; top: 0px; width: 650px;max-height:100%;font: 12px sans-serif; text-align: left; display: block; z-index: 1001;}\
                 #settings_title{font-weight: bolder; background: none repeat scroll 0% 0% rgb(204, 204, 204); border-bottom: 1px solid rgb(102, 102, 102); padding: 3px;}\
                 #settingsPanelButtonContainer {background: none repeat scroll 0% 0% rgb(204, 204, 204); border-top: 1px solid rgb(102, 102, 102);padding: 3px;text-align:center} \
                 #charPanel {width:98%;max-height:550px;overflow:auto;display:block;padding:3px;}\
@@ -3566,6 +3589,8 @@ function _select_Gateway() { // Check for Gateway used to
                 select.customProfiles { margin: 10px }\
                 textarea.customProfiles { width: 500px; height: 350px; margin: 10px 0; }\
                 .custom_profiles_delete { height: 16px; }\
+                #settingsPanel table {border-collapse: collapse; }\
+                tr.totals > td { border-top: 1px solid grey; padding-top: 3px; } \
                 ");
             
 
@@ -3828,6 +3853,60 @@ function _select_Gateway() { // Check for Gateway used to
                 });
                 task_tab.append(tableHTML);
 
+                // Manual Slots allocation tab
+                var task2_tab = addTab(char_tabs[0], "Manual Tasks");
+                
+                var tableHTML2 = $('<table><thead><tr><th>Slot #</th><th>Profession</th><th>Profile</th></tr></thead><tbody>');
+
+                var taskOpts = [];
+                tasklist.forEach(function(task) {
+                    if (!task.taskActive) return;
+                    taskOpts.push({ name: task.taskListName, value: task.taskListName  });
+                    
+                })
+                
+                function fillProfile(taskName) {
+                    var _profiles = tasklist.filter(function(task) {
+                        return task.taskListName == taskName;
+                    })[0].profiles.filter(function(profile) {
+                        return profile.isProfileActive
+                    });
+                    var options = [];
+                    _profiles.forEach(function(profile) {
+                        options.push({ name: profile.profileName, value: profile.profileName });
+                    });
+                    return options;
+                }
+                
+                // 9 slots
+                for (var j = 0; j < 9; j++) {
+                    var _tasks = {scope: 'char_task', group: 'taskListSettingsManual', name: j, sub_name: 'Profession', opts: taskOpts ,title: 'Assign to slot #' +(j+1), type: 'select', pane: 'tasks2', tooltip: '',
+                            onchange: function (newValue, elm) {
+                                var profileId = $(elm).attr('id').split('__');
+                                profileId[profileId.length-1] = 'Profile';
+                                profileId = profileId.join('__');
+                                var profileSelect = $("[id='" + profileId + "']").empty();
+                                fillProfile(newValue).forEach(function(option) {
+                                    profileSelect.append($("<option />").val(option.value).text(option.name));
+                                });
+                                profileSelect.change();
+                            }
+                        };
+                    var _tsk = createInput(_tasks, charName, 'settingsInput taskListSettingsManual taskListSettingsManualTask', 'settingsLabel');
+                    
+                    var _profile = {scope: 'char_task', group: 'taskListSettingsManual', name: j, sub_name: 'Profile', opts: fillProfile($(_tsk.input).val()) ,title: '', type: 'select', pane: 'tasks2', tooltip: ''};
+                    var _prf = createInput(_profile, charName, 'settingsInput taskListSettingsManual taskListSettingsManualProfile', 'settingsLabel');
+                    
+                    var tr = $("<tr>");
+                    //$("<td>").append(_slt.label).appendTo(tr);
+                    $("<td>").append(_tsk.label).appendTo(tr);
+                    $("<td>").append(_tsk.input).appendTo(tr);
+                    $("<td>").append(_prf.input).appendTo(tr);
+                    tr.appendTo(tableHTML2);
+                }
+                task2_tab.append(tableHTML2);
+
+                // Char settings tabs
                 var tabs_c = {
                     main: 'General settings',
                     prof: 'Professions',
@@ -3850,62 +3929,8 @@ function _select_Gateway() { // Check for Gateway used to
             });
             $(".charSettingsTabs").tabs();
   
-/*
-
-            // Manual Slots allocation tab
-            addText += '<div id="charSettingsTab-2-' + i + '" class="charSettingsTab" >';
-            addText += '<input type="checkbox" name="settings__char__' + i + '__tasksOverride" /><label> Use advanced slot allocations -- NOT FULLY IMPLEMENTED YET </label>';
-            addText += '<table><thead><tr><th>Slot #</th><th>Profession</th><th>Profile</th><th>fill assets</th></tr></thead><tbody>';
-
-            for (var m = 1; m <= 9; m++) {
-                addText += '<tr>';
-                addText += '<td>' + m + '.</td>';
-                var _id = 'settings__char__' + i + '__slot__' + m;
-                var _attrib = '';
-                addText += '<td><select class="taskSelectA" style="margin: 4px; padding: 2px;" name="' + _id + '__profession" id="' + _id + '__profession">';
-                tasklist.forEach(function(task) {
-                    addText += '<option value="' + task.taskListName + '">' + task.taskListName + '</option>';
-                })
-                addText += '</select></td>';
-                addText += '<td><select class="" style="margin: 4px; padding: 2px;" name="' + _id + '__profession__profile" id="' + _id + '__profession__profile"></select></td>';
-                addText += '<td><select class="" style="margin: 4px; padding: 2px;" name="' + _id + '__profession__assets" id="' + _id + '__profession__assets">';
-                $.each(charSlotsFillAssetsOptions, function(index, value) {
-                    addText += '<option value="' + index + '">' + value + '</option>';
-                });
-                addText += '</select></td>';
-                addText += '</tr>';
-            }
-            addText += '</tbody></table></div>';
-            addText += '</div>'; // charContainer
-        }
-        addText += '\
-                    </div>\
-                ';
-        $("#settingsPanel form").append(addText);
-
-
-        // Set up the advanced slot selects 
-        $(".taskSelectA").change(function(e) {
-            var _taskname = $(this).val();
-            var _profiles = tasklist.filter(function(task) {
-                return task.taskListName == _taskname;
-            })[0].profiles.filter(function(profile) {
-                return profile.isProfileActive
-            });
-
-            var _options = "";
-            //tasklist[" .profiles.forEach( function(profile) { if (profile.isProfileActive) profileNames.push({name: profile.profileName, value: profile.profileName}); } ); 
-
-            var profileSelect = $("#" + this.id + "__profile").html("");
-            _profiles.forEach(function(profile) {
-                profileSelect.append($("<option />").val(profile.profileName).text(profile.profileName));
-            });
-        });
-        $(".taskSelectA").change();
-
-*/
             setEventHandlers = true;
-            updateCounters(false);
+            updateCounters();
         }
 
         // Adding the save events
@@ -3935,19 +3960,10 @@ function _select_Gateway() { // Check for Gateway used to
 
             var fun = $(elm).data('onchange');
             if (typeof fun === 'function') {
-                var retval = fun(value);
+                var retval = fun(value, elm);
                 if (retval === false ) return;  // Allowing the onchange function to stop the save
             }
             
-            /*
-            var setting = settingnames.filter(function(elem) {
-                return elem.scope == scope && elem.group == group && elem.name == name;
-            });
-            if (setting.length > 0 && setting[0].onchange != undefined) {
-                setting[0].onchange(value);
-            }
-            */
-           
             switch (scope) {
                 case 'script':
                     scriptSettings[group][name] = value;
@@ -4145,7 +4161,7 @@ function _select_Gateway() { // Check for Gateway used to
     }
 
 
-    function updateCounters(reset) {
+    function updateCounters() {
 
         function formatNum(num) {
             if ((num / 1000000) > 1)
@@ -4155,24 +4171,21 @@ function _select_Gateway() { // Check for Gateway used to
             return Math.floor(num);
         }
 
-        var total = 0;
+        var total = [0, 0, 0, 0];
         var html = '<table>';
         html += "<tr><th>Character Name</th><th>#slots</th><th>R.Counter</th><th>~ad/h</th>";
         html += "<th>RAD</th><th>AD</th><th>gold</th><th>rBI</th><th>BI</th><th>R.today<th></th></tr>";
 
-        if (reset) {
-            charNamesList.forEach(function(charName) {
-                charStatisticsList[charName].general.refineCounter = 0;
-                charStatisticsList[charName].general.refineCounterReset = Date.now();
-            });
-        };
 
         charNamesList.forEach(function(charName) {
             var counterTime = (Date.now() - charStatisticsList[charName].general.refineCounterReset) / 1000 / 60 / 60; // in hours.
             var radh = 0;
             if (counterTime > 0) radh = charStatisticsList[charName].general.refineCounter / counterTime;
 
-            total += charStatisticsList[charName].general.refineCounter;
+            total[0] += charStatisticsList[charName].general.refineCounter;
+            total[1] += charStatisticsList[charName].general.diamonds;
+            total[2] += charStatisticsList[charName].general.gold;
+            total[3] += charStatisticsList[charName].general.refined;
 
             html += "<tr>";
             html += "<td>" + charName + "</td>";
@@ -4188,14 +4201,22 @@ function _select_Gateway() { // Check for Gateway used to
             //html += "<td>" + formatNum(charStatisticsList[charName].general.refineLimitLeft) + "</td>";
             html += "</tr>";
         });
+        html += "<tr class='totals'><td>Totals (without AD in ZAX):</td><td></td><td>" +  formatNum(total[0]) +  "</td><td></td>";
+        html += "<td></td><td>" + formatNum(total[1]) + "</td><td>" + formatNum(total[2]) + "</td>";
+        html += "<td></td><td></td><td>" + formatNum(total[3]) + "<td></td></tr>";
         html += "</table>";
-        html += "<div style='margin: 5px 0;'> Total refined: " + total + "</div>";
         html += "<button>Reset Refined Counter</button>";
         $('#rcounters').html(html);
 
         $('#rcounters button').button();
         $('#rcounters button').click(function() {
-            updateCounters(true);
+            charNamesList.forEach(function(charName) {
+                charStatisticsList[charName].general.refineCounter = 0;
+                charStatisticsList[charName].general.refineCounterReset = Date.now();
+                // !! This can couse a freeze on slow computers.                
+                GM_setValue("statistics__char__" + charName + "@" + loggedAccount , JSON.stringify(charStatisticsList[charName]));
+            });
+            updateCounters();
         });
 
         // Worker tab update.
@@ -4241,7 +4262,7 @@ function _select_Gateway() { // Check for Gateway used to
         for (var i = 0; i < 3; i++) {
             $('#setting__worker__tab__p' + i).val(workerTabSelects[i]);
             $('#setting__worker__tab__p' + i).change(function() {
-                updateCounters(false);
+                updateCounters();
             });
         }
 
@@ -4280,7 +4301,7 @@ function _select_Gateway() { // Check for Gateway used to
         for (var i = 0; i < 4; i++) {
             $('#setting__tools__tab__p' + i).val(toolsTabSelects[i]);
             $('#setting__tools__tab__p' + i).change(function() {
-                updateCounters(false);
+                updateCounters();
             });
         }
 
@@ -4373,7 +4394,7 @@ function _select_Gateway() { // Check for Gateway used to
             if (value) { 
                 console.log("Reseting for " + charNamesList[value-1]);
                 chartimers[parseInt(value)-1] = null;
-                updateCounters(false);
+                updateCounters();
                 clearTimeout(timerHandle);
                 curCharNum = GM_setValue("curCharNum_" + loggedAccount, parseInt(value)-1);
                 timerHandle = window.setTimeout(function() {
