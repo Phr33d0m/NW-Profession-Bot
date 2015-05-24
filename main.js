@@ -4208,8 +4208,8 @@ function _select_Gateway() { // Check for Gateway used to
         html += "<td></td><td>" + formatNum(total[1]) + "</td><td>" + formatNum(total[2]) + "</td>";
         html += "<td></td><td></td><td>" + formatNum(total[3]) + "<td></td></tr>";
         html += "</table>";
+        html += "*No info for this reset yet. <br />";
         html += "<button>Reset Refined Counter</button>";
-        html += "*No info for this reset yet.";
         $('#rcounters').html(html);
 
         $('#rcounters button').button();
