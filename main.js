@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.0
+// @version 4
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -37,7 +37,7 @@ Developers & Contributors
 - WloBeb
 
 RELEASE NOTES
-3.5
+4
 - Per slot task & profile allocation tab (functional)
 - Settings are saved per account / char.
 - Settings are saved via event - should fix the freeze (save button removed).
@@ -63,7 +63,7 @@ http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
 
 // Make sure it's running on the main page, no frames
 
-var scriptVersion = 3.5;
+var scriptVersion = 4;
 var forceSettingsResetOnUpgrade = true;
 
 if(window.self !== window.top) {
@@ -291,9 +291,9 @@ function _select_Gateway() { // Check for Gateway used to
 
 
     // Forcing settings clear !
-    var ver = GM_getValue("script_version", 0);
+    var ver = parseFloat(GM_getValue("script_version", 0));
     
-    if ((ver < scriptVersion) && forceSettingsResetOnUpgrade) {
+    if ((ver < 3.5) && forceSettingsResetOnUpgrade) {
         var str = "Detected an upgrade from old version or fresh install.<br />Procceding will wipe all saved settings.<br />Please set characters to active after log in.";  
         $('<div id="dialog-confirm" title="Setting wipe confirm">' + str + '</div>').dialog({
               resizable: true,
@@ -3188,7 +3188,7 @@ function _select_Gateway() { // Check for Gateway used to
         curCharFullName = curCharName + "@" + loggedAccount;
         
 
-        if (accountSettings.consolidationSettings.consolidate) {
+        if (getSetting('consolidationSettings','consolidate')) {
             // Withdraw AD from the ZAX into the banker character
             if (accountSettings.consolidationSettings.bankCharName == curCharName) {
                 window.setTimeout(cancelZexOffer, delay.SHORT);
