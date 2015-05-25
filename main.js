@@ -37,7 +37,7 @@ Developers & Contributors
 - WloBeb
 
 RELEASE NOTES
-3.5
+4.0
 - Per slot task & profile allocation tab (functional)
 - Settings are saved per account / char.
 - Settings are saved via event - should fix the freeze (save button removed).
