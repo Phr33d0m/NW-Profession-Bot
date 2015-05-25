@@ -3492,7 +3492,7 @@ function _select_Gateway() { // Check for Gateway used to
         }
 
         // MAC-NW -- AD Consolidation -- Banker Withdraw Section
-        if (accountSettings.consolidationSettings.consolidate) {
+        if (getSetting('consolidationSettings','consolidate')) {
 
             unsafeWindow.client.dataModel.fetchExchangeAccountData();
 
@@ -3974,7 +3974,7 @@ function _select_Gateway() { // Check for Gateway used to
                     scriptSettings[group][name] = value;
                     setTimeout(function() {
                         GM_setValue("settings__script", JSON.stringify(scriptSettings));
-                        console.log("Saved script setting: " + scope + "." + group + "." + name);
+                        console.log("Saved script setting: " + scope + "." + group + "." + name + " Value: " + value);
                         $(elm).addClass("inputSaved");
                         setTimeout(function() {
                             $(elm).removeClass("inputSaved");
@@ -3985,7 +3985,7 @@ function _select_Gateway() { // Check for Gateway used to
                     accountSettings[group][name] = value;
                     setTimeout(function() {
                         GM_setValue("settings__account__" + loggedAccount, JSON.stringify(accountSettings));
-                        console.log("Saved account setting: " + scope + "." + group + "." + name + " For: " + loggedAccount);
+                        console.log("Saved account setting: " + scope + "." + group + "." + name + " Value: " + value + " For: " + loggedAccount);
                         $(elm).addClass("inputSaved");
                         setTimeout(function() {
                             $(elm).removeClass("inputSaved");
@@ -3999,7 +3999,7 @@ function _select_Gateway() { // Check for Gateway used to
                         charSettingsList[c_name][group][name] = value;
                         setTimeout(function() {
                             GM_setValue("settings__char__" + c_name + "@" + loggedAccount, JSON.stringify(charSettingsList[c_name]));
-                            console.log("Saved char setting: " + scope + "." + group + "." + name + " For: " + c_name);
+                            console.log("Saved char setting: " + scope + "." + group + "." + name + " Value: " + value + " For: " + c_name);
                             $(elm).addClass("inputSaved");
                             setTimeout(function() {
                                 $(elm).removeClass("inputSaved");
@@ -4014,7 +4014,7 @@ function _select_Gateway() { // Check for Gateway used to
                         charSettingsList[c_name][group][name][sub_name] = value;
                         setTimeout(function() {
                             GM_setValue("settings__char__" + c_name + "@" + loggedAccount, JSON.stringify(charSettingsList[c_name]));
-                            console.log("Saved char_task setting: " + scope + "." + group + "." + name + "." + sub_name + " For: " + c_name);
+                            console.log("Saved char_task setting: " + scope + "." + group + "." + name + "." + sub_name + " Value: " + value + " For: " + c_name);
                             $(elm).addClass("inputSaved");
                             setTimeout(function() {
                                 $(elm).removeClass("inputSaved");
