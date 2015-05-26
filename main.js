@@ -3596,6 +3596,8 @@ function _select_Gateway() { // Check for Gateway used to
                 .custom_profiles_delete { height: 16px; }\
                 #settingsPanel table {border-collapse: collapse; }\
                 tr.totals > td { border-top: 1px solid grey; padding-top: 3px; } \
+                .rarity_Gold {color: blue; } .rarity_Silver {color: green; } .rarity_Special {color: purple; }  \
+                #dialog-inventory { overflow-y: scroll; font: 10px Arial; } #dialog-inventory table { width: 100% } #dialog-inventory table th { text-align: left; font-weight: bold; }\
                 ");
             
 
@@ -3654,7 +3656,10 @@ function _select_Gateway() { // Check for Gateway used to
             addInputsUL(tab, 'script', 'main');
             
             tab = addTab("#script_settings", "Advanced");
-            tab.html("<button id='reset_settings_btn'>Reset ALL Settings</button>");
+            var thtml = "<button id='reset_settings_btn'>Reset ALL Settings</button><br /><br />";
+            thtml += "Must be logged in and at the correct charactar to list it's items.<br />";
+            thtml += "<button id='list_inventory_btn'>List Inventory</button>";
+            tab.html(thtml);
 
             $('#reset_settings_btn').button();
             $('#reset_settings_btn').click(function() {
@@ -3673,6 +3678,59 @@ function _select_Gateway() { // Check for Gateway used to
                         unsafeWindow.location.href = current_Gateway;
                     }, 0);
                 }, 0);
+            });
+
+
+            $('#list_inventory_btn').button();
+            $('#list_inventory_btn').click(function() {
+                var _inventory;
+                try {
+                    _inventory = client.dataModel.model.ent.main.inventory;
+                }
+                catch (e) {
+                    var str = "Inventory could not be loaded, make sure you are logged in and at the correct character."
+                    $('<div id="dialog-error-inventory" title="Error loading inventory">' + str + '</div>').dialog({
+                          resizable: true,
+                          width: 500,
+                          modal: false,
+                        });        
+                    return;
+                }
+                var inv_tbl_head = "<table><tr><th>Slot #</th><th>Qty</th><th>Item Name</th><th>Rarity</th><th>Bound</th></tr>";
+                var str = '';
+                var slotCnt = 0;
+                _inventory.playerbags.forEach(function (bag) {
+                    str += '<div>' + bag.name + '</div>';
+                    str += inv_tbl_head;
+                    bag.slots.forEach( function (slot, slotNum) {
+                        if (!slot) return;
+                        slotCnt++;
+                        str += '<tr><td>' + slotNum + 
+                            '</td><td>' + slot.count + '</td><td class=" rarity_' + slot.rarity + '">' + slot.name +
+                            '</td><td>' + slot.rarity + '</td><td>' + (slot.bound || slot.boundtoaccount) +  '</td></tr>';
+                    })
+                    str += '</table><br/>';
+                })
+                
+                
+                str += '<div>Resources</div>';
+                str += inv_tbl_head;
+                var bag = _inventory.tradebag;
+                bag = bag.slice(0,slotCnt);
+                bag.forEach( function (slot, slotNum) {
+                    if (!slot) return;
+                    str += '<tr><td>' + slotNum + 
+                        '</td><td>' + slot.count + '</td><td class=" rarity_' + slot.rarity + '">' + slot.name +
+                        '</td><td>' + slot.rarity + '</td><td>' + (slot.bound || slot.boundtoaccount) +  '</td></tr>';
+                })
+                str += '</table>';
+                
+                $('<div id="dialog-inventory" title="Inventory listing">' + str + '</div>').dialog({
+                      resizable: true,
+                      width: 550,
+                      height: 550,
+                      modal: false,
+                    });        
             });
 
             
