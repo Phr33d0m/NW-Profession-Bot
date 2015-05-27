@@ -341,9 +341,6 @@ function _select_Gateway() { // Check for Gateway used to
      */
     function addProfile(profession, profile, base)
     {
-        if (profile.profileName === 'Aqua Regia'){
-            debugger;
-        }
         maxLevel = maxLevel || 25;
         definedTask = definedTask || {};
         //general prototype for profession
