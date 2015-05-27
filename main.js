@@ -341,6 +341,9 @@ function _select_Gateway() { // Check for Gateway used to
      */
     function addProfile(profession, profile, base)
     {
+        if (profile.profileName === 'Aqua Regia'){
+            debugger;
+        }
         maxLevel = maxLevel || 25;
         definedTask = definedTask || {};
         //general prototype for profession
@@ -358,7 +361,6 @@ function _select_Gateway() { // Check for Gateway used to
         var profileBase = {
             profileName: 'Add profile name',
             isProfileActive: true,
-            recursiveList: true,
             level: {}
         };
 
@@ -403,10 +405,13 @@ function _select_Gateway() { // Check for Gateway used to
             //override
             if(profile.level && profile.level[i]) {
                 newProfile.level[i] = profile.level[i];
+                if (profile.recursiveList && i > 0 && !profile.level[i+1]) {
+                    profile.level[i+1] = profile.level[i];
+                }
                 continue;
             } 
             //iterate and set
-            if(newProfile.recursiveList && i > 0 && !newProfile.level[i]) {
+            if(profile.recursiveList && i > 0 && !newProfile.level[i]) {
                 newProfile.level[i] = newProfile.level[i - 1];
             }
         }
@@ -1199,7 +1204,7 @@ function _select_Gateway() { // Check for Gateway used to
     });
    
     addProfile("Leatherworking", {
-        profileName: "craft  Elemental Trousers(?)",
+        profileName: "craft  Elemental Trousers",
         level: {
             //purples  first. shirts > tunics > pants.
             25: ['Leatherworking_Tier4_Leather_Pants_Special_2_Set2', //Exquisite Elemental Trousers
@@ -1666,6 +1671,7 @@ function _select_Gateway() { // Check for Gateway used to
         customProfiles = [];
     };
     customProfiles.forEach(function (cProfile, idx) {
+        if (!cProfile.profile.hasOwnProperty('recursiveList')){ cProfile.profile.recursiveList = false;}
         addProfile(cProfile.taskName, cProfile.profile, cProfile.baseProfile);
     });
     
