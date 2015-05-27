@@ -1704,6 +1704,7 @@ function _select_Gateway() { // Check for Gateway used to
         generalSettings: {
             refineAD: true,
             openRewards: false,
+            keepOneUnopened: false,
             runSCA: 'free',
             SCADailyReset: Date.now() - 24*60*60*1000,
         },
@@ -1749,6 +1750,7 @@ function _select_Gateway() { // Check for Gateway used to
         },
         generalSettings: {
             refineAD: true,
+            keepOneUnopened: false,
             openRewards: false,
             runSCA: 'free',
         },
@@ -1841,6 +1843,7 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'script', group: 'general', name: 'saveCharNextTime', title: tr('settings.main.savenexttime'),   type: 'checkbox', pane: 'main', tooltip: tr('settings.main.savenexttime.tooltip')},
         
         {scope: 'account', group: 'generalSettings', name: 'openRewards', title: tr('settings.account.openrewards'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.account.openrewards.tooltip')},
+        {scope: 'account', group: 'generalSettings', name: 'keepOneUnopened', title: 'Keep one reward box unopened',  type: 'checkbox', pane: 'main', tooltip: 'Used to reserve the slots for the reward boxes'},
         {scope: 'account', group: 'generalSettings', name: 'refineAD', title: tr('settings.account.refinead'),           type: 'checkbox', pane: 'main', tooltip: tr('settings.account.refinead.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'runSCA', title: tr('settings.account.runSCA'),               type: 'select',   pane: 'main', tooltip: tr('settings.account.runSCA.tooltip'),
             opts: [ { name: 'never',        value: 'never'}, 
@@ -1878,6 +1881,7 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'char', group: 'general', name:'manualTaskSlots',    type:'checkbox',    pane:'main_not_tab',    title:'Use manual task allocation tab',   tooltip:'Per slot profile allocation'},
         
         {scope: 'char', group: 'generalSettings', name: 'openRewards', title: 'Open Reward Chests',  type: 'checkbox', pane: 'main', tooltip: 'Enable opeing of leadership chests on character switch' },
+        {scope: 'char', group: 'generalSettings', name: 'keepOneUnopened', title: 'Keep one reward box unopened',  type: 'checkbox', pane: 'main', tooltip: 'Used to reserve the slots for the reward boxes'},        
         {scope: 'char', group: 'generalSettings', name: 'refineAD',    title: 'Refine AD',           type: 'checkbox', pane: 'main', tooltip: 'Enable refining of AD on character switch'},
         {scope: 'char', group: 'generalSettings', name: 'runSCA',    title: 'Run SCA',               type: 'select',   pane: 'main', tooltip: 'Running SCA adventures reward after professions',
             opts: [ { name: 'never',        value: 'never'}, 
@@ -3040,7 +3044,9 @@ function _select_Gateway() { // Check for Gateway used to
                     if (slot && _cRewardPat.test(slot.name)) {
                         if (slot.count >= 99)
                             slot.count = 99;
-                        for (i = 1; i <= slot.count; i++) {
+                        
+                        var reserve = getSetting('generalSettings', 'keepOneUnopened') ? 1 : 0;
+                        for (i = 1; i <= (slot.count - reserve); i++) {
                             window.setTimeout(function() {
                                 client.sendCommand('GatewayInventory_OpenRewardPack', slot.uid);
                             }, 500);
