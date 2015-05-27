@@ -404,13 +404,13 @@ function _select_Gateway() { // Check for Gateway used to
             if(profile.level && profile.level[i]) {
                 newProfile.level[i] = profile.level[i];
                 continue;
-            }
+            } 
             //iterate and set
-            if(newProfile.recursiveList && i > 0) {
+            if(newProfile.recursiveList && i > 0 && !newProfile.level[i]) {
                 newProfile.level[i] = newProfile.level[i - 1];
             }
         }
-
+        console.info("profile added ",newProfile.profileName, newProfile);
         professionSet.profiles.push(newProfile);
     }
 
