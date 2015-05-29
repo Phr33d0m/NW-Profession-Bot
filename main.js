@@ -2989,10 +2989,10 @@ function _select_Gateway() { // Check for Gateway used to
 			}
 		}
 
+        var refined_diamonds = 0;
         if (getSetting('generalSettings', 'refineAD')) {
             var _currencies = unsafeWindow.client.dataModel.model.ent.main.currencies;
             if (_currencies.diamondsconvertleft && _currencies.roughdiamonds) {
-                var refined_diamonds;
                 if (_currencies.diamondsconvertleft < _currencies.roughdiamonds) {
                     refined_diamonds = _currencies.diamondsconvertleft
                 } else {
@@ -3066,11 +3066,11 @@ function _select_Gateway() { // Check for Gateway used to
         var _chardata = unsafeWindow.client.dataModel.model.ent.main.currencies;
         _stat.lastVisit = Date.now();
         _stat.gold = parseInt(_chardata.gold);
-        _stat.rad = parseInt(_chardata.roughdiamonds);
+        _stat.rad = parseInt(_chardata.roughdiamonds - refined_diamonds);  // refined_diamonds: removing and adding manually to compensate for slow model update
         _stat.diamonds = parseInt(_chardata.diamonds);
         _stat.rBI = parseInt(_chardata.rawblackice);
         _stat.BI = parseInt(_chardata.blackice);
-        _stat.refined = parseInt(_chardata.diamondsconverted);
+        _stat.refined = parseInt(_chardata.diamondsconverted + refined_diamonds);
         _stat.diamondsconvertleft = parseInt(_chardata.refineLimitLeft);
         _stat.activeSlots = unsafeWindow.client.dataModel.model.ent.main.itemassignments.active;
 
