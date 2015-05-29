@@ -2727,7 +2727,7 @@ function _select_Gateway() { // Check for Gateway used to
 
         if (_purchaseCount < 1) {
             // Not enough gold for 1 resource
-            console.log("Purchasing profession resources failed for:", item);
+            console.log("Purchasing profession resources failed for: ", item, " Have: ",_charCopperTotal, " Cost Per Item: ", _resourceCost[item], " Can buy: ", _resourcePurchasable);
             return false;
         } else {
             // Make purchase
