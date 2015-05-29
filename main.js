@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.0
+// @version 4.1
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -37,6 +37,12 @@ Developers & Contributors
 - WloBeb
 
 RELEASE NOTES
+4.1
+- Added script version display
+- Added Settings Listing to Advanced tab
+- Added Item Listing to Advanced tab (thanks WloBeb script idea)
+- Override display at visit tab
+- Various fixes
 4.0
 - Per slot task & profile allocation tab (functional)
 - Settings are saved per account / char.
@@ -51,11 +57,6 @@ RELEASE NOTES
 - Translation support (thanks WloBeb)
 - Profile adjustments
 - addProfile() for easier profiles (thanks WloBeb, dlebedynskyi)
-3.1
-- A lot of backend changes
-- Added mass refining profiles for some professions
-- Logic change at how we add new profession profiles
-- Added autovendor option for major potions
 
 Check Changelog.txt for the full changelog:
 http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
@@ -63,7 +64,7 @@ http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
 
 // Make sure it's running on the main page, no frames
 
-var scriptVersion = 4.0;
+var scriptVersion = 4.1;
 var forceSettingsResetOnUpgrade = true;
 var forceResetOnVerBelow = 3.5;
 
@@ -2989,10 +2990,10 @@ function _select_Gateway() { // Check for Gateway used to
 			}
 		}
 
+        var refined_diamonds = 0;
         if (getSetting('generalSettings', 'refineAD')) {
             var _currencies = unsafeWindow.client.dataModel.model.ent.main.currencies;
             if (_currencies.diamondsconvertleft && _currencies.roughdiamonds) {
-                var refined_diamonds;
                 if (_currencies.diamondsconvertleft < _currencies.roughdiamonds) {
                     refined_diamonds = _currencies.diamondsconvertleft
                 } else {
@@ -3066,11 +3067,11 @@ function _select_Gateway() { // Check for Gateway used to
         var _chardata = unsafeWindow.client.dataModel.model.ent.main.currencies;
         _stat.lastVisit = Date.now();
         _stat.gold = parseInt(_chardata.gold);
-        _stat.rad = parseInt(_chardata.roughdiamonds);
-        _stat.diamonds = parseInt(_chardata.diamonds);
+        _stat.rad = parseInt(_chardata.roughdiamonds - refined_diamonds);  // refined_diamonds: removing and adding manually to compensate for slow model update
+        _stat.diamonds = parseInt(_chardata.diamonds + refined_diamonds);
         _stat.rBI = parseInt(_chardata.rawblackice);
         _stat.BI = parseInt(_chardata.blackice);
-        _stat.refined = parseInt(_chardata.diamondsconverted);
+        _stat.refined = parseInt(_chardata.diamondsconverted + refined_diamonds);
         _stat.diamondsconvertleft = parseInt(_chardata.refineLimitLeft);
         _stat.activeSlots = unsafeWindow.client.dataModel.model.ent.main.itemassignments.active;
 
@@ -3613,7 +3614,7 @@ function _select_Gateway() { // Check for Gateway used to
                 <div id="settings_title">\
                 <span class="ui-icon ui-icon-wrench" style="float: left;"></span>\
                 <span id="settings_close" class="ui-icon ui-icon-closethick" title="Click to hide preferences" style="float: right; cursor: pointer; display: block;"\></span>\
-                <span style="margin:3px">Settings</span>\
+                <span style="margin:3px">Settings (script version ' + scriptVersion + ')</span>\
                 </div>\
                 <div id="script_settings"><ul></ul></div>\
                 <div id="account_settings">\
@@ -3664,7 +3665,9 @@ function _select_Gateway() { // Check for Gateway used to
             tab = addTab("#script_settings", "Advanced");
             var thtml = "<button id='reset_settings_btn'>Reset ALL Settings</button><br /><br />";
             thtml += "Must be logged in and at the correct charactar to list it's items.<br />";
-            thtml += "<button id='list_inventory_btn'>List Inventory</button>";
+            thtml += "<button id='list_inventory_btn'>List Inventory</button><br /><br />";
+            thtml += "List settings (display all the configuration and obscure char names to char 1,2... and banker)<br />";
+            thtml += "<button id='list_settings_btn'>Dump settings </button><br /><br />";
             tab.html(thtml);
 
             $('#reset_settings_btn').button();
@@ -3685,7 +3688,6 @@ function _select_Gateway() { // Check for Gateway used to
                     }, 0);
                 }, 0);
             });
-
 
             $('#list_inventory_btn').button();
             $('#list_inventory_btn').click(function() {
@@ -3714,10 +3716,9 @@ function _select_Gateway() { // Check for Gateway used to
                         str += '<tr><td>' + slotNum + 
                             '</td><td>' + slot.count + '</td><td class=" rarity_' + slot.rarity + '">' + slot.name +
                             '</td><td>' + slot.rarity + '</td><td>' + (slot.bound || slot.boundtoaccount) +  '</td></tr>';
-                    })
+                    });
                     str += '</table><br/>';
-                })
-                
+                });
                 
                 str += '<div>Resources</div>';
                 str += inv_tbl_head;
@@ -3739,7 +3740,40 @@ function _select_Gateway() { // Check for Gateway used to
                     });        
             });
 
-            
+            $('#list_settings_btn').button();
+            $('#list_settings_btn').click(function() {
+                var str = 'Script Settings (script version ' + scriptVersion + ')\n';
+                var tempObj;
+                tempObj = $.extend(true, {}, scriptSettings);
+                str += '' +  JSON.stringify(tempObj,null,4) + '\n';
+                
+                str += 'Account Settings\n';
+                tempObj = $.extend(true, {}, accountSettings);
+                if (accountSettings.consolidationSettings.bankCharName) {
+                    var bankIndex = charNamesList.indexOf(accountSettings.consolidationSettings.bankCharName);
+                    if (bankIndex == -1)  str += "Bank set but not found in charNamesList\n";
+                    else  str += "Bank set and found at index:" + bankIndex + "\n";
+                    tempObj.consolidationSettings.bankCharName = "Char " + bankIndex;
+                }
+                str += '' +  JSON.stringify(tempObj,null,4) + '\n';
+                //str += '<pre>' +  JSON.stringify(tempObj,null,4) + '</pre>';
+
+                str += 'Char Settings\n';
+                charNamesList.forEach(function (charName, idx){
+                    tempObj = $.extend(true, {}, charSettingsList[charName]);
+                    str += 'Char ' + idx  + '\n';
+                    tempObj.charName = "Char " + idx;
+                    str += '' +  JSON.stringify(tempObj,null,4) + '\n';
+                })
+
+                $('<div id="dialog-settings" title="Settings listing"><textarea style=" width: 98%; height: 98%;">' + str + '</textarea></div>').dialog({
+                      resizable: true,
+                      width: 550,
+                      height: 750,
+                      modal: false,
+                    });        
+            });
+
             // Custom profiles
             tab = addTab("#script_settings", "Custom profiles");
             var temp_html = '';
@@ -4436,14 +4470,19 @@ function _select_Gateway() { // Check for Gateway used to
         
         // Visit times and SCA tab
         html = '<table>';
-        html += "<tr><th>Character Name</th><th>Next Profession</th><th>Last SCA</th>";
+        html += "<tr><th>Character Name</th><th>Next Profession</th><th>Last SCA</th><th>Override</th></tr>";
         charNamesList.forEach(function(charName, idx) {
             html += "<tr>";
             html += "<td>" + charName + "</td>";
+            
             if (!chartimers[idx]) html += "<td>No data</td>";
             else    html += "<td><button class=' visitReset ' value=" + (idx + 1) + ">reset</button><span data-timer='" + chartimers[idx] + "' data-timer-length='2'></span></td>";
+            
             if (!charStatisticsList[charName].general.lastSCAVisit) html += "<td>No data</td>";
             else html += "<td>" +  (new Date(charStatisticsList[charName].general.lastSCAVisit)).toLocaleString() + "</td>";
+            
+            if (charSettingsList[charName].general.overrideGlobalSettings) html += "<td><span class='ui-icon  ui-icon-check '></span></td>";
+            else html += "<td></td>";
             html += "</tr>";
         });
         html += "</table>";
