@@ -1622,7 +1622,7 @@ function _select_Gateway() { // Check for Gateway used to
         fname: 'e.Aggregate',
         name: 'Crafting_Resource_Elemental_Aggregate'
     }, {
-        fname: 'EU',
+        fname: 'UE',
         name: 'Crafting_Resource_Elemental_Unified'
     }, 
 ];
@@ -2727,7 +2727,7 @@ function _select_Gateway() { // Check for Gateway used to
 
         if (_purchaseCount < 1) {
             // Not enough gold for 1 resource
-            console.log("Purchasing profession resources failed for:", item);
+            console.log("Purchasing profession resources failed for: ", item, " Have: ",_charCopperTotal, " Cost Per Item: ", _resourceCost[item], " Can buy: ", _resourcePurchasable);
             return false;
         } else {
             // Make purchase
@@ -3605,6 +3605,7 @@ function _select_Gateway() { // Check for Gateway used to
                 tr.totals > td { border-top: 1px solid grey; padding-top: 3px; } \
                 .rarity_Gold {color: blue; } .rarity_Silver {color: green; } .rarity_Special {color: purple; }  \
                 #dialog-inventory { overflow-y: scroll; font: 10px Arial; } #dialog-inventory table { width: 100% } #dialog-inventory table th { text-align: left; font-weight: bold; }\
+                .slt_None {color: red;} .slt_Lead {color: blue;} .slt_Alch {color: green;} .slt_Jewe {color: gold;} .slt_Leat {color: brown;}\
                 ");
             
 
@@ -4460,7 +4461,8 @@ function _select_Gateway() { // Check for Gateway used to
             html += "<tr>";
             html += "<td>" + charName + "</td>";
             for (var i = 0; i < 9; i++) {
-                html += "<td>" + $.trim(charStatisticsList[charName].slotUse[i]).substring(0, 3) + " </td>";
+                var _slot = charStatisticsList[charName].slotUse[i];
+                html += "<td class=' slt_"+ $.trim(_slot).substring(0, 4) + "'>" + $.trim(_slot).substring(0, 4) + " </td>";
             }
             html += "</tr>";
         });
