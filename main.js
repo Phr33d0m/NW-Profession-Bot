@@ -38,6 +38,7 @@ Developers & Contributors
 
 RELEASE NOTES
 4.1
+- Added settings copy tab
 - Added script version display
 - Added Settings Listing to Advanced tab
 - Added Item Listing to Advanced tab (thanks WloBeb script idea)
@@ -3609,6 +3610,7 @@ function _select_Gateway() { // Check for Gateway used to
                 .rarity_Gold {color: blue; } .rarity_Silver {color: green; } .rarity_Special {color: purple; }  \
                 #dialog-inventory { overflow-y: scroll; font: 10px Arial; } #dialog-inventory table { width: 100% } #dialog-inventory table th { text-align: left; font-weight: bold; }\
                 .slt_None {color: red;} .slt_Lead {color: blue;} .slt_Alch {color: green;} .slt_Jewe {color: gold;} .slt_Leat {color: brown;}\
+                #copy_settings_to { width: 200px; height: 350px; margin: 5px 0;} #copy_settings_from { margin: 5px 0;}\
                 ");
             
 
@@ -3860,8 +3862,6 @@ function _select_Gateway() { // Check for Gateway used to
                 }, 0);
             });
             
-           
-           
             $("#script_settings").tabs({ active: false, collapsible: true });
             setEventHandlers = true;
         }
@@ -3883,8 +3883,41 @@ function _select_Gateway() { // Check for Gateway used to
                 var temp_tab = addTab("#main_tabs", tabs[key]);
                 addInputsUL(temp_tab, 'account', key);
             }
-            $("div#main_tabs").tabs({ active: false, collapsible: true });                
+            var settings_copy_tab = addTab("#main_tabs", "Settings Copy");
+            $("div#main_tabs").tabs({ active: false, collapsible: true });                            
 
+            // Settings copy Tab
+            var temp_html = '';
+            temp_html += '<div><label class="">Copy settings from: </label><select class=" custom_input " id="copy_settings_from">';
+            charNamesList.forEach( function (charName) {
+                temp_html += '<option value="' + charName + '">' + charName + '</option>';
+            })
+            temp_html += '</select></div>';
+            temp_html += '<div><label class="">Copy settings to: (multiple select by holding ctrl/shift)</label></div><div><select multiple="multiple" class=" custom_input " id="copy_settings_to">';
+            charNamesList.forEach( function (charName) {
+                temp_html += '<option value="' + charName + '">' + charName + '</option>';
+            })
+            temp_html += '</select></div><div><button id="copy_settings_button" class="" value="">copy</button></div>';
+            settings_copy_tab.html(temp_html);            
+            
+            $( "#copy_settings_button" ).button();
+            $( "#copy_settings_button" ).click( function(e) {
+                var _from = $("#copy_settings_from").val();
+                var _fromSettings = charSettingsList[_from];
+                if (!_fromSettings) return;
+                var _to = $("#copy_settings_to").val();
+                _to.forEach(function (toName){
+                    if (charNamesList.indexOf(toName) == -1) return;
+                    var newSettings = $.extend(true, {}, _fromSettings);
+                    newSettings.charName = toName;
+                    charSettingsList[toName] = newSettings;
+                    GM_setValue("settings__char__" + toName + "@" + loggedAccount, JSON.stringify(newSettings));
+                    console.log("Copied settings from: ", _from, " to: ", toName);
+                })
+                window.setTimeout(function() {
+                    unsafeWindow.location.href = current_Gateway;
+                }, 0);
+            });
 
             //Statisitcs Tabs
             var temp_tab = addTab("#info_tabs", tr('tab.counters'));
