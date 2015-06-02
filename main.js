@@ -3793,7 +3793,7 @@ function _select_Gateway() { // Check for Gateway used to
             temp_html += '</div>';
             temp_html += 'Input must be valid JSON: double quotes on property names & no trailing commas. <br /> Use any online validator to easily find errors. <br /> like: http://jsonformatter.curiousconcept.com/ <br /> http://json.parser.online.fr/';
             temp_html += '<div><textarea id="custom_profile_textarea" class=" custom_input customProfiles ">';
-            temp_html += '{ \n "profileName": "Example", \n "isProfileActive": true,\n "level": { \n  "1": ["Alchemy_Tier1_Refine_Basic", "Alchemy_Tier1_Gather_Components"] \n } \n }';
+            temp_html += '{\n    "profileName": "Example",\n    "isProfileActive": true,\n    "level": {\n        "0": ["Alchemy_Tier0_Intro_1"],\n        "1": ["Alchemy_Tier1_Refine_Basic", "Alchemy_Tier1_Gather_Components"]\n    }\n}';
             temp_html += '</textarea></div>';
             temp_html += '<div><button id="custom__profiles__import_btn">Import</button></div>';
             temp_html += '<table><tr><th>#</th><th>Task Name</th><th>Base Profile</th><th>Profile Name</th><th><th></tr>';
