@@ -38,6 +38,7 @@ Developers & Contributors
 
 RELEASE NOTES
 4.1
+- Added Failed task tracker to prevent script lockup on failed tasks
 - Added settings copy tab
 - Added script version display
 - Added Settings Listing to Advanced tab
@@ -82,11 +83,13 @@ var fouxConsole = {
 
 };
 var console = unsafeWindow.console || fouxConsole;
-var chardiamonds = {};
+var chardiamonds = [];
 var zexdiamonds = 0;
-var chargold = {};
+var chargold = [];
 var definedTask = {};
 var translation = {};
+var failedTasksList = [];
+var failedProfiles = {};
 var antiInfLoopTrap = {// without this script sometimes try to start the same task in infinite loop (lags?) 
     prevCharName: "unknown", // character name which recently launched a task
     prevTaskName: "unknown", // name of the task previously launched
@@ -2029,6 +2032,11 @@ function _select_Gateway() { // Check for Gateway used to
                     return profile.profileName === charSettingsList[curCharName].taskListSettingsManual[slotIndex].Profile;
                 })[0];
 
+                if (failedProfiles[_task.taskListName].indexOf(_profile.profileName) === -1) {
+                    console.warn("Profile ", _profile.profileName, " for task ", _task.taskListName, " failed previously, skipping slot");
+                    return false; // TODO: Should skip the slot and not the char entierly.
+                }
+
                 console.log("Allocating per slot. For slot #" + slotIndex + " profession: " + _task.taskListName + " profile: " +  _profile.profileName);
                 unsafeWindow.client.professionFetchTaskList('craft_' + _task.taskName);
                 window.setTimeout(function() {
@@ -2041,7 +2049,7 @@ function _select_Gateway() { // Check for Gateway used to
                 console.log("Prioritizing task lists.");
                 var charTaskList = tasklist
                     .filter(function(task) {
-                        return (charSettingsList[curCharName].taskListSettings[task.taskListName].taskSlots > 0);
+                        return ((charSettingsList[curCharName].taskListSettings[task.taskListName].taskSlots > 0) && (failedTasksList.indexOf(task.taskListName) === -1)) ;
                     })
                     .sort(function(a, b) {
                         return (charSettingsList[curCharName].taskListSettings[a.taskListName].taskPriority - charSettingsList[curCharName].taskListSettings[b.taskListName].taskPriority);
@@ -2255,8 +2263,14 @@ function _select_Gateway() { // Check for Gateway used to
         })[0].currentrank;
         var list = profile.level[level];
         if(list.length <= i) {
-            console.log("Nothing Found");
-            switchChar();
+            console.log("Task list exhausted for ", prof.taskListName, " at level ", level, " profile: ", profile.profileName);
+            failedTasksList.push(prof.taskListName);
+            if (typeof failedProfiles[prof.taskListName] === 'undefined') {
+                failedProfiles[prof.taskListName] = [];
+                failedProfiles[prof.taskListName].push(profile.profileName);
+            }
+            dfdNextRun.resolve(delay.SHORT);
+            //switchChar();
             return false;
         }
         console.log(prof.taskName, "is level", level);
@@ -3198,7 +3212,8 @@ function _select_Gateway() { // Check for Gateway used to
         
         curCharName = charNamesList[curCharNum];
         curCharFullName = curCharName + "@" + loggedAccount;
-        
+        failedTasksList = [];
+        failedProfiles = {};
 
         if (getSetting('consolidationSettings','consolidate')) {
             // Withdraw AD from the ZAX into the banker character
@@ -3456,6 +3471,8 @@ function _select_Gateway() { // Check for Gateway used to
                 if (scriptSettings.general.saveCharNextTime)
                     charNamesList.forEach( function(name, idx) {
                         chartimers[idx] = (new Date(charStatisticsList[name].general.nextTask));
+                        chargold[idx]   = charStatisticsList[name].general.gold;
+                        chardiamonds[idx] = charStatisticsList[name].general.diamonds;
                     });
                 
                 
@@ -4295,6 +4312,7 @@ function _select_Gateway() { // Check for Gateway used to
                 break;
         }
         setTimeout(function() {
+            //console.log("Pause set to", scriptSettings.general.scriptPaused);
             GM_setValue("settings__script", JSON.stringify(scriptSettings));
         }, 0);        
         displayPause();        
