@@ -3621,7 +3621,7 @@ function _select_Gateway() { // Check for Gateway used to
                 label.customProfiles {min-width: 150px; }\
                 select.customProfiles { margin: 10px }\
                 textarea.customProfiles { width: 500px; height: 350px; margin: 10px 0; }\
-                .custom_profiles_delete { height: 16px; }\
+                .custom_profiles_delete { height: 16px; } #custom__profiles__viewbase_btn { height: 16px; } .custom_profiles_view {height: 16px; margin: 0 4px; }\
                 #settingsPanel table {border-collapse: collapse; }\
                 tr.totals > td { border-top: 1px solid grey; padding-top: 3px; } \
                 .rarity_Gold {color: blue; } .rarity_Silver {color: green; } .rarity_Special {color: purple; }  \
@@ -3807,6 +3807,7 @@ function _select_Gateway() { // Check for Gateway used to
             })
             temp_html += '</select>';
             temp_html += '<label class="customProfiles">Base Profile: </label><select class=" custom_input customProfiles " id="custom__profiles__baseprofile"></select>';
+            temp_html += '<button id="custom__profiles__viewbase_btn"></button>';
             temp_html += '</div>';
             temp_html += 'Input must be valid JSON: double quotes on property names & no trailing commas. <br /> Use any online validator to easily find errors. <br /> like: http://jsonformatter.curiousconcept.com/ <br /> http://json.parser.online.fr/';
             temp_html += '<div><textarea id="custom_profile_textarea" class=" custom_input customProfiles ">';
@@ -3821,11 +3822,32 @@ function _select_Gateway() { // Check for Gateway used to
                 temp_html += '<td>' + cProfile.baseProfile + '</td>';
                 if (typeof cProfile.profile === 'object')
                     temp_html += '<td>' + cProfile.profile.profileName + '</td>';
-                temp_html += '<td><button class="custom_profiles_delete" value=' + idx + '></button></td>';
+                temp_html += '<td><button class="custom_profiles_view" value=' + idx + '></button><button class="custom_profiles_delete" value=' + idx + '></button></td>';
             });
             temp_html += '</ul>';
             tab.html(temp_html);
             
+            $( ".custom_profiles_view" ).button({
+                icons: {
+                    primary: "ui-icon-zoomin"
+                },
+                text: false
+            });
+            $( ".custom_profiles_view" ).click( function(e) {
+                var pidx = $(this).val();                    
+                var str = "Task name : " + customProfiles[pidx].taskName + "\n";
+                    str += "Base Profile : " + customProfiles[pidx].baseProfile + "\n"
+                    str += "Profile : \n\n";
+                    str += JSON.stringify(customProfiles[pidx].profile,null,4);
+
+                $('<div id="dialog-display-custom-profile" title="Custom profile"><textarea style=" width: 98%; height: 98%;">' + str + '</textarea></div>').dialog({
+                      resizable: true,
+                      width: 550,
+                      height: 750,
+                      modal: false,
+                    });        
+            });
+
             $( ".custom_profiles_delete" ).button({
                 icons: {
                     primary: "ui-icon-trash"
@@ -3857,6 +3879,32 @@ function _select_Gateway() { // Check for Gateway used to
                 });
             });
             $("#custom_profiles_taskname").change();
+
+            $('#custom__profiles__viewbase_btn').button({
+                icons: {
+                    primary: "ui-icon-zoomin"
+                },
+                text: false
+            });
+            $('#custom__profiles__viewbase_btn').click(function() {
+                var _taskName = $("#custom_profiles_taskname").val();
+                var _baseProfile = $("#custom__profiles__baseprofile").val();
+                
+                var _profiles = tasklist.filter(function(task) {
+                    return task.taskListName == _taskName;
+                })[0].profiles.filter(function(profile) {
+                    return profile.profileName === _baseProfile;
+                });
+                var str = JSON.stringify(_profiles,null,4);
+
+                $('<div id="dialog-display-profile" title="Profile"><textarea style=" width: 98%; height: 98%;">' + str + '</textarea></div>').dialog({
+                    resizable: true,
+                    width: 550,
+                    height: 750,
+                    modal: false,
+                });        
+            });
+
 
             $('#custom__profiles__import_btn').button();
             $('#custom__profiles__import_btn').click(function() {
