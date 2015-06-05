@@ -1861,7 +1861,7 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'account', group: 'professionSettings', name: 'fillOptionals',   type: 'checkbox', pane: 'prof',    title: 'Fill Optional Assets',  tooltip: 'Enable to include selecting the optional assets of tasks'},
         {scope: 'account', group: 'professionSettings', name: 'autoPurchaseRes', type: 'checkbox', pane: 'prof',    title: 'Auto Purchase Resources', tooltip: 'Automatically purchase required resources from gateway shop (100 at a time)'}, 
         {scope: 'account', group: 'professionSettings', name:'trainAssets',      type:'checkbox',  pane:'prof',     title:'Train Assets', tooltip:'Enable training/upgrading of asset worker resources'}, 
-        {scope: 'account', group: 'professionSettings', name:'smartLeadershipAssets',   type:'checkbox', pane:'prof', title:'Smart Asset allocation for leadership', tooltip:'Try to spread adn fill non-common assets and suplement with common if needed'},
+        {scope: 'account', group: 'professionSettings', name:'smartLeadershipAssets',   type:'checkbox', pane:'prof', title:'Smart Asset allocation for leadership', tooltip:'Try to spread and fill non-common assets and supplement with common if needed'},
         {scope: 'account', group: 'professionSettings', name:'skipPatrolTask', type:'select', pane:'prof', title:'Skip Patrol task if > 10 claims', tooltip:'Skip \"Patrol the Mines\" leadership task if there are more than 10 mining claims in the inventory (Never, Always, On AD profile, if Leadership level is &gt;= 20, or both of the above )',
             opts:[{name:'never',value:'never'},{name:'always',value:'always'},{name:'AD profile',value:'ad'},{name:'Leadership lvl 20',value:'ld20'},{name:'AD&Lvl20',value:'AD&Lvl20'}]},
         {scope: 'account', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
@@ -1880,15 +1880,15 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'consolidationSettings', name:'consolidate',      type:'checkbox',pane:'bank',    title:'Consolidate AD via ZAX',     tooltip:'Automatically attempt to post, cancel and withdraw AD via ZAX and consolidate to designated character',border:true},
         {scope: 'account', group: 'consolidationSettings', name:'bankCharName',         type:'text',    pane:'bank',    title:'Character Name of Banker',   tooltip:'Enter name of the character to hold account AD'},
-        {scope: 'account', group: 'consolidationSettings', name:'minToTransfer',    type:'text',    pane:'bank',    title:'Min AD for Transfer',        tooltip:'Enter minimum AD limit for it to be cosidered for transfer off a character'},
+        {scope: 'account', group: 'consolidationSettings', name:'minToTransfer',    type:'text',    pane:'bank',    title:'Min AD for Transfer',        tooltip:'Enter minimum AD limit for it to be considered for transfer off a character'},
         {scope: 'account', group: 'consolidationSettings', name:'minCharBalance',   type:'text',    pane:'bank',    title:'Min Character balance',      tooltip:'Enter the amount of AD to always keep available on characters'},
-        {scope: 'account', group: 'consolidationSettings', name:'transferRate',     type:'text',    pane:'bank',    title:'AD per Zen Rate (in zen)',   tooltip:'Enter default rate to use for transfering through ZAX'},
+        {scope: 'account', group: 'consolidationSettings', name:'transferRate',     type:'text',    pane:'bank',    title:'AD per Zen Rate (in zen)',   tooltip:'Enter default rate to use for transferring through ZAX'},
 
         {scope: 'char', group: 'general', name: 'active',     type:'checkbox',    pane: 'main_not_tab',    title: 'Active',   tooltip: 'The char will be processed by the script'},
         {scope: 'char', group: 'general', name:'overrideGlobalSettings',    type:'checkbox',    pane:'main_not_tab',    title:'Override account settings for this char',   tooltip:''},
         {scope: 'char', group: 'general', name:'manualTaskSlots',    type:'checkbox',    pane:'main_not_tab',    title:'Use manual task allocation tab',   tooltip:'Per slot profile allocation'},
         
-        {scope: 'char', group: 'generalSettings', name: 'openRewards', title: 'Open Reward Chests',  type: 'checkbox', pane: 'main', tooltip: 'Enable opeing of leadership chests on character switch' },
+        {scope: 'char', group: 'generalSettings', name: 'openRewards', title: 'Open Reward Chests',  type: 'checkbox', pane: 'main', tooltip: 'Enable opening of leadership chests on character switch' },
         {scope: 'char', group: 'generalSettings', name: 'keepOneUnopened', title: 'Keep one reward box unopened',  type: 'checkbox', pane: 'main', tooltip: 'Used to reserve the slots for the reward boxes'},        
         {scope: 'char', group: 'generalSettings', name: 'refineAD',    title: 'Refine AD',           type: 'checkbox', pane: 'main', tooltip: 'Enable refining of AD on character switch'},
         {scope: 'char', group: 'generalSettings', name: 'runSCA',    title: 'Run SCA',               type: 'select',   pane: 'main', tooltip: 'Running SCA adventures reward after professions',
@@ -1900,7 +1900,7 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'char', group: 'professionSettings', name: 'fillOptionals',   type: 'checkbox', pane: 'prof',    title: 'Fill Optional Assets',  tooltip: 'Enable to include selecting the optional assets of tasks'},
         {scope: 'char', group: 'professionSettings', name: 'autoPurchaseRes', type: 'checkbox', pane: 'prof',    title: 'Auto Purchase Resources', tooltip: 'Automatically purchase required resources from gateway shop (100 at a time)'}, 
         {scope: 'char', group: 'professionSettings', name: 'trainAssets',      type:'checkbox',  pane:'prof',     title:'Train Assets', tooltip:'Enable training/upgrading of asset worker resources'}, 
-        {scope: 'char', group: 'professionSettings', name:'smartLeadershipAssets',   type:'checkbox', pane:'prof', title:'Smart Asset allocation for leadership', tooltip:'Try to spread adn fill non-common assets and suplement with common if needed'},
+        {scope: 'char', group: 'professionSettings', name:'smartLeadershipAssets',   type:'checkbox', pane:'prof', title:'Smart Asset allocation for leadership', tooltip:'Try to spread and fill non-common assets and supplement with common if needed'},
         {scope: 'char', group: 'professionSettings', name:'skipPatrolTask', type:'select', pane:'prof', title:'Skip Patrol task if > 10 claims', tooltip:'Skip \"Patrol the Mines\" leadership task if there are more than 10 mining claims in the inventory (Never, Always, On AD profile, if Leadership level is &gt;= 20, or both of the above )',
             opts:[{name:'never',value:'never'},{name:'always',value:'always'},{name:'AD profile',value:'ad'},{name:'Leadership lvl 20',value:'ld20'},{name:'AD&Lvl20',value:'AD&Lvl20'}]},
         {scope: 'char', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
@@ -1918,7 +1918,7 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'consolidationSettings', name:'consolidate',      type:'checkbox',pane:'bank',    title:'Consolidate AD via ZAX',     tooltip:'Automatically attempt to post, cancel and withdraw AD via ZAX and consolidate to designated character',border:true},
-        {scope: 'char', group: 'consolidationSettings', name:'minToTransfer',    type:'text',    pane:'bank',    title:'Min AD for Transfer',        tooltip:'Enter minimum AD limit for it to be cosidered for transfer off a character'},
+        {scope: 'char', group: 'consolidationSettings', name:'minToTransfer',    type:'text',    pane:'bank',    title:'Min AD for Transfer',        tooltip:'Enter minimum AD limit for it to be considered for transfer off a character'},
         {scope: 'char', group: 'consolidationSettings', name:'minCharBalance',   type:'text',    pane:'bank',    title:'Min Character balance',      tooltip:'Enter the amount of AD to always keep available on characters'},
         
         
@@ -2806,7 +2806,7 @@ function _select_Gateway() { // Check for Gateway used to
                 ZenQty = (ZenQty > 5000) ? 5000 : ZenQty;
                 console.log("Posting ZAX buy listing for " + ZenQty + " ZEN at the rate of " + ZenRate + " AD/ZEN. AD remainder: " + charDiamonds + " - " + (ZenRate * ZenQty) + " = " + (charDiamonds - (ZenRate * ZenQty)));
                 unsafeWindow.client.createBuyOrder(ZenQty, ZenRate);
-                // set moved ad to the ad counter ZAX log
+                // set moved ad to the ad counter zax log
                 var ADTotal = ZenRate * ZenQty - exchangeDiamonds;
                 if (ADTotal > 0) {
                     console.log("AD moved to ZAX from", charNamesList[lastCharNum] + ":", ADTotal);
@@ -2834,7 +2834,7 @@ function _select_Gateway() { // Check for Gateway used to
                 var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
                 var ZenRate = parseInt(getSetting('consolidationSettings','transferRate'));
 
-                // cycle through the ZAX listings
+                // cycle through the zax listings
                 unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.forEach(function(item) {
                     // find any buy orders in the list with our set zen rate
                     if (parseInt(item.price) == ZenRate && item.ordertype == "Buy") {
@@ -2856,7 +2856,7 @@ function _select_Gateway() { // Check for Gateway used to
             if (parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow) > 0) {
                 unsafeWindow.client.sendCommand("GatewayExchange_ClaimTC", unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
                 console.log("Attempting to withdraw exchange balancees... ClaimTC: " + unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
-                // clear the ad counter ZAX log
+                // clear the ad counter zax log
                 zaxdiamonds = 0;
             }
             if (parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc) > 0) {
