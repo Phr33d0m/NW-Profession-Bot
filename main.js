@@ -2791,7 +2791,7 @@ function _select_Gateway() { // Check for Gateway used to
     function postZaxOffer() {
         // Make sure the exchange data is loaded to model
         if (unsafeWindow.client.dataModel.model.exchangeaccountdata) {
-            // Check that there is atleast 1 free zax order slot
+            // Check that there is atleast 1 free ZAX order slot
             if (unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length < 5) {
                 // Place the order
                 var exchangeDiamonds = parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
@@ -2804,9 +2804,9 @@ function _select_Gateway() { // Check for Gateway used to
                 if (!ZenRate) return;
                 var ZenQty = Math.floor((charDiamonds + exchangeDiamonds - parseInt(getSetting('consolidationSettings','minCharBalance'))) / ZenRate);
                 ZenQty = (ZenQty > 5000) ? 5000 : ZenQty;
-                console.log("Posting Zax buy listing for " + ZenQty + " ZEN at the rate of " + ZenRate + " AD/ZEN. AD remainder: " + charDiamonds + " - " + (ZenRate * ZenQty) + " = " + (charDiamonds - (ZenRate * ZenQty)));
+                console.log("Posting ZAX buy listing for " + ZenQty + " ZEN at the rate of " + ZenRate + " AD/ZEN. AD remainder: " + charDiamonds + " - " + (ZenRate * ZenQty) + " = " + (charDiamonds - (ZenRate * ZenQty)));
                 unsafeWindow.client.createBuyOrder(ZenQty, ZenRate);
-                // set moved ad to the ad counter zax log
+                // set moved ad to the ad counter ZAX log
                 var ADTotal = ZenRate * ZenQty - exchangeDiamonds;
                 if (ADTotal > 0) {
                     console.log("AD moved to ZAX from", charNamesList[lastCharNum] + ":", ADTotal);
@@ -2816,10 +2816,10 @@ function _select_Gateway() { // Check for Gateway used to
                     console.log("Astral Diamonds on the ZAX:", zaxdiamonds);
                 }
             } else {
-                console.log("Zen Max Listings Reached (5). Skipping Zax Posting..");
+                console.log("Zen Max Listings Reached (5). Skipping ZAX Posting..");
             }
         } else {
-            console.log("Zen Exchange data did not load in time for transfer. Skipping Zax Posting..");
+            console.log("Zen Exchange data did not load in time for transfer. Skipping ZAX Posting..");
         }
     }
 
@@ -2834,20 +2834,20 @@ function _select_Gateway() { // Check for Gateway used to
                 var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
                 var ZenRate = parseInt(getSetting('consolidationSettings','transferRate'));
 
-                // cycle through the zax listings
+                // cycle through the ZAX listings
                 unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.forEach(function(item) {
                     // find any buy orders in the list with our set zen rate
                     if (parseInt(item.price) == ZenRate && item.ordertype == "Buy") {
                         // cancel/withdraw the order
                         client.withdrawOrder(item.orderid);
-                        console.log("Canceling Zax offer for " + item.quantity + " ZEN at the rate of " + item.price + " . Total value in AD: " + item.totaltc);
+                        console.log("Canceling ZAX offer for " + item.quantity + " ZEN at the rate of " + item.price + " . Total value in AD: " + item.totaltc);
                     }
                 });
             } else {
-                console.log("No listings found on Zax. Skipping Zax Withrdaw..");
+                console.log("No listings found on ZAX. Skipping ZAX Withrdaw..");
             }
         } else {
-            console.log("Zen Exchange data did not load in time for transfer. Skipping Zax Withrdaw..");
+            console.log("Zen Exchange data did not load in time for transfer. Skipping ZAX Withrdaw..");
         }
     }
 
@@ -2856,7 +2856,7 @@ function _select_Gateway() { // Check for Gateway used to
             if (parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow) > 0) {
                 unsafeWindow.client.sendCommand("GatewayExchange_ClaimTC", unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
                 console.log("Attempting to withdraw exchange balancees... ClaimTC: " + unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
-                // clear the ad counter zax log
+                // clear the ad counter ZAX log
                 zaxdiamonds = 0;
             }
             if (parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc) > 0) {
@@ -3041,17 +3041,17 @@ function _select_Gateway() { // Check for Gateway used to
                     if (accountSettings.consolidationSettings.transferRate && parseInt(accountSettings.consolidationSettings.transferRate) >= 50 && parseInt(accountSettings.consolidationSettings.transferRate) <= 500) {
                         window.setTimeout(postZaxOffer, delay.SHORT);
                     } else {
-                        console.log("Zen transfer rate does not meet the minimum (50) or maximum (500). Skipping Zax Posting..");
+                        console.log("Zen transfer rate does not meet the minimum (50) or maximum (500). Skipping ZAX Posting..");
                     }
                 } else {
-                    console.log("Character does not have minimum AD balance to do funds transfer. Skipping Zax Posting..");
+                    console.log("Character does not have minimum AD balance to do funds transfer. Skipping ZAX Posting..");
                 }
             }
             else {
                 console.log("Bank char not set or bank char, skipping posting.");
             }
         } else {
-            console.log("Zen Exchange AD transfer not enabled. Skipping Zax Posting..");
+            console.log("Zen Exchange AD transfer not enabled. Skipping ZAX Posting..");
         }
 
         if (getSetting('generalSettings','openRewards')) {
@@ -3557,7 +3557,7 @@ function _select_Gateway() { // Check for Gateway used to
             unsafeWindow.client.dataModel.loadEntityByName(charname);
 
         } else {
-            console.log("Zen Exchange AD transfer not enabled. Skipping Zax Posting..");
+            console.log("Zen Exchange AD transfer not enabled. Skipping ZAX Posting..");
         }
         // MAC-NW
 
