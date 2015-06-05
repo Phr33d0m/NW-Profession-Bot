@@ -84,7 +84,7 @@ var fouxConsole = {
 };
 var console = unsafeWindow.console || fouxConsole;
 var chardiamonds = [];
-var zexdiamonds = 0;
+var zaxdiamonds = 0;
 var chargold = [];
 var definedTask = {};
 var translation = {};
@@ -1878,11 +1878,11 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
-        {scope: 'account', group: 'consolidationSettings', name:'consolidate',      type:'checkbox',pane:'bank',    title:'Consolidate AD via ZEX',     tooltip:'Automatically attempt to post, cancel and withdraw AD via ZEX and consolidate to designated character',border:true},
+        {scope: 'account', group: 'consolidationSettings', name:'consolidate',      type:'checkbox',pane:'bank',    title:'Consolidate AD via ZAX',     tooltip:'Automatically attempt to post, cancel and withdraw AD via ZAX and consolidate to designated character',border:true},
         {scope: 'account', group: 'consolidationSettings', name:'bankCharName',         type:'text',    pane:'bank',    title:'Character Name of Banker',   tooltip:'Enter name of the character to hold account AD'},
         {scope: 'account', group: 'consolidationSettings', name:'minToTransfer',    type:'text',    pane:'bank',    title:'Min AD for Transfer',        tooltip:'Enter minimum AD limit for it to be cosidered for transfer off a character'},
         {scope: 'account', group: 'consolidationSettings', name:'minCharBalance',   type:'text',    pane:'bank',    title:'Min Character balance',      tooltip:'Enter the amount of AD to always keep available on characters'},
-        {scope: 'account', group: 'consolidationSettings', name:'transferRate',     type:'text',    pane:'bank',    title:'AD per Zen Rate (in zen)',   tooltip:'Enter default rate to use for transfering through ZEX'},
+        {scope: 'account', group: 'consolidationSettings', name:'transferRate',     type:'text',    pane:'bank',    title:'AD per Zen Rate (in zen)',   tooltip:'Enter default rate to use for transfering through ZAX'},
 
         {scope: 'char', group: 'general', name: 'active',     type:'checkbox',    pane: 'main_not_tab',    title: 'Active',   tooltip: 'The char will be processed by the script'},
         {scope: 'char', group: 'general', name:'overrideGlobalSettings',    type:'checkbox',    pane:'main_not_tab',    title:'Override account settings for this char',   tooltip:''},
@@ -1917,7 +1917,7 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
-        {scope: 'char', group: 'consolidationSettings', name:'consolidate',      type:'checkbox',pane:'bank',    title:'Consolidate AD via ZEX',     tooltip:'Automatically attempt to post, cancel and withdraw AD via ZEX and consolidate to designated character',border:true},
+        {scope: 'char', group: 'consolidationSettings', name:'consolidate',      type:'checkbox',pane:'bank',    title:'Consolidate AD via ZAX',     tooltip:'Automatically attempt to post, cancel and withdraw AD via ZAX and consolidate to designated character',border:true},
         {scope: 'char', group: 'consolidationSettings', name:'minToTransfer',    type:'text',    pane:'bank',    title:'Min AD for Transfer',        tooltip:'Enter minimum AD limit for it to be cosidered for transfer off a character'},
         {scope: 'char', group: 'consolidationSettings', name:'minCharBalance',   type:'text',    pane:'bank',    title:'Min Character balance',      tooltip:'Enter the amount of AD to always keep available on characters'},
         
@@ -2788,10 +2788,10 @@ function _select_Gateway() { // Check for Gateway used to
 
     // Function used to check exchange data model and post calculated AD/Zen for transfer if all requirements are met
 
-    function postZexOffer() {
+    function postZaxOffer() {
         // Make sure the exchange data is loaded to model
         if (unsafeWindow.client.dataModel.model.exchangeaccountdata) {
-            // Check that there is atleast 1 free zex order slot
+            // Check that there is atleast 1 free zax order slot
             if (unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length < 5) {
                 // Place the order
                 var exchangeDiamonds = parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
@@ -2804,67 +2804,67 @@ function _select_Gateway() { // Check for Gateway used to
                 if (!ZenRate) return;
                 var ZenQty = Math.floor((charDiamonds + exchangeDiamonds - parseInt(getSetting('consolidationSettings','minCharBalance'))) / ZenRate);
                 ZenQty = (ZenQty > 5000) ? 5000 : ZenQty;
-                console.log("Posting Zex buy listing for " + ZenQty + " ZEN at the rate of " + ZenRate + " AD/ZEN. AD remainder: " + charDiamonds + " - " + (ZenRate * ZenQty) + " = " + (charDiamonds - (ZenRate * ZenQty)));
+                console.log("Posting Zax buy listing for " + ZenQty + " ZEN at the rate of " + ZenRate + " AD/ZEN. AD remainder: " + charDiamonds + " - " + (ZenRate * ZenQty) + " = " + (charDiamonds - (ZenRate * ZenQty)));
                 unsafeWindow.client.createBuyOrder(ZenQty, ZenRate);
-                // set moved ad to the ad counter zex log
+                // set moved ad to the ad counter zax log
                 var ADTotal = ZenRate * ZenQty - exchangeDiamonds;
                 if (ADTotal > 0) {
-                    console.log("AD moved to ZEX from", charNamesList[lastCharNum] + ":", ADTotal);
+                    console.log("AD moved to ZAX from", charNamesList[lastCharNum] + ":", ADTotal);
                     chardiamonds[lastCharNum] -= ADTotal;
                     console.log(charNamesList[lastCharNum] + "'s", "Astral Diamonds:", chardiamonds[lastCharNum]);
-                    zexdiamonds += ADTotal;
-                    console.log("Astral Diamonds on the ZEX:", zexdiamonds);
+                    zaxdiamonds += ADTotal;
+                    console.log("Astral Diamonds on the ZAX:", zaxdiamonds);
                 }
             } else {
-                console.log("Zen Max Listings Reached (5). Skipping Zex Posting..");
+                console.log("Zen Max Listings Reached (5). Skipping Zax Posting..");
             }
         } else {
-            console.log("Zen Exchange data did not load in time for transfer. Skipping Zex Posting..");
+            console.log("Zen Exchange data did not load in time for transfer. Skipping Zax Posting..");
         }
     }
 
     // Function used to check exchange data model and withdraw listed orders that use the settings zen transfer rate
 
-    function cancelZexOffer() {
+    function cancelZaxOffer() {
         // Make sure the exchange data is loaded to model
         if(unsafeWindow.client.dataModel.model.exchangeaccountdata) {
             if(unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length >= 1) {
-                console.log("Canceling ZEX orders");
+                console.log("Canceling ZAX orders");
 
                 var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
                 var ZenRate = parseInt(getSetting('consolidationSettings','transferRate'));
 
-                // cycle through the zex listings
+                // cycle through the zax listings
                 unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.forEach(function(item) {
                     // find any buy orders in the list with our set zen rate
                     if (parseInt(item.price) == ZenRate && item.ordertype == "Buy") {
                         // cancel/withdraw the order
                         client.withdrawOrder(item.orderid);
-                        console.log("Canceling Zex offer for " + item.quantity + " ZEN at the rate of " + item.price + " . Total value in AD: " + item.totaltc);
+                        console.log("Canceling Zax offer for " + item.quantity + " ZEN at the rate of " + item.price + " . Total value in AD: " + item.totaltc);
                     }
                 });
             } else {
-                console.log("No listings found on Zex. Skipping Zex Withrdaw..");
+                console.log("No listings found on Zax. Skipping Zax Withrdaw..");
             }
         } else {
-            console.log("Zen Exchange data did not load in time for transfer. Skipping Zex Withrdaw..");
+            console.log("Zen Exchange data did not load in time for transfer. Skipping Zax Withrdaw..");
         }
     }
 
-    function claimZexOffer() {
+    function claimZaxOffer() {
         if (unsafeWindow.client.dataModel.model.exchangeaccountdata) {
             if (parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow) > 0) {
                 unsafeWindow.client.sendCommand("GatewayExchange_ClaimTC", unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
                 console.log("Attempting to withdraw exchange balancees... ClaimTC: " + unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
-                // clear the ad counter zex log
-                zexdiamonds = 0;
+                // clear the ad counter zax log
+                zaxdiamonds = 0;
             }
             if (parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc) > 0) {
                 unsafeWindow.client.sendCommand("GatewayExchange_ClaimMTC", unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
                 console.log("Attempting to withdraw exchange balancees... ClaimMT: " + unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
             }
         } else {
-            window.setTimeout(claimZexOffer, delay.SHORT);
+            window.setTimeout(claimZaxOffer, delay.SHORT);
         }
     }
 
@@ -3039,19 +3039,19 @@ function _select_Gateway() { // Check for Gateway used to
                         parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds) >= (parseInt(getSetting('consolidationSettings','minToTransfer')) + parseInt(getSetting('consolidationSettings','minCharBalance')))) {
                     // Check that the rate is not less than the min & max
                     if (accountSettings.consolidationSettings.transferRate && parseInt(accountSettings.consolidationSettings.transferRate) >= 50 && parseInt(accountSettings.consolidationSettings.transferRate) <= 500) {
-                        window.setTimeout(postZexOffer, delay.SHORT);
+                        window.setTimeout(postZaxOffer, delay.SHORT);
                     } else {
-                        console.log("Zen transfer rate does not meet the minimum (50) or maximum (500). Skipping Zex Posting..");
+                        console.log("Zen transfer rate does not meet the minimum (50) or maximum (500). Skipping Zax Posting..");
                     }
                 } else {
-                    console.log("Character does not have minimum AD balance to do funds transfer. Skipping Zex Posting..");
+                    console.log("Character does not have minimum AD balance to do funds transfer. Skipping Zax Posting..");
                 }
             }
             else {
                 console.log("Bank char not set or bank char, skipping posting.");
             }
         } else {
-            console.log("Zen Exchange AD transfer not enabled. Skipping Zex Posting..");
+            console.log("Zen Exchange AD transfer not enabled. Skipping Zax Posting..");
         }
 
         if (getSetting('generalSettings','openRewards')) {
@@ -3218,12 +3218,12 @@ function _select_Gateway() { // Check for Gateway used to
         if (getSetting('consolidationSettings','consolidate')) {
             // Withdraw AD from the ZAX into the banker character
             if (accountSettings.consolidationSettings.bankCharName == curCharName) {
-                window.setTimeout(cancelZexOffer, delay.SHORT);
+                window.setTimeout(cancelZaxOffer, delay.SHORT);
             }
         }
 
         // Count AD & Gold
-        var curdiamonds = zexdiamonds;
+        var curdiamonds = zaxdiamonds;
         var curgold = 0;
         charNamesList.forEach( function (charName, idx) {
             if (chardiamonds[idx] != null) {
@@ -3541,13 +3541,13 @@ function _select_Gateway() { // Check for Gateway used to
             //          will overwrite one of your previous orders and return the AD to that other character
             var exchangeDiamonds = parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
             if (exchangeDiamonds > 0) {
-                claimZexOffer();
+                claimZaxOffer();
             }
 
             // Domino effect: first check if we're out of space for new offers
             if (unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length == 5) {
                 // Domino effect: then withdraw as much offers as we can and claim the diamonds
-                window.setTimeout(cancelZexOffer, delay.SHORT);
+                window.setTimeout(cancelZaxOffer, delay.SHORT);
             }
 
             WaitForState("button.closeNotification").done(function() {
@@ -3557,7 +3557,7 @@ function _select_Gateway() { // Check for Gateway used to
             unsafeWindow.client.dataModel.loadEntityByName(charname);
 
         } else {
-            console.log("Zen Exchange AD transfer not enabled. Skipping Zex Posting..");
+            console.log("Zen Exchange AD transfer not enabled. Skipping Zax Posting..");
         }
         // MAC-NW
 
