@@ -335,8 +335,8 @@ function addProfile(profession, profile, base){
     definedTask = definedTask || {};
     //general prototype for profession
     var professionBase = {
-        taskListName: profession, // Friendly name used at the UI
-        taskName: profession, // String used at the gateway
+        taskListName:  typeof(profession) ==='string' ? profession : profession.taskListName, // Friendly name used at the UI
+        taskName: typeof(profession) ==='string' ? profession : profession.taskName, // String used at the gateway
         taskDefaultPriority: 2, // Priority to allocate free task slots: 0 - High, 1 - Medium, 2 - Low
         taskActive: true,
         taskDefaultSlotNum: 0,
