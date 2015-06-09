@@ -90,6 +90,7 @@ var definedTask = {};
 var translation = {};
 var failedTasksList = [];
 var failedProfiles = {};
+var collectTaskAttempts = new Array(9); var k = 9; while (k) {collectTaskAttempts[--k] = 0};    //collectTaskAttempts.fill(0); js6 
 var antiInfLoopTrap = {// without this script sometimes try to start the same task in infinite loop (lags?) 
     prevCharName: "unknown", // character name which recently launched a task
     prevTaskName: "unknown", // name of the task previously launched
@@ -1645,6 +1646,7 @@ function _select_Gateway() { // Check for Gateway used to
             autoLoginPassword: "",
             autoReload: false,
             scriptDelayFactor: 1,
+            maxCollectTaskAttempts: 2,
         }
     };
 
@@ -1849,6 +1851,8 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'script', group: 'general', name: 'autoLoginAccount', title: tr('settings.main.nw_username'),   type: 'text',     pane: 'main', tooltip: tr('settings.main.nw_username.tooltip')},
         {scope: 'script', group: 'general', name: 'autoLoginPassword', title: tr('settings.main.nw_password'),   type: 'password', pane: 'main', tooltip: tr('settings.main.nw_password.tooltip')},
         {scope: 'script', group: 'general', name: 'saveCharNextTime', title: tr('settings.main.savenexttime'),   type: 'checkbox', pane: 'main', tooltip: tr('settings.main.savenexttime.tooltip')},
+        {scope: 'script', group: 'general', name: 'maxCollectTaskAttempts', title: 'Number of attempts to collect task result',   type: 'select', pane: 'main', tooltip: 'After this number of attempts the the script will continue without collecting',
+            opts: [ { name: '1',  value: 1},  { name: '2',  value: 2},  { name: '3',  value: 3}], },
         
         {scope: 'account', group: 'generalSettings', name: 'openRewards', title: tr('settings.account.openrewards'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.account.openrewards.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'keepOneUnopened', title: 'Keep one reward box unopened',  type: 'checkbox', pane: 'main', tooltip: 'Used to reserve the slots for the reward boxes'},
@@ -2007,13 +2011,17 @@ function _select_Gateway() { // Check for Gateway used to
 
         // Collect rewards for completed tasks and restart
         if (unsafeWindow.client.dataModel.model.ent.main.itemassignments.complete) {
-            unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.forEach(function(entry) {
-                if (entry.hascompletedetails) {
+            if (!unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.every(function(entry, idx) {
+                if (entry.hascompletedetails && (collectTaskAttempts[idx] < scriptSettings.general.maxCollectTaskAttempts)) {
                     unsafeWindow.client.professionTaskCollectRewards(entry.uassignmentid);
+                    collectTaskAttempts[idx]++;
+                    return false;
                 }
-            });
-            dfdNextRun.resolve();
+                return true;
+            })) {
+            dfdNextRun.resolve(delay.SHORT);
             return true;
+            }
         }
 
         // Check for available slots and start new task
@@ -3214,6 +3222,7 @@ function _select_Gateway() { // Check for Gateway used to
         curCharFullName = curCharName + "@" + loggedAccount;
         failedTasksList = [];
         failedProfiles = {};
+        var k = 9; while (k) {collectTaskAttempts[--k] = 0}; //collectTaskAttempts.fill(0);
 
         if (getSetting('consolidationSettings','consolidate')) {
             // Withdraw AD from the ZAX into the banker character
