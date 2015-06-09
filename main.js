@@ -38,6 +38,8 @@ Developers & Contributors
 
 RELEASE NOTES
 4.1
+- Added failsafe to prevent script getting stuck when can't claim task result
+- AddProfile() improved (thanks dlebedynskyi)
 - Added Failed task tracker to prevent script lockup on failed tasks
 - Added settings copy tab
 - Added script version display
@@ -84,12 +86,13 @@ var fouxConsole = {
 };
 var console = unsafeWindow.console || fouxConsole;
 var chardiamonds = [];
-var zexdiamonds = 0;
+var zaxdiamonds = 0;
 var chargold = [];
 var definedTask = {};
 var translation = {};
 var failedTasksList = [];
 var failedProfiles = {};
+var collectTaskAttempts = new Array(9); var k = 9; while (k) {collectTaskAttempts[--k] = 0};    //collectTaskAttempts.fill(0); js6 
 var antiInfLoopTrap = {// without this script sometimes try to start the same task in infinite loop (lags?) 
     prevCharName: "unknown", // character name which recently launched a task
     prevTaskName: "unknown", // name of the task previously launched
@@ -328,99 +331,101 @@ function _select_Gateway() { // Check for Gateway used to
         return;
     }
 
-    /*
-     adds new profession and new profile to task list.
-     
-     profession 
-     - name as string of profession to add.  Will create new one if not found
-     - object. will extend or create new profession 
-     Will extend default definition- > can be short
-     
-     profile 
-     - new profile to add.  Set recursiveList to false not use resursive list generation
-     Will extend default definition- > can be short
-     
-     base 
-     - name as string of prifile to use as extension. 
-     Will extend default definition- > can be short
-     */
-    function addProfile(profession, profile, base)
-    {
-        maxLevel = maxLevel || 25;
-        definedTask = definedTask || {};
-        //general prototype for profession
-        var professionBase = {
-            taskListName: profession, // Friendly name used at the UI
-            taskName: profession, // String used at the gateway
-            taskDefaultPriority: 2, // Priority to allocate free task slots: 0 - High, 1 - Medium, 2 - Low
-            taskActive: true,
-            taskDefaultSlotNum: 0,
-            taskDescription: "",
-            profiles: []
-        };
 
-        //profile prototype
-        var profileBase = {
-            profileName: 'Add profile name',
-            isProfileActive: true,
-            level: {}
-        };
+function addProfile(profession, profile, base){
+    maxLevel = maxLevel || 25;
+    definedTask = definedTask || {};
+    //general prototype for profession
+    var professionBase = {
+        taskListName:  typeof(profession) ==='string' ? profession : profession.taskListName, // Friendly name used at the UI
+        taskName: typeof(profession) ==='string' ? profession : profession.taskName, // String used at the gateway
+        taskDefaultPriority: 2, // Priority to allocate free task slots: 0 - High, 1 - Medium, 2 - Low
+        taskActive: true,
+        taskDefaultSlotNum: 0,
+        taskDescription: "",
+        profiles: []
+    };
 
-        //creating new profession or using existing one 
-        var professionSet = (typeof profession === 'object')
-            ? jQuery.extend(true, professionBase, profession)
-            : definedTask[profession] || professionBase;
-        if(!professionSet) {
-            return;
-        }
+    
 
-        if(!definedTask[profession]) {
-            definedTask[profession] = professionSet;
+    //creating new profession or using existing one 
+    var professionSet = (typeof profession === 'object')
+        ? jQuery.extend(true, professionBase, profession)
+        : definedTask[profession] || professionBase;
+    
+    if(!professionSet) {return;}
+    if(!definedTask[profession]) {definedTask[profession] = professionSet;}
+    if(!profile) {return;}
+
+    //profile prototype
+    var profileBase = {
+        profileName: 'Add profile name',
+        isProfileActive: true,
+        level: {}
+    };
+    
+    //getting new profile formated
+    var newProfile = jQuery.extend(true, profileBase, profile),
+        baseProfile;
+    //getting base to extend
+      base = base ||  (professionSet.taskListName === 'Leadership' ? 'XP' : 'default');
+      if(base && typeof base === 'string') {
+        var existing = professionSet.profiles.filter(function(e) {return e.profileName === base;});
+        if(existing && existing.length) {baseProfile = existing[0];}
+      }
+    
+
+    //setting levels
+    var baseLevels = baseProfile ? baseProfile.level : [],
+        rec = 0;
+    for(var i = 0; i <= maxLevel; i++) {
+      //recur has priority
+      if (rec > 0 ){ 
+        rec -=1;
+        //setting empty array to handle later by fallback
+        newProfile.level[i] = newProfile.level[i] || [];
+      }
+      
+      if(newProfile.level && newProfile.level[i]){
+            //override for arrays
+            if (Array.isArray(newProfile.level[i]) && newProfile.level[i].length){
+              //cancel rec since new array is defined
+               rec  = 0;
+              //process array
+              var ind = newProfile.level[i].indexOf('+');
+              if (ind>-1){
+                var def = newProfile.level[i].splice(0, ind);
+                var tail = newProfile.level[i].splice(1, newProfile.level[i].length);
+                def = def.concat(baseLevels[i] || [], tail || []);
+                newProfile.level[i] = def;
+              }
+              
+            }//process '+N'
+            else if (typeof newProfile.level[i] == 'string'
+                  && newProfile.level[i][0] === '+'){
+                  rec = parseInt(newProfile.level[i].replace(/\D/g,''));  
+                  rec = rec > 0 ? rec : 0;
+                  //setting empty array to handle later by fallback
+                  newProfile.level[i] = [];
+                  rec -=1;
             }
-
-        if(!profile) {
-            return;
-        }
-
-        //getting base one to extend
-        var newProfile = jQuery.extend(true, {}, profileBase);
-
-        if(!base) {
-            base = (professionSet.taskListName === 'Leadership' ? 'XP' : 'default');
+      }
+      //falback to base if not defined
+      else{
+         var baseLevel = baseLevels[i] || [];
+         newProfile.level[i] = baseLevel;
+      }
+        
+      //fallback from empty array to copy one before
+      if (Array.isArray(newProfile.level[i]) && !newProfile.level[i].length && i> 0){
+        newProfile.level[i] = newProfile.level[i-1];
+      }
     }
-
-        if(base && typeof base === 'string') {
-            var existing = professionSet.profiles.filter(function(e) {
-                return e.profileName === base;
-            });
-            if(existing) {
-                newProfile = jQuery.extend(true, newProfile, existing.length ? existing[0] : existing);
-            }
-        }
-
-        if(!profile.hasOwnProperty('recursiveList')) {
-            profile.recursiveList = true;
-        }
-        newProfile = jQuery.extend(true, newProfile, profile);
-        //setting levels
-        for(var i = 0; i <= maxLevel; i++) {
-            //override
-            if(profile.level && profile.level[i]) {
-                newProfile.level[i] = profile.level[i];
-                if (profile.recursiveList && i > 0 && !profile.level[i+1]) {
-                    profile.level[i+1] = profile.level[i];
-                }
-                continue;
-            } 
-            //iterate and set
-            if(profile.recursiveList && i > 0 && !newProfile.level[i]) {
-                newProfile.level[i] = newProfile.level[i - 1];
-            }
-        }
-        console.info("profile added ",newProfile.profileName, newProfile);
-        professionSet.profiles.push(newProfile);
-    }
-
+    
+    console.info("profile added ",newProfile.profileName, newProfile);
+    professionSet.profiles.push(newProfile);
+}
+   
 
     /*
      * Tasklist can be modified to configure the training you want to perform.
@@ -699,9 +704,13 @@ function _select_Gateway() { // Check for Gateway used to
         level : {
             0: ["Jewelcrafting_Tier0_Intro"],
             1: ["Jewelcrafting_Tier1_Refine_Basic_Mass", "Jewelcrafting_Tier1_Gather_Basic"],
+            2: '+25',
             7: ["Jewelcrafting_Tier2_Refine_Basic_Mass"],
+            8 : '+25',
             14: ["Jewelcrafting_Tier3_Refine_Basic_Mass"],
+            15 : '+25',
             21: ["Jewelcrafting_Tier4_Refine_Basic_Mass"],
+            22 : '+25',
         },
     });    
 
@@ -710,6 +719,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: true,
         level: {
             21: ["Jewelcrafting_Tier4_Refine_Basic_Mass", "Jewelcrafting_Tier4_Gather_Basic"],
+            22: '+25'
         },
     });
 
@@ -720,6 +730,7 @@ function _select_Gateway() { // Check for Gateway used to
         level: {
             // we care only about neck items that we can start pile up at lvl 16
             16: ["Jewelcrafting_Tier3_Neck_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+            17 : '+25',
             25: ["Jewelcrafting_Tier4_Neck_Offense_4_Purple", //Exquisite Adamant Necklace of Piercing
                   "Jewelcrafting_Tier4_Neck_Misc_4_Purple", // Exquisite Adamant Necklace of Recovery 
                   "Jewelcrafting_Tier4_Neck_Defense_4_Purple",//Exquisite Adamant Necklace of Regeneration
@@ -737,6 +748,7 @@ function _select_Gateway() { // Check for Gateway used to
         level: {
             // we care only about neck items that we can start pile up at lvl 15
             15: ["Jewelcrafting_Tier3_Ring_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+            16 :'+25',
             25: ["Jewelcrafting_Tier4_Ring_Offense_4_Purple", //Exquisite Adamant Ring of Piercing
                 "Jewelcrafting_Tier4_Ring_Misc_4_Purple", //Exquisite Adamant Ring of Recovery
                 "Jewelcrafting_Tier4_Ring_Defense_4_Purple", //Exquisite Adamant Ring of Regeneration
@@ -814,9 +826,13 @@ function _select_Gateway() { // Check for Gateway used to
         level : {
             0: ["Med_Armorsmithing_Tier0_Intro"],
             1: ["Med_Armorsmithing_Tier1_Refine_Basic_Mass", "Med_Armorsmithing_Tier1_Gather_Basic"],
+            2: "+25",
             7: ["Med_Armorsmithing_Tier2_Refine_Basic_Mass"],
+            8: "+25",
             14: ["Med_Armorsmithing_Tier3_Refine_Basic_Mass"],
+            15: "+25",
             21: ["Crafted_Med_Armorsmithing_T4_Refine_Basic_Mass"],
+            22: "+25",
         },
     });    
 
@@ -825,6 +841,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: true,
         level: {
             21: ["Crafted_Med_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Med_Armorsmithing_T4_Gather_Basic_Mass"],
+            22: "+25",
             25: ["Crafted_Med_Armorsmithing_T4_Refine_Basic", "Crafted_Med_Armorsmithing_T4_Gather_Basic"],
         },
     });
@@ -1027,6 +1044,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: false,
         level: {
             6: ["Med_Armorsmithing_Tier1_Event_Gond"],
+            7: "+25",            
         },
     });
 
@@ -1078,9 +1096,13 @@ function _select_Gateway() { // Check for Gateway used to
         level : {
             0: ["Hvy_Armorsmithing_Tier0_Intro"],
             1: ["Hvy_Armorsmithing_Tier1_Refine_Basic_Mass", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+            2: "+25",
             7: ["Hvy_Armorsmithing_Tier2_Refine_Basic_Mass"],
+            8: "+25",
             14: ["Hvy_Armorsmithing_Tier3_Refine_Basic_Mass"],
+            15: "+25",
             21: ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass"],
+            22: "+25",
         },
     });
 
@@ -1089,6 +1111,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: true,
         level: {
             21: ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Hvy_Armorsmithing_T4_Gather_Basic_Mass"],
+            22: "+25",
         },
     });
 
@@ -1097,6 +1120,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: false,
         level: {
             6: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
+            7: "+25",
         },
     });
 
@@ -1149,9 +1173,13 @@ function _select_Gateway() { // Check for Gateway used to
         level : {
             0: ["Leatherworking_Tier0_Intro_1"],
             1: ["Leatherworking_Tier1_Refine_Basic_Mass", "Leatherworking_Tier1_Gather_Basic"],
+            2: "+25",
             7: ["Leatherworking_Tier2_Refine_Basic_Mass"],
+            8: "+25",
             14: ["Leatherworking_Tier3_Refine_Basic_Mass"],
+            15: "+25",
             21: ["Leatherworking_Tier4_Refine_Basic_Mass"],
+            22: "+25",
         },
     });    
 
@@ -1161,6 +1189,7 @@ function _select_Gateway() { // Check for Gateway used to
         level: {
             20: ["Leatherworking_Tier3_Leather_Pants"],
             21: ["Leatherworking_Tier4_Refine_Basic_Mass", "Leatherworking_Tier4_Gather_Basic"],
+            22: "+25",
             25: ["Leatherworking_Tier4_Refine_Basic", "Leatherworking_Tier4_Gather_Basic"],
         },
     });
@@ -1238,6 +1267,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: false,
         level: {
             6: ["Leatherworking_Tier1_Event_Gond"],
+            7: "+25",
         },
     });
 
@@ -1290,9 +1320,13 @@ function _select_Gateway() { // Check for Gateway used to
         level : {
             0: ["Tailoring_Tier0_Intro"],
             1: ["Tailoring_Tier1_Refine_Basic_Mass", "Tailoring_Tier1_Gather_Basic"],
+            2: "+25",
             7: ["Tailoring_Tier2_Refine_Basic_Mass"],
+            8: "+25",
             14: ["Tailoring_Tier3_Refine_Basic_Mass"],
+            15: "+25",
             21: ["Crafted_Tailoring_T4_Refine_Basic_Mass"],
+            22: "+25",
         },
     });
 
@@ -1301,6 +1335,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: true,
         level: {
             21: ["Crafted_Tailoring_T4_Refine_Basic_Mass", "Crafted_Tailoring_T4_Gather_Basic_Mass"],
+            22: "+25",
             25: ["Crafted_Tailoring_T4_Refine_Basic", "Crafted_Tailoring_T4_Gather_Basic"],
         },
     });
@@ -1310,6 +1345,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: false,
         level: {
             6: ["Tailoring_Tier1_Event_Gond"],
+            7: "+25",
         },
     });
 
@@ -1363,9 +1399,13 @@ function _select_Gateway() { // Check for Gateway used to
         level : {
             0: ["Artificing_Tier0_Intro_1"],
             1: ["Artificing_Tier1_Refine_Basic_Mass", "Artificing_Tier1_Gather_Basic"],
+            2: "+25",
             7: ["Artificing_Tier2_Refine_Basic_Mass"],
+            8: "+25",
             14: ["Artificing_Tier3_Refine_Basic_Mass"],
+            15: "+25",
             21: ["Artificing_Tier4_Refine_Basic_Mass"],
+            22: "+25",
         },
     });
 
@@ -1374,6 +1414,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: false,
         level: {
             6: ["Artificing_Tier1_Event_Gond"],
+            7: "+25",
         },
     });
 
@@ -1427,9 +1468,13 @@ function _select_Gateway() { // Check for Gateway used to
         level : {
             0: ["Weaponsmithing_Tier0_Intro"],
             1: ["Weaponsmithing_Tier1_Refine_Basic_Mass", "Weaponsmithing_Tier1_Gather_Basic"],
+            2: "+25",
             7: ["Weaponsmithing_Tier2_Refine_Basic_Mass"],
+            8: "+25",
             14: ["Weaponsmithing_Tier3_Refine_Basic_Mass"],
+            15: "+25",
             21: ["Weaponsmithing_Tier4_Refine_Basic_Mass"],
+            22: "+25",
         },
     });
 
@@ -1438,6 +1483,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: false,
         level: {
             6: ["Weaponsmithing_Tier1_Event_Gond"],
+            7: "+25",
         },
     });
 
@@ -1481,17 +1527,22 @@ function _select_Gateway() { // Check for Gateway used to
             },
         }]
     };
+
+
     addProfile("Alchemy", {
         profileName: "Aqua Regia",
         level: {
             20: ["Alchemy_Tier2_Aquaregia", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
-            22: ["Alchemy_Tier4_Aquaregia_2", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"]
+            21: "+25",
+            22: ["Alchemy_Tier4_Aquaregia_2", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
+            23: "+25",
         }
     });
     addProfile("Alchemy", {
         profileName: "Aqua Vitae",
         level: {
             20: ["Alchemy_Tier2_Aquavitae_2", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
+            21: "+25",
         }
     });
     addProfile("Alchemy", {
@@ -1512,6 +1563,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: true,
         level: {
             1: ["Alchemy_Tier1_Refine_Basic", "Alchemy_Tier1_Gather_Components"],
+            2: "+25",
         },
     });
 
@@ -1520,6 +1572,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: false,
         level: {
             6: ["Alchemy_Tier1_Event_Gond"],
+            7: "+25",
         },
     });
 
@@ -1645,6 +1698,7 @@ function _select_Gateway() { // Check for Gateway used to
             autoLoginPassword: "",
             autoReload: false,
             scriptDelayFactor: 1,
+            maxCollectTaskAttempts: 2,
         }
     };
 
@@ -1849,6 +1903,8 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'script', group: 'general', name: 'autoLoginAccount', title: tr('settings.main.nw_username'),   type: 'text',     pane: 'main', tooltip: tr('settings.main.nw_username.tooltip')},
         {scope: 'script', group: 'general', name: 'autoLoginPassword', title: tr('settings.main.nw_password'),   type: 'password', pane: 'main', tooltip: tr('settings.main.nw_password.tooltip')},
         {scope: 'script', group: 'general', name: 'saveCharNextTime', title: tr('settings.main.savenexttime'),   type: 'checkbox', pane: 'main', tooltip: tr('settings.main.savenexttime.tooltip')},
+        {scope: 'script', group: 'general', name: 'maxCollectTaskAttempts', title: 'Number of attempts to collect task result',   type: 'select', pane: 'main', tooltip: 'After this number of attempts the the script will continue without collecting',
+            opts: [ { name: '1',  value: 1},  { name: '2',  value: 2},  { name: '3',  value: 3}], },
         
         {scope: 'account', group: 'generalSettings', name: 'openRewards', title: tr('settings.account.openrewards'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.account.openrewards.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'keepOneUnopened', title: 'Keep one reward box unopened',  type: 'checkbox', pane: 'main', tooltip: 'Used to reserve the slots for the reward boxes'},
@@ -1861,7 +1917,7 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'account', group: 'professionSettings', name: 'fillOptionals',   type: 'checkbox', pane: 'prof',    title: 'Fill Optional Assets',  tooltip: 'Enable to include selecting the optional assets of tasks'},
         {scope: 'account', group: 'professionSettings', name: 'autoPurchaseRes', type: 'checkbox', pane: 'prof',    title: 'Auto Purchase Resources', tooltip: 'Automatically purchase required resources from gateway shop (100 at a time)'}, 
         {scope: 'account', group: 'professionSettings', name:'trainAssets',      type:'checkbox',  pane:'prof',     title:'Train Assets', tooltip:'Enable training/upgrading of asset worker resources'}, 
-        {scope: 'account', group: 'professionSettings', name:'smartLeadershipAssets',   type:'checkbox', pane:'prof', title:'Smart Asset allocation for leadership', tooltip:'Try to spread adn fill non-common assets and suplement with common if needed'},
+        {scope: 'account', group: 'professionSettings', name:'smartLeadershipAssets',   type:'checkbox', pane:'prof', title:'Smart Asset allocation for leadership', tooltip:'Try to spread and fill non-common assets and supplement with common if needed'},
         {scope: 'account', group: 'professionSettings', name:'skipPatrolTask', type:'select', pane:'prof', title:'Skip Patrol task if > 10 claims', tooltip:'Skip \"Patrol the Mines\" leadership task if there are more than 10 mining claims in the inventory (Never, Always, On AD profile, if Leadership level is &gt;= 20, or both of the above )',
             opts:[{name:'never',value:'never'},{name:'always',value:'always'},{name:'AD profile',value:'ad'},{name:'Leadership lvl 20',value:'ld20'},{name:'AD&Lvl20',value:'AD&Lvl20'}]},
         {scope: 'account', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
@@ -1878,17 +1934,17 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
-        {scope: 'account', group: 'consolidationSettings', name:'consolidate',      type:'checkbox',pane:'bank',    title:'Consolidate AD via ZEX',     tooltip:'Automatically attempt to post, cancel and withdraw AD via ZEX and consolidate to designated character',border:true},
+        {scope: 'account', group: 'consolidationSettings', name:'consolidate',      type:'checkbox',pane:'bank',    title:'Consolidate AD via ZAX',     tooltip:'Automatically attempt to post, cancel and withdraw AD via ZAX and consolidate to designated character',border:true},
         {scope: 'account', group: 'consolidationSettings', name:'bankCharName',         type:'text',    pane:'bank',    title:'Character Name of Banker',   tooltip:'Enter name of the character to hold account AD'},
-        {scope: 'account', group: 'consolidationSettings', name:'minToTransfer',    type:'text',    pane:'bank',    title:'Min AD for Transfer',        tooltip:'Enter minimum AD limit for it to be cosidered for transfer off a character'},
+        {scope: 'account', group: 'consolidationSettings', name:'minToTransfer',    type:'text',    pane:'bank',    title:'Min AD for Transfer',        tooltip:'Enter minimum AD limit for it to be considered for transfer off a character'},
         {scope: 'account', group: 'consolidationSettings', name:'minCharBalance',   type:'text',    pane:'bank',    title:'Min Character balance',      tooltip:'Enter the amount of AD to always keep available on characters'},
-        {scope: 'account', group: 'consolidationSettings', name:'transferRate',     type:'text',    pane:'bank',    title:'AD per Zen Rate (in zen)',   tooltip:'Enter default rate to use for transfering through ZEX'},
+        {scope: 'account', group: 'consolidationSettings', name:'transferRate',     type:'text',    pane:'bank',    title:'AD per Zen Rate (in zen)',   tooltip:'Enter default rate to use for transferring through ZAX'},
 
         {scope: 'char', group: 'general', name: 'active',     type:'checkbox',    pane: 'main_not_tab',    title: 'Active',   tooltip: 'The char will be processed by the script'},
         {scope: 'char', group: 'general', name:'overrideGlobalSettings',    type:'checkbox',    pane:'main_not_tab',    title:'Override account settings for this char',   tooltip:''},
         {scope: 'char', group: 'general', name:'manualTaskSlots',    type:'checkbox',    pane:'main_not_tab',    title:'Use manual task allocation tab',   tooltip:'Per slot profile allocation'},
         
-        {scope: 'char', group: 'generalSettings', name: 'openRewards', title: 'Open Reward Chests',  type: 'checkbox', pane: 'main', tooltip: 'Enable opeing of leadership chests on character switch' },
+        {scope: 'char', group: 'generalSettings', name: 'openRewards', title: 'Open Reward Chests',  type: 'checkbox', pane: 'main', tooltip: 'Enable opening of leadership chests on character switch' },
         {scope: 'char', group: 'generalSettings', name: 'keepOneUnopened', title: 'Keep one reward box unopened',  type: 'checkbox', pane: 'main', tooltip: 'Used to reserve the slots for the reward boxes'},        
         {scope: 'char', group: 'generalSettings', name: 'refineAD',    title: 'Refine AD',           type: 'checkbox', pane: 'main', tooltip: 'Enable refining of AD on character switch'},
         {scope: 'char', group: 'generalSettings', name: 'runSCA',    title: 'Run SCA',               type: 'select',   pane: 'main', tooltip: 'Running SCA adventures reward after professions',
@@ -1900,7 +1956,7 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'char', group: 'professionSettings', name: 'fillOptionals',   type: 'checkbox', pane: 'prof',    title: 'Fill Optional Assets',  tooltip: 'Enable to include selecting the optional assets of tasks'},
         {scope: 'char', group: 'professionSettings', name: 'autoPurchaseRes', type: 'checkbox', pane: 'prof',    title: 'Auto Purchase Resources', tooltip: 'Automatically purchase required resources from gateway shop (100 at a time)'}, 
         {scope: 'char', group: 'professionSettings', name: 'trainAssets',      type:'checkbox',  pane:'prof',     title:'Train Assets', tooltip:'Enable training/upgrading of asset worker resources'}, 
-        {scope: 'char', group: 'professionSettings', name:'smartLeadershipAssets',   type:'checkbox', pane:'prof', title:'Smart Asset allocation for leadership', tooltip:'Try to spread adn fill non-common assets and suplement with common if needed'},
+        {scope: 'char', group: 'professionSettings', name:'smartLeadershipAssets',   type:'checkbox', pane:'prof', title:'Smart Asset allocation for leadership', tooltip:'Try to spread and fill non-common assets and supplement with common if needed'},
         {scope: 'char', group: 'professionSettings', name:'skipPatrolTask', type:'select', pane:'prof', title:'Skip Patrol task if > 10 claims', tooltip:'Skip \"Patrol the Mines\" leadership task if there are more than 10 mining claims in the inventory (Never, Always, On AD profile, if Leadership level is &gt;= 20, or both of the above )',
             opts:[{name:'never',value:'never'},{name:'always',value:'always'},{name:'AD profile',value:'ad'},{name:'Leadership lvl 20',value:'ld20'},{name:'AD&Lvl20',value:'AD&Lvl20'}]},
         {scope: 'char', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
@@ -1917,8 +1973,8 @@ function _select_Gateway() { // Check for Gateway used to
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
-        {scope: 'char', group: 'consolidationSettings', name:'consolidate',      type:'checkbox',pane:'bank',    title:'Consolidate AD via ZEX',     tooltip:'Automatically attempt to post, cancel and withdraw AD via ZEX and consolidate to designated character',border:true},
-        {scope: 'char', group: 'consolidationSettings', name:'minToTransfer',    type:'text',    pane:'bank',    title:'Min AD for Transfer',        tooltip:'Enter minimum AD limit for it to be cosidered for transfer off a character'},
+        {scope: 'char', group: 'consolidationSettings', name:'consolidate',      type:'checkbox',pane:'bank',    title:'Consolidate AD via ZAX',     tooltip:'Automatically attempt to post, cancel and withdraw AD via ZAX and consolidate to designated character',border:true},
+        {scope: 'char', group: 'consolidationSettings', name:'minToTransfer',    type:'text',    pane:'bank',    title:'Min AD for Transfer',        tooltip:'Enter minimum AD limit for it to be considered for transfer off a character'},
         {scope: 'char', group: 'consolidationSettings', name:'minCharBalance',   type:'text',    pane:'bank',    title:'Min Character balance',      tooltip:'Enter the amount of AD to always keep available on characters'},
         
         
@@ -2007,13 +2063,17 @@ function _select_Gateway() { // Check for Gateway used to
 
         // Collect rewards for completed tasks and restart
         if (unsafeWindow.client.dataModel.model.ent.main.itemassignments.complete) {
-            unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.forEach(function(entry) {
-                if (entry.hascompletedetails) {
+            if (!unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.every(function(entry, idx) {
+                if (entry.hascompletedetails && (collectTaskAttempts[idx] < scriptSettings.general.maxCollectTaskAttempts)) {
                     unsafeWindow.client.professionTaskCollectRewards(entry.uassignmentid);
+                    collectTaskAttempts[idx]++;
+                    return false;
                 }
-            });
-            dfdNextRun.resolve();
+                return true;
+            })) {
+            dfdNextRun.resolve(delay.SHORT);
             return true;
+            }
         }
 
         // Check for available slots and start new task
@@ -2788,10 +2848,10 @@ function _select_Gateway() { // Check for Gateway used to
 
     // Function used to check exchange data model and post calculated AD/Zen for transfer if all requirements are met
 
-    function postZexOffer() {
+    function postZaxOffer() {
         // Make sure the exchange data is loaded to model
         if (unsafeWindow.client.dataModel.model.exchangeaccountdata) {
-            // Check that there is atleast 1 free zex order slot
+            // Check that there is atleast 1 free ZAX order slot
             if (unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length < 5) {
                 // Place the order
                 var exchangeDiamonds = parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
@@ -2804,67 +2864,67 @@ function _select_Gateway() { // Check for Gateway used to
                 if (!ZenRate) return;
                 var ZenQty = Math.floor((charDiamonds + exchangeDiamonds - parseInt(getSetting('consolidationSettings','minCharBalance'))) / ZenRate);
                 ZenQty = (ZenQty > 5000) ? 5000 : ZenQty;
-                console.log("Posting Zex buy listing for " + ZenQty + " ZEN at the rate of " + ZenRate + " AD/ZEN. AD remainder: " + charDiamonds + " - " + (ZenRate * ZenQty) + " = " + (charDiamonds - (ZenRate * ZenQty)));
+                console.log("Posting ZAX buy listing for " + ZenQty + " ZEN at the rate of " + ZenRate + " AD/ZEN. AD remainder: " + charDiamonds + " - " + (ZenRate * ZenQty) + " = " + (charDiamonds - (ZenRate * ZenQty)));
                 unsafeWindow.client.createBuyOrder(ZenQty, ZenRate);
-                // set moved ad to the ad counter zex log
+                // set moved ad to the ad counter zax log
                 var ADTotal = ZenRate * ZenQty - exchangeDiamonds;
                 if (ADTotal > 0) {
-                    console.log("AD moved to ZEX from", charNamesList[lastCharNum] + ":", ADTotal);
+                    console.log("AD moved to ZAX from", charNamesList[lastCharNum] + ":", ADTotal);
                     chardiamonds[lastCharNum] -= ADTotal;
                     console.log(charNamesList[lastCharNum] + "'s", "Astral Diamonds:", chardiamonds[lastCharNum]);
-                    zexdiamonds += ADTotal;
-                    console.log("Astral Diamonds on the ZEX:", zexdiamonds);
+                    zaxdiamonds += ADTotal;
+                    console.log("Astral Diamonds on the ZAX:", zaxdiamonds);
                 }
             } else {
-                console.log("Zen Max Listings Reached (5). Skipping Zex Posting..");
+                console.log("Zen Max Listings Reached (5). Skipping ZAX Posting..");
             }
         } else {
-            console.log("Zen Exchange data did not load in time for transfer. Skipping Zex Posting..");
+            console.log("Zen Exchange data did not load in time for transfer. Skipping ZAX Posting..");
         }
     }
 
     // Function used to check exchange data model and withdraw listed orders that use the settings zen transfer rate
 
-    function cancelZexOffer() {
+    function cancelZaxOffer() {
         // Make sure the exchange data is loaded to model
         if(unsafeWindow.client.dataModel.model.exchangeaccountdata) {
             if(unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length >= 1) {
-                console.log("Canceling ZEX orders");
+                console.log("Canceling ZAX orders");
 
                 var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
                 var ZenRate = parseInt(getSetting('consolidationSettings','transferRate'));
 
-                // cycle through the zex listings
+                // cycle through the zax listings
                 unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.forEach(function(item) {
                     // find any buy orders in the list with our set zen rate
                     if (parseInt(item.price) == ZenRate && item.ordertype == "Buy") {
                         // cancel/withdraw the order
                         client.withdrawOrder(item.orderid);
-                        console.log("Canceling Zex offer for " + item.quantity + " ZEN at the rate of " + item.price + " . Total value in AD: " + item.totaltc);
+                        console.log("Canceling ZAX offer for " + item.quantity + " ZEN at the rate of " + item.price + " . Total value in AD: " + item.totaltc);
                     }
                 });
             } else {
-                console.log("No listings found on Zex. Skipping Zex Withrdaw..");
+                console.log("No listings found on ZAX. Skipping ZAX Withrdaw..");
             }
         } else {
-            console.log("Zen Exchange data did not load in time for transfer. Skipping Zex Withrdaw..");
+            console.log("Zen Exchange data did not load in time for transfer. Skipping ZAX Withrdaw..");
         }
     }
 
-    function claimZexOffer() {
+    function claimZaxOffer() {
         if (unsafeWindow.client.dataModel.model.exchangeaccountdata) {
             if (parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow) > 0) {
                 unsafeWindow.client.sendCommand("GatewayExchange_ClaimTC", unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
                 console.log("Attempting to withdraw exchange balancees... ClaimTC: " + unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
-                // clear the ad counter zex log
-                zexdiamonds = 0;
+                // clear the ad counter zax log
+                zaxdiamonds = 0;
             }
             if (parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc) > 0) {
                 unsafeWindow.client.sendCommand("GatewayExchange_ClaimMTC", unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
                 console.log("Attempting to withdraw exchange balancees... ClaimMT: " + unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
             }
         } else {
-            window.setTimeout(claimZexOffer, delay.SHORT);
+            window.setTimeout(claimZaxOffer, delay.SHORT);
         }
     }
 
@@ -3039,19 +3099,19 @@ function _select_Gateway() { // Check for Gateway used to
                         parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds) >= (parseInt(getSetting('consolidationSettings','minToTransfer')) + parseInt(getSetting('consolidationSettings','minCharBalance')))) {
                     // Check that the rate is not less than the min & max
                     if (accountSettings.consolidationSettings.transferRate && parseInt(accountSettings.consolidationSettings.transferRate) >= 50 && parseInt(accountSettings.consolidationSettings.transferRate) <= 500) {
-                        window.setTimeout(postZexOffer, delay.SHORT);
+                        window.setTimeout(postZaxOffer, delay.SHORT);
                     } else {
-                        console.log("Zen transfer rate does not meet the minimum (50) or maximum (500). Skipping Zex Posting..");
+                        console.log("Zen transfer rate does not meet the minimum (50) or maximum (500). Skipping ZAX Posting..");
                     }
                 } else {
-                    console.log("Character does not have minimum AD balance to do funds transfer. Skipping Zex Posting..");
+                    console.log("Character does not have minimum AD balance to do funds transfer. Skipping ZAX Posting..");
                 }
             }
             else {
                 console.log("Bank char not set or bank char, skipping posting.");
             }
         } else {
-            console.log("Zen Exchange AD transfer not enabled. Skipping Zex Posting..");
+            console.log("Zen Exchange AD transfer not enabled. Skipping ZAX Posting..");
         }
 
         if (getSetting('generalSettings','openRewards')) {
@@ -3214,16 +3274,17 @@ function _select_Gateway() { // Check for Gateway used to
         curCharFullName = curCharName + "@" + loggedAccount;
         failedTasksList = [];
         failedProfiles = {};
+        var k = 9; while (k) {collectTaskAttempts[--k] = 0}; //collectTaskAttempts.fill(0);
 
         if (getSetting('consolidationSettings','consolidate')) {
             // Withdraw AD from the ZAX into the banker character
             if (accountSettings.consolidationSettings.bankCharName == curCharName) {
-                window.setTimeout(cancelZexOffer, delay.SHORT);
+                window.setTimeout(cancelZaxOffer, delay.SHORT);
             }
         }
 
         // Count AD & Gold
-        var curdiamonds = zexdiamonds;
+        var curdiamonds = zaxdiamonds;
         var curgold = 0;
         charNamesList.forEach( function (charName, idx) {
             if (chardiamonds[idx] != null) {
@@ -3541,13 +3602,13 @@ function _select_Gateway() { // Check for Gateway used to
             //          will overwrite one of your previous orders and return the AD to that other character
             var exchangeDiamonds = parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
             if (exchangeDiamonds > 0) {
-                claimZexOffer();
+                claimZaxOffer();
             }
 
             // Domino effect: first check if we're out of space for new offers
             if (unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.length == 5) {
                 // Domino effect: then withdraw as much offers as we can and claim the diamonds
-                window.setTimeout(cancelZexOffer, delay.SHORT);
+                window.setTimeout(cancelZaxOffer, delay.SHORT);
             }
 
             WaitForState("button.closeNotification").done(function() {
@@ -3557,7 +3618,7 @@ function _select_Gateway() { // Check for Gateway used to
             unsafeWindow.client.dataModel.loadEntityByName(charname);
 
         } else {
-            console.log("Zen Exchange AD transfer not enabled. Skipping Zex Posting..");
+            console.log("Zen Exchange AD transfer not enabled. Skipping ZAX Posting..");
         }
         // MAC-NW
 
@@ -3621,7 +3682,7 @@ function _select_Gateway() { // Check for Gateway used to
                 label.customProfiles {min-width: 150px; }\
                 select.customProfiles { margin: 10px }\
                 textarea.customProfiles { width: 500px; height: 350px; margin: 10px 0; }\
-                .custom_profiles_delete { height: 16px; }\
+                .custom_profiles_delete { height: 16px; } #custom__profiles__viewbase_btn { height: 16px; } .custom_profiles_view {height: 16px; margin: 0 4px; }\
                 #settingsPanel table {border-collapse: collapse; }\
                 tr.totals > td { border-top: 1px solid grey; padding-top: 3px; } \
                 .rarity_Gold {color: blue; } .rarity_Silver {color: green; } .rarity_Special {color: purple; }  \
@@ -3807,6 +3868,7 @@ function _select_Gateway() { // Check for Gateway used to
             })
             temp_html += '</select>';
             temp_html += '<label class="customProfiles">Base Profile: </label><select class=" custom_input customProfiles " id="custom__profiles__baseprofile"></select>';
+            temp_html += '<button id="custom__profiles__viewbase_btn"></button>';
             temp_html += '</div>';
             temp_html += 'Input must be valid JSON: double quotes on property names & no trailing commas. <br /> Use any online validator to easily find errors. <br /> like: http://jsonformatter.curiousconcept.com/ <br /> http://json.parser.online.fr/';
             temp_html += '<div><textarea id="custom_profile_textarea" class=" custom_input customProfiles ">';
@@ -3821,11 +3883,32 @@ function _select_Gateway() { // Check for Gateway used to
                 temp_html += '<td>' + cProfile.baseProfile + '</td>';
                 if (typeof cProfile.profile === 'object')
                     temp_html += '<td>' + cProfile.profile.profileName + '</td>';
-                temp_html += '<td><button class="custom_profiles_delete" value=' + idx + '></button></td>';
+                temp_html += '<td><button class="custom_profiles_view" value=' + idx + '></button><button class="custom_profiles_delete" value=' + idx + '></button></td>';
             });
             temp_html += '</ul>';
             tab.html(temp_html);
             
+            $( ".custom_profiles_view" ).button({
+                icons: {
+                    primary: "ui-icon-zoomin"
+                },
+                text: false
+            });
+            $( ".custom_profiles_view" ).click( function(e) {
+                var pidx = $(this).val();                    
+                var str = "Task name : " + customProfiles[pidx].taskName + "\n";
+                    str += "Base Profile : " + customProfiles[pidx].baseProfile + "\n"
+                    str += "Profile : \n\n";
+                    str += JSON.stringify(customProfiles[pidx].profile,null,4);
+
+                $('<div id="dialog-display-custom-profile" title="Custom profile"><textarea style=" width: 98%; height: 98%;">' + str + '</textarea></div>').dialog({
+                      resizable: true,
+                      width: 550,
+                      height: 750,
+                      modal: false,
+                    });        
+            });
+
             $( ".custom_profiles_delete" ).button({
                 icons: {
                     primary: "ui-icon-trash"
@@ -3857,6 +3940,32 @@ function _select_Gateway() { // Check for Gateway used to
                 });
             });
             $("#custom_profiles_taskname").change();
+
+            $('#custom__profiles__viewbase_btn').button({
+                icons: {
+                    primary: "ui-icon-zoomin"
+                },
+                text: false
+            });
+            $('#custom__profiles__viewbase_btn').click(function() {
+                var _taskName = $("#custom_profiles_taskname").val();
+                var _baseProfile = $("#custom__profiles__baseprofile").val();
+                
+                var _profiles = tasklist.filter(function(task) {
+                    return task.taskListName == _taskName;
+                })[0].profiles.filter(function(profile) {
+                    return profile.profileName === _baseProfile;
+                });
+                var str = JSON.stringify(_profiles,null,4);
+
+                $('<div id="dialog-display-profile" title="Profile"><textarea style=" width: 98%; height: 98%;">' + str + '</textarea></div>').dialog({
+                    resizable: true,
+                    width: 550,
+                    height: 750,
+                    modal: false,
+                });        
+            });
+
 
             $('#custom__profiles__import_btn').button();
             $('#custom__profiles__import_btn').click(function() {
