@@ -329,99 +329,101 @@ function _select_Gateway() { // Check for Gateway used to
         return;
     }
 
-    /*
-     adds new profession and new profile to task list.
-     
-     profession 
-     - name as string of profession to add.  Will create new one if not found
-     - object. will extend or create new profession 
-     Will extend default definition- > can be short
-     
-     profile 
-     - new profile to add.  Set recursiveList to false not use resursive list generation
-     Will extend default definition- > can be short
-     
-     base 
-     - name as string of prifile to use as extension. 
-     Will extend default definition- > can be short
-     */
-    function addProfile(profession, profile, base)
-    {
-        maxLevel = maxLevel || 25;
-        definedTask = definedTask || {};
-        //general prototype for profession
-        var professionBase = {
-            taskListName: profession, // Friendly name used at the UI
-            taskName: profession, // String used at the gateway
-            taskDefaultPriority: 2, // Priority to allocate free task slots: 0 - High, 1 - Medium, 2 - Low
-            taskActive: true,
-            taskDefaultSlotNum: 0,
-            taskDescription: "",
-            profiles: []
-        };
 
-        //profile prototype
-        var profileBase = {
-            profileName: 'Add profile name',
-            isProfileActive: true,
-            level: {}
-        };
+function addProfile(profession, profile, base){
+    maxLevel = maxLevel || 25;
+    definedTask = definedTask || {};
+    //general prototype for profession
+    var professionBase = {
+        taskListName:  typeof(profession) ==='string' ? profession : profession.taskListName, // Friendly name used at the UI
+        taskName: typeof(profession) ==='string' ? profession : profession.taskName, // String used at the gateway
+        taskDefaultPriority: 2, // Priority to allocate free task slots: 0 - High, 1 - Medium, 2 - Low
+        taskActive: true,
+        taskDefaultSlotNum: 0,
+        taskDescription: "",
+        profiles: []
+    };
 
-        //creating new profession or using existing one 
-        var professionSet = (typeof profession === 'object')
-            ? jQuery.extend(true, professionBase, profession)
-            : definedTask[profession] || professionBase;
-        if(!professionSet) {
-            return;
-        }
+    
 
-        if(!definedTask[profession]) {
-            definedTask[profession] = professionSet;
+    //creating new profession or using existing one 
+    var professionSet = (typeof profession === 'object')
+        ? jQuery.extend(true, professionBase, profession)
+        : definedTask[profession] || professionBase;
+    
+    if(!professionSet) {return;}
+    if(!definedTask[profession]) {definedTask[profession] = professionSet;}
+    if(!profile) {return;}
+
+    //profile prototype
+    var profileBase = {
+        profileName: 'Add profile name',
+        isProfileActive: true,
+        level: {}
+    };
+    
+    //getting new profile formated
+    var newProfile = jQuery.extend(true, profileBase, profile),
+        baseProfile;
+    //getting base to extend
+      base = base ||  (professionSet.taskListName === 'Leadership' ? 'XP' : 'default');
+      if(base && typeof base === 'string') {
+        var existing = professionSet.profiles.filter(function(e) {return e.profileName === base;});
+        if(existing && existing.length) {baseProfile = existing[0];}
+      }
+    
+
+    //setting levels
+    var baseLevels = baseProfile ? baseProfile.level : [],
+        rec = 0;
+    for(var i = 0; i <= maxLevel; i++) {
+      //recur has priority
+      if (rec > 0 ){ 
+        rec -=1;
+        //setting empty array to handle later by fallback
+        newProfile.level[i] = newProfile.level[i] || [];
+      }
+      
+      if(newProfile.level && newProfile.level[i]){
+            //override for arrays
+            if (Array.isArray(newProfile.level[i]) && newProfile.level[i].length){
+              //cancel rec since new array is defined
+               rec  = 0;
+              //process array
+              var ind = newProfile.level[i].indexOf('+');
+              if (ind>-1){
+                var def = newProfile.level[i].splice(0, ind);
+                var tail = newProfile.level[i].splice(1, newProfile.level[i].length);
+                def = def.concat(baseLevels[i] || [], tail || []);
+                newProfile.level[i] = def;
+              }
+              
+            }//process '+N'
+            else if (typeof newProfile.level[i] == 'string'
+                  && newProfile.level[i][0] === '+'){
+                  rec = parseInt(newProfile.level[i].replace(/\D/g,''));  
+                  rec = rec > 0 ? rec : 0;
+                  //setting empty array to handle later by fallback
+                  newProfile.level[i] = [];
+                  rec -=1;
             }
-
-        if(!profile) {
-            return;
-        }
-
-        //getting base one to extend
-        var newProfile = jQuery.extend(true, {}, profileBase);
-
-        if(!base) {
-            base = (professionSet.taskListName === 'Leadership' ? 'XP' : 'default');
+      }
+      //falback to base if not defined
+      else{
+         var baseLevel = baseLevels[i] || [];
+         newProfile.level[i] = baseLevel;
+      }
+        
+      //fallback from empty array to copy one before
+      if (Array.isArray(newProfile.level[i]) && !newProfile.level[i].length && i> 0){
+        newProfile.level[i] = newProfile.level[i-1];
+      }
     }
-
-        if(base && typeof base === 'string') {
-            var existing = professionSet.profiles.filter(function(e) {
-                return e.profileName === base;
-            });
-            if(existing) {
-                newProfile = jQuery.extend(true, newProfile, existing.length ? existing[0] : existing);
-            }
-        }
-
-        if(!profile.hasOwnProperty('recursiveList')) {
-            profile.recursiveList = true;
-        }
-        newProfile = jQuery.extend(true, newProfile, profile);
-        //setting levels
-        for(var i = 0; i <= maxLevel; i++) {
-            //override
-            if(profile.level && profile.level[i]) {
-                newProfile.level[i] = profile.level[i];
-                if (profile.recursiveList && i > 0 && !profile.level[i+1]) {
-                    profile.level[i+1] = profile.level[i];
-                }
-                continue;
-            } 
-            //iterate and set
-            if(profile.recursiveList && i > 0 && !newProfile.level[i]) {
-                newProfile.level[i] = newProfile.level[i - 1];
-            }
-        }
-        console.info("profile added ",newProfile.profileName, newProfile);
-        professionSet.profiles.push(newProfile);
-    }
-
+    
+    console.info("profile added ",newProfile.profileName, newProfile);
+    professionSet.profiles.push(newProfile);
+}
+   
 
     /*
      * Tasklist can be modified to configure the training you want to perform.
@@ -700,9 +702,13 @@ function _select_Gateway() { // Check for Gateway used to
         level : {
             0: ["Jewelcrafting_Tier0_Intro"],
             1: ["Jewelcrafting_Tier1_Refine_Basic_Mass", "Jewelcrafting_Tier1_Gather_Basic"],
+            2: '+25',
             7: ["Jewelcrafting_Tier2_Refine_Basic_Mass"],
+            8 : '+25',
             14: ["Jewelcrafting_Tier3_Refine_Basic_Mass"],
+            15 : '+25',
             21: ["Jewelcrafting_Tier4_Refine_Basic_Mass"],
+            22 : '+25',
         },
     });    
 
@@ -711,6 +717,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: true,
         level: {
             21: ["Jewelcrafting_Tier4_Refine_Basic_Mass", "Jewelcrafting_Tier4_Gather_Basic"],
+            22: '+25'
         },
     });
 
@@ -721,6 +728,7 @@ function _select_Gateway() { // Check for Gateway used to
         level: {
             // we care only about neck items that we can start pile up at lvl 16
             16: ["Jewelcrafting_Tier3_Neck_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+            17 : '+25',
             25: ["Jewelcrafting_Tier4_Neck_Offense_4_Purple", //Exquisite Adamant Necklace of Piercing
                   "Jewelcrafting_Tier4_Neck_Misc_4_Purple", // Exquisite Adamant Necklace of Recovery 
                   "Jewelcrafting_Tier4_Neck_Defense_4_Purple",//Exquisite Adamant Necklace of Regeneration
@@ -738,6 +746,7 @@ function _select_Gateway() { // Check for Gateway used to
         level: {
             // we care only about neck items that we can start pile up at lvl 15
             15: ["Jewelcrafting_Tier3_Ring_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+            16 :'+25',
             25: ["Jewelcrafting_Tier4_Ring_Offense_4_Purple", //Exquisite Adamant Ring of Piercing
                 "Jewelcrafting_Tier4_Ring_Misc_4_Purple", //Exquisite Adamant Ring of Recovery
                 "Jewelcrafting_Tier4_Ring_Defense_4_Purple", //Exquisite Adamant Ring of Regeneration
@@ -815,9 +824,13 @@ function _select_Gateway() { // Check for Gateway used to
         level : {
             0: ["Med_Armorsmithing_Tier0_Intro"],
             1: ["Med_Armorsmithing_Tier1_Refine_Basic_Mass", "Med_Armorsmithing_Tier1_Gather_Basic"],
+            2: "+25",
             7: ["Med_Armorsmithing_Tier2_Refine_Basic_Mass"],
+            8: "+25",
             14: ["Med_Armorsmithing_Tier3_Refine_Basic_Mass"],
+            15: "+25",
             21: ["Crafted_Med_Armorsmithing_T4_Refine_Basic_Mass"],
+            22: "+25",
         },
     });    
 
@@ -826,6 +839,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: true,
         level: {
             21: ["Crafted_Med_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Med_Armorsmithing_T4_Gather_Basic_Mass"],
+            22: "+25",
             25: ["Crafted_Med_Armorsmithing_T4_Refine_Basic", "Crafted_Med_Armorsmithing_T4_Gather_Basic"],
         },
     });
@@ -1028,6 +1042,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: false,
         level: {
             6: ["Med_Armorsmithing_Tier1_Event_Gond"],
+            7: "+25",            
         },
     });
 
@@ -1079,9 +1094,13 @@ function _select_Gateway() { // Check for Gateway used to
         level : {
             0: ["Hvy_Armorsmithing_Tier0_Intro"],
             1: ["Hvy_Armorsmithing_Tier1_Refine_Basic_Mass", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
+            2: "+25",
             7: ["Hvy_Armorsmithing_Tier2_Refine_Basic_Mass"],
+            8: "+25",
             14: ["Hvy_Armorsmithing_Tier3_Refine_Basic_Mass"],
+            15: "+25",
             21: ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass"],
+            22: "+25",
         },
     });
 
@@ -1090,6 +1109,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: true,
         level: {
             21: ["Crafted_Hvy_Armorsmithing_T4_Refine_Basic_Mass", "Crafted_Hvy_Armorsmithing_T4_Gather_Basic_Mass"],
+            22: "+25",
         },
     });
 
@@ -1098,6 +1118,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: false,
         level: {
             6: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
+            7: "+25",
         },
     });
 
@@ -1150,9 +1171,13 @@ function _select_Gateway() { // Check for Gateway used to
         level : {
             0: ["Leatherworking_Tier0_Intro_1"],
             1: ["Leatherworking_Tier1_Refine_Basic_Mass", "Leatherworking_Tier1_Gather_Basic"],
+            2: "+25",
             7: ["Leatherworking_Tier2_Refine_Basic_Mass"],
+            8: "+25",
             14: ["Leatherworking_Tier3_Refine_Basic_Mass"],
+            15: "+25",
             21: ["Leatherworking_Tier4_Refine_Basic_Mass"],
+            22: "+25",
         },
     });    
 
@@ -1162,6 +1187,7 @@ function _select_Gateway() { // Check for Gateway used to
         level: {
             20: ["Leatherworking_Tier3_Leather_Pants"],
             21: ["Leatherworking_Tier4_Refine_Basic_Mass", "Leatherworking_Tier4_Gather_Basic"],
+            22: "+25",
             25: ["Leatherworking_Tier4_Refine_Basic", "Leatherworking_Tier4_Gather_Basic"],
         },
     });
@@ -1239,6 +1265,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: false,
         level: {
             6: ["Leatherworking_Tier1_Event_Gond"],
+            7: "+25",
         },
     });
 
@@ -1291,9 +1318,13 @@ function _select_Gateway() { // Check for Gateway used to
         level : {
             0: ["Tailoring_Tier0_Intro"],
             1: ["Tailoring_Tier1_Refine_Basic_Mass", "Tailoring_Tier1_Gather_Basic"],
+            2: "+25",
             7: ["Tailoring_Tier2_Refine_Basic_Mass"],
+            8: "+25",
             14: ["Tailoring_Tier3_Refine_Basic_Mass"],
+            15: "+25",
             21: ["Crafted_Tailoring_T4_Refine_Basic_Mass"],
+            22: "+25",
         },
     });
 
@@ -1302,6 +1333,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: true,
         level: {
             21: ["Crafted_Tailoring_T4_Refine_Basic_Mass", "Crafted_Tailoring_T4_Gather_Basic_Mass"],
+            22: "+25",
             25: ["Crafted_Tailoring_T4_Refine_Basic", "Crafted_Tailoring_T4_Gather_Basic"],
         },
     });
@@ -1311,6 +1343,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: false,
         level: {
             6: ["Tailoring_Tier1_Event_Gond"],
+            7: "+25",
         },
     });
 
@@ -1364,9 +1397,13 @@ function _select_Gateway() { // Check for Gateway used to
         level : {
             0: ["Artificing_Tier0_Intro_1"],
             1: ["Artificing_Tier1_Refine_Basic_Mass", "Artificing_Tier1_Gather_Basic"],
+            2: "+25",
             7: ["Artificing_Tier2_Refine_Basic_Mass"],
+            8: "+25",
             14: ["Artificing_Tier3_Refine_Basic_Mass"],
+            15: "+25",
             21: ["Artificing_Tier4_Refine_Basic_Mass"],
+            22: "+25",
         },
     });
 
@@ -1375,6 +1412,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: false,
         level: {
             6: ["Artificing_Tier1_Event_Gond"],
+            7: "+25",
         },
     });
 
@@ -1428,9 +1466,13 @@ function _select_Gateway() { // Check for Gateway used to
         level : {
             0: ["Weaponsmithing_Tier0_Intro"],
             1: ["Weaponsmithing_Tier1_Refine_Basic_Mass", "Weaponsmithing_Tier1_Gather_Basic"],
+            2: "+25",
             7: ["Weaponsmithing_Tier2_Refine_Basic_Mass"],
+            8: "+25",
             14: ["Weaponsmithing_Tier3_Refine_Basic_Mass"],
+            15: "+25",
             21: ["Weaponsmithing_Tier4_Refine_Basic_Mass"],
+            22: "+25",
         },
     });
 
@@ -1439,6 +1481,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: false,
         level: {
             6: ["Weaponsmithing_Tier1_Event_Gond"],
+            7: "+25",
         },
     });
 
@@ -1482,17 +1525,22 @@ function _select_Gateway() { // Check for Gateway used to
             },
         }]
     };
+
+
     addProfile("Alchemy", {
         profileName: "Aqua Regia",
         level: {
             20: ["Alchemy_Tier2_Aquaregia", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
-            22: ["Alchemy_Tier4_Aquaregia_2", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"]
+            21: "+25",
+            22: ["Alchemy_Tier4_Aquaregia_2", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
+            23: "+25",
         }
     });
     addProfile("Alchemy", {
         profileName: "Aqua Vitae",
         level: {
             20: ["Alchemy_Tier2_Aquavitae_2", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
+            21: "+25",
         }
     });
     addProfile("Alchemy", {
@@ -1513,6 +1561,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: true,
         level: {
             1: ["Alchemy_Tier1_Refine_Basic", "Alchemy_Tier1_Gather_Components"],
+            2: "+25",
         },
     });
 
@@ -1521,6 +1570,7 @@ function _select_Gateway() { // Check for Gateway used to
         isProfileActive: false,
         level: {
             6: ["Alchemy_Tier1_Event_Gond"],
+            7: "+25",
         },
     });
 
