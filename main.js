@@ -577,6 +577,7 @@ function addProfile(profession, profile, base){
         isProfileActive: true,
         level: {
             3: ["Leadership_Tier3_13_Recruit", "Leadership_Tier2_7_Recruit", "Leadership_Tier1_2_Recruit"],
+            4: '+25'
         }
     });
 
