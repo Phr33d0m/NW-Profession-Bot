@@ -38,6 +38,8 @@ Developers & Contributors
 
 RELEASE NOTES
 4.1
+- Added failsafe to prevent script getting stuck when can't claim task result
+- AddProfile() improved (thanks dlebedynskyi)
 - Added Failed task tracker to prevent script lockup on failed tasks
 - Added settings copy tab
 - Added script version display
