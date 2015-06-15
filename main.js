@@ -580,6 +580,78 @@ function addProfile(profession, profile, base){
         }
     });
 
+    addProfile('Leadership',{
+        "profileName": "Goodies",
+            "level": {
+                "21": [
+                    "Leadership_Tier4_21_Training",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier3_20r_Master2",
+                    "Leadership_Tier3_20r_Master1",
+                    "Leadership_Tier3_20r_Master3",
+                    "Leadership_Tier3_20_Destroy",
+                    "Leadership_Tier1_5_Explore"
+                ],
+                "22": [
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_21_Training",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier3_20r_Master2",
+                    "Leadership_Tier3_20r_Master1",
+                    "Leadership_Tier3_20r_Master3",
+                    "Leadership_Tier3_20_Destroy",
+                    "Leadership_Tier1_5_Explore"
+                ],
+                "23": [
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_21_Training",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier3_20r_Master2",
+                    "Leadership_Tier3_20r_Master1",
+                    "Leadership_Tier3_20r_Master3",
+                    "Leadership_Tier3_20_Destroy",
+                    "Leadership_Tier1_5_Explore"
+                ],
+                "24": [
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_21_Training",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier3_20r_Master2",
+                    "Leadership_Tier3_20r_Master1",
+                    "Leadership_Tier3_20r_Master3",
+                    "Leadership_Tier3_20_Destroy",
+                    "Leadership_Tier1_5_Explore"
+                ],
+                "25": [
+                    "Leadership_Tier4_25r_Huntexperiment",
+                    "Leadership_Tier4_25_Battleelementalcultists",
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_21_Training",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier3_20r_Master2",
+                    "Leadership_Tier3_20r_Master1",
+                    "Leadership_Tier3_20r_Master3",
+                    "Leadership_Tier3_20_Destroy",
+                    "Leadership_Tier1_5_Explore"
+                ]
+            }
+        }, 'AD');
+
     definedTask["Winter Event"] = {
         taskListName: "WinterEvent",
         taskName: "WinterEvent",
