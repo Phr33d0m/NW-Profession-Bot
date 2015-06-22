@@ -2554,7 +2554,7 @@ function addProfile(profession, profile, base){
         }
 
         // start task if requirements are met
-        if (!thisTask.failedrequirementsreasons.length) {
+        if (!thisTask.failslevelrequirementsfilter && !thisTask.failslevelrequirements && !thisTask.failsresourcesrequirements) {
             return thisTask;
         }
 
