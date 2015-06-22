@@ -582,7 +582,7 @@ function addProfile(profession, profile, base){
     });
 
     addProfile('Leadership',{
-        "profileName": "Goodies",
+        "profileName": "RP Boxes",
             "level": {
                 "21": [
                     "Leadership_Tier4_21_Training",
