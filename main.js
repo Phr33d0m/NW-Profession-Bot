@@ -3912,6 +3912,8 @@ function addProfile(profession, profile, base){
                 var str = 'Script Settings (script version ' + scriptVersion + ')\n';
                 var tempObj;
                 tempObj = $.extend(true, {}, scriptSettings);
+                tempObj.autoLoginAccount = "";
+                tempObj.autoLoginPassword = "";
                 str += '' +  JSON.stringify(tempObj,null,4) + '\n';
                 
                 str += 'Account Settings\n';
