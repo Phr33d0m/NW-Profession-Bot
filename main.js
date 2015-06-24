@@ -3648,6 +3648,11 @@ function addProfile(profession, profile, base){
     function loadCharacter(charname) {
         // Load character and restart next load loop
         console.log("Loading gateway script for", charname);
+        if (unsafeWindow.location.hash != "#char(" + encodeURI(charname) + ")/professions" &&
+            unsafeWindow.location.hash != "#char(" + encodeURI(charname) + ")/") {
+                
+            unsafeWindow.location.hash = "#char(" + encodeURI(charname) + ")/";
+        }
         unsafeWindow.client.dataModel.loadEntityByName(charname);
 
         try {
