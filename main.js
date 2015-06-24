@@ -2366,8 +2366,8 @@ function addProfile(profession, profile, base){
     function getNextFinishedTask() {
         var tmpNext,
             next = null;
-        unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.forEach(function(entry) {
-            if (entry.uassignmentid) {
+        unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.forEach(function(entry, idx) {
+            if (entry.uassignmentid && (collectTaskAttempts[idx] < scriptSettings.general.maxCollectTaskAttempts)) {
                 tmpNext = new Date(entry.ufinishdate);
                 if (!next || tmpNext < next) {
                     next = tmpNext;
@@ -3317,7 +3317,7 @@ function addProfile(profession, profile, base){
         GM_setValue("statistics__char__" + curCharFullName , JSON.stringify(charStatisticsList[curCharName]));
         updateCounters();
 
-
+        // TODO: refactor this block into function and merge with the similar in charSCA()
         console.log("Switching Characters");
         lastCharNum = curCharNum;
 
@@ -3351,7 +3351,9 @@ function addProfile(profession, profile, base){
             console.log("No date found for " + charName + ", switching now.");
             return false; // = break; 
         });
-        
+        // Change to optional ?
+        if (chardelay > delay.SHORT) chardelay = chardelay + (Math.random() + 0.3) * delay.DEFAULT;  
+
         curCharName = charNamesList[curCharNum];
         curCharFullName = curCharName + "@" + loggedAccount;
         failedTasksList = [];
