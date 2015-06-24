@@ -438,7 +438,7 @@ function addProfile(profession, profile, base){
      */
 
     definedTask["Leadership"] = {
-        taskListName: "Leadership", // Friendly name used at the UI
+        taskListName: "Leadership", // Friendly name used at the UI, have to be the same as key in definedTask array!!!
         taskName: "Leadership", // String used at the gateway
         taskDefaultPriority: 2, // Priority to allocate free task slots: 0 - High, 1 - Medium, 2 - Low
         taskActive: true,
@@ -653,7 +653,7 @@ function addProfile(profession, profile, base){
             }
         }, 'AD');
 
-    definedTask["Winter Event"] = {
+    definedTask["WinterEvent"] = {
         taskListName: "WinterEvent",
         taskName: "WinterEvent",
         taskDefaultPriority: 1,
@@ -678,7 +678,7 @@ function addProfile(profession, profile, base){
         }]
     };
 
-    definedTask["Siege Event"] = {
+    definedTask["SiegeEvent"] = {
         taskListName: "SiegeEvent",
         taskName: "Event_Siege",
         taskDefaultPriority: 1,
@@ -702,7 +702,7 @@ function addProfile(profession, profile, base){
         }]
     };
 
-    definedTask["Black Ice Shaping"] = {
+    definedTask["BlackIce"] = {
         taskListName: "BlackIce",
         taskName: "BlackIce",
         taskDefaultPriority: 1,
@@ -1671,9 +1671,9 @@ function addProfile(profession, profile, base){
         definedTask["Platesmithing"],
         definedTask["Leatherworking"],
         definedTask["Tailoring"],
-        definedTask["Black Ice Shaping"],
-        definedTask["Winter Event"],
-        definedTask["Siege Event"],
+        definedTask["BlackIce"],
+        definedTask["WinterEvent"],
+        definedTask["SiegeEvent"],
     ];
 
     var customProfiles = [];  // [ { taskName: 'name', baseProfile: 'profileName' / null, profile: JSON.parsed_from_input }, { } ....]
