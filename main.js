@@ -346,12 +346,17 @@ function addProfile(profession, profile, base){
         profiles: []
     };
 
+    var baseProfileByName;
+    if (typeof(profession) ==='string') {
+        $.each(definedTask, function(index, value) {
+            if (value.taskListName === profession) baseProfileByName = value;
+        });
+    }
     
-
     //creating new profession or using existing one 
     var professionSet = (typeof profession === 'object')
         ? jQuery.extend(true, professionBase, profession)
-        : definedTask[profession] || professionBase;
+        : baseProfileByName || professionBase;
     
     if(!professionSet) {return;}
     if(!definedTask[profession]) {definedTask[profession] = professionSet;}
@@ -1810,7 +1815,6 @@ function addProfile(profession, profile, base){
         customProfiles = [];
     };
     customProfiles.forEach(function (cProfile, idx) {
-        if (!cProfile.profile.hasOwnProperty('recursiveList')){ cProfile.profile.recursiveList = false;}
         addProfile(cProfile.taskName, cProfile.profile, cProfile.baseProfile);
     });
     
