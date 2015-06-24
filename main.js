@@ -1810,7 +1810,6 @@ function addProfile(profession, profile, base){
         customProfiles = [];
     };
     customProfiles.forEach(function (cProfile, idx) {
-        if (!cProfile.profile.hasOwnProperty('recursiveList')){ cProfile.profile.recursiveList = false;}
         addProfile(cProfile.taskName, cProfile.profile, cProfile.baseProfile);
     });
     
