@@ -101,6 +101,7 @@ var antiInfLoopTrap = {// without this script sometimes try to start the same ta
     currTaskName: "unknown", // name of the new task to launch
     trapActivation: 15 // number of repetition to activation trap 
 };
+var pleaseBuy = [];
 // Page Reloading function
 // Every second the page is idle or loading is tracked
 var loading_reset = false; // Enables a periodic reload if this is toggled on by the Auto Reload check box on the settings panel
@@ -2645,6 +2646,9 @@ function addProfile(profession, profile, base){
                 // Matched profession auto-purchase item found but auto-purchase is not enabled
                 else if (!getSetting('professionSettings','autoPurchaseRes') && itemName.match(/^Crafting_Resource_(Charcoal|Rocksalt|Spool_Thread|Porridge|Solvent|Brimstone|Coal|Moonseasalt|Quicksilver|Spool_Threadsilk)$/)) {
                     console.log("Purchasable resource required:", itemName, "for task:", taskname, ". Recommend enabling Auto Purchase Resources.");
+                    if (pleaseBuy.push("Please buy " + itemName + " for " + unsafeWindow.client.getCurrentCharAtName()) > 5) {
+                        pleaseBuy.shift();
+                    }
                     return false;
                 }
                 // craftable ingredient set to search for
@@ -2714,6 +2718,11 @@ function addProfile(profession, profile, base){
 
         if (!taskList.length) {
             console.log("No ingredient tasks found for:", taskname, searchItem);
+            if (!searchItem.match(/(_Research)|(_Craftsman_)|(Crafted_)/)) {
+                if (pleaseBuy.push("Please buy " + searchItem + " for " + unsafeWindow.client.getCurrentCharAtName()) > 5) {
+                    pleaseBuy.shift();
+                }
+            }
             return false;
         }
 
@@ -2888,6 +2897,9 @@ function addProfile(profession, profile, base){
         if (_purchaseCount < 1) {
             // Not enough gold for 1 resource
             console.log("Purchasing profession resources failed for: ", item, " Have: ",_charCopperTotal, " Cost Per Item: ", _resourceCost[item], " Can buy: ", _resourcePurchasable);
+            if (pleaseBuy.push("Please buy " + item + " for " + unsafeWindow.client.getCurrentCharAtName()) > 5) {
+                pleaseBuy.shift();
+            }
             return false;
         } else {
             // Make purchase
@@ -3382,7 +3394,7 @@ function addProfile(profession, profile, base){
 
         console.log("Next run for " + curCharName + " in " + parseInt(chardelay / 1000) + " seconds.");
         $("#prinfopane").empty();
-        var ptext = $("<h3 class='promo-image copy-top prh3'>Professions Robot<br />Next task for " + curCharName + "<br /><span data-timer='" + chardate + "' data-timer-length='2'></span><br />Diamonds: " + curdiamonds.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "<br />Gold: " + curgold + "</h3>")
+        var ptext = $("<h3 class='promo-image copy-top prh3'>Professions Robot<br />Next task for " + curCharName + "<br /><span data-timer='" + chardate + "' data-timer-length='2'></span><br />Diamonds: " + curdiamonds.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "<br />Gold: " + curgold + (pleaseBuy.length > 0 ? "<br />" : "") + pleaseBuy.join("<br />") + "</h3>")
             .appendTo("#prinfopane");
         
         if (not_active == charNamesList.length) {
@@ -3520,6 +3532,13 @@ function addProfile(profession, profile, base){
             return;
         }
 
+        if (pleaseBuy.length == 0) {
+            pleaseBuy['ts'] = Date.now() + 15*60*1000;
+        } else if ((pleaseBuy['ts']||0) < Date.now()) {
+            pleaseBuy.shift();
+            pleaseBuy['ts'] = Date.now() + 15*60*1000;
+        }
+        
         window.setTimeout(function() {
             loginProcess();
         }, delay.SHORT);
