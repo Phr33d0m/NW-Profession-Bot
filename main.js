@@ -101,6 +101,7 @@ var antiInfLoopTrap = {// without this script sometimes try to start the same ta
     currTaskName: "unknown", // name of the new task to launch
     trapActivation: 15 // number of repetition to activation trap 
 };
+var pleaseBuy = [];
 // Page Reloading function
 // Every second the page is idle or loading is tracked
 var loading_reset = false; // Enables a periodic reload if this is toggled on by the Auto Reload check box on the settings panel
@@ -1857,6 +1858,7 @@ function addProfile(profession, profile, base){
         generalSettings: {
             refineAD: true,
             openRewards: false,
+            openInvocation: true,
             keepOneUnopened: false,
             runSCA: 'free',
             SCADailyReset: Date.now() - 24*60*60*1000,
@@ -1903,8 +1905,9 @@ function addProfile(profession, profile, base){
         },
         generalSettings: {
             refineAD: true,
-            keepOneUnopened: false,
             openRewards: false,
+            openInvocation: true,
+            keepOneUnopened: false,
             runSCA: 'free',
         },
         consolidationSettings: {
@@ -1998,6 +2001,7 @@ function addProfile(profession, profile, base){
             opts: [ { name: '1',  value: 1},  { name: '2',  value: 2},  { name: '3',  value: 3}], },
         
         {scope: 'account', group: 'generalSettings', name: 'openRewards', title: tr('settings.general.openrewards'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openrewards.tooltip')},
+        {scope: 'account', group: 'generalSettings', name: 'openInvocation', title: tr('settings.general.openInvocation'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openInvocation.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'keepOneUnopened', title: tr('settings.general.keepOneUnopened'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.keepOneUnopened.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'refineAD', title: tr('settings.general.refinead'),           type: 'checkbox', pane: 'main', tooltip: tr('settings.general.refinead.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'runSCA', title: tr('settings.general.runSCA'),               type: 'select',   pane: 'main', tooltip: tr('settings.general.runSCA.tooltip'),
@@ -2036,6 +2040,7 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'general', name:'manualTaskSlots',    type:'checkbox',    pane:'main_not_tab',    title:'Use manual task allocation tab',   tooltip:'Per slot profile allocation'},
         
         {scope: 'char', group: 'generalSettings', name: 'openRewards', title: tr('settings.general.openrewards'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openrewards.tooltip')},
+        {scope: 'char', group: 'generalSettings', name: 'openInvocation', title: tr('settings.general.openInvocation'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openInvocation.tooltip')},
         {scope: 'char', group: 'generalSettings', name: 'keepOneUnopened', title: tr('settings.general.keepOneUnopened'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.keepOneUnopened.tooltip')},
         {scope: 'char', group: 'generalSettings', name: 'refineAD',    title: tr('settings.general.keepOneUnopened'),           type: 'checkbox', pane: 'main', tooltip: tr('settings.general.refinead.tooltip')},
         {scope: 'char', group: 'generalSettings', name: 'runSCA',    title: tr('settings.general.runSCA'),               type: 'select',   pane: 'main', tooltip: tr('settings.general.runSCA.tooltip'),
@@ -2654,6 +2659,9 @@ function addProfile(profession, profile, base){
                 // Matched profession auto-purchase item found but auto-purchase is not enabled
                 else if (!getSetting('professionSettings','autoPurchaseRes') && itemName.match(/^Crafting_Resource_(Charcoal|Rocksalt|Spool_Thread|Porridge|Solvent|Brimstone|Coal|Moonseasalt|Quicksilver|Spool_Threadsilk)$/)) {
                     console.log("Purchasable resource required:", itemName, "for task:", taskname, ". Recommend enabling Auto Purchase Resources.");
+                    if (pleaseBuy.push("Please buy " + itemName + " for " + unsafeWindow.client.getCurrentCharAtName()) > 5) {
+                        pleaseBuy.shift();
+                    }
                     return false;
                 }
                 // craftable ingredient set to search for
@@ -2723,6 +2731,11 @@ function addProfile(profession, profile, base){
 
         if (!taskList.length) {
             console.log("No ingredient tasks found for:", taskname, searchItem);
+            if (!searchItem.match(/(_Research)|(_Craftsman_)|(Crafted_)/)) {
+                if (pleaseBuy.push("Please buy " + searchItem + " for " + unsafeWindow.client.getCurrentCharAtName()) > 5) {
+                    pleaseBuy.shift();
+                }
+            }
             return false;
         }
 
@@ -2897,6 +2910,9 @@ function addProfile(profession, profile, base){
         if (_purchaseCount < 1) {
             // Not enough gold for 1 resource
             console.log("Purchasing profession resources failed for: ", item, " Have: ",_charCopperTotal, " Cost Per Item: ", _resourceCost[item], " Can buy: ", _resourcePurchasable);
+            if (pleaseBuy.push("Please buy " + item + " for " + unsafeWindow.client.getCurrentCharAtName()) > 5) {
+                pleaseBuy.shift();
+            }
             return false;
         } else {
             // Make purchase
@@ -3226,6 +3242,20 @@ function addProfile(profession, profile, base){
             });
         }
 
+        if (getSetting('generalSettings','openInvocation')) {
+            var _pbags = unsafeWindow.client.dataModel.model.ent.main.inventory.playerbags;
+            var _cRewardPat = /Invocation_Rp_Bag/;
+            console.log("Opening Invocation Rewards");
+            $.each(_pbags, function(bi, bag) {
+                bag.slots.forEach(function(slot) {
+                    if (slot && _cRewardPat.test(slot.name)) {
+                        window.setTimeout(function() {
+                            client.sendCommand('GatewayInventory_OpenRewardPack', slot.uid);
+                        }, 500);
+                    }
+                });
+            });
+        }
         // Check Vendor Options & Vendor matched items
         vendorJunk();
 
@@ -3391,7 +3421,7 @@ function addProfile(profession, profile, base){
 
         console.log("Next run for " + curCharName + " in " + parseInt(chardelay / 1000) + " seconds.");
         $("#prinfopane").empty();
-        var ptext = $("<h3 class='promo-image copy-top prh3'>Professions Robot<br />Next task for " + curCharName + "<br /><span data-timer='" + chardate + "' data-timer-length='2'></span><br />Diamonds: " + curdiamonds.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "<br />Gold: " + curgold + "</h3>")
+        var ptext = $("<h3 class='promo-image copy-top prh3'>Professions Robot<br />Next task for " + curCharName + "<br /><span data-timer='" + chardate + "' data-timer-length='2'></span><br />Diamonds: " + curdiamonds.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "<br />Gold: " + curgold + (pleaseBuy.length > 0 ? "<br />" : "") + pleaseBuy.join("<br />") + "</h3>")
             .appendTo("#prinfopane");
         
         if (not_active == charNamesList.length) {
@@ -3529,6 +3559,13 @@ function addProfile(profession, profile, base){
             return;
         }
 
+        if (pleaseBuy.length == 0) {
+            pleaseBuy['ts'] = Date.now() + 15*60*1000;
+        } else if ((pleaseBuy['ts']||0) < Date.now()) {
+            pleaseBuy.shift();
+            pleaseBuy['ts'] = Date.now() + 15*60*1000;
+        }
+        
         window.setTimeout(function() {
             loginProcess();
         }, delay.SHORT);
@@ -3601,8 +3638,8 @@ function addProfile(profession, profile, base){
                         tempCharsSetting = null;
                     }
                     if (!tempCharsSetting) {
-                        console.log('Character settings couldn\'t be retrieved, loading defaults.');
                         tempCharsSetting = {};
+                        console.log('Character settings couldn\'t be retrieved, loading defaults.');
                     };
                     charSettingsList[charName] = $.extend(true, {}, defaultCharSettings, tempCharsSetting);
                     charSettingsList[charName].charName = charName; // for compatibility 
@@ -5033,6 +5070,8 @@ function addProfile(profession, profile, base){
                 //'settings.main.charcount.tooltip': 'Enter number of characters to use (Save and Apply to update settings form)',
                 'settings.general.openrewards': 'Open Reward Chests',
                 'settings.general.openrewards.tooltip': 'Enable opening of leadership chests on character switch',
+                'settings.general.openInvocation': 'Open Invocation Rewards',
+                'settings.general.openInvocation.tooltip': 'Enable opening rewards from invocation',
                 'settings.general.keepOneUnopened': 'Keep one reward box unopened',
                 'settings.general.keepOneUnopened.tooltip': 'Used to reserve the slots for the reward boxes',
                 'settings.general.refinead': 'Refine AD',
@@ -5106,6 +5145,8 @@ function addProfile(profession, profile, base){
                 //'settings.main.charcount.tooltip': 'Wprowadź liczbę postaci (naciśnij "Save and Apply" aby odświerzyć formularz)',
                 'settings.general.openrewards': 'Otwieraj skrzynki',
                 'settings.general.openrewards.tooltip': 'Otwieraj skrzynki z zadań Przywództwa przy zmianie postaci',
+                'settings.general.openInvocation': 'Otwieraj nagrody z inwokacji',
+                'settings.general.openInvocation.tooltip': 'Otwieraj nagrody z inwokacji - zajmują masę miejsca, bo się nie łączą w stosy',
                 'settings.general.keepOneUnopened': 'Pozostaw jedną skrzynkę nieotwartą',
                 'settings.general.keepOneUnopened.tooltip': 'Potrzebne do zarezerwowania miejsca na nagrody',
                 'settings.general.refinead': 'Szlifuj diamenty',
