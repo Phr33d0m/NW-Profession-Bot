@@ -1749,7 +1749,7 @@ function addProfile(profession, profile, base){
     var workerList = workerDefinition();
     var toolList = toolListDefinition();
 
-    var trackResources = [{
+    var defaultTrackResources = [{
         fname: 'Aqua Regia',
         name: 'Crafting_Resource_Aquaregia'
     }, {
@@ -1769,6 +1769,15 @@ function addProfile(profession, profile, base){
         name: 'Crafting_Resource_Elemental_Unified'
     }, 
 ];
+    var trackResources;
+    try {
+        trackResources = JSON.parse(GM_getValue("tracked_resources", null));
+    } catch (e) {
+        trackResources = null;
+    }
+    if (!trackResources) {
+        trackResources = defaultTrackResources;
+    };
 
     var defaultScriptSettings = {
         general: {
@@ -1992,8 +2001,8 @@ function addProfile(profession, profile, base){
             opts: [ { name: '1',  value: 1},  { name: '2',  value: 2},  { name: '3',  value: 3}], },
         
         {scope: 'account', group: 'generalSettings', name: 'openRewards', title: tr('settings.general.openrewards'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openrewards.tooltip')},
-        {scope: 'account', group: 'generalSettings', name: 'openInvocation', title: tr('settings.general.openInvocation'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openInvocation.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'keepOneUnopened', title: tr('settings.general.keepOneUnopened'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.keepOneUnopened.tooltip')},
+        {scope: 'account', group: 'generalSettings', name: 'openInvocation', title: tr('settings.general.openInvocation'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openInvocation.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'refineAD', title: tr('settings.general.refinead'),           type: 'checkbox', pane: 'main', tooltip: tr('settings.general.refinead.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'runSCA', title: tr('settings.general.runSCA'),               type: 'select',   pane: 'main', tooltip: tr('settings.general.runSCA.tooltip'),
             opts: [ { name: 'never',        value: 'never'}, 
@@ -2031,8 +2040,8 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'general', name:'manualTaskSlots',    type:'checkbox',    pane:'main_not_tab',    title:'Use manual task allocation tab',   tooltip:'Per slot profile allocation'},
         
         {scope: 'char', group: 'generalSettings', name: 'openRewards', title: tr('settings.general.openrewards'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openrewards.tooltip')},
-        {scope: 'char', group: 'generalSettings', name: 'openInvocation', title: tr('settings.general.openInvocation'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openInvocation.tooltip')},
         {scope: 'char', group: 'generalSettings', name: 'keepOneUnopened', title: tr('settings.general.keepOneUnopened'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.keepOneUnopened.tooltip')},
+        {scope: 'char', group: 'generalSettings', name: 'openInvocation', title: tr('settings.general.openInvocation'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openInvocation.tooltip')},
         {scope: 'char', group: 'generalSettings', name: 'refineAD',    title: tr('settings.general.keepOneUnopened'),           type: 'checkbox', pane: 'main', tooltip: tr('settings.general.refinead.tooltip')},
         {scope: 'char', group: 'generalSettings', name: 'runSCA',    title: tr('settings.general.runSCA'),               type: 'select',   pane: 'main', tooltip: tr('settings.general.runSCA.tooltip'),
             opts: [ { name: 'never',        value: 'never'}, 
@@ -3160,11 +3169,11 @@ function addProfile(profession, profile, base){
         var oldRefineToday = charStatisticsList[curCharName].general.refined | 0;
         var newRefineToday = unsafeWindow.client.dataModel.model.ent.main.currencies.diamondsconverted | 0;
         if (newRefineToday < oldRefineToday) {
-			if (accountSettings.generalSettings.SCADailyReset < Date.now() - 16*60*60*1000) {
-				accountSettings.generalSettings.SCADailyReset = Date.now();
-				GM_setValue("settings__account__" + loggedAccount, JSON.stringify(accountSettings));
-			}
-		}
+            if (accountSettings.generalSettings.SCADailyReset < Date.now() - 16*60*60*1000) {
+                accountSettings.generalSettings.SCADailyReset = Date.now();
+                GM_setValue("settings__account__" + loggedAccount, JSON.stringify(accountSettings));
+            }
+        }
 
         var refined_diamonds = 0;
         if (getSetting('generalSettings', 'refineAD')) {
@@ -3809,6 +3818,7 @@ function addProfile(profession, profile, base){
                 select.customProfiles { margin: 10px }\
                 textarea.customProfiles { width: 500px; height: 350px; margin: 10px 0; }\
                 .custom_profiles_delete { height: 16px; } #custom__profiles__viewbase_btn { height: 16px; } .custom_profiles_view {height: 16px; margin: 0 4px; }\
+                .custom_resources_delete { height: 16px; } .customResources input { margin: 10px }\
                 #settingsPanel table {border-collapse: collapse; }\
                 tr.totals > td { border-top: 1px solid grey; padding-top: 3px; } \
                 .rarity_Gold {color: blue; } .rarity_Silver {color: green; } .rarity_Special {color: purple; }  \
@@ -4013,7 +4023,7 @@ function addProfile(profession, profile, base){
                     temp_html += '<td>' + cProfile.profile.profileName + '</td>';
                 temp_html += '<td><button class="custom_profiles_view" value=' + idx + '></button><button class="custom_profiles_delete" value=' + idx + '></button></td>';
             });
-            temp_html += '</ul>';
+            temp_html += '</table>';
             tab.html(temp_html);
             
             $( ".custom_profiles_view" ).button({
@@ -4116,12 +4126,77 @@ function addProfile(profession, profile, base){
                 }, 0);
             });
             
+            //Tracked resources tab
+            tab = addTab("#script_settings", tr('tab.trackedResources'));
+            var temp_html = 'Insert human readable resource name and NeverWinter gateway internal resource name (from Inventory Listing)';
+            temp_html += '<div class="customResources"><label>Resource name: </label>';
+            temp_html += '<input type="text" name="" id="custom_resource_fname" \>';
+            temp_html += '<label>Inventory name: </label>';
+            temp_html += '<input type="text" name="" id="custom_resource_name" \>';
+            temp_html += '<button id="custom_resources_add_btn">Add</button></div>';
+            temp_html += '</div>';
+            temp_html += '<table><tr><th>#</th><th>Resource Name</th><th><th></tr>';
+
+            trackResources.forEach(function (trRes, idx) {
+                temp_html += '<tr><td>' + (idx+1) + '</td>';
+                temp_html += '<td>' + trRes.fname + '</td>';
+                temp_html += '<td><button class="custom_resources_delete" value=' + idx + '></button></td>';
+            });
+            temp_html += '</table>';
+            tab.html(temp_html);
+
+            $( ".custom_resources_delete" ).button({
+                icons: {
+                    primary: "ui-icon-trash"
+                },
+                text: false
+            });
+            $( ".custom_resources_delete" ).click( function(e) {
+                if ( !loggedAccount ) {
+                    var str = "Tracked resource could not be removed, make sure you are logged in.";
+                    $('<div id="dialog-error-inventory" title="Error deleting tracked resource">' + str + '</div>').dialog({
+                          resizable: true,
+                          width: 500,
+                          modal: false,
+                        });
+                    return;
+                }
+                var pidx = $(this).val();
+                trackResources.splice(pidx,1);
+                GM_setValue("tracked_resources", JSON.stringify(trackResources));
+                charNamesList.forEach( function (charName) {
+                    charStatisticsList[charName].trackedResources.splice(pidx, 1);
+                    GM_setValue("statistics__char__" + charName + "@" + loggedAccount , JSON.stringify(charStatisticsList[charName]));
+                });
+                window.setTimeout(function() {
+                    unsafeWindow.location.href = current_Gateway;
+                }, 0);
+            });
+
+            $('#custom_resources_add_btn').button();
+            $('#custom_resources_add_btn').click( function (e) {
+                var _fname = $("#custom_resource_fname").val();
+                var _name = $("#custom_resource_name").val();
+                if ( _fname.length == 0 || _name.length == 0) {
+					var str = "Tracked resource could not be added. You have to enter both values!";
+                    $('<div id="dialog-error-inventory" title="Error adding tracked resource">' + str + '</div>').dialog({
+                          resizable: true,
+                          width: 500,
+                          modal: false,
+                        });
+                    return;
+                }
+                trackResources.push({ fname: _fname, name: _name });
+                GM_setValue("tracked_resources", JSON.stringify(trackResources));
+                window.setTimeout(function() {
+                    unsafeWindow.location.href = current_Gateway;
+                }, 0);
+            });
+
             $("#script_settings").tabs({ active: false, collapsible: true });
             setEventHandlers = true;
         }
-        
-        
-        
+
         // Refresh is needed / Loading all the info (account, statistics and chars)
         if (UIaccount != loggedAccount) {
             UIaccount = loggedAccount;
@@ -4955,6 +5030,7 @@ function addProfile(profession, profile, base){
                 'tab.scriptSettings': 'Script settings',
                 'tab.advanced': 'Advanced',
                 'tab.customProfiles': 'Custom profiles',
+                'tab.trackedResources': 'Tracked resources',
                 'tab.general': 'General settings',
                 'tab.professions': 'Professions',
                 'tab.vendor': 'Vendor options',
@@ -5029,6 +5105,7 @@ function addProfile(profession, profile, base){
                 'tab.scriptSettings': 'Ustawienia skryptu',
                 'tab.advanced': 'Zaawansowane',
                 'tab.customProfiles': 'Własne profile',
+                'tab.trackedResources': 'Śledzone surowce',
                 'tab.general': 'Ogólne',
                 'tab.professions': 'Profesje',
                 'tab.vendor': 'Kupiec',
