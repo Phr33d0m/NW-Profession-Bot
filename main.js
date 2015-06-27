@@ -3290,18 +3290,21 @@ function addProfile(profession, profile, base){
             charStatisticsList[curCharName].trackedResources[ri] = 0;
         });
 
-        // Counting tracked resources
-        unsafeWindow.client.dataModel.model.ent.main.inventory.bags
-            .filter(function(bag) {
+        /*
+        unsafeWindow.client.dataModel.model.ent.main.inventory.bags            
+        .filter(function(bag) {
                 return bag.bagid == "CraftingResources"
             })
             .forEach(function(bag) {
-                bag.slots.forEach(function(slot) {
-                    trackResources.forEach(function(resource, ri) {
-                        if (slot && slot.name === resource.name) {
-                            charStatisticsList[curCharName].trackedResources[ri] += slot.count;
-                        }
-                    });
+            });
+
+        */
+        client.dataModel.model.ent.main.inventory.tradebag
+            .forEach(function(slot) {
+                trackResources.forEach(function(resource, ri) {
+                    if (slot && slot.name === resource.name) {
+                        charStatisticsList[curCharName].trackedResources[ri] += slot.count;
+                    }
                 });
             });
 
