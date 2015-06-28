@@ -101,6 +101,7 @@ var antiInfLoopTrap = {// without this script sometimes try to start the same ta
     currTaskName: "unknown", // name of the new task to launch
     trapActivation: 15 // number of repetition to activation trap 
 };
+var pleaseBuy = [];
 // Page Reloading function
 // Every second the page is idle or loading is tracked
 var loading_reset = false; // Enables a periodic reload if this is toggled on by the Auto Reload check box on the settings panel
@@ -438,7 +439,7 @@ function addProfile(profession, profile, base){
      */
 
     definedTask["Leadership"] = {
-        taskListName: "Leadership", // Friendly name used at the UI
+        taskListName: "Leadership", // Friendly name used at the UI, have to be the same as key in definedTask array!!!
         taskName: "Leadership", // String used at the gateway
         taskDefaultPriority: 2, // Priority to allocate free task slots: 0 - High, 1 - Medium, 2 - Low
         taskActive: true,
@@ -577,10 +578,83 @@ function addProfile(profession, profile, base){
         isProfileActive: true,
         level: {
             3: ["Leadership_Tier3_13_Recruit", "Leadership_Tier2_7_Recruit", "Leadership_Tier1_2_Recruit"],
+            4: '+25'
         }
     });
 
-    definedTask["Winter Event"] = {
+    addProfile('Leadership',{
+        "profileName": "RP Boxes",
+            "level": {
+                "21": [
+                    "Leadership_Tier4_21_Training",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier3_20r_Master2",
+                    "Leadership_Tier3_20r_Master1",
+                    "Leadership_Tier3_20r_Master3",
+                    "Leadership_Tier3_20_Destroy",
+                    "Leadership_Tier1_5_Explore"
+                ],
+                "22": [
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_21_Training",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier3_20r_Master2",
+                    "Leadership_Tier3_20r_Master1",
+                    "Leadership_Tier3_20r_Master3",
+                    "Leadership_Tier3_20_Destroy",
+                    "Leadership_Tier1_5_Explore"
+                ],
+                "23": [
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_21_Training",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier3_20r_Master2",
+                    "Leadership_Tier3_20r_Master1",
+                    "Leadership_Tier3_20r_Master3",
+                    "Leadership_Tier3_20_Destroy",
+                    "Leadership_Tier1_5_Explore"
+                ],
+                "24": [
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_21_Training",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier3_20r_Master2",
+                    "Leadership_Tier3_20r_Master1",
+                    "Leadership_Tier3_20r_Master3",
+                    "Leadership_Tier3_20_Destroy",
+                    "Leadership_Tier1_5_Explore"
+                ],
+                "25": [
+                    "Leadership_Tier4_25r_Huntexperiment",
+                    "Leadership_Tier4_25_Battleelementalcultists",
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_21_Training",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier3_20r_Master2",
+                    "Leadership_Tier3_20r_Master1",
+                    "Leadership_Tier3_20r_Master3",
+                    "Leadership_Tier3_20_Destroy",
+                    "Leadership_Tier1_5_Explore"
+                ]
+            }
+        }, 'AD');
+
+    definedTask["WinterEvent"] = {
         taskListName: "WinterEvent",
         taskName: "WinterEvent",
         taskDefaultPriority: 1,
@@ -605,7 +679,7 @@ function addProfile(profession, profile, base){
         }]
     };
 
-    definedTask["Siege Event"] = {
+    definedTask["SiegeEvent"] = {
         taskListName: "SiegeEvent",
         taskName: "Event_Siege",
         taskDefaultPriority: 1,
@@ -629,7 +703,7 @@ function addProfile(profession, profile, base){
         }]
     };
 
-    definedTask["Black Ice Shaping"] = {
+    definedTask["BlackIce"] = {
         taskListName: "BlackIce",
         taskName: "BlackIce",
         taskDefaultPriority: 1,
@@ -846,6 +920,26 @@ function addProfile(profession, profile, base){
         },
     });
     
+    addProfile("Mailsmithing", {
+        profileName: "Berserker's Chainmail and rares",
+        isProfileActive: true,
+        level: {
+            25: ["Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank", //Berserker's Exquisite Elemental Chainmail
+                "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps", //Berserker's Exquisite Elemental Chausses
+
+                "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Dps", //Soldier's Exquisite Elemental Chainmail
+                "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps", //Soldier's Exquisite Elemental Chausses
+                      
+                "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps", //Zealot's Exquisite Elemental Chainmail
+                "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps", //Zealot's Exquisite Elemental Chausses 
+                "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank", //Prelate's Exquisite Elemental Chainmail
+                "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank", //Prelate's Exquisite Elemental Chausses 
+
+                "Crafted_Med_Armorsmithing_Scale_T4_Green_Shirt_Dps",//Berserker's Elemental Chainmail
+                "Med_Armorsmithing_Tier3_Refine_Basic"
+                ],
+            },
+        });
 
     addProfile("Mailsmithing", {
         profileName: "Berserker's Chausses and rares",
@@ -868,27 +962,6 @@ function addProfile(profession, profile, base){
             ],
         },
     });
-
-    addProfile("Mailsmithing", {
-        profileName: "Soldier's Chausses and rares",
-        isProfileActive: true,
-        level: {
-            25: ["Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps", //Soldier's Exquisite Elemental Chausses
-                "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Dps", //Soldier's Exquisite Elemental Chainmail
-
-                "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps", //Berserker's Exquisite Elemental Chausses
-                "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank", //Berserker's Exquisite Elemental Chainmail
-
-                "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps", //Zealot's Exquisite Elemental Chainmail
-                "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps", //Zealot's Exquisite Elemental Chausses 
-                "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank", //Prelate's Exquisite Elemental Chainmail
-                "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank", //Prelate's Exquisite Elemental Chausses 
-
-                "Crafted_Med_Armorsmithing_Scale_T4_Green_Pants_Tank",//Soldier's Elemental Chausses
-                "Med_Armorsmithing_Tier3_Refine_Basic"
-                ],
-            },
-        });
     
     addProfile("Mailsmithing", {
         profileName: "Soldier's Chainmail and rares",
@@ -912,25 +985,49 @@ function addProfile(profession, profile, base){
         });
 
     addProfile("Mailsmithing", {
-        profileName: "Berserker's Chainmail and rares",
+        profileName: "Soldier's Chausses and rares",
         isProfileActive: true,
         level: {
-            25: ["Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank", //Berserker's Exquisite Elemental Chainmail
-                "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps", //Berserker's Exquisite Elemental Chausses
-
+            25: ["Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps", //Soldier's Exquisite Elemental Chausses
                 "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Dps", //Soldier's Exquisite Elemental Chainmail
-                "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps", //Soldier's Exquisite Elemental Chausses
-                      
+
+                "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps", //Berserker's Exquisite Elemental Chausses
+                "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank", //Berserker's Exquisite Elemental Chainmail
+
                 "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps", //Zealot's Exquisite Elemental Chainmail
                 "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps", //Zealot's Exquisite Elemental Chausses 
                 "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank", //Prelate's Exquisite Elemental Chainmail
                 "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank", //Prelate's Exquisite Elemental Chausses 
 
-                "Crafted_Med_Armorsmithing_Scale_T4_Green_Shirt_Dps",//Berserker's Elemental Chainmail
+                "Crafted_Med_Armorsmithing_Scale_T4_Green_Pants_Tank",//Soldier's Elemental Chausses
                 "Med_Armorsmithing_Tier3_Refine_Basic"
                 ],
             },
         });
+    
+    
+    addProfile("Mailsmithing", {
+        profileName: "Zealot's Chainmail and rares",
+        isProfileActive: true,
+        level: {
+            25: ["Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps", //Zealot's Exquisite Elemental Chainmail
+                "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps", //Zealot's Exquisite Elemental Chausses 
+                      
+                "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank", //Prelate's Exquisite Elemental Chainmail                      
+                "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank", //Prelate's Exquisite Elemental Chausses 
+                      
+                "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps", //Soldier's Exquisite Elemental Chausses
+                "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Dps", //Soldier's Exquisite Elemental Chainmail
+
+                "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps", //Berserker's Exquisite Elemental Chausses
+                "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank", //Berserker's Exquisite Elemental Chainmail
+
+                "Crafted_Med_Armorsmithing_Chain_T4_Green_Shirt_Dps",//Zealot's Elemental Chainmail
+                "Med_Armorsmithing_Tier3_Refine_Basic"
+                ],
+            },
+        });
+    
 
     addProfile("Mailsmithing", {
         profileName: "Zealot's Chausses and rares",
@@ -954,27 +1051,7 @@ function addProfile(profession, profile, base){
             },
         });
 
-    addProfile("Mailsmithing", {
-        profileName: "Zealot's Chainmail and rares",
-        isProfileActive: true,
-        level: {
-            25: ["Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Dps", //Zealot's Exquisite Elemental Chainmail
-                "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Dps", //Zealot's Exquisite Elemental Chausses 
-                      
-                "Crafted_Med_Armorsmithing_Chain_T4_Purple_Shirt_Tank", //Prelate's Exquisite Elemental Chainmail                      
-                "Crafted_Med_Armorsmithing_Chain_T4_Purple_Pants_Tank", //Prelate's Exquisite Elemental Chausses 
-                      
-                "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps", //Soldier's Exquisite Elemental Chausses
-                "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Dps", //Soldier's Exquisite Elemental Chainmail
-
-                "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps", //Berserker's Exquisite Elemental Chausses
-                "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank", //Berserker's Exquisite Elemental Chainmail
-
-                "Crafted_Med_Armorsmithing_Chain_T4_Green_Shirt_Dps",//Zealot's Elemental Chainmail
-                "Med_Armorsmithing_Tier3_Refine_Basic"
-                ],
-            },
-        });
+    
    
     addProfile("Mailsmithing", {
         profileName: "Prelate's Chainmail and rares",
@@ -1528,6 +1605,13 @@ function addProfile(profession, profile, base){
         }]
     };
 
+    addProfile("Alchemy", {
+        profileName: "Elemental Aggregate",
+        level: {
+            24: ["Alchemy_Tier4_Create_Elemental_Aggregate", "Alchemy_Tier4_Experiment_Rank25", "Alchemy_Tier4_Experimentation_Rank24", "Alchemy_Tier4_Aquaregia_2", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components", "Alchemy_Tier1_Gather_Basic"],
+            25: '+25',
+        }
+    });
 
     addProfile("Alchemy", {
         profileName: "Aqua Regia",
@@ -1588,9 +1672,9 @@ function addProfile(profession, profile, base){
         definedTask["Platesmithing"],
         definedTask["Leatherworking"],
         definedTask["Tailoring"],
-        definedTask["Black Ice Shaping"],
-        definedTask["Winter Event"],
-        definedTask["Siege Event"],
+        definedTask["BlackIce"],
+        definedTask["WinterEvent"],
+        definedTask["SiegeEvent"],
     ];
 
     var customProfiles = [];  // [ { taskName: 'name', baseProfile: 'profileName' / null, profile: JSON.parsed_from_input }, { } ....]
@@ -1665,7 +1749,7 @@ function addProfile(profession, profile, base){
     var workerList = workerDefinition();
     var toolList = toolListDefinition();
 
-    var trackResources = [{
+    var defaultTrackResources = [{
         fname: 'Aqua Regia',
         name: 'Crafting_Resource_Aquaregia'
     }, {
@@ -1678,13 +1762,22 @@ function addProfile(profession, profile, base){
         fname: 'Mining Claim',
         name: 'Crafting_Resource_Mining_Claim'
     }, {
-        fname: 'e.Aggregate',
+        fname: 'Elemental Aggregate',
         name: 'Crafting_Resource_Elemental_Aggregate'
     }, {
-        fname: 'UE',
+        fname: 'Unified Elements',
         name: 'Crafting_Resource_Elemental_Unified'
     }, 
 ];
+    var trackResources;
+    try {
+        trackResources = JSON.parse(GM_getValue("tracked_resources", null));
+    } catch (e) {
+        trackResources = null;
+    }
+    if (!trackResources) {
+        trackResources = defaultTrackResources;
+    };
 
     var defaultScriptSettings = {
         general: {
@@ -1727,7 +1820,6 @@ function addProfile(profession, profile, base){
         customProfiles = [];
     };
     customProfiles.forEach(function (cProfile, idx) {
-        if (!cProfile.profile.hasOwnProperty('recursiveList')){ cProfile.profile.recursiveList = false;}
         addProfile(cProfile.taskName, cProfile.profile, cProfile.baseProfile);
     });
     
@@ -1766,6 +1858,7 @@ function addProfile(profession, profile, base){
         generalSettings: {
             refineAD: true,
             openRewards: false,
+            openInvocation: true,
             keepOneUnopened: false,
             runSCA: 'free',
             SCADailyReset: Date.now() - 24*60*60*1000,
@@ -1812,8 +1905,9 @@ function addProfile(profession, profile, base){
         },
         generalSettings: {
             refineAD: true,
-            keepOneUnopened: false,
             openRewards: false,
+            openInvocation: true,
+            keepOneUnopened: false,
             runSCA: 'free',
         },
         consolidationSettings: {
@@ -1893,12 +1987,12 @@ function addProfile(profession, profile, base){
         },
         {scope: 'script', group: 'general', name: 'autoReload', title: tr('settings.main.autoreload'), type: 'checkbox', pane: 'main', tooltip: tr('settings.main.autoreload.tooltip')},
         {scope: 'script', group: 'general', name: 'scriptDelayFactor', title: tr('settings.main.incdelay'), type: 'select', pane: 'main', tooltip: tr('settings.main.incdelay.tooltip'),
-            opts: [ { name: 'default - 1',  value: '1'}, 
-                    { name: '1.5',          value: '1.5'}, 
+            opts: [ { name: 'default - 1',  value: '1'},
+                    { name: '1.5',          value: '1.5'},
                     { name: '2',            value: '2'},
                     { name: '2.5',          value: '2.5'},
                     { name: '3',            value: '3'}],
-        }, 
+        },
         {scope: 'script', group: 'general', name: 'autoLogin', title: tr('settings.main.autologin'), type: 'checkbox', pane: 'main', tooltip: tr('settings.main.autologin.tooltip')},
         {scope: 'script', group: 'general', name: 'autoLoginAccount', title: tr('settings.main.nw_username'),   type: 'text',     pane: 'main', tooltip: tr('settings.main.nw_username.tooltip')},
         {scope: 'script', group: 'general', name: 'autoLoginPassword', title: tr('settings.main.nw_password'),   type: 'password', pane: 'main', tooltip: tr('settings.main.nw_password.tooltip')},
@@ -1906,19 +2000,20 @@ function addProfile(profession, profile, base){
         {scope: 'script', group: 'general', name: 'maxCollectTaskAttempts', title: 'Number of attempts to collect task result',   type: 'select', pane: 'main', tooltip: 'After this number of attempts the the script will continue without collecting',
             opts: [ { name: '1',  value: 1},  { name: '2',  value: 2},  { name: '3',  value: 3}], },
         
-        {scope: 'account', group: 'generalSettings', name: 'openRewards', title: tr('settings.account.openrewards'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.account.openrewards.tooltip')},
-        {scope: 'account', group: 'generalSettings', name: 'keepOneUnopened', title: 'Keep one reward box unopened',  type: 'checkbox', pane: 'main', tooltip: 'Used to reserve the slots for the reward boxes'},
-        {scope: 'account', group: 'generalSettings', name: 'refineAD', title: tr('settings.account.refinead'),           type: 'checkbox', pane: 'main', tooltip: tr('settings.account.refinead.tooltip')},
-        {scope: 'account', group: 'generalSettings', name: 'runSCA', title: tr('settings.account.runSCA'),               type: 'select',   pane: 'main', tooltip: tr('settings.account.runSCA.tooltip'),
+        {scope: 'account', group: 'generalSettings', name: 'openRewards', title: tr('settings.general.openrewards'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openrewards.tooltip')},
+        {scope: 'account', group: 'generalSettings', name: 'keepOneUnopened', title: tr('settings.general.keepOneUnopened'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.keepOneUnopened.tooltip')},
+        {scope: 'account', group: 'generalSettings', name: 'openInvocation', title: tr('settings.general.openInvocation'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openInvocation.tooltip')},
+        {scope: 'account', group: 'generalSettings', name: 'refineAD', title: tr('settings.general.refinead'),           type: 'checkbox', pane: 'main', tooltip: tr('settings.general.refinead.tooltip')},
+        {scope: 'account', group: 'generalSettings', name: 'runSCA', title: tr('settings.general.runSCA'),               type: 'select',   pane: 'main', tooltip: tr('settings.general.runSCA.tooltip'),
             opts: [ { name: 'never',        value: 'never'}, 
                     { name: 'free time',    value: 'free'}, 
                     { name: 'always',       value: 'always'}],
             },        
-        {scope: 'account', group: 'professionSettings', name: 'fillOptionals',   type: 'checkbox', pane: 'prof',    title: 'Fill Optional Assets',  tooltip: 'Enable to include selecting the optional assets of tasks'},
-        {scope: 'account', group: 'professionSettings', name: 'autoPurchaseRes', type: 'checkbox', pane: 'prof',    title: 'Auto Purchase Resources', tooltip: 'Automatically purchase required resources from gateway shop (100 at a time)'}, 
-        {scope: 'account', group: 'professionSettings', name:'trainAssets',      type:'checkbox',  pane:'prof',     title:'Train Assets', tooltip:'Enable training/upgrading of asset worker resources'}, 
-        {scope: 'account', group: 'professionSettings', name:'smartLeadershipAssets',   type:'checkbox', pane:'prof', title:'Smart Asset allocation for leadership', tooltip:'Try to spread and fill non-common assets and supplement with common if needed'},
-        {scope: 'account', group: 'professionSettings', name:'skipPatrolTask', type:'select', pane:'prof', title:'Skip Patrol task if > 10 claims', tooltip:'Skip \"Patrol the Mines\" leadership task if there are more than 10 mining claims in the inventory (Never, Always, On AD profile, if Leadership level is &gt;= 20, or both of the above )',
+        {scope: 'account', group: 'professionSettings', name: 'fillOptionals',         type: 'checkbox', pane: 'prof', title: tr('settings.profession.fillOptionals'),   tooltip: tr('settings.profession.fillOptionals.tooltip')},
+        {scope: 'account', group: 'professionSettings', name: 'autoPurchaseRes',       type: 'checkbox', pane: 'prof', title: tr('settings.profession.autoPurchase'),    tooltip: tr('settings.profession.autoPurchase.tooltip')},
+        {scope: 'account', group: 'professionSettings', name: 'trainAssets',           type:'checkbox',  pane: 'prof', title: tr('settings.profession.trainAssets'),     tooltip: tr('settings.profession.trainAssets.tooltip')},
+        {scope: 'account', group: 'professionSettings', name: 'smartLeadershipAssets', type:'checkbox',  pane: 'prof', title: tr('settings.profession.smartLeadership'), tooltip: tr('settings.profession.smartLeadership.tooltip')},
+        {scope: 'account', group: 'professionSettings', name: 'skipPatrolTask',        type:'select',    pane: 'prof', title: tr('settings.profession.skipPatrol'),      tooltip: tr('settings.profession.skipPatrol.tooltip'),
             opts:[{name:'never',value:'never'},{name:'always',value:'always'},{name:'AD profile',value:'ad'},{name:'Leadership lvl 20',value:'ld20'},{name:'AD&Lvl20',value:'AD&Lvl20'}]},
         {scope: 'account', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
         {scope: 'account', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Node Kit Stacks',  tooltip:'Limit skill kits stacks to 50, vendor kits unusable by class, remove all if player has one bag or full bags'},
@@ -1930,38 +2025,39 @@ function addProfile(profession, profile, base){
         {scope: 'account', group: 'vendorSettings', name:'vendorPots2',     type:'checkbox', pane:'vend',   title:'Auto Vendor lesser potions (lvl 15)',tooltip:'Vendor all lesser potions (lvl 15) found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorPots3',     type:'checkbox', pane:'vend',   title:'Auto Vendor potions (lvl 30)',       tooltip:'Vendor all potions (lvl 30) found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorPots4',     type:'checkbox', pane:'vend',   title:'Auto Vendor greater potions (lvl 45)',   tooltip:'Vendor all greater potions (lvl 45) found in player bags'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorPots5',     type:'checkbox', pane:'vend',   title:'Auto Vendor major potions (lvl 60)',     tooltip:'Auto Vendor major potions (lvl 60)'},        
+        {scope: 'account', group: 'vendorSettings', name:'vendorPots5',     type:'checkbox', pane:'vend',   title:'Auto Vendor major potions (lvl 60)',     tooltip:'Auto Vendor major potions (lvl 60)'},
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
-        {scope: 'account', group: 'consolidationSettings', name:'consolidate',      type:'checkbox',pane:'bank',    title:'Consolidate AD via ZAX',     tooltip:'Automatically attempt to post, cancel and withdraw AD via ZAX and consolidate to designated character',border:true},
-        {scope: 'account', group: 'consolidationSettings', name:'bankCharName',         type:'text',    pane:'bank',    title:'Character Name of Banker',   tooltip:'Enter name of the character to hold account AD'},
-        {scope: 'account', group: 'consolidationSettings', name:'minToTransfer',    type:'text',    pane:'bank',    title:'Min AD for Transfer',        tooltip:'Enter minimum AD limit for it to be considered for transfer off a character'},
-        {scope: 'account', group: 'consolidationSettings', name:'minCharBalance',   type:'text',    pane:'bank',    title:'Min Character balance',      tooltip:'Enter the amount of AD to always keep available on characters'},
-        {scope: 'account', group: 'consolidationSettings', name:'transferRate',     type:'text',    pane:'bank',    title:'AD per Zen Rate (in zen)',   tooltip:'Enter default rate to use for transferring through ZAX'},
+        {scope: 'account', group: 'consolidationSettings', name:'consolidate',    type:'checkbox', pane:'bank', title: tr('settings.consolid.consolidate'),    tooltip: tr('settings.consolid.consolidate.tooltip') ,border:true},
+        {scope: 'account', group: 'consolidationSettings', name:'bankCharName',   type:'text',     pane:'bank', title: tr('settings.consolid.bankerName'),     tooltip: tr('settings.consolid.bankerName.tooltip')},
+        {scope: 'account', group: 'consolidationSettings', name:'minToTransfer',  type:'text',     pane:'bank', title: tr('settings.consolid.minToTransfer'),  tooltip: tr('settings.consolid.minToTransfer.tooltip')},
+        {scope: 'account', group: 'consolidationSettings', name:'minCharBalance', type:'text',     pane:'bank', title: tr('settings.consolid.minCharBalance'), tooltip: tr('settings.consolid.minCharBalance,tooltip')},
+        {scope: 'account', group: 'consolidationSettings', name:'transferRate',   type:'text',     pane:'bank', title: tr('settings.consolid.transferRate'),   tooltip: tr('settings.consolid.transferRate.tooltip')},
 
         {scope: 'char', group: 'general', name: 'active',     type:'checkbox',    pane: 'main_not_tab',    title: 'Active',   tooltip: 'The char will be processed by the script'},
         {scope: 'char', group: 'general', name:'overrideGlobalSettings',    type:'checkbox',    pane:'main_not_tab',    title:'Override account settings for this char',   tooltip:''},
         {scope: 'char', group: 'general', name:'manualTaskSlots',    type:'checkbox',    pane:'main_not_tab',    title:'Use manual task allocation tab',   tooltip:'Per slot profile allocation'},
         
-        {scope: 'char', group: 'generalSettings', name: 'openRewards', title: 'Open Reward Chests',  type: 'checkbox', pane: 'main', tooltip: 'Enable opening of leadership chests on character switch' },
-        {scope: 'char', group: 'generalSettings', name: 'keepOneUnopened', title: 'Keep one reward box unopened',  type: 'checkbox', pane: 'main', tooltip: 'Used to reserve the slots for the reward boxes'},        
-        {scope: 'char', group: 'generalSettings', name: 'refineAD',    title: 'Refine AD',           type: 'checkbox', pane: 'main', tooltip: 'Enable refining of AD on character switch'},
-        {scope: 'char', group: 'generalSettings', name: 'runSCA',    title: 'Run SCA',               type: 'select',   pane: 'main', tooltip: 'Running SCA adventures reward after professions',
+        {scope: 'char', group: 'generalSettings', name: 'openRewards', title: tr('settings.general.openrewards'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openrewards.tooltip')},
+        {scope: 'char', group: 'generalSettings', name: 'keepOneUnopened', title: tr('settings.general.keepOneUnopened'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.keepOneUnopened.tooltip')},
+        {scope: 'char', group: 'generalSettings', name: 'openInvocation', title: tr('settings.general.openInvocation'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openInvocation.tooltip')},
+        {scope: 'char', group: 'generalSettings', name: 'refineAD',    title: tr('settings.general.keepOneUnopened'),           type: 'checkbox', pane: 'main', tooltip: tr('settings.general.refinead.tooltip')},
+        {scope: 'char', group: 'generalSettings', name: 'runSCA',    title: tr('settings.general.runSCA'),               type: 'select',   pane: 'main', tooltip: tr('settings.general.runSCA.tooltip'),
             opts: [ { name: 'never',        value: 'never'}, 
                     { name: 'free time',    value: 'free'}, 
                     { name: 'always',       value: 'always'}],
             },        
         
-        {scope: 'char', group: 'professionSettings', name: 'fillOptionals',   type: 'checkbox', pane: 'prof',    title: 'Fill Optional Assets',  tooltip: 'Enable to include selecting the optional assets of tasks'},
-        {scope: 'char', group: 'professionSettings', name: 'autoPurchaseRes', type: 'checkbox', pane: 'prof',    title: 'Auto Purchase Resources', tooltip: 'Automatically purchase required resources from gateway shop (100 at a time)'}, 
-        {scope: 'char', group: 'professionSettings', name: 'trainAssets',      type:'checkbox',  pane:'prof',     title:'Train Assets', tooltip:'Enable training/upgrading of asset worker resources'}, 
-        {scope: 'char', group: 'professionSettings', name:'smartLeadershipAssets',   type:'checkbox', pane:'prof', title:'Smart Asset allocation for leadership', tooltip:'Try to spread and fill non-common assets and supplement with common if needed'},
-        {scope: 'char', group: 'professionSettings', name:'skipPatrolTask', type:'select', pane:'prof', title:'Skip Patrol task if > 10 claims', tooltip:'Skip \"Patrol the Mines\" leadership task if there are more than 10 mining claims in the inventory (Never, Always, On AD profile, if Leadership level is &gt;= 20, or both of the above )',
+        {scope: 'char', group: 'professionSettings', name: 'fillOptionals',         type: 'checkbox', pane: 'prof', title: tr('settings.profession.fillOptionals'),   tooltip: tr('settings.profession.fillOptionals.tooltip')},
+        {scope: 'char', group: 'professionSettings', name: 'autoPurchaseRes',       type: 'checkbox', pane: 'prof', title: tr('settings.profession.autoPurchase'),    tooltip: tr('settings.profession.autoPurchase.tooltip')},
+        {scope: 'char', group: 'professionSettings', name: 'trainAssets',           type:'checkbox',  pane: 'prof', title: tr('settings.profession.trainAssets'),     tooltip: tr('settings.profession.trainAssets.tooltip')},
+        {scope: 'char', group: 'professionSettings', name: 'smartLeadershipAssets', type:'checkbox',  pane: 'prof', title: tr('settings.profession.smartLeadership'), tooltip: tr('settings.profession.smartLeadership.tooltip')},
+        {scope: 'char', group: 'professionSettings', name: 'skipPatrolTask',        type: 'select',   pane: 'prof', title: tr('settings.profession.skipPatrol'),      tooltip: tr('settings.profession.skipPatrol.tooltip'),
             opts:[{name:'never',value:'never'},{name:'always',value:'always'},{name:'AD profile',value:'ad'},{name:'Leadership lvl 20',value:'ld20'},{name:'AD&Lvl20',value:'AD&Lvl20'}]},
         {scope: 'char', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
         {scope: 'char', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Altar Node Kit Stacks',  tooltip:'Limit skill kits stacks to 50/Altars80, vendor kits unusable by class, remove all if player has one bag or full bags'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorAltarsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Altar Stacks',  tooltip:'Limit Altars to 80,remove all if player has one bag or full bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorAltarsLimit', type:'checkbox', pane:'vend', title:'Vendor/Maintain Altar Stacks',  tooltip:'Limit Altars to 80,remove all if player has one bag or full bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorKitsAll',   type:'checkbox', pane:'vend',   title:'Vendor All Node Kits',   tooltip:'Sell ALL skill kits.'},
         {scope: 'char', group: 'vendorSettings', name:'vendorAltarsAll', type:'checkbox', pane:'vend',   title:'Vendor All Altar',       tooltip:'Sell ALL Altars.'},
         {scope: 'char', group: 'vendorSettings', name:'vendorProfResults',type:'checkbox',pane:'vend',   title:'Vendor/Maintain Prof Crafted Levelup Items',    tooltip:'Vendor off Tier 1 to 5 items produced and reused for leveling crafting professions.'},
@@ -1973,9 +2069,9 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
-        {scope: 'char', group: 'consolidationSettings', name:'consolidate',      type:'checkbox',pane:'bank',    title:'Consolidate AD via ZAX',     tooltip:'Automatically attempt to post, cancel and withdraw AD via ZAX and consolidate to designated character',border:true},
-        {scope: 'char', group: 'consolidationSettings', name:'minToTransfer',    type:'text',    pane:'bank',    title:'Min AD for Transfer',        tooltip:'Enter minimum AD limit for it to be considered for transfer off a character'},
-        {scope: 'char', group: 'consolidationSettings', name:'minCharBalance',   type:'text',    pane:'bank',    title:'Min Character balance',      tooltip:'Enter the amount of AD to always keep available on characters'},
+        {scope: 'char', group: 'consolidationSettings', name:'consolidate',    type:'checkbox', pane:'bank', title: tr('settings.consolid.consolidate'),    tooltip: tr('settings.consolid.consolidate.tooltip'), border:true},
+        {scope: 'char', group: 'consolidationSettings', name:'minToTransfer',  type:'text',     pane:'bank', title: tr('settings.consolid.minToTransfer'),  tooltip: tr('settings.consolid.minToTransfer.tooltip')},
+        {scope: 'char', group: 'consolidationSettings', name:'minCharBalance', type:'text',     pane:'bank', title: tr('settings.consolid.minCharBalance'), tooltip: tr('settings.consolid.minCharBalance,tooltip')},
         
         
         
@@ -2284,8 +2380,8 @@ function addProfile(profession, profile, base){
     function getNextFinishedTask() {
         var tmpNext,
             next = null;
-        unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.forEach(function(entry) {
-            if (entry.uassignmentid) {
+        unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.forEach(function(entry, idx) {
+            if (entry.uassignmentid && (collectTaskAttempts[idx] < scriptSettings.general.maxCollectTaskAttempts)) {
                 tmpNext = new Date(entry.ufinishdate);
                 if (!next || tmpNext < next) {
                     next = tmpNext;
@@ -2471,7 +2567,7 @@ function addProfile(profession, profile, base){
         }
 
         // start task if requirements are met
-        if (!thisTask.failedrequirementsreasons.length) {
+        if (!thisTask.failslevelrequirementsfilter && !thisTask.failslevelrequirements && !thisTask.failsresourcesrequirements) {
             return thisTask;
         }
 
@@ -2563,6 +2659,9 @@ function addProfile(profession, profile, base){
                 // Matched profession auto-purchase item found but auto-purchase is not enabled
                 else if (!getSetting('professionSettings','autoPurchaseRes') && itemName.match(/^Crafting_Resource_(Charcoal|Rocksalt|Spool_Thread|Porridge|Solvent|Brimstone|Coal|Moonseasalt|Quicksilver|Spool_Threadsilk)$/)) {
                     console.log("Purchasable resource required:", itemName, "for task:", taskname, ". Recommend enabling Auto Purchase Resources.");
+                    if (pleaseBuy.push("Please buy " + itemName + " for " + unsafeWindow.client.getCurrentCharAtName()) > 5) {
+                        pleaseBuy.shift();
+                    }
                     return false;
                 }
                 // craftable ingredient set to search for
@@ -2632,6 +2731,11 @@ function addProfile(profession, profile, base){
 
         if (!taskList.length) {
             console.log("No ingredient tasks found for:", taskname, searchItem);
+            if (!searchItem.match(/(_Research)|(_Craftsman_)|(Crafted_)/)) {
+                if (pleaseBuy.push("Please buy " + searchItem + " for " + unsafeWindow.client.getCurrentCharAtName()) > 5) {
+                    pleaseBuy.shift();
+                }
+            }
             return false;
         }
 
@@ -2806,6 +2910,9 @@ function addProfile(profession, profile, base){
         if (_purchaseCount < 1) {
             // Not enough gold for 1 resource
             console.log("Purchasing profession resources failed for: ", item, " Have: ",_charCopperTotal, " Cost Per Item: ", _resourceCost[item], " Can buy: ", _resourcePurchasable);
+            if (pleaseBuy.push("Please buy " + item + " for " + unsafeWindow.client.getCurrentCharAtName()) > 5) {
+                pleaseBuy.shift();
+            }
             return false;
         } else {
             // Make purchase
@@ -3062,11 +3169,11 @@ function addProfile(profession, profile, base){
         var oldRefineToday = charStatisticsList[curCharName].general.refined | 0;
         var newRefineToday = unsafeWindow.client.dataModel.model.ent.main.currencies.diamondsconverted | 0;
         if (newRefineToday < oldRefineToday) {
-			if (accountSettings.generalSettings.SCADailyReset < Date.now() - 16*60*60*1000) {
-				accountSettings.generalSettings.SCADailyReset = Date.now();
-				GM_setValue("settings__account__" + loggedAccount, JSON.stringify(accountSettings));
-			}
-		}
+            if (accountSettings.generalSettings.SCADailyReset < Date.now() - 16*60*60*1000) {
+                accountSettings.generalSettings.SCADailyReset = Date.now();
+                GM_setValue("settings__account__" + loggedAccount, JSON.stringify(accountSettings));
+            }
+        }
 
         var refined_diamonds = 0;
         if (getSetting('generalSettings', 'refineAD')) {
@@ -3135,6 +3242,20 @@ function addProfile(profession, profile, base){
             });
         }
 
+        if (getSetting('generalSettings','openInvocation')) {
+            var _pbags = unsafeWindow.client.dataModel.model.ent.main.inventory.playerbags;
+            var _cRewardPat = /Invocation_Rp_Bag/;
+            console.log("Opening Invocation Rewards");
+            $.each(_pbags, function(bi, bag) {
+                bag.slots.forEach(function(slot) {
+                    if (slot && _cRewardPat.test(slot.name)) {
+                        window.setTimeout(function() {
+                            client.sendCommand('GatewayInventory_OpenRewardPack', slot.uid);
+                        }, 500);
+                    }
+                });
+            });
+        }
         // Check Vendor Options & Vendor matched items
         vendorJunk();
 
@@ -3169,18 +3290,21 @@ function addProfile(profession, profile, base){
             charStatisticsList[curCharName].trackedResources[ri] = 0;
         });
 
-        // Counting tracked resources
-        unsafeWindow.client.dataModel.model.ent.main.inventory.bags
-            .filter(function(bag) {
+        /*
+        unsafeWindow.client.dataModel.model.ent.main.inventory.bags            
+        .filter(function(bag) {
                 return bag.bagid == "CraftingResources"
             })
             .forEach(function(bag) {
-                bag.slots.forEach(function(slot) {
-                    trackResources.forEach(function(resource, ri) {
-                        if (slot && slot.name === resource.name) {
-                            charStatisticsList[curCharName].trackedResources[ri] += slot.count;
-                        }
-                    });
+            });
+
+        */
+        client.dataModel.model.ent.main.inventory.tradebag
+            .forEach(function(slot) {
+                trackResources.forEach(function(resource, ri) {
+                    if (slot && slot.name === resource.name) {
+                        charStatisticsList[curCharName].trackedResources[ri] += slot.count;
+                    }
                 });
             });
 
@@ -3235,7 +3359,7 @@ function addProfile(profession, profile, base){
         GM_setValue("statistics__char__" + curCharFullName , JSON.stringify(charStatisticsList[curCharName]));
         updateCounters();
 
-
+        // TODO: refactor this block into function and merge with the similar in charSCA()
         console.log("Switching Characters");
         lastCharNum = curCharNum;
 
@@ -3269,7 +3393,9 @@ function addProfile(profession, profile, base){
             console.log("No date found for " + charName + ", switching now.");
             return false; // = break; 
         });
-        
+        // Change to optional ?
+        if (chardelay > delay.SHORT) chardelay = chardelay + (Math.random() + 0.3) * delay.DEFAULT;  
+
         curCharName = charNamesList[curCharNum];
         curCharFullName = curCharName + "@" + loggedAccount;
         failedTasksList = [];
@@ -3298,7 +3424,7 @@ function addProfile(profession, profile, base){
 
         console.log("Next run for " + curCharName + " in " + parseInt(chardelay / 1000) + " seconds.");
         $("#prinfopane").empty();
-        var ptext = $("<h3 class='promo-image copy-top prh3'>Professions Robot<br />Next task for " + curCharName + "<br /><span data-timer='" + chardate + "' data-timer-length='2'></span><br />Diamonds: " + curdiamonds.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "<br />Gold: " + curgold + "</h3>")
+        var ptext = $("<h3 class='promo-image copy-top prh3'>Professions Robot<br />Next task for " + curCharName + "<br /><span data-timer='" + chardate + "' data-timer-length='2'></span><br />Diamonds: " + curdiamonds.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "<br />Gold: " + curgold + (pleaseBuy.length > 0 ? "<br />" : "") + pleaseBuy.join("<br />") + "</h3>")
             .appendTo("#prinfopane");
         
         if (not_active == charNamesList.length) {
@@ -3436,6 +3562,13 @@ function addProfile(profession, profile, base){
             return;
         }
 
+        if (pleaseBuy.length == 0) {
+            pleaseBuy['ts'] = Date.now() + 15*60*1000;
+        } else if ((pleaseBuy['ts']||0) < Date.now()) {
+            pleaseBuy.shift();
+            pleaseBuy['ts'] = Date.now() + 15*60*1000;
+        }
+        
         window.setTimeout(function() {
             loginProcess();
         }, delay.SHORT);
@@ -3508,8 +3641,8 @@ function addProfile(profession, profile, base){
                         tempCharsSetting = null;
                     }
                     if (!tempCharsSetting) {
-                        console.log('Character settings couldn\'t be retrieved, loading defaults.');
                         tempCharsSetting = {};
+                        console.log('Character settings couldn\'t be retrieved, loading defaults.');
                     };
                     charSettingsList[charName] = $.extend(true, {}, defaultCharSettings, tempCharsSetting);
                     charSettingsList[charName].charName = charName; // for compatibility 
@@ -3566,6 +3699,9 @@ function addProfile(profession, profile, base){
     function loadCharacter(charname) {
         // Load character and restart next load loop
         console.log("Loading gateway script for", charname);
+        if (unsafeWindow.location.hash != "#char(" + encodeURI(charname) + ")/professions") {
+            unsafeWindow.location.hash = "#char(" + encodeURI(charname) + ")/professions";
+        }
         unsafeWindow.client.dataModel.loadEntityByName(charname);
 
         try {
@@ -3670,9 +3806,9 @@ function addProfile(profession, profile, base){
                 table.professionRanks { border-collapse: collapse; } \
                 table.professionRanks td { height: 14px; } \
                 td.ranked2, td.tranked2 { border-bottom: solid 1px #555; border-top: dashed 1px #888 }\
-                table.professionLevels td.rotate, table.professionLevels th.rotate { height: 100px; } \
-                table.professionLevels td.rotate, table.professionLevels th.rotate > div { transform: translate(0, 30px) rotate(290deg); width: 30px; } \
-                table.professionLevels td.rotate, table.professionLevels th.rotate > div > span { border-bottom: 1px solid #ccc; padding: 5px 10px; white-space: nowrap; } \
+                table.withRotation td.rotate, table.withRotation th.rotate { height: 100px; } \
+                table.withRotation td.rotate, table.withRotation th.rotate > div { transform: translate(0, 30px) rotate(290deg); width: 30px; } \
+                table.withRotation td.rotate, table.withRotation th.rotate > div > span { border-bottom: 1px solid #ccc; padding: 5px 10px; white-space: nowrap; } \
                 input[type='checkbox'].settingsInput { margin: 5px 10px 5px 5px;  }\
                 input.settingsInput { margin: 5px 5px; }\
                 label.settingsLabel { margin: 5px 5px; min-width: 150px; display: inline-block; }\
@@ -3683,6 +3819,7 @@ function addProfile(profession, profile, base){
                 select.customProfiles { margin: 10px }\
                 textarea.customProfiles { width: 500px; height: 350px; margin: 10px 0; }\
                 .custom_profiles_delete { height: 16px; } #custom__profiles__viewbase_btn { height: 16px; } .custom_profiles_view {height: 16px; margin: 0 4px; }\
+                .custom_resources_delete { height: 16px; } .customResources input { margin: 10px }\
                 #settingsPanel table {border-collapse: collapse; }\
                 tr.totals > td { border-top: 1px solid grey; padding-top: 3px; } \
                 .rarity_Gold {color: blue; } .rarity_Silver {color: green; } .rarity_Special {color: purple; }  \
@@ -3743,10 +3880,10 @@ function addProfile(profession, profile, base){
                 
             
             //$('#script_settings').html('');
-            var tab = addTab("#script_settings", "Script settings");
+            var tab = addTab("#script_settings", tr('tab.scriptSettings'));
             addInputsUL(tab, 'script', 'main');
             
-            tab = addTab("#script_settings", "Advanced");
+            tab = addTab("#script_settings", tr('tab.advanced'));
             var thtml = "<button id='reset_settings_btn'>Reset ALL Settings</button><br /><br />";
             thtml += "Must be logged in and at the correct charactar to list it's items.<br />";
             thtml += "<button id='list_inventory_btn'>List Inventory</button><br /><br />";
@@ -3829,6 +3966,8 @@ function addProfile(profession, profile, base){
                 var str = 'Script Settings (script version ' + scriptVersion + ')\n';
                 var tempObj;
                 tempObj = $.extend(true, {}, scriptSettings);
+                tempObj.autoLoginAccount = "";
+                tempObj.autoLoginPassword = "";
                 str += '' +  JSON.stringify(tempObj,null,4) + '\n';
                 
                 str += 'Account Settings\n';
@@ -3859,7 +3998,7 @@ function addProfile(profession, profile, base){
             });
 
             // Custom profiles
-            tab = addTab("#script_settings", "Custom profiles");
+            tab = addTab("#script_settings", tr('tab.customProfiles'));
             var temp_html = '';
             temp_html += '<div><label class="customProfiles">Task name: </label><select class=" custom_input customProfiles " id="custom_profiles_taskname">';
             tasklist.forEach(function(task) {
@@ -3885,7 +4024,7 @@ function addProfile(profession, profile, base){
                     temp_html += '<td>' + cProfile.profile.profileName + '</td>';
                 temp_html += '<td><button class="custom_profiles_view" value=' + idx + '></button><button class="custom_profiles_delete" value=' + idx + '></button></td>';
             });
-            temp_html += '</ul>';
+            temp_html += '</table>';
             tab.html(temp_html);
             
             $( ".custom_profiles_view" ).button({
@@ -3988,12 +4127,77 @@ function addProfile(profession, profile, base){
                 }, 0);
             });
             
+            //Tracked resources tab
+            tab = addTab("#script_settings", tr('tab.trackedResources'));
+            var temp_html = 'Insert human readable resource name and NeverWinter gateway internal resource name (from Inventory Listing)';
+            temp_html += '<div class="customResources"><label>Resource name: </label>';
+            temp_html += '<input type="text" name="" id="custom_resource_fname" \>';
+            temp_html += '<label>Inventory name: </label>';
+            temp_html += '<input type="text" name="" id="custom_resource_name" \>';
+            temp_html += '<button id="custom_resources_add_btn">Add</button></div>';
+            temp_html += '</div>';
+            temp_html += '<table><tr><th>#</th><th>Resource Name</th><th><th></tr>';
+
+            trackResources.forEach(function (trRes, idx) {
+                temp_html += '<tr><td>' + (idx+1) + '</td>';
+                temp_html += '<td>' + trRes.fname + '</td>';
+                temp_html += '<td><button class="custom_resources_delete" value=' + idx + '></button></td>';
+            });
+            temp_html += '</table>';
+            tab.html(temp_html);
+
+            $( ".custom_resources_delete" ).button({
+                icons: {
+                    primary: "ui-icon-trash"
+                },
+                text: false
+            });
+            $( ".custom_resources_delete" ).click( function(e) {
+                if ( !loggedAccount ) {
+                    var str = "Tracked resource could not be removed, make sure you are logged in.";
+                    $('<div id="dialog-error-inventory" title="Error deleting tracked resource">' + str + '</div>').dialog({
+                          resizable: true,
+                          width: 500,
+                          modal: false,
+                        });
+                    return;
+                }
+                var pidx = $(this).val();
+                trackResources.splice(pidx,1);
+                GM_setValue("tracked_resources", JSON.stringify(trackResources));
+                charNamesList.forEach( function (charName) {
+                    charStatisticsList[charName].trackedResources.splice(pidx, 1);
+                    GM_setValue("statistics__char__" + charName + "@" + loggedAccount , JSON.stringify(charStatisticsList[charName]));
+                });
+                window.setTimeout(function() {
+                    unsafeWindow.location.href = current_Gateway;
+                }, 0);
+            });
+
+            $('#custom_resources_add_btn').button();
+            $('#custom_resources_add_btn').click( function (e) {
+                var _fname = $("#custom_resource_fname").val();
+                var _name = $("#custom_resource_name").val();
+                if ( _fname.length == 0 || _name.length == 0) {
+					var str = "Tracked resource could not be added. You have to enter both values!";
+                    $('<div id="dialog-error-inventory" title="Error adding tracked resource">' + str + '</div>').dialog({
+                          resizable: true,
+                          width: 500,
+                          modal: false,
+                        });
+                    return;
+                }
+                trackResources.push({ fname: _fname, name: _name });
+                GM_setValue("tracked_resources", JSON.stringify(trackResources));
+                window.setTimeout(function() {
+                    unsafeWindow.location.href = current_Gateway;
+                }, 0);
+            });
+
             $("#script_settings").tabs({ active: false, collapsible: true });
             setEventHandlers = true;
         }
-        
-        
-        
+
         // Refresh is needed / Loading all the info (account, statistics and chars)
         if (UIaccount != loggedAccount) {
             UIaccount = loggedAccount;
@@ -4009,7 +4213,7 @@ function addProfile(profession, profile, base){
                 var temp_tab = addTab("#main_tabs", tabs[key]);
                 addInputsUL(temp_tab, 'account', key);
             }
-            var settings_copy_tab = addTab("#main_tabs", "Settings Copy");
+            var settings_copy_tab = addTab("#main_tabs", tr('tab.copySettings'));
             $("div#main_tabs").tabs({ active: false, collapsible: true });                            
 
             // Settings copy Tab
@@ -4576,9 +4780,9 @@ function addProfile(profession, profile, base){
 
 
         // Resource tracker update.
-        html = '<table><tr><th>Character Name</th>';
+        html = "<table class='withRotation'><tr><th class='rotate'><div><span>Character Name</div></span></th>";
         trackResources.forEach(function(item) {
-            html += "<th>" + item.fname + "</th>";
+            html += "<th class='rotate'><div><span>" + item.fname + "</div></span></th>";
         })
         html += '</tr>';
         charNamesList.forEach(function(charName) {
@@ -4593,7 +4797,7 @@ function addProfile(profession, profile, base){
 
 
         // 'profession_levels' tab
-        html = '<table class="professionLevels">';
+        html = '<table class="withRotation">';
         html += "<tr><th class='rotate'><div><span>Character Name</div></span></th>";
         html += "<th class='rotate'><div><span>#slots</div></span></th>";
         $.each(charStatisticsList[charNamesList[0]].professions, function(profession) {
@@ -4824,10 +5028,15 @@ function addProfile(profession, profile, base){
             'currLang': lang,
             'en': {
                 'translation.needed': 'translation needed',
+                'tab.scriptSettings': 'Script settings',
+                'tab.advanced': 'Advanced',
+                'tab.customProfiles': 'Custom profiles',
+                'tab.trackedResources': 'Tracked resources',
                 'tab.general': 'General settings',
                 'tab.professions': 'Professions',
                 'tab.vendor': 'Vendor options',
                 'tab.consolidation': 'AD Consolidation',
+                'tab.copySettings': 'Settings Copy',
                 'tab.other': 'Other',
                 'tab.counters': 'Refine Counters',
                 'tab.visits': 'SCA & Visits',
@@ -4860,19 +5069,49 @@ function addProfile(profession, profile, base){
                 'settings.main.savenexttime.tooltip': 'Save the next proffesion times persistently',
                 //'settings.main.charcount': 'Enter number of characters to use (Save and Apply to update settings form)',
                 //'settings.main.charcount.tooltip': 'Enter number of characters to use (Save and Apply to update settings form)',
-                'settings.account.openrewards': 'Open Reward Chests',
-                'settings.account.openrewards.tooltip': 'Enable opening of leadership chests on character switch',
-                'settings.account.refinead': 'Refine AD',
-                'settings.account.refinead.tooltip': 'Enable refining of AD on character switch',
-                'settings.account.runSCA': 'Run SCA',
-                'settings.account.runSCA.tooltip': 'Running SCA adventures reward after professions',
+                'settings.general.openrewards': 'Open Reward Chests',
+                'settings.general.openrewards.tooltip': 'Enable opening of leadership chests on character switch',
+                'settings.general.openInvocation': 'Open Invocation Rewards',
+                'settings.general.openInvocation.tooltip': 'Enable opening rewards from invocation',
+                'settings.general.keepOneUnopened': 'Keep one reward box unopened',
+                'settings.general.keepOneUnopened.tooltip': 'Used to reserve the slots for the reward boxes',
+                'settings.general.refinead': 'Refine AD',
+                'settings.general.refinead.tooltip': 'Enable refining of AD on character switch',
+                'settings.general.runSCA': 'Run SCA',
+                'settings.general.runSCA.tooltip': 'Running SCA adventures reward after professions',
+                'settings.profession.fillOptionals': 'Fill Optional Assets',
+                'settings.profession.fillOptionals.tooltip': 'Enable to include selecting the optional assets of tasks',
+                'settings.profession.autoPurchase': 'Auto Purchase Resources',
+                'settings.profession.autoPurchase.tooltip': 'Automatically purchase required resources from gateway shop (100 at a time)',
+                'settings.profession.trainAssets': 'Train Assets',
+                'settings.profession.trainAssets.tooltip': 'Enable training/upgrading of asset worker resources',
+                'settings.profession.smartLeadership': 'Smart Asset allocation for leadership',
+                'settings.profession.smartLeadership.tooltip': 'Try to spread and fill non-common assets and supplement with common if needed',
+                'settings.profession.skipPatrol': 'Skip Patrol task if > 10 claims',
+                'settings.profession.skipPatrol.tooltip': 'Skip &quot;Patrol the Mines&quot; leadership task if there are more than 10 mining claims in the inventory (Never, Always, On AD profile, if Leadership level is &gt;= 20, or both of the above )',
+                'settings.consolid.consolidate': 'Consolidate AD via ZAX',
+                'settings.consolid.consolidate.tooltip': 'Automatically attempt to post, cancel and withdraw AD via ZAX and consolidate to designated character',
+                'settings.consolid.bankerName': 'Character Name of Banker',
+                'settings.consolid.bankerName.tooltip': 'Enter name of the character to hold account AD',
+                'settings.consolid.minToTransfer': 'Min AD for Transfer',
+                'settings.consolid.minToTransfer.tooltip': 'Enter minimum AD limit for it to be considered for transfer off a character',
+                'settings.consolid.minCharBalance': 'Min Character balance',
+                'settings.consolid.minCharBalance,tooltip': 'Enter the amount of AD to always keep available on characters',
+                'settings.consolid.transferRate': 'AD per Zen Rate (in zen)',
+                'settings.consolid.transferRate.tooltip': 'Enter default rate to use for transferring through ZAX',
+
             },
             'pl': {
                 'translation.needed': 'wymagane tłumaczenie',
+                'tab.scriptSettings': 'Ustawienia skryptu',
+                'tab.advanced': 'Zaawansowane',
+                'tab.customProfiles': 'Własne profile',
+                'tab.trackedResources': 'Śledzone surowce',
                 'tab.general': 'Ogólne',
                 'tab.professions': 'Profesje',
                 'tab.vendor': 'Kupiec',
                 'tab.consolidation': 'Konsolidacja AD',
+                'tab.copySettings': 'Kopiuj ustawienia',
                 'tab.other': 'Pozostałe',
                 'tab.counters': 'Liczniki szlifowania',
                 'tab.visits': 'Nast.zadanie i SCA',
@@ -4905,12 +5144,36 @@ function addProfile(profession, profile, base){
                 'settings.main.savenexttime.tooltip': 'Zapisuj czas następnego zadania w danych międzysesyjnych',
                 //'settings.main.charcount': 'Wprowadź liczbę postaci (naciśnij "Zapisz i zastosuj" aby odświerzyć formularz)',
                 //'settings.main.charcount.tooltip': 'Wprowadź liczbę postaci (naciśnij "Save and Apply" aby odświerzyć formularz)',
-                'settings.account.openrewards': 'Otwieraj skrzynki',
-                'settings.account.openrewards.tooltip': 'Otwieraj skrzynki z zadań Przywództwa przy zmianie postaci',
-                'settings.account.refinead': 'Szlifuj diamenty',
-                'settings.account.refinead.tooltip': 'Przy zmianie postaci szlifuj diamenty astralne jeśli to możliwe',
-                'settings.account.runSCA': 'Uruchom Wybrzeże Mieczy',
-                'settings.account.runSCA.tooltip': 'Uruchom Wybrzeże Mieczy po wybraniu zadań profesji',
+                'settings.general.openrewards': 'Otwieraj skrzynki',
+                'settings.general.openrewards.tooltip': 'Otwieraj skrzynki z zadań Przywództwa przy zmianie postaci',
+                'settings.general.openInvocation': 'Otwieraj nagrody z inwokacji',
+                'settings.general.openInvocation.tooltip': 'Otwieraj nagrody z inwokacji - zajmują masę miejsca, bo się nie łączą w stosy',
+                'settings.general.keepOneUnopened': 'Pozostaw jedną skrzynkę nieotwartą',
+                'settings.general.keepOneUnopened.tooltip': 'Potrzebne do zarezerwowania miejsca na nagrody',
+                'settings.general.refinead': 'Szlifuj diamenty',
+                'settings.general.refinead.tooltip': 'Przy zmianie postaci szlifuj diamenty astralne jeśli to możliwe',
+                'settings.general.runSCA': 'Uruchom Wybrzeże Mieczy',
+                'settings.general.runSCA.tooltip': 'Uruchom Wybrzeże Mieczy po wybraniu zadań profesji',
+                'settings.profession.fillOptionals': 'Wypełniaj opcjonalnych pracowników',
+                'settings.profession.fillOptionals.tooltip': 'Pozwól na używanie większej ilości pracowników dla zadań, które na to pozwalają',
+                'settings.profession.autoPurchase': 'Autozakup surowców',
+                'settings.profession.autoPurchase.tooltip': 'Automatycznie kupuj wynagane surowce profesji ze sklepu (po 100 sztuk równocześnie)',
+                'settings.profession.trainAssets': 'Trenuj pracowników',
+                'settings.profession.trainAssets.tooltip': 'Pozwól na trenowanie/ulepszanie zwykłych pracowników',
+                'settings.profession.smartLeadership': 'Inteligentny przydział pracowników do Przywództwa',
+                'settings.profession.smartLeadership.tooltip': 'Próbuje przydzielić jak najmniej zwykłych pracowników do zadań przywództwa',
+                'settings.profession.skipPatrol': 'Pomiń zadanie Patrol jeśli masz >10 zezwoleń',
+                'settings.profession.skipPatrol.tooltip': 'Pomiń zadanie Przywództwa &quot;Patroluj kopalnie&quot; jeśli masz więcej niż 10 pozwoleń górniczych (Nigdy, Zawsze, Gdy wybrany profil to AD, jeśli poziom Przywództwa is &gt;= 20, lub jeśli obydwa poprzednie)',
+                'settings.consolid.consolidate': 'Konsoliduj AD przez ZAX',
+                'settings.consolid.consolidate.tooltip': 'Automatycznie próbuj wysyłać Diamenty Astralne przez wymianę ZEN i wypłacać na jednej postaci',
+                'settings.consolid.bankerName': 'Nazwa Bankiera',
+                'settings.consolid.bankerName.tooltip': 'Wprowadź nazwę postaci, która ma zbierać wszystkie Diamenty Astralne konta',
+                'settings.consolid.minToTransfer': 'Min AD do transferowania',
+                'settings.consolid.minToTransfer.tooltip': 'Minimalna ilość Diamentów Astralnych, przy której nastąpi próba przeniesienia do bankiera',
+                'settings.consolid.minCharBalance': 'Min AD do pozostawienia',
+                'settings.consolid.minCharBalance,tooltip': 'Minimalna ilość Diamentów Astralnych, które powinny pozostać na koncie postaci',
+                'settings.consolid.transferRate': 'Stawka AD za Zen',
+                'settings.consolid.transferRate.tooltip': 'Domyślna stawka Diamentów Astralnych za ZEN użyta do transferowania',
             },
             'fr': {
                 'translation.needed': 'traduction nécessaire',
