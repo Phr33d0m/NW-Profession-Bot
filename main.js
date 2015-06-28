@@ -2188,7 +2188,7 @@ function addProfile(profession, profile, base){
                     return profile.profileName === charSettingsList[curCharName].taskListSettingsManual[slotIndex].Profile;
                 })[0];
 
-                if (failedProfiles[_task.taskListName].indexOf(_profile.profileName) === -1) {
+                if (failedProfiles[_task.taskListName] && failedProfiles[_task.taskListName].indexOf(_profile.profileName) === -1) {
                     console.warn("Profile ", _profile.profileName, " for task ", _task.taskListName, " failed previously, skipping slot");
                     return false; // TODO: Should skip the slot and not the char entierly.
                 }
