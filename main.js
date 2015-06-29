@@ -101,6 +101,7 @@ var antiInfLoopTrap = {// without this script sometimes try to start the same ta
     currTaskName: "unknown", // name of the new task to launch
     trapActivation: 15 // number of repetition to activation trap 
 };
+var pleaseBuy = [];
 // Page Reloading function
 // Every second the page is idle or loading is tracked
 var loading_reset = false; // Enables a periodic reload if this is toggled on by the Auto Reload check box on the settings panel
@@ -1748,7 +1749,7 @@ function addProfile(profession, profile, base){
     var workerList = workerDefinition();
     var toolList = toolListDefinition();
 
-    var trackResources = [{
+    var defaultTrackResources = [{
         fname: 'Aqua Regia',
         name: 'Crafting_Resource_Aquaregia'
     }, {
@@ -1768,6 +1769,15 @@ function addProfile(profession, profile, base){
         name: 'Crafting_Resource_Elemental_Unified'
     }, 
 ];
+    var trackResources;
+    try {
+        trackResources = JSON.parse(GM_getValue("tracked_resources", null));
+    } catch (e) {
+        trackResources = null;
+    }
+    if (!trackResources) {
+        trackResources = defaultTrackResources;
+    };
 
     var defaultScriptSettings = {
         general: {
@@ -1848,6 +1858,7 @@ function addProfile(profession, profile, base){
         generalSettings: {
             refineAD: true,
             openRewards: false,
+            openInvocation: true,
             keepOneUnopened: false,
             runSCA: 'free',
             SCADailyReset: Date.now() - 24*60*60*1000,
@@ -1894,8 +1905,9 @@ function addProfile(profession, profile, base){
         },
         generalSettings: {
             refineAD: true,
-            keepOneUnopened: false,
             openRewards: false,
+            openInvocation: true,
+            keepOneUnopened: false,
             runSCA: 'free',
         },
         consolidationSettings: {
@@ -1990,6 +2002,7 @@ function addProfile(profession, profile, base){
         
         {scope: 'account', group: 'generalSettings', name: 'openRewards', title: tr('settings.general.openrewards'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openrewards.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'keepOneUnopened', title: tr('settings.general.keepOneUnopened'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.keepOneUnopened.tooltip')},
+        {scope: 'account', group: 'generalSettings', name: 'openInvocation', title: tr('settings.general.openInvocation'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openInvocation.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'refineAD', title: tr('settings.general.refinead'),           type: 'checkbox', pane: 'main', tooltip: tr('settings.general.refinead.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'runSCA', title: tr('settings.general.runSCA'),               type: 'select',   pane: 'main', tooltip: tr('settings.general.runSCA.tooltip'),
             opts: [ { name: 'never',        value: 'never'}, 
@@ -2028,6 +2041,7 @@ function addProfile(profession, profile, base){
         
         {scope: 'char', group: 'generalSettings', name: 'openRewards', title: tr('settings.general.openrewards'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openrewards.tooltip')},
         {scope: 'char', group: 'generalSettings', name: 'keepOneUnopened', title: tr('settings.general.keepOneUnopened'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.keepOneUnopened.tooltip')},
+        {scope: 'char', group: 'generalSettings', name: 'openInvocation', title: tr('settings.general.openInvocation'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openInvocation.tooltip')},
         {scope: 'char', group: 'generalSettings', name: 'refineAD',    title: tr('settings.general.keepOneUnopened'),           type: 'checkbox', pane: 'main', tooltip: tr('settings.general.refinead.tooltip')},
         {scope: 'char', group: 'generalSettings', name: 'runSCA',    title: tr('settings.general.runSCA'),               type: 'select',   pane: 'main', tooltip: tr('settings.general.runSCA.tooltip'),
             opts: [ { name: 'never',        value: 'never'}, 
@@ -2174,7 +2188,7 @@ function addProfile(profession, profile, base){
                     return profile.profileName === charSettingsList[curCharName].taskListSettingsManual[slotIndex].Profile;
                 })[0];
 
-                if (failedProfiles[_task.taskListName].indexOf(_profile.profileName) === -1) {
+                if (failedProfiles[_task.taskListName] && failedProfiles[_task.taskListName].indexOf(_profile.profileName) === -1) {
                     console.warn("Profile ", _profile.profileName, " for task ", _task.taskListName, " failed previously, skipping slot");
                     return false; // TODO: Should skip the slot and not the char entierly.
                 }
@@ -2645,6 +2659,9 @@ function addProfile(profession, profile, base){
                 // Matched profession auto-purchase item found but auto-purchase is not enabled
                 else if (!getSetting('professionSettings','autoPurchaseRes') && itemName.match(/^Crafting_Resource_(Charcoal|Rocksalt|Spool_Thread|Porridge|Solvent|Brimstone|Coal|Moonseasalt|Quicksilver|Spool_Threadsilk)$/)) {
                     console.log("Purchasable resource required:", itemName, "for task:", taskname, ". Recommend enabling Auto Purchase Resources.");
+                    if (pleaseBuy.push("Please buy " + itemName + " for " + unsafeWindow.client.getCurrentCharAtName()) > 5) {
+                        pleaseBuy.shift();
+                    }
                     return false;
                 }
                 // craftable ingredient set to search for
@@ -2714,6 +2731,11 @@ function addProfile(profession, profile, base){
 
         if (!taskList.length) {
             console.log("No ingredient tasks found for:", taskname, searchItem);
+            if (!searchItem.match(/(_Research)|(_Craftsman_)|(Crafted_)/)) {
+                if (pleaseBuy.push("Please buy " + searchItem + " for " + unsafeWindow.client.getCurrentCharAtName()) > 5) {
+                    pleaseBuy.shift();
+                }
+            }
             return false;
         }
 
@@ -2888,6 +2910,9 @@ function addProfile(profession, profile, base){
         if (_purchaseCount < 1) {
             // Not enough gold for 1 resource
             console.log("Purchasing profession resources failed for: ", item, " Have: ",_charCopperTotal, " Cost Per Item: ", _resourceCost[item], " Can buy: ", _resourcePurchasable);
+            if (pleaseBuy.push("Please buy " + item + " for " + unsafeWindow.client.getCurrentCharAtName()) > 5) {
+                pleaseBuy.shift();
+            }
             return false;
         } else {
             // Make purchase
@@ -3144,11 +3169,11 @@ function addProfile(profession, profile, base){
         var oldRefineToday = charStatisticsList[curCharName].general.refined | 0;
         var newRefineToday = unsafeWindow.client.dataModel.model.ent.main.currencies.diamondsconverted | 0;
         if (newRefineToday < oldRefineToday) {
-			if (accountSettings.generalSettings.SCADailyReset < Date.now() - 16*60*60*1000) {
-				accountSettings.generalSettings.SCADailyReset = Date.now();
-				GM_setValue("settings__account__" + loggedAccount, JSON.stringify(accountSettings));
-			}
-		}
+            if (accountSettings.generalSettings.SCADailyReset < Date.now() - 16*60*60*1000) {
+                accountSettings.generalSettings.SCADailyReset = Date.now();
+                GM_setValue("settings__account__" + loggedAccount, JSON.stringify(accountSettings));
+            }
+        }
 
         var refined_diamonds = 0;
         if (getSetting('generalSettings', 'refineAD')) {
@@ -3217,6 +3242,20 @@ function addProfile(profession, profile, base){
             });
         }
 
+        if (getSetting('generalSettings','openInvocation')) {
+            var _pbags = unsafeWindow.client.dataModel.model.ent.main.inventory.playerbags;
+            var _cRewardPat = /Invocation_Rp_Bag/;
+            console.log("Opening Invocation Rewards");
+            $.each(_pbags, function(bi, bag) {
+                bag.slots.forEach(function(slot) {
+                    if (slot && _cRewardPat.test(slot.name)) {
+                        window.setTimeout(function() {
+                            client.sendCommand('GatewayInventory_OpenRewardPack', slot.uid);
+                        }, 500);
+                    }
+                });
+            });
+        }
         // Check Vendor Options & Vendor matched items
         vendorJunk();
 
@@ -3251,18 +3290,21 @@ function addProfile(profession, profile, base){
             charStatisticsList[curCharName].trackedResources[ri] = 0;
         });
 
-        // Counting tracked resources
-        unsafeWindow.client.dataModel.model.ent.main.inventory.bags
-            .filter(function(bag) {
+        /*
+        unsafeWindow.client.dataModel.model.ent.main.inventory.bags            
+        .filter(function(bag) {
                 return bag.bagid == "CraftingResources"
             })
             .forEach(function(bag) {
-                bag.slots.forEach(function(slot) {
-                    trackResources.forEach(function(resource, ri) {
-                        if (slot && slot.name === resource.name) {
-                            charStatisticsList[curCharName].trackedResources[ri] += slot.count;
-                        }
-                    });
+            });
+
+        */
+        client.dataModel.model.ent.main.inventory.tradebag
+            .forEach(function(slot) {
+                trackResources.forEach(function(resource, ri) {
+                    if (slot && slot.name === resource.name) {
+                        charStatisticsList[curCharName].trackedResources[ri] += slot.count;
+                    }
                 });
             });
 
@@ -3382,7 +3424,7 @@ function addProfile(profession, profile, base){
 
         console.log("Next run for " + curCharName + " in " + parseInt(chardelay / 1000) + " seconds.");
         $("#prinfopane").empty();
-        var ptext = $("<h3 class='promo-image copy-top prh3'>Professions Robot<br />Next task for " + curCharName + "<br /><span data-timer='" + chardate + "' data-timer-length='2'></span><br />Diamonds: " + curdiamonds.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "<br />Gold: " + curgold + "</h3>")
+        var ptext = $("<h3 class='promo-image copy-top prh3'>Professions Robot<br />Next task for " + curCharName + "<br /><span data-timer='" + chardate + "' data-timer-length='2'></span><br />Diamonds: " + curdiamonds.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "<br />Gold: " + curgold + (pleaseBuy.length > 0 ? "<br />" : "") + pleaseBuy.join("<br />") + "</h3>")
             .appendTo("#prinfopane");
         
         if (not_active == charNamesList.length) {
@@ -3520,6 +3562,13 @@ function addProfile(profession, profile, base){
             return;
         }
 
+        if (pleaseBuy.length == 0) {
+            pleaseBuy['ts'] = Date.now() + 15*60*1000;
+        } else if ((pleaseBuy['ts']||0) < Date.now()) {
+            pleaseBuy.shift();
+            pleaseBuy['ts'] = Date.now() + 15*60*1000;
+        }
+        
         window.setTimeout(function() {
             loginProcess();
         }, delay.SHORT);
@@ -3592,8 +3641,8 @@ function addProfile(profession, profile, base){
                         tempCharsSetting = null;
                     }
                     if (!tempCharsSetting) {
-                        console.log('Character settings couldn\'t be retrieved, loading defaults.');
                         tempCharsSetting = {};
+                        console.log('Character settings couldn\'t be retrieved, loading defaults.');
                     };
                     charSettingsList[charName] = $.extend(true, {}, defaultCharSettings, tempCharsSetting);
                     charSettingsList[charName].charName = charName; // for compatibility 
@@ -3650,10 +3699,8 @@ function addProfile(profession, profile, base){
     function loadCharacter(charname) {
         // Load character and restart next load loop
         console.log("Loading gateway script for", charname);
-        if (unsafeWindow.location.hash != "#char(" + encodeURI(charname) + ")/professions" &&
-            unsafeWindow.location.hash != "#char(" + encodeURI(charname) + ")/") {
-                
-            unsafeWindow.location.hash = "#char(" + encodeURI(charname) + ")/";
+        if (unsafeWindow.location.hash != "#char(" + encodeURI(charname) + ")/professions") {
+            unsafeWindow.location.hash = "#char(" + encodeURI(charname) + ")/professions";
         }
         unsafeWindow.client.dataModel.loadEntityByName(charname);
 
@@ -3772,6 +3819,7 @@ function addProfile(profession, profile, base){
                 select.customProfiles { margin: 10px }\
                 textarea.customProfiles { width: 500px; height: 350px; margin: 10px 0; }\
                 .custom_profiles_delete { height: 16px; } #custom__profiles__viewbase_btn { height: 16px; } .custom_profiles_view {height: 16px; margin: 0 4px; }\
+                .custom_resources_delete { height: 16px; } .customResources input { margin: 10px }\
                 #settingsPanel table {border-collapse: collapse; }\
                 tr.totals > td { border-top: 1px solid grey; padding-top: 3px; } \
                 .rarity_Gold {color: blue; } .rarity_Silver {color: green; } .rarity_Special {color: purple; }  \
@@ -3976,7 +4024,7 @@ function addProfile(profession, profile, base){
                     temp_html += '<td>' + cProfile.profile.profileName + '</td>';
                 temp_html += '<td><button class="custom_profiles_view" value=' + idx + '></button><button class="custom_profiles_delete" value=' + idx + '></button></td>';
             });
-            temp_html += '</ul>';
+            temp_html += '</table>';
             tab.html(temp_html);
             
             $( ".custom_profiles_view" ).button({
@@ -4079,12 +4127,77 @@ function addProfile(profession, profile, base){
                 }, 0);
             });
             
+            //Tracked resources tab
+            tab = addTab("#script_settings", tr('tab.trackedResources'));
+            var temp_html = 'Insert human readable resource name and NeverWinter gateway internal resource name (from Inventory Listing)';
+            temp_html += '<div class="customResources"><label>Resource name: </label>';
+            temp_html += '<input type="text" name="" id="custom_resource_fname" \>';
+            temp_html += '<label>Inventory name: </label>';
+            temp_html += '<input type="text" name="" id="custom_resource_name" \>';
+            temp_html += '<button id="custom_resources_add_btn">Add</button></div>';
+            temp_html += '</div>';
+            temp_html += '<table><tr><th>#</th><th>Resource Name</th><th><th></tr>';
+
+            trackResources.forEach(function (trRes, idx) {
+                temp_html += '<tr><td>' + (idx+1) + '</td>';
+                temp_html += '<td>' + trRes.fname + '</td>';
+                temp_html += '<td><button class="custom_resources_delete" value=' + idx + '></button></td>';
+            });
+            temp_html += '</table>';
+            tab.html(temp_html);
+
+            $( ".custom_resources_delete" ).button({
+                icons: {
+                    primary: "ui-icon-trash"
+                },
+                text: false
+            });
+            $( ".custom_resources_delete" ).click( function(e) {
+                if ( !loggedAccount ) {
+                    var str = "Tracked resource could not be removed, make sure you are logged in.";
+                    $('<div id="dialog-error-inventory" title="Error deleting tracked resource">' + str + '</div>').dialog({
+                          resizable: true,
+                          width: 500,
+                          modal: false,
+                        });
+                    return;
+                }
+                var pidx = $(this).val();
+                trackResources.splice(pidx,1);
+                GM_setValue("tracked_resources", JSON.stringify(trackResources));
+                charNamesList.forEach( function (charName) {
+                    charStatisticsList[charName].trackedResources.splice(pidx, 1);
+                    GM_setValue("statistics__char__" + charName + "@" + loggedAccount , JSON.stringify(charStatisticsList[charName]));
+                });
+                window.setTimeout(function() {
+                    unsafeWindow.location.href = current_Gateway;
+                }, 0);
+            });
+
+            $('#custom_resources_add_btn').button();
+            $('#custom_resources_add_btn').click( function (e) {
+                var _fname = $("#custom_resource_fname").val();
+                var _name = $("#custom_resource_name").val();
+                if ( _fname.length == 0 || _name.length == 0) {
+					var str = "Tracked resource could not be added. You have to enter both values!";
+                    $('<div id="dialog-error-inventory" title="Error adding tracked resource">' + str + '</div>').dialog({
+                          resizable: true,
+                          width: 500,
+                          modal: false,
+                        });
+                    return;
+                }
+                trackResources.push({ fname: _fname, name: _name });
+                GM_setValue("tracked_resources", JSON.stringify(trackResources));
+                window.setTimeout(function() {
+                    unsafeWindow.location.href = current_Gateway;
+                }, 0);
+            });
+
             $("#script_settings").tabs({ active: false, collapsible: true });
             setEventHandlers = true;
         }
-        
-        
-        
+
         // Refresh is needed / Loading all the info (account, statistics and chars)
         if (UIaccount != loggedAccount) {
             UIaccount = loggedAccount;
@@ -4918,6 +5031,7 @@ function addProfile(profession, profile, base){
                 'tab.scriptSettings': 'Script settings',
                 'tab.advanced': 'Advanced',
                 'tab.customProfiles': 'Custom profiles',
+                'tab.trackedResources': 'Tracked resources',
                 'tab.general': 'General settings',
                 'tab.professions': 'Professions',
                 'tab.vendor': 'Vendor options',
@@ -4957,6 +5071,8 @@ function addProfile(profession, profile, base){
                 //'settings.main.charcount.tooltip': 'Enter number of characters to use (Save and Apply to update settings form)',
                 'settings.general.openrewards': 'Open Reward Chests',
                 'settings.general.openrewards.tooltip': 'Enable opening of leadership chests on character switch',
+                'settings.general.openInvocation': 'Open Invocation Rewards',
+                'settings.general.openInvocation.tooltip': 'Enable opening rewards from invocation',
                 'settings.general.keepOneUnopened': 'Keep one reward box unopened',
                 'settings.general.keepOneUnopened.tooltip': 'Used to reserve the slots for the reward boxes',
                 'settings.general.refinead': 'Refine AD',
@@ -4990,6 +5106,7 @@ function addProfile(profession, profile, base){
                 'tab.scriptSettings': 'Ustawienia skryptu',
                 'tab.advanced': 'Zaawansowane',
                 'tab.customProfiles': 'Własne profile',
+                'tab.trackedResources': 'Śledzone surowce',
                 'tab.general': 'Ogólne',
                 'tab.professions': 'Profesje',
                 'tab.vendor': 'Kupiec',
@@ -5029,6 +5146,8 @@ function addProfile(profession, profile, base){
                 //'settings.main.charcount.tooltip': 'Wprowadź liczbę postaci (naciśnij "Save and Apply" aby odświerzyć formularz)',
                 'settings.general.openrewards': 'Otwieraj skrzynki',
                 'settings.general.openrewards.tooltip': 'Otwieraj skrzynki z zadań Przywództwa przy zmianie postaci',
+                'settings.general.openInvocation': 'Otwieraj nagrody z inwokacji',
+                'settings.general.openInvocation.tooltip': 'Otwieraj nagrody z inwokacji - zajmują masę miejsca, bo się nie łączą w stosy',
                 'settings.general.keepOneUnopened': 'Pozostaw jedną skrzynkę nieotwartą',
                 'settings.general.keepOneUnopened.tooltip': 'Potrzebne do zarezerwowania miejsca na nagrody',
                 'settings.general.refinead': 'Szlifuj diamenty',
