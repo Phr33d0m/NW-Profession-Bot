@@ -1045,7 +1045,7 @@ function addProfile(profession, profile, base){
                 "Crafted_Med_Armorsmithing_Scale_T4_Purple_Pants_Dps", //Berserker's Exquisite Elemental Chausses
                 "Crafted_Med_Armorsmithing_Scale_T4_Purple_Shirt_Tank", //Berserker's Exquisite Elemental Chainmail
 
-                "Crafted_Med_Armorsmithing_Chain_T4_Green_Pants_Dps",//Berserker's Elemental Chainmail
+                "Crafted_Med_Armorsmithing_Chain_T4_Green_Pants_Dps",//Zealot's Elemental Chausses
                 "Med_Armorsmithing_Tier3_Refine_Basic"
                 ],
             },
@@ -1333,7 +1333,7 @@ function addProfile(profession, profile, base){
                 'Leatherworking_Tier4_Leather_Pants_Special_2_Set2', //Exquisite Elemental Trousers
                 'Leatherworking_Tier4_Leather_Shirt_Special_2_Set2', //Exquisite Elemental Tunic
                 'Leatherdeworking_Tier4_Leather_Shirt_Special_2', //Exquisite Elemental Shirt
-                'Leatherworking_Tier4_Leather_Pants2', //Elemental Leather Trousers 
+                'Leatherworking_Tier4_Leather_Pants2', //Elemental Leather Pants 
                 'Leatherworking_Tier3_Gather_Basic'
                     ]
         }
@@ -3806,7 +3806,8 @@ function addProfile(profession, profile, base){
                 table.professionRanks { border-collapse: collapse; } \
                 table.professionRanks td { height: 14px; } \
                 td.ranked2, td.tranked2 { border-bottom: solid 1px #555; border-top: dashed 1px #888 }\
-                table.withRotation td.rotate, table.withRotation th.rotate { height: 100px; } \
+                #resource_tracker {overflow-x:auto;}\
+                table.withRotation td.rotate, table.withRotation th.rotate { height: 250px; } \
                 table.withRotation td.rotate, table.withRotation th.rotate > div { transform: translate(0, 30px) rotate(290deg); width: 30px; } \
                 table.withRotation td.rotate, table.withRotation th.rotate > div > span { border-bottom: 1px solid #ccc; padding: 5px 10px; white-space: nowrap; } \
                 input[type='checkbox'].settingsInput { margin: 5px 10px 5px 5px;  }\
