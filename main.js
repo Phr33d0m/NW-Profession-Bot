@@ -3835,7 +3835,7 @@ function addProfile(profession, profile, base){
                 table.professionRanks td { height: 14px; } \
                 td.ranked2, td.tranked2 { border-bottom: solid 1px #555; border-top: dashed 1px #888 }\
                 #resource_tracker {overflow-x:auto;}\
-                table.withRotation td.rotate, table.withRotation th.rotate { height: 250px; } \
+                table.withRotation td.rotate, table.withRotation th.rotate { height: 125px; } \
                 table.withRotation td.rotate, table.withRotation th.rotate > div { transform: translate(0, 30px) rotate(290deg); width: 30px; } \
                 table.withRotation td.rotate, table.withRotation th.rotate > div > span { border-bottom: 1px solid #ccc; padding: 5px 10px; white-space: nowrap; } \
                 table.withRotation td { border-right: 1px solid #ccc;} \
