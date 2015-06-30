@@ -288,6 +288,7 @@ function _select_Gateway() { // Check for Gateway used to
     var curCharFullName = '';
     var chartimers = {};
     var maxLevel = 25;
+    var waitingNextChar = false;
     var delay = {
         SHORT: 1000,
         MEDIUM: 5000,
@@ -1751,22 +1752,28 @@ function addProfile(profession, profile, base){
 
     var defaultTrackResources = [{
         fname: 'Aqua Regia',
-        name: 'Crafting_Resource_Aquaregia'
+        name: 'Crafting_Resource_Aquaregia',
+        bank: false, unbound: true, btc: true, bta: true
     }, {
         fname: 'Aqua Vitae',
-        name: 'Crafting_Resource_Aquavitae'
+        name: 'Crafting_Resource_Aquavitae',
+        bank: false, unbound: true, btc: true, bta: true
     }, {
         fname: 'Residuum',
-        name: 'Crafting_Resource_Residuum'
+        name: 'Crafting_Resource_Residuum',
+        bank: false, unbound: true, btc: true, bta: true
     }, {
         fname: 'Mining Claim',
-        name: 'Crafting_Resource_Mining_Claim'
+        name: 'Crafting_Resource_Mining_Claim',
+        bank: false, unbound: true, btc: true, bta: true
     }, {
         fname: 'Elemental Aggregate',
-        name: 'Crafting_Resource_Elemental_Aggregate'
+        name: 'Crafting_Resource_Elemental_Aggregate',
+        bank: false, unbound: true, btc: true, bta: true
     }, {
         fname: 'Unified Elements',
-        name: 'Crafting_Resource_Elemental_Unified'
+        name: 'Crafting_Resource_Elemental_Unified',
+        bank: false, unbound: true, btc: true, bta: true
     }, 
 ];
     var trackResources;
@@ -2423,8 +2430,9 @@ function addProfile(profession, profile, base){
             failedTasksList.push(prof.taskListName);
             if (typeof failedProfiles[prof.taskListName] === 'undefined') {
                 failedProfiles[prof.taskListName] = [];
-                failedProfiles[prof.taskListName].push(profile.profileName);
             }
+            failedProfiles[prof.taskListName].push(profile.profileName);
+            
             dfdNextRun.resolve(delay.SHORT);
             //switchChar();
             return false;
@@ -3290,24 +3298,42 @@ function addProfile(profession, profile, base){
             charStatisticsList[curCharName].trackedResources[ri] = 0;
         });
 
-        /*
-        unsafeWindow.client.dataModel.model.ent.main.inventory.bags            
-        .filter(function(bag) {
-                return bag.bagid == "CraftingResources"
-            })
-            .forEach(function(bag) {
-            });
-
-        */
-        client.dataModel.model.ent.main.inventory.tradebag
-            .forEach(function(slot) {
+        // Counting main inventory bags
+        unsafeWindow.client.dataModel.model.ent.main.inventory.playerbags
+        .forEach(function (bag) {
+            bag.slots.forEach( function (slot, slotNum) {
+                if (!slot) return;
                 trackResources.forEach(function(resource, ri) {
-                    if (slot && slot.name === resource.name) {
-                        charStatisticsList[curCharName].trackedResources[ri] += slot.count;
+                    if (slot.name === resource.name) {
+                        if ((trackResources.unbound && !slot.bound && !slot.boundtoaccount) ||
+                            (trackResources.btc && slot.bound && !slot.boundtoaccount) ||
+                            (trackResources.bta && slot.boundtoaccount)) {
+                            charStatisticsList[curCharName].trackedResources[ri] += slot.count;
+                        }
                     }
                 });
             });
+        });
 
+        // Counting the rest of the bags
+        trackResources.forEach(function(resource, ri) {
+            unsafeWindow.client.dataModel.model.ent.main.inventory.bags
+            .filter(function(bag) {
+                    return ((["CraftingResources", "Overflow", "CraftingInventory"].indexOf(bag.bagid) != -1) || (resource.bank && bag.bagid == "Bank"));
+                })
+                .forEach(function(bag) {
+                    bag.slots.forEach( function (slot, slotNum) {
+                        if (slot && slot.name === resource.name) {
+                            if ((trackResources.unbound && !slot.bound && !slot.boundtoaccount) ||
+                                (trackResources.btc && slot.bound && !slot.boundtoaccount) ||
+                                (trackResources.bta && slot.boundtoaccount)) {
+                                charStatisticsList[curCharName].trackedResources[ri] += slot.count;
+                            }
+                        }
+                    });                    
+                });
+        });
+        
         // Slot assignment
         unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.forEach(function(slot, ix) {
             charStatisticsList[curCharName].slotUse[ix] = slot.category;
@@ -3520,7 +3546,8 @@ function addProfile(profession, profile, base){
      */
 
     function process() {
-
+        waitingNextChar = false;
+    
         // Calculating last daily reset time
         var today = new Date();
         var todayRest = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 10,0,0));
@@ -3575,6 +3602,7 @@ function addProfile(profession, profile, base){
 
         // Continue again later
         dfdNextRun.done(function(delayTimer) {
+            waitingNextChar = true;
             dfdNextRun = $.Deferred();
             timerHandle = window.setTimeout(function() {
                 process();
@@ -3819,7 +3847,8 @@ function addProfile(profession, profile, base){
                 select.customProfiles { margin: 10px }\
                 textarea.customProfiles { width: 500px; height: 350px; margin: 10px 0; }\
                 .custom_profiles_delete { height: 16px; } #custom__profiles__viewbase_btn { height: 16px; } .custom_profiles_view {height: 16px; margin: 0 4px; }\
-                .custom_resources_delete { height: 16px; } .customResources input { margin: 10px }\
+                .custom_resources_delete { height: 16px; } .customResources input:not([type='checkbox']) { margin: 3px 10px } .customResources label { margin-right: 10px; }\
+                .customResources input[type='checkbox'] { margin-right: 10px } .customResources button { margin: 0 10px } div.customResources { margin: 10px 0;} \
                 #settingsPanel table {border-collapse: collapse; }\
                 tr.totals > td { border-top: 1px solid grey; padding-top: 3px; } \
                 .rarity_Gold {color: blue; } .rarity_Silver {color: green; } .rarity_Special {color: purple; }  \
@@ -3940,18 +3969,24 @@ function addProfile(profession, profile, base){
                     });
                     str += '</table><br/>';
                 });
-                
-                str += '<div>Resources</div>';
-                str += inv_tbl_head;
-                var bag = _inventory.tradebag;
-                bag = bag.slice(0,slotCnt);
-                bag.forEach( function (slot, slotNum) {
-                    if (!slot) return;
-                    str += '<tr><td>' + slotNum + 
-                        '</td><td>' + slot.count + '</td><td class=" rarity_' + slot.rarity + '">' + slot.name +
-                        '</td><td>' + slot.rarity + '</td><td>' + (slot.bound || slot.boundtoaccount) +  '</td></tr>';
+
+
+                _inventory.bags.filter(function(bag) {
+                    return (["CraftingResources", "Overflow", "CraftingInventory", "Bank"].indexOf(bag.bagid) != -1);
                 })
-                str += '</table>';
+                .forEach(function(bag) {
+                    str += '<div>' + bag.bagid + '</div>';
+                    str += inv_tbl_head;
+                    bag.slots.forEach( function (slot, slotNum) {
+                        if (!slot) return;
+                        str += '<tr><td>' + slotNum + 
+                            '</td><td>' + slot.count + '</td><td class=" rarity_' + slot.rarity + '">' + slot.name +
+                            '</td><td>' + slot.rarity + '</td><td>' + (slot.bound || slot.boundtoaccount) +  '</td></tr>';
+                    });
+                    str += '</table><br />';
+                });
+        
+                
                 
                 $('<div id="dialog-inventory" title="Inventory listing">' + str + '</div>').dialog({
                       resizable: true,
@@ -4022,7 +4057,7 @@ function addProfile(profession, profile, base){
                 temp_html += '<td>' + cProfile.baseProfile + '</td>';
                 if (typeof cProfile.profile === 'object')
                     temp_html += '<td>' + cProfile.profile.profileName + '</td>';
-                temp_html += '<td><button class="custom_profiles_view" value=' + idx + '></button><button class="custom_profiles_delete" value=' + idx + '></button></td>';
+                temp_html += '<td><button class="custom_profiles_view" value=' + idx + '></button><button class="custom_profiles_delete" value=' + idx + '></button></td></tr>';
             });
             temp_html += '</table>';
             tab.html(temp_html);
@@ -4134,16 +4169,25 @@ function addProfile(profession, profile, base){
             temp_html += '<input type="text" name="" id="custom_resource_fname" \>';
             temp_html += '<label>Inventory name: </label>';
             temp_html += '<input type="text" name="" id="custom_resource_name" \>';
-            temp_html += '<button id="custom_resources_add_btn">Add</button></div>';
+            temp_html += '<br />'
+            temp_html += '<input type="checkbox" name="" id="custom_resource_countbank" \><label>Count in bank</label>';
+            temp_html += '<input type="checkbox" name="" id="custom_resource_unbound" checked="checked" \><label>unbound </label>';
+            temp_html += '<input type="checkbox" name="" id="custom_resource_btc" checked="checked" \><label>BtC </label>';
+            temp_html += '<input type="checkbox" name="" id="custom_resource_bta" checked="checked" \><label>BtA </label>';
+            temp_html += '<button id="custom_resources_add_btn">Add</button>';
             temp_html += '</div>';
-            temp_html += '<table><tr><th>#</th><th>Resource Name</th><th><th></tr>';
+            temp_html += '<table><tr><th>#</th><th>Resource Name</th><th>bank</th><th>unbound</th><th>BtC</th><th>BtA</th><th><th></tr>';
 
             trackResources.forEach(function (trRes, idx) {
                 temp_html += '<tr><td>' + (idx+1) + '</td>';
                 temp_html += '<td>' + trRes.fname + '</td>';
-                temp_html += '<td><button class="custom_resources_delete" value=' + idx + '></button></td>';
+                temp_html += '<td><span class=" ui-icon ' + (trRes.bank ? 'ui-icon-check' : 'ui-icon-close') + '"></span></td>'; 
+                temp_html += '<td><span class=" ui-icon ' + (trRes.unbound ? 'ui-icon-check' : 'ui-icon-close') + '"></span></td>'; 
+                temp_html += '<td><span class=" ui-icon ' + (trRes.btc ? 'ui-icon-check' : 'ui-icon-close') + '"></span></td>'; 
+                temp_html += '<td><span class=" ui-icon ' + (trRes.bta ? 'ui-icon-check' : 'ui-icon-close') + '"></span></td>'; 
+                temp_html += '<td><button class="custom_resources_delete" value=' + idx + '></button></td></tr>';
             });
-            temp_html += '</table>';
+            temp_html += '</table><br /><button id="custom_resources_reset">Reset to default</button>';
             tab.html(temp_html);
 
             $( ".custom_resources_delete" ).button({
@@ -4173,11 +4217,36 @@ function addProfile(profession, profile, base){
                     unsafeWindow.location.href = current_Gateway;
                 }, 0);
             });
+            
+            $( "#custom_resources_reset" ).button();
+            $( "#custom_resources_reset" ).click( function(e) {
+                if ( !loggedAccount ) {
+                    var str = "Tracked resource could not be removed, make sure you are logged in.";
+                    $('<div id="dialog-error-inventory" title="Error deleting tracked resource">' + str + '</div>').dialog({
+                          resizable: true,
+                          width: 500,
+                          modal: false,
+                        });
+                    return;
+                }
+                GM_deleteValue("tracked_resources");
+                charNamesList.forEach( function (charName) {
+                    charStatisticsList[charName].trackedResources = [];
+                    GM_setValue("statistics__char__" + charName + "@" + loggedAccount , JSON.stringify(charStatisticsList[charName]));
+                });
+                window.setTimeout(function() {
+                    unsafeWindow.location.href = current_Gateway;
+                }, 0);
+            });
 
             $('#custom_resources_add_btn').button();
             $('#custom_resources_add_btn').click( function (e) {
                 var _fname = $("#custom_resource_fname").val();
                 var _name = $("#custom_resource_name").val();
+                var _bank = $("#custom_resource_countbank").prop('checked');
+                var _unbound = $("#custom_resource_name").prop('checked');
+                var _btc = $("#custom_resource_btc").prop('checked');
+                var _bta = $("#custom_resource_bta").prop('checked');
                 if ( _fname.length == 0 || _name.length == 0) {
 					var str = "Tracked resource could not be added. You have to enter both values!";
                     $('<div id="dialog-error-inventory" title="Error adding tracked resource">' + str + '</div>').dialog({
@@ -4187,12 +4256,14 @@ function addProfile(profession, profile, base){
                         });
                     return;
                 }
-                trackResources.push({ fname: _fname, name: _name });
+                trackResources.push({ fname: _fname, name: _name, bank: _bank, btc: _btc, bta: _bta });
                 GM_setValue("tracked_resources", JSON.stringify(trackResources));
                 window.setTimeout(function() {
                     unsafeWindow.location.href = current_Gateway;
                 }, 0);
             });
+
+
 
             $("#script_settings").tabs({ active: false, collapsible: true });
             setEventHandlers = true;
@@ -4874,13 +4945,14 @@ function addProfile(profession, profile, base){
                 console.log("Reseting for " + charNamesList[value-1]);
                 chartimers[parseInt(value)-1] = null;
                 updateCounters();
-                clearTimeout(timerHandle);
-                curCharNum = GM_setValue("curCharNum_" + loggedAccount, parseInt(value)-1);
-                timerHandle = window.setTimeout(function() {
-                    process();
-                }, delay.SHORT);
+                if (waitingNextChar) {
+                    clearTimeout(timerHandle);
+                    curCharNum = GM_setValue("curCharNum_" + loggedAccount, parseInt(value)-1);
+                    timerHandle = window.setTimeout(function() {
+                        process();
+                    }, delay.SHORT);
+                }
             } 
-            
         });
     }
 
