@@ -3270,6 +3270,7 @@ function addProfile(profession, profile, base){
         // MAC-NW (endchanges)
 
         // Updating statistics
+        console.log('Updating statistics');
         var _stat = charStatisticsList[curCharName].general;
         var _chardata = unsafeWindow.client.dataModel.model.ent.main.currencies;
         _stat.lastVisit = Date.now();
@@ -3305,9 +3306,9 @@ function addProfile(profession, profile, base){
                 if (!slot) return;
                 trackResources.forEach(function(resource, ri) {
                     if (slot.name === resource.name) {
-                        if ((trackResources.unbound && !slot.bound && !slot.boundtoaccount) ||
-                            (trackResources.btc && slot.bound && !slot.boundtoaccount) ||
-                            (trackResources.bta && slot.boundtoaccount)) {
+                        if ((resource.unbound && !slot.bound && !slot.boundtoaccount) ||
+                            (resource.btc && slot.bound && !slot.boundtoaccount) ||
+                            (resource.bta && slot.boundtoaccount)) {
                             charStatisticsList[curCharName].trackedResources[ri] += slot.count;
                         }
                     }
@@ -3319,14 +3320,14 @@ function addProfile(profession, profile, base){
         trackResources.forEach(function(resource, ri) {
             unsafeWindow.client.dataModel.model.ent.main.inventory.bags
             .filter(function(bag) {
-                    return ((["CraftingResources", "Overflow", "CraftingInventory"].indexOf(bag.bagid) != -1) || (resource.bank && bag.bagid == "Bank"));
+                    return ((["CraftingResources", "Overflow", "CraftingInventory"].indexOf(bag.bagid) > -1) || (resource.bank && bag.bagid == "Bank"));
                 })
                 .forEach(function(bag) {
                     bag.slots.forEach( function (slot, slotNum) {
                         if (slot && slot.name === resource.name) {
-                            if ((trackResources.unbound && !slot.bound && !slot.boundtoaccount) ||
-                                (trackResources.btc && slot.bound && !slot.boundtoaccount) ||
-                                (trackResources.bta && slot.boundtoaccount)) {
+                            if ((resource.unbound && !slot.bound && !slot.boundtoaccount) ||
+                                (resource.btc && slot.bound && !slot.boundtoaccount) ||
+                                (resource.bta && slot.boundtoaccount)) {
                                 charStatisticsList[curCharName].trackedResources[ri] += slot.count;
                             }
                         }
