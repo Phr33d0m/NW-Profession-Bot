@@ -3126,7 +3126,13 @@ function _select_Gateway() { // Check for Gateway used to
 
         // Slot assignment
         unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.forEach(function(slot, ix) {
-            charStatisticsList[curCharName].slotUse[ix] = slot.category;
+            if (!slot.islockedslot && slot.category !== "None") {
+                charStatisticsList[curCharName].slotUse[ix] = slot.category;
+            } else if (slot.islockedslot) {
+                charStatisticsList[curCharName].slotUse[ix] = "----"; // Locked Slot
+            } else {
+                charStatisticsList[curCharName].slotUse[ix] = "OPEN"; // Un-Assigned Slot!!!
+            }
         });
 
         // Workers and tools assignment and qty
