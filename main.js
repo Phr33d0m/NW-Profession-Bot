@@ -1851,6 +1851,7 @@ function addProfile(profession, profile, base){
             vendorPots3: false,
             vendorPots4: false,
             vendorPots5: false,
+            vendorHealingPots: false,
             vendorEnchR1: false,
             vendorEnchR2: false,
             vendorEnchR3: false,
@@ -1899,6 +1900,7 @@ function addProfile(profession, profile, base){
             vendorPots3: false,
             vendorPots4: false,
             vendorPots5: false,
+            vendorHealingPots: false,
             vendorEnchR1: false,
             vendorEnchR2: false,
             vendorEnchR3: false,
@@ -2033,6 +2035,7 @@ function addProfile(profession, profile, base){
         {scope: 'account', group: 'vendorSettings', name:'vendorPots3',     type:'checkbox', pane:'vend',   title:'Auto Vendor potions (lvl 30)',       tooltip:'Vendor all potions (lvl 30) found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorPots4',     type:'checkbox', pane:'vend',   title:'Auto Vendor greater potions (lvl 45)',   tooltip:'Vendor all greater potions (lvl 45) found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorPots5',     type:'checkbox', pane:'vend',   title:'Auto Vendor major potions (lvl 60)',     tooltip:'Auto Vendor major potions (lvl 60)'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorHealingPots',     type:'checkbox', pane:'vend',   title:'Auto Vendor healing potions (1-60)',     tooltip:'Auto Vendor healing potions (lvl 60)'},
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
@@ -2076,6 +2079,7 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorHealingPots',     type:'checkbox', pane:'vend',   title:'Auto Vendor healing potions (1-60)',     tooltip:'Auto Vendor healing potions (lvl 60)'},        
         {scope: 'char', group: 'consolidationSettings', name:'consolidate',    type:'checkbox', pane:'bank', title: tr('settings.consolid.consolidate'),    tooltip: tr('settings.consolid.consolidate.tooltip'), border:true},
         {scope: 'char', group: 'consolidationSettings', name:'minToTransfer',  type:'text',     pane:'bank', title: tr('settings.consolid.minToTransfer'),  tooltip: tr('settings.consolid.minToTransfer.tooltip')},
         {scope: 'char', group: 'consolidationSettings', name:'minCharBalance', type:'text',     pane:'bank', title: tr('settings.consolid.minCharBalance'), tooltip: tr('settings.consolid.minCharBalance,tooltip')},
@@ -3300,10 +3304,14 @@ function addProfile(profession, profile, base){
         });
 
         // Counting main inventory bags
+        charStatisticsList[curCharName].general.emptyBagSlots = 0;
         unsafeWindow.client.dataModel.model.ent.main.inventory.playerbags
         .forEach(function (bag) {
             bag.slots.forEach( function (slot, slotNum) {
-                if (!slot) return;
+                if (!slot) {
+                    charStatisticsList[curCharName].general.emptyBagSlots += 1;
+                    return;
+                }
                 trackResources.forEach(function(resource, ri) {
                     if (slot.name === resource.name) {
                         if ((resource.unbound && !slot.bound && !slot.boundtoaccount) ||
@@ -4861,12 +4869,14 @@ function addProfile(profession, profile, base){
 
         // Resource tracker update.
         html = "<table class='withRotation'><tr><th class='rotate'><div><span>Character Name</div></span></th>";
+        html += "<th class='rotate'><div><span>Main bags empty slots</div></span></th>";
         trackResources.forEach(function(item) {
             html += "<th class='rotate'><div><span>" + item.fname + "</div></span></th>";
         })
         html += '</tr>';
         charNamesList.forEach(function(charName) {
             html += '<tr><td>' + charName + '</td>';
+            html += '<td>' + charStatisticsList[charName].general.emptyBagSlots + '</td>';
             charStatisticsList[charName].trackedResources.forEach(function(count) {
                 html += '<td>' + count + '</td>';
             })
@@ -5052,6 +5062,13 @@ function addProfile(profession, profile, base){
                 limit: 0
             };
         }
+        if (getSetting('vendorSettings', 'vendorHealingPots')) {
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Potion_Healing(|_[1-5])$/,
+                limit: 0
+            };
+        }        
+        
         if (getSetting('vendorSettings', 'vendorJunk')) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Item_Snowworks_/,
@@ -5075,6 +5092,22 @@ function addProfile(profession, profile, base){
             };
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Object_Decoration_/,
+                limit: 0
+            };
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Object_Gem_/,
+                limit: 0
+            };
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Object_Jewelry_/,
+                limit: 0
+            };
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Object_Mug_/,
+                limit: 0
+            };
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Object_Trinket_/,
                 limit: 0
             };
             _vendorItems[_vendorItems.length] = {
