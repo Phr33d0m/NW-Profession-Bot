@@ -4261,7 +4261,7 @@ function addProfile(profession, profile, base){
                 var _fname = $("#custom_resource_fname").val();
                 var _name = $("#custom_resource_name").val();
                 var _bank = $("#custom_resource_countbank").prop('checked');
-                var _unbound = $("#custom_resource_name").prop('checked');
+                var _unbound = $("#custom_resource_unbound").prop('checked');
                 var _btc = $("#custom_resource_btc").prop('checked');
                 var _bta = $("#custom_resource_bta").prop('checked');
                 if ( _fname.length == 0 || _name.length == 0) {
@@ -4273,7 +4273,7 @@ function addProfile(profession, profile, base){
                         });
                     return;
                 }
-                trackResources.push({ fname: _fname, name: _name, bank: _bank, btc: _btc, bta: _bta });
+                trackResources.push({ fname: _fname, name: _name, bank: _bank, unbound: _unbound, btc: _btc, bta: _bta });
                 GM_setValue("tracked_resources", JSON.stringify(trackResources));
                 window.setTimeout(function() {
                     unsafeWindow.location.href = current_Gateway;
