@@ -5152,9 +5152,21 @@ function addProfile(profession, profile, base){
                 limit: 0
             };
             _vendorItems[_vendorItems.length] = {
-                pattern: /_Green_T[1-5]_Unid$/,
+                pattern: /_Green_T[1-7]_Unid$/,
                 limit: 0
             }; // Unidentified Green Gear
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Object_Trinket_/,
+                limit: 0
+            }; 
+             _vendorItems[_vendorItems.length] = {
+                pattern: /^Object_Skill_/,
+                limit: 0
+            };
+             _vendorItems[_vendorItems.length] = {
+                pattern: /^Magic Focus$/,
+                limit: 0
+            };
         }
         
         if (getSetting('vendorSettings', 'vendorProfResults')) {
