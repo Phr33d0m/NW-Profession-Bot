@@ -3289,7 +3289,7 @@ function addProfile(profession, profile, base){
 
         if (getSetting('generalSettings','openInvocation')) {
             var _pbags = unsafeWindow.client.dataModel.model.ent.main.inventory.playerbags;
-            var _cRewardPat = /Invocation_Rp_Bag/;
+            var _cRewardPat = /Invocation_Rp_Bag|Invocation_Reward_Celestial_Artifact_Equipment_Box|Invocation_Reward_Celestial_Artifacts_Box|Invocation_Reward_Celestial_Enchantments_Box/;
             console.log("Opening Invocation Rewards");
             $.each(_pbags, function(bi, bag) {
                 bag.slots.forEach(function(slot) {
