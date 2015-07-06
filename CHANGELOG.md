@@ -1,4 +1,11 @@
 RELEASE NOTES
+4.2
+- Added "Resource Tracker" tab
+- Added "to buy" notification for missing resources
+- Added new professions & some hotfixes for some profiles
+- New profile syntax
+- addProfile() functionality changed a bit to adapt to our new profile syntax
+- A lot of fixes here and there
 4.1
 - Added failsafe to prevent script getting stuck when can't claim task result
 - AddProfile() improved (thanks dlebedynskyi)
