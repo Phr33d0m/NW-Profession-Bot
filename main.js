@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.1
+// @version 4.2
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -37,6 +37,13 @@ Developers & Contributors
 - WloBeb
 
 RELEASE NOTES
+4.2
+- Added "Resource Tracker" tab
+- Added "to buy" notification for missing resources
+- Added new professions & some hotfixes for some profiles
+- New profile syntax
+- addProfile() functionality changed a bit to adapt to our new profile syntax
+- A lot of fixes here and there
 4.1
 - Added failsafe to prevent script getting stuck when can't claim task result
 - AddProfile() improved (thanks dlebedynskyi)
@@ -68,7 +75,7 @@ http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
 
 // Make sure it's running on the main page, no frames
 
-var scriptVersion = 4.1;
+var scriptVersion = 4.2;
 var forceSettingsResetOnUpgrade = true;
 var forceResetOnVerBelow = 3.5;
 
