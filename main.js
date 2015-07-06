@@ -5245,7 +5245,7 @@ function addProfile(profession, profile, base){
                 'settings.profession.skipPatrol': 'Skip Patrol task if > 10 claims',
                 'settings.profession.skipPatrol.tooltip': 'Skip &quot;Patrol the Mines&quot; leadership task if there are more than 10 mining claims in the inventory (Never, Always, On AD profile, if Leadership level is &gt;= 20, or both of the above )',
                 'settings.profession.stopNotLeadership': 'Stop NON-Leadership task at level: ',
-                'settings.profession.stopNotLeadership.tooltip': 'Block All professions except Leadership at a specified level and above. Make sure you have Leadership set.',
+                'settings.profession.stopNotLeadership.tooltip': 'Block All professions except Leadership at level 20 or 25 and above. Make sure you have Leadership set.',
                 'settings.profession.stopAlchemyAt3': 'Stop Alchemy leveling at level 3',
                 'settings.profession.stopAlchemyAt3.tooltip': 'Block Alchemy tasks at level 3 or above, Make sure you have other tasks set',
                 'settings.consolid.consolidate': 'Consolidate AD via ZAX',
