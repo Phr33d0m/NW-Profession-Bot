@@ -1869,6 +1869,8 @@ function addProfile(profession, profile, base){
             trainAssets: true,
             smartLeadershipAssets: true,
             skipPatrolTask: 'AD&Lvl20',
+            stopNotLeadership: 0,
+            stopAlchemyAt3: false,
         },
         generalSettings: {
             refineAD: true,
@@ -1918,6 +1920,8 @@ function addProfile(profession, profile, base){
             trainAssets: true,
             skipPatrolTask: 'AD&Lvl20',
             smartLeadershipAssets: true,
+            stopNotLeadership: 0,
+            stopAlchemyAt3: false,
         },
         generalSettings: {
             refineAD: true,
@@ -2031,6 +2035,9 @@ function addProfile(profession, profile, base){
         {scope: 'account', group: 'professionSettings', name: 'smartLeadershipAssets', type:'checkbox',  pane: 'prof', title: tr('settings.profession.smartLeadership'), tooltip: tr('settings.profession.smartLeadership.tooltip')},
         {scope: 'account', group: 'professionSettings', name: 'skipPatrolTask',        type:'select',    pane: 'prof', title: tr('settings.profession.skipPatrol'),      tooltip: tr('settings.profession.skipPatrol.tooltip'),
             opts:[{name:'never',value:'never'},{name:'always',value:'always'},{name:'AD profile',value:'ad'},{name:'Leadership lvl 20',value:'ld20'},{name:'AD&Lvl20',value:'AD&Lvl20'}]},
+        {scope: 'account', group: 'professionSettings', name: 'stopNotLeadership',        type:'select',    pane: 'prof', title: tr('settings.profession.stopNotLeadership'),      tooltip: tr('settings.profession.stopNotLeadership.tooltip'),
+            opts:[{name:'never',value:'0'},{name: '20' ,value: 20},{name: '25' ,value: 25}]},
+        {scope: 'account', group: 'professionSettings', name: 'stopAlchemyAt3',        type:'checkbox',    pane: 'prof', title: tr('settings.profession.stopAlchemyAt3'),      tooltip: tr('settings.profession.stopAlchemyAt3.tooltip')},
         {scope: 'account', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
         {scope: 'account', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Node Kit Stacks',  tooltip:'Limit skill kits stacks to 50, vendor kits unusable by class, remove all if player has one bag or full bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorAltarsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Altar Stacks',  tooltip:'Limit Altars to 80,remove all if player has one bag or full bags'},
@@ -2049,7 +2056,7 @@ function addProfile(profession, profile, base){
         {scope: 'account', group: 'consolidationSettings', name:'consolidate',    type:'checkbox', pane:'bank', title: tr('settings.consolid.consolidate'),    tooltip: tr('settings.consolid.consolidate.tooltip') ,border:true},
         {scope: 'account', group: 'consolidationSettings', name:'bankCharName',   type:'text',     pane:'bank', title: tr('settings.consolid.bankerName'),     tooltip: tr('settings.consolid.bankerName.tooltip')},
         {scope: 'account', group: 'consolidationSettings', name:'minToTransfer',  type:'text',     pane:'bank', title: tr('settings.consolid.minToTransfer'),  tooltip: tr('settings.consolid.minToTransfer.tooltip')},
-        {scope: 'account', group: 'consolidationSettings', name:'minCharBalance', type:'text',     pane:'bank', title: tr('settings.consolid.minCharBalance'), tooltip: tr('settings.consolid.minCharBalance,tooltip')},
+        {scope: 'account', group: 'consolidationSettings', name:'minCharBalance', type:'text',     pane:'bank', title: tr('settings.consolid.minCharBalance'), tooltip: tr('settings.consolid.minCharBalance.tooltip')},
         {scope: 'account', group: 'consolidationSettings', name:'transferRate',   type:'text',     pane:'bank', title: tr('settings.consolid.transferRate'),   tooltip: tr('settings.consolid.transferRate.tooltip')},
 
         {scope: 'char', group: 'general', name: 'active',     type:'checkbox',    pane: 'main_not_tab',    title: 'Active',   tooltip: 'The char will be processed by the script'},
@@ -2072,6 +2079,10 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'professionSettings', name: 'smartLeadershipAssets', type:'checkbox',  pane: 'prof', title: tr('settings.profession.smartLeadership'), tooltip: tr('settings.profession.smartLeadership.tooltip')},
         {scope: 'char', group: 'professionSettings', name: 'skipPatrolTask',        type: 'select',   pane: 'prof', title: tr('settings.profession.skipPatrol'),      tooltip: tr('settings.profession.skipPatrol.tooltip'),
             opts:[{name:'never',value:'never'},{name:'always',value:'always'},{name:'AD profile',value:'ad'},{name:'Leadership lvl 20',value:'ld20'},{name:'AD&Lvl20',value:'AD&Lvl20'}]},
+        {scope: 'char', group: 'professionSettings', name: 'stopNotLeadership',        type:'select',    pane: 'prof', title: tr('settings.profession.stopNotLeadership'),      tooltip: tr('settings.profession.stopNotLeadership.tooltip'),
+            opts:[{name:'never',value:0},{name: '20' ,value: 20},{name: '25' ,value: 25}]},
+        {scope: 'char', group: 'professionSettings', name: 'stopAlchemyAt3',        type:'checkbox',    pane: 'prof', title: tr('settings.profession.stopAlchemyAt3'),      tooltip: tr('settings.profession.stopAlchemyAt3.tooltip')},
+        
         {scope: 'char', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
         {scope: 'char', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Altar Node Kit Stacks',  tooltip:'Limit skill kits stacks to 50/Altars80, vendor kits unusable by class, remove all if player has one bag or full bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorAltarsLimit', type:'checkbox', pane:'vend', title:'Vendor/Maintain Altar Stacks',  tooltip:'Limit Altars to 80,remove all if player has one bag or full bags'},
@@ -2089,7 +2100,7 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'vendorSettings', name:'vendorHealingPots',     type:'checkbox', pane:'vend',   title:'Auto Vendor healing potions (1-60)',     tooltip:'Auto Vendor healing potions (lvl 60)'},        
         {scope: 'char', group: 'consolidationSettings', name:'consolidate',    type:'checkbox', pane:'bank', title: tr('settings.consolid.consolidate'),    tooltip: tr('settings.consolid.consolidate.tooltip'), border:true},
         {scope: 'char', group: 'consolidationSettings', name:'minToTransfer',  type:'text',     pane:'bank', title: tr('settings.consolid.minToTransfer'),  tooltip: tr('settings.consolid.minToTransfer.tooltip')},
-        {scope: 'char', group: 'consolidationSettings', name:'minCharBalance', type:'text',     pane:'bank', title: tr('settings.consolid.minCharBalance'), tooltip: tr('settings.consolid.minCharBalance,tooltip')},
+        {scope: 'char', group: 'consolidationSettings', name:'minCharBalance', type:'text',     pane:'bank', title: tr('settings.consolid.minCharBalance'), tooltip: tr('settings.consolid.minCharBalance.tooltip')},
         
         
         
@@ -2436,8 +2447,15 @@ function addProfile(profession, profile, base){
             return entry.name == prof.taskName;
         })[0].currentrank;
         var list = profile.level[level];
-        if(list.length <= i) {
-            console.log("Task list exhausted for ", prof.taskListName, " at level ", level, " profile: ", profile.profileName);
+        
+        var taskBlocked = ((getSetting('professionSettings','stopNotLeadership') == 20 && prof.taskName != 'Leadership' && level >= 20) || 
+            (getSetting('professionSettings','stopNotLeadership') == 25 && prof.taskName != 'Leadership' && level >= 25) ||
+            (getSetting('professionSettings','stopAlchemyAt3') && prof.taskName == 'Alchemy' && level > 3));
+        
+        if(list.length <= i || taskBlocked) {
+            if (!taskBlocked) console.log("Task list exhausted for ", prof.taskListName, " at level ", level, " profile: ", profile.profileName);
+            else console.warn("Task list blocked for ", prof.taskListName, " at level ", level, " profile: ", profile.profileName);
+            
             failedTasksList.push(prof.taskListName);
             if (typeof failedProfiles[prof.taskListName] === 'undefined') {
                 failedProfiles[prof.taskListName] = [];
@@ -5210,6 +5228,10 @@ function addProfile(profession, profile, base){
                 'settings.profession.smartLeadership.tooltip': 'Try to spread and fill non-common assets and supplement with common if needed',
                 'settings.profession.skipPatrol': 'Skip Patrol task if > 10 claims',
                 'settings.profession.skipPatrol.tooltip': 'Skip &quot;Patrol the Mines&quot; leadership task if there are more than 10 mining claims in the inventory (Never, Always, On AD profile, if Leadership level is &gt;= 20, or both of the above )',
+                'settings.profession.stopNotLeadership': 'Stop NON-Leadership task above level: ',
+                'settings.profession.stopNotLeadership.tooltip': 'Block All professions except Leadership above level 20 or 25. Make sure you have Leadership set.',
+                'settings.profession.stopAlchemyAt3': 'Stop Alchemy leveling above level 3',
+                'settings.profession.stopAlchemyAt3.tooltip': 'Block Alchemy tasks above level 3, Make sure you have other tasks set',
                 'settings.consolid.consolidate': 'Consolidate AD via ZAX',
                 'settings.consolid.consolidate.tooltip': 'Automatically attempt to post, cancel and withdraw AD via ZAX and consolidate to designated character',
                 'settings.consolid.bankerName': 'Character Name of Banker',
@@ -5217,7 +5239,7 @@ function addProfile(profession, profile, base){
                 'settings.consolid.minToTransfer': 'Min AD for Transfer',
                 'settings.consolid.minToTransfer.tooltip': 'Enter minimum AD limit for it to be considered for transfer off a character',
                 'settings.consolid.minCharBalance': 'Min Character balance',
-                'settings.consolid.minCharBalance,tooltip': 'Enter the amount of AD to always keep available on characters',
+                'settings.consolid.minCharBalance.tooltip': 'Enter the amount of AD to always keep available on characters',
                 'settings.consolid.transferRate': 'AD per Zen Rate (in zen)',
                 'settings.consolid.transferRate.tooltip': 'Enter default rate to use for transferring through ZAX',
 
@@ -5292,7 +5314,7 @@ function addProfile(profession, profile, base){
                 'settings.consolid.minToTransfer': 'Min AD do transferowania',
                 'settings.consolid.minToTransfer.tooltip': 'Minimalna ilość Diamentów Astralnych, przy której nastąpi próba przeniesienia do bankiera',
                 'settings.consolid.minCharBalance': 'Min AD do pozostawienia',
-                'settings.consolid.minCharBalance,tooltip': 'Minimalna ilość Diamentów Astralnych, które powinny pozostać na koncie postaci',
+                'settings.consolid.minCharBalance.tooltip': 'Minimalna ilość Diamentów Astralnych, które powinny pozostać na koncie postaci',
                 'settings.consolid.transferRate': 'Stawka AD za Zen',
                 'settings.consolid.transferRate.tooltip': 'Domyślna stawka Diamentów Astralnych za ZEN użyta do transferowania',
             },
