@@ -1952,6 +1952,7 @@ function addProfile(profession, profile, base){
         defaultCharSettings.taskListSettings[task.taskListName].taskSlots = task.taskDefaultSlotNum;
         defaultCharSettings.taskListSettings[task.taskListName].taskProfile = profileNames[0].value;
         defaultCharSettings.taskListSettings[task.taskListName].taskPriority = task.taskDefaultPriority;
+        defaultCharSettings.taskListSettings[task.taskListName].stopTaskAtLevel = 0;
     });
 
     for (var i = 0; i < 9; i++) {
@@ -2234,7 +2235,14 @@ function addProfile(profession, profile, base){
                 console.log("Prioritizing task lists.");
                 var charTaskList = tasklist
                     .filter(function(task) {
-                        return ((charSettingsList[curCharName].taskListSettings[task.taskListName].taskSlots > 0) && (failedTasksList.indexOf(task.taskListName) === -1)) ;
+                        var level = unsafeWindow.client.dataModel.model.ent.main.itemassignmentcategories.categories.filter(function(entry) {
+                                return entry.name == task.taskName;
+                            })
+                        level = (level[0]) ? level[0].currentrank : 0;
+                        console.log(level, task.taskListName, (charSettingsList[curCharName].taskListSettings[task.taskListName].stopTaskAtLevel == 0 || charSettingsList[curCharName].taskListSettings[task.taskListName].stopTaskAtLevel > level));
+                        return ((charSettingsList[curCharName].taskListSettings[task.taskListName].taskSlots > 0) 
+                                && (failedTasksList.indexOf(task.taskListName) === -1)
+                                && (charSettingsList[curCharName].taskListSettings[task.taskListName].stopTaskAtLevel == 0 || charSettingsList[curCharName].taskListSettings[task.taskListName].stopTaskAtLevel > level));
                     })
                     .sort(function(a, b) {
                         return (charSettingsList[curCharName].taskListSettings[a.taskListName].taskPriority - charSettingsList[curCharName].taskListSettings[b.taskListName].taskPriority);
@@ -4401,7 +4409,7 @@ function addProfile(profession, profile, base){
                 var task_tab = addTab(char_tabs[0], "Tasks");
 
                 // Creating the Tasks custom tab
-                var tableHTML = $('<table><thead><tr><th>Task name</th><th># of slots</th><th>profile</th><th>priority</th></tr></thead><tbody>');
+                var tableHTML = $('<table><thead><tr><th>Task name</th><th># of slots</th><th>profile</th><th>priority</th><th>stop at lvl</th></tr></thead><tbody>');
                 
                 var _slotOptions = [];
                 for (var i = 0; i < 10; i++) 
@@ -4410,6 +4418,9 @@ function addProfile(profession, profile, base){
                         value: i
                     });
                 var _priorityOptions = [{name:'high',value:0},{name:'medium',value:1},{name:'low',value:2}];
+                var _stopTaskAtLevelOptions = []; 
+                    _stopTaskAtLevelOptions.push({name: 'none', value: 0}); 
+                    for (var i = 1; i < 26; i++) _stopTaskAtLevelOptions.push({name: i, value: i});
 
                 tasklist.forEach(function(task) {
                     if (!task.taskActive) return;
@@ -4423,19 +4434,24 @@ function addProfile(profession, profile, base){
                     var _slots = {scope: 'char_task', group: 'taskListSettings', name: task.taskListName, sub_name: 'taskSlots', opts: _slotOptions ,title: task.taskListName, type: 'select', pane: 'tasks1', tooltip: 'Number of slots to assign to ' + task.taskListName};
                     var _profile = {scope: 'char_task', group: 'taskListSettings', name: task.taskListName, sub_name: 'taskProfile', opts: _profileNames ,title: task.taskListName, type: 'select', pane: 'tasks1', tooltip: ''};
                     var _priority = {scope: 'char_task', group: 'taskListSettings', name: task.taskListName, sub_name: 'taskPriority', opts: _priorityOptions ,title: task.taskListName, type: 'select', pane: 'tasks1', tooltip: ''};
+                    var _stop = {scope: 'char_task', group: 'taskListSettings', name: task.taskListName, sub_name: 'stopTaskAtLevel', opts: _stopTaskAtLevelOptions ,title: task.taskListName, type: 'select', pane: 'tasks1', tooltip: ''};                    
 
                     var _slt = createInput(_slots, charName, 'settingsInput', 'settingsLabel');
                     var _prf = createInput(_profile, charName, 'settingsInput', 'settingsLabel');
                     var _pr = createInput(_priority, charName, 'settingsInput', 'settingsLabel');
+                    var _stp = createInput(_stop, charName, 'settingsInput', 'settingsLabel');
+                    
                     var tr = $("<tr>");
                     $("<td>").append(_slt.label).appendTo(tr);
                     $("<td>").append(_slt.input).appendTo(tr);
                     $("<td>").append(_prf.input).appendTo(tr);
                     $("<td>").append(_pr.input).appendTo(tr);
+                    $("<td>").append(_stp.input).appendTo(tr);
                     tr.appendTo(tableHTML);
                 });
                 task_tab.append(tableHTML);
 
+                
                 // Manual Slots allocation tab
                 var task2_tab = addTab(char_tabs[0], "Manual Tasks");
                 
