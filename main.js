@@ -5247,7 +5247,7 @@ function addProfile(profession, profile, base){
                 'settings.profession.stopNotLeadership': 'Stop NON-Leadership task at level: ',
                 'settings.profession.stopNotLeadership.tooltip': 'Block All professions except Leadership at level 20 or 25 and above. Make sure you have Leadership set.',
                 'settings.profession.stopAlchemyAt3': 'Stop Alchemy leveling at level 3',
-                'settings.profession.stopAlchemyAt3.tooltip': 'Block Alchemy tasks at level 3 and above, Make sure you have other tasks set',
+                'settings.profession.stopAlchemyAt3.tooltip': 'Block Alchemy tasks at level 3 and above. Make sure you have other tasks set.',
                 'settings.consolid.consolidate': 'Consolidate AD via ZAX',
                 'settings.consolid.consolidate.tooltip': 'Automatically attempt to post, cancel and withdraw AD via ZAX and consolidate to designated character',
                 'settings.consolid.bankerName': 'Character Name of Banker',
