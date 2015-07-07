@@ -2063,9 +2063,9 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'general', name: 'active',     type:'checkbox',    pane: 'main_not_tab',    title: 'Active',   tooltip: 'The char will be processed by the script',
             onchange: function(newValue) {
                 if (newValue) {
-                    $(":focus").parents('.ui-accordion-content').prev().removeClass('unactive');
+                    $(":focus").parents('.ui-accordion-content').prev().removeClass('inactive');
                 } else {
-                    $(":focus").parents('.ui-accordion-content').prev().addClass('unactive');
+                    $(":focus").parents('.ui-accordion-content').prev().addClass('inactive');
                 }
             }
         },
@@ -3872,7 +3872,7 @@ function addProfile(profession, profile, base){
                 #settingsPanel{position: fixed; overflow: auto; right: 0px; top: 0px; width: 650px;max-height:100%;font: 12px sans-serif; text-align: left; display: block; z-index: 1001;}\
                 #settings_title{font-weight: bolder; background: none repeat scroll 0% 0% rgb(204, 204, 204); border-bottom: 1px solid rgb(102, 102, 102); padding: 3px;}\
                 #settingsPanelButtonContainer {background: none repeat scroll 0% 0% rgb(204, 204, 204); border-top: 1px solid rgb(102, 102, 102);padding: 3px;text-align:center} \
-                #charSettingsAccordion h3.unactive {color: LightGray ;}\
+                #charSettingsAccordion h3.inactive {color: LightGray ;}\
                 #charPanel {width:98%;max-height:550px;overflow:auto;display:block;padding:3px;}\
                 .inventory-container {float: left; clear: none; width: 270px; margin-right: 20px;}\
                 #prinfopane {position: fixed; top: 5px; left: 200px; display: block; z-index: 1000;}\
@@ -4410,7 +4410,7 @@ function addProfile(profession, profile, base){
                 if (charSettingsList[charNamesList[idx]].general.active) {
                     wrp.append('<h3>' + charName + '</h3>');
                 } else {
-                    wrp.append("<h3 class='unactive'>" + charName + '</h3>');
+                    wrp.append("<h3 class='inactive'>" + charName + '</h3>');
                 }
                 var wrp2 = $('<div id="charContainer' + idx + '">');
                 wrp.append(wrp2);
