@@ -1207,10 +1207,68 @@ function addProfile(profession, profile, base){
             25: ["Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Tank", //Defender's Exquisite Elemental Chainmail
             	 "Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Dps", //Warrior's Exquisite Elemental Chainmail
             	 "Crafted_Hvy_Armorsmithing_T4_Purple_Pants_Tank",//Defender's Exquisite Elemental Chausses
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Pants_Dps", //Warrior's Exquisite Elemental Chausses
             	 "Hvy_Armorsmithing_Tier3_Refine_Basic"//Mithral plates
             ]
         }
-    });
+    }, "21->25 gather");
+
+     addProfile("Platesmithing", {
+        profileName: "craft Exq. Tank shirt",
+        isProfileActive: true,
+        level: {
+            25: ["Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Tank", //Defender's Exquisite Elemental Chainmail
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Dps", //Warrior's Exquisite Elemental Chainmail
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Pants_Tank",//Defender's Exquisite Elemental Chausses
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Pants_Dps", //Warrior's Exquisite Elemental Chausses
+            	 "Crafted_Hvy_Armorsmithing_T4_Green_Shirt_Tank",
+            	 "Hvy_Armorsmithing_Tier3_Refine_Basic"//Mithral plates
+            ]
+        }
+    }, "21->25 gather");
+
+     addProfile("Platesmithing", {
+        profileName: "craft Exq. Warrior shirt",
+        isProfileActive: true,
+        level: {
+            25: ["Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Dps", //Warrior's Exquisite Elemental Chainmail
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Tank", //Defender's Exquisite Elemental Chainmail
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Pants_Tank",//Defender's Exquisite Elemental Chausses
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Pants_Dps", //Warrior's Exquisite Elemental Chausses
+            	 "Crafted_Hvy_Armorsmithing_T4_Green_Shirt_Dps",
+            	 "Hvy_Armorsmithing_Tier3_Refine_Basic"//Mithral plates
+            ]
+        }
+    }, "21->25 gather");
+
+	addProfile("Platesmithing", {
+        profileName: "craft Exq. Tank pants",
+        isProfileActive: true,
+        level: {
+            25: ["Crafted_Hvy_Armorsmithing_T4_Purple_Pants_Tank",//Defender's Exquisite Elemental Chausses
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Pants_Dps", //Warrior's Exquisite Elemental Chausses
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Dps", //Warrior's Exquisite Elemental Chainmail
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Tank", //Defender's Exquisite Elemental Chainmail
+            	 "Crafted_Hvy_Armorsmithing_T4_Green_Pants_Tank",
+            	 "Hvy_Armorsmithing_Tier3_Refine_Basic"//Mithral plates
+            ]
+        }
+    }, "21->25 gather");
+
+    addProfile("Platesmithing", {
+        profileName: "craft Exq. Warrior pants",
+        isProfileActive: true,
+        level: {
+            25: ["Crafted_Hvy_Armorsmithing_T4_Purple_Pants_Dps", //Warrior's Exquisite Elemental Chausses
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Dps", //Warrior's Exquisite Elemental Chainmail
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Tank", //Defender's Exquisite Elemental Chainmail
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Pants_Tank",//Defender's Exquisite Elemental Chausses
+            	 "Crafted_Hvy_Armorsmithing_T4_Green_Pants_Dps",
+            	 "Hvy_Armorsmithing_Tier3_Refine_Basic"//Mithral plates
+            ]
+        }
+    }, "21->25 gather");
+
 
     addProfile("Platesmithing", {
         profileName: "Wondrous Sprocket",
