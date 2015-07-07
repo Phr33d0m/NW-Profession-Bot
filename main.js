@@ -2060,7 +2060,15 @@ function addProfile(profession, profile, base){
         {scope: 'account', group: 'consolidationSettings', name:'minCharBalance', type:'text',     pane:'bank', title: tr('settings.consolid.minCharBalance'), tooltip: tr('settings.consolid.minCharBalance.tooltip')},
         {scope: 'account', group: 'consolidationSettings', name:'transferRate',   type:'text',     pane:'bank', title: tr('settings.consolid.transferRate'),   tooltip: tr('settings.consolid.transferRate.tooltip')},
 
-        {scope: 'char', group: 'general', name: 'active',     type:'checkbox',    pane: 'main_not_tab',    title: 'Active',   tooltip: 'The char will be processed by the script'},
+        {scope: 'char', group: 'general', name: 'active',     type:'checkbox',    pane: 'main_not_tab',    title: 'Active',   tooltip: 'The char will be processed by the script',
+            onchange: function(newValue) {
+                if (newValue) {
+                    $(":focus").parents('.ui-accordion-content').prev().removeClass('unactive');
+                } else {
+                    $(":focus").parents('.ui-accordion-content').prev().addClass('unactive');
+                }
+            }
+        },
         {scope: 'char', group: 'general', name:'overrideGlobalSettings',    type:'checkbox',    pane:'main_not_tab',    title:'Override account settings for this char',   tooltip:''},
         {scope: 'char', group: 'general', name:'manualTaskSlots',    type:'checkbox',    pane:'main_not_tab',    title:'Use manual task allocation tab',   tooltip:'Per slot profile allocation'},
         
@@ -3864,6 +3872,7 @@ function addProfile(profession, profile, base){
                 #settingsPanel{position: fixed; overflow: auto; right: 0px; top: 0px; width: 650px;max-height:100%;font: 12px sans-serif; text-align: left; display: block; z-index: 1001;}\
                 #settings_title{font-weight: bolder; background: none repeat scroll 0% 0% rgb(204, 204, 204); border-bottom: 1px solid rgb(102, 102, 102); padding: 3px;}\
                 #settingsPanelButtonContainer {background: none repeat scroll 0% 0% rgb(204, 204, 204); border-top: 1px solid rgb(102, 102, 102);padding: 3px;text-align:center} \
+                #charSettingsAccordion h3.unactive {color: LightGray ;}\
                 #charPanel {width:98%;max-height:550px;overflow:auto;display:block;padding:3px;}\
                 .inventory-container {float: left; clear: none; width: 270px; margin-right: 20px;}\
                 #prinfopane {position: fixed; top: 5px; left: 200px; display: block; z-index: 1000;}\
@@ -4298,7 +4307,7 @@ function addProfile(profession, profile, base){
                 var _btc = $("#custom_resource_btc").prop('checked');
                 var _bta = $("#custom_resource_bta").prop('checked');
                 if ( _fname.length == 0 || _name.length == 0) {
-					var str = "Tracked resource could not be added. You have to enter both values!";
+                    var str = "Tracked resource could not be added. You have to enter both values!";
                     $('<div id="dialog-error-inventory" title="Error adding tracked resource">' + str + '</div>').dialog({
                           resizable: true,
                           width: 500,
@@ -4398,7 +4407,11 @@ function addProfile(profession, profile, base){
             var wrp = $('<div id="charSettingsAccordion">');
             $("#char_settings").append(wrp);
             charNamesList.forEach( function(charName, idx) {
-                wrp.append('<h3>' + charName + '</h3>');
+                if (charSettingsList[charNamesList[idx]].general.active) {
+                    wrp.append('<h3>' + charName + '</h3>');
+                } else {
+                    wrp.append("<h3 class='unactive'>" + charName + '</h3>');
+                }
                 var wrp2 = $('<div id="charContainer' + idx + '">');
                 wrp.append(wrp2);
                 addInputsUL(wrp2[0], 'char', 'main_not_tab', charName);
