@@ -5163,10 +5163,6 @@ function addProfile(profession, profile, base){
                 pattern: /^Object_Skill_/,
                 limit: 0
             };
-             _vendorItems[_vendorItems.length] = {
-                pattern: /^Magic Focus$/,
-                limit: 0
-            };
         }
         
         if (getSetting('vendorSettings', 'vendorProfResults')) {
