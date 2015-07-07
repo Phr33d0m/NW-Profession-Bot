@@ -1200,6 +1200,18 @@ function addProfile(profession, profile, base){
         },
     });
 
+     addProfile("Platesmithing", {
+        profileName: "craft purple lvl 25",
+        isProfileActive: true,
+        level: {
+            25: ["Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Tank", //Defender's Exquisite Elemental Chainmail
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Dps", //Warrior's Exquisite Elemental Chainmail
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Pants_Tank",//Defender's Exquisite Elemental Chausses
+            	 "Hvy_Armorsmithing_Tier3_Refine_Basic"//Mithral plates
+            ]
+        }
+    });
+
     addProfile("Platesmithing", {
         profileName: "Wondrous Sprocket",
         isProfileActive: false,
