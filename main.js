@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.1
+// @version 4.2
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -37,6 +37,13 @@ Developers & Contributors
 - WloBeb
 
 RELEASE NOTES
+4.2
+- Added "Resource Tracker" tab
+- Added "to buy" notification for missing resources
+- Added new professions & some hotfixes for some profiles
+- New profile syntax
+- addProfile() functionality changed a bit to adapt to our new profile syntax
+- A lot of fixes here and there
 4.1
 - Added failsafe to prevent script getting stuck when can't claim task result
 - AddProfile() improved (thanks dlebedynskyi)
@@ -68,7 +75,7 @@ http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
 
 // Make sure it's running on the main page, no frames
 
-var scriptVersion = 4.1;
+var scriptVersion = 4.2;
 var forceSettingsResetOnUpgrade = true;
 var forceResetOnVerBelow = 3.5;
 
@@ -288,6 +295,7 @@ function _select_Gateway() { // Check for Gateway used to
     var curCharFullName = '';
     var chartimers = {};
     var maxLevel = 25;
+    var waitingNextChar = false;
     var delay = {
         SHORT: 1000,
         MEDIUM: 5000,
@@ -1751,22 +1759,28 @@ function addProfile(profession, profile, base){
 
     var defaultTrackResources = [{
         fname: 'Aqua Regia',
-        name: 'Crafting_Resource_Aquaregia'
+        name: 'Crafting_Resource_Aquaregia',
+        bank: false, unbound: true, btc: true, bta: true
     }, {
         fname: 'Aqua Vitae',
-        name: 'Crafting_Resource_Aquavitae'
+        name: 'Crafting_Resource_Aquavitae',
+        bank: false, unbound: true, btc: true, bta: true
     }, {
         fname: 'Residuum',
-        name: 'Crafting_Resource_Residuum'
+        name: 'Crafting_Resource_Residuum',
+        bank: false, unbound: true, btc: true, bta: true
     }, {
         fname: 'Mining Claim',
-        name: 'Crafting_Resource_Mining_Claim'
+        name: 'Crafting_Resource_Mining_Claim',
+        bank: false, unbound: true, btc: true, bta: true
     }, {
         fname: 'Elemental Aggregate',
-        name: 'Crafting_Resource_Elemental_Aggregate'
+        name: 'Crafting_Resource_Elemental_Aggregate',
+        bank: false, unbound: true, btc: true, bta: true
     }, {
         fname: 'Unified Elements',
-        name: 'Crafting_Resource_Elemental_Unified'
+        name: 'Crafting_Resource_Elemental_Unified',
+        bank: false, unbound: true, btc: true, bta: true
     }, 
 ];
     var trackResources;
@@ -1844,6 +1858,7 @@ function addProfile(profession, profile, base){
             vendorPots3: false,
             vendorPots4: false,
             vendorPots5: false,
+            vendorHealingPots: false,
             vendorEnchR1: false,
             vendorEnchR2: false,
             vendorEnchR3: false,
@@ -1854,6 +1869,8 @@ function addProfile(profession, profile, base){
             trainAssets: true,
             smartLeadershipAssets: true,
             skipPatrolTask: 'AD&Lvl20',
+            stopNotLeadership: 0,
+            stopAlchemyAt3: false,
         },
         generalSettings: {
             refineAD: true,
@@ -1892,6 +1909,7 @@ function addProfile(profession, profile, base){
             vendorPots3: false,
             vendorPots4: false,
             vendorPots5: false,
+            vendorHealingPots: false,
             vendorEnchR1: false,
             vendorEnchR2: false,
             vendorEnchR3: false,
@@ -1902,6 +1920,8 @@ function addProfile(profession, profile, base){
             trainAssets: true,
             skipPatrolTask: 'AD&Lvl20',
             smartLeadershipAssets: true,
+            stopNotLeadership: 0,
+            stopAlchemyAt3: false,
         },
         generalSettings: {
             refineAD: true,
@@ -1932,6 +1952,7 @@ function addProfile(profession, profile, base){
         defaultCharSettings.taskListSettings[task.taskListName].taskSlots = task.taskDefaultSlotNum;
         defaultCharSettings.taskListSettings[task.taskListName].taskProfile = profileNames[0].value;
         defaultCharSettings.taskListSettings[task.taskListName].taskPriority = task.taskDefaultPriority;
+        defaultCharSettings.taskListSettings[task.taskListName].stopTaskAtLevel = 0;
     });
 
     for (var i = 0; i < 9; i++) {
@@ -2015,6 +2036,9 @@ function addProfile(profession, profile, base){
         {scope: 'account', group: 'professionSettings', name: 'smartLeadershipAssets', type:'checkbox',  pane: 'prof', title: tr('settings.profession.smartLeadership'), tooltip: tr('settings.profession.smartLeadership.tooltip')},
         {scope: 'account', group: 'professionSettings', name: 'skipPatrolTask',        type:'select',    pane: 'prof', title: tr('settings.profession.skipPatrol'),      tooltip: tr('settings.profession.skipPatrol.tooltip'),
             opts:[{name:'never',value:'never'},{name:'always',value:'always'},{name:'AD profile',value:'ad'},{name:'Leadership lvl 20',value:'ld20'},{name:'AD&Lvl20',value:'AD&Lvl20'}]},
+        {scope: 'account', group: 'professionSettings', name: 'stopNotLeadership',        type:'select',    pane: 'prof', title: tr('settings.profession.stopNotLeadership'),      tooltip: tr('settings.profession.stopNotLeadership.tooltip'),
+            opts:[{name:'never',value:'0'},{name: '20' ,value: 20},{name: '25' ,value: 25}]},
+        {scope: 'account', group: 'professionSettings', name: 'stopAlchemyAt3',        type:'checkbox',    pane: 'prof', title: tr('settings.profession.stopAlchemyAt3'),      tooltip: tr('settings.profession.stopAlchemyAt3.tooltip')},
         {scope: 'account', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
         {scope: 'account', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Node Kit Stacks',  tooltip:'Limit skill kits stacks to 50, vendor kits unusable by class, remove all if player has one bag or full bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorAltarsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Altar Stacks',  tooltip:'Limit Altars to 80,remove all if player has one bag or full bags'},
@@ -2026,13 +2050,14 @@ function addProfile(profession, profile, base){
         {scope: 'account', group: 'vendorSettings', name:'vendorPots3',     type:'checkbox', pane:'vend',   title:'Auto Vendor potions (lvl 30)',       tooltip:'Vendor all potions (lvl 30) found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorPots4',     type:'checkbox', pane:'vend',   title:'Auto Vendor greater potions (lvl 45)',   tooltip:'Vendor all greater potions (lvl 45) found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorPots5',     type:'checkbox', pane:'vend',   title:'Auto Vendor major potions (lvl 60)',     tooltip:'Auto Vendor major potions (lvl 60)'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorHealingPots',     type:'checkbox', pane:'vend',   title:'Auto Vendor healing potions (1-60)',     tooltip:'Auto Vendor healing potions (lvl 60)'},
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'consolidationSettings', name:'consolidate',    type:'checkbox', pane:'bank', title: tr('settings.consolid.consolidate'),    tooltip: tr('settings.consolid.consolidate.tooltip') ,border:true},
         {scope: 'account', group: 'consolidationSettings', name:'bankCharName',   type:'text',     pane:'bank', title: tr('settings.consolid.bankerName'),     tooltip: tr('settings.consolid.bankerName.tooltip')},
         {scope: 'account', group: 'consolidationSettings', name:'minToTransfer',  type:'text',     pane:'bank', title: tr('settings.consolid.minToTransfer'),  tooltip: tr('settings.consolid.minToTransfer.tooltip')},
-        {scope: 'account', group: 'consolidationSettings', name:'minCharBalance', type:'text',     pane:'bank', title: tr('settings.consolid.minCharBalance'), tooltip: tr('settings.consolid.minCharBalance,tooltip')},
+        {scope: 'account', group: 'consolidationSettings', name:'minCharBalance', type:'text',     pane:'bank', title: tr('settings.consolid.minCharBalance'), tooltip: tr('settings.consolid.minCharBalance.tooltip')},
         {scope: 'account', group: 'consolidationSettings', name:'transferRate',   type:'text',     pane:'bank', title: tr('settings.consolid.transferRate'),   tooltip: tr('settings.consolid.transferRate.tooltip')},
 
         {scope: 'char', group: 'general', name: 'active',     type:'checkbox',    pane: 'main_not_tab',    title: 'Active',   tooltip: 'The char will be processed by the script'},
@@ -2055,6 +2080,10 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'professionSettings', name: 'smartLeadershipAssets', type:'checkbox',  pane: 'prof', title: tr('settings.profession.smartLeadership'), tooltip: tr('settings.profession.smartLeadership.tooltip')},
         {scope: 'char', group: 'professionSettings', name: 'skipPatrolTask',        type: 'select',   pane: 'prof', title: tr('settings.profession.skipPatrol'),      tooltip: tr('settings.profession.skipPatrol.tooltip'),
             opts:[{name:'never',value:'never'},{name:'always',value:'always'},{name:'AD profile',value:'ad'},{name:'Leadership lvl 20',value:'ld20'},{name:'AD&Lvl20',value:'AD&Lvl20'}]},
+        {scope: 'char', group: 'professionSettings', name: 'stopNotLeadership',        type:'select',    pane: 'prof', title: tr('settings.profession.stopNotLeadership'),      tooltip: tr('settings.profession.stopNotLeadership.tooltip'),
+            opts:[{name:'never',value:0},{name: '20' ,value: 20},{name: '25' ,value: 25}]},
+        {scope: 'char', group: 'professionSettings', name: 'stopAlchemyAt3',        type:'checkbox',    pane: 'prof', title: tr('settings.profession.stopAlchemyAt3'),      tooltip: tr('settings.profession.stopAlchemyAt3.tooltip')},
+        
         {scope: 'char', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
         {scope: 'char', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Altar Node Kit Stacks',  tooltip:'Limit skill kits stacks to 50/Altars80, vendor kits unusable by class, remove all if player has one bag or full bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorAltarsLimit', type:'checkbox', pane:'vend', title:'Vendor/Maintain Altar Stacks',  tooltip:'Limit Altars to 80,remove all if player has one bag or full bags'},
@@ -2069,9 +2098,10 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorHealingPots',     type:'checkbox', pane:'vend',   title:'Auto Vendor healing potions (1-60)',     tooltip:'Auto Vendor healing potions (lvl 60)'},        
         {scope: 'char', group: 'consolidationSettings', name:'consolidate',    type:'checkbox', pane:'bank', title: tr('settings.consolid.consolidate'),    tooltip: tr('settings.consolid.consolidate.tooltip'), border:true},
         {scope: 'char', group: 'consolidationSettings', name:'minToTransfer',  type:'text',     pane:'bank', title: tr('settings.consolid.minToTransfer'),  tooltip: tr('settings.consolid.minToTransfer.tooltip')},
-        {scope: 'char', group: 'consolidationSettings', name:'minCharBalance', type:'text',     pane:'bank', title: tr('settings.consolid.minCharBalance'), tooltip: tr('settings.consolid.minCharBalance,tooltip')},
+        {scope: 'char', group: 'consolidationSettings', name:'minCharBalance', type:'text',     pane:'bank', title: tr('settings.consolid.minCharBalance'), tooltip: tr('settings.consolid.minCharBalance.tooltip')},
         
         
         
@@ -2205,7 +2235,14 @@ function addProfile(profession, profile, base){
                 console.log("Prioritizing task lists.");
                 var charTaskList = tasklist
                     .filter(function(task) {
-                        return ((charSettingsList[curCharName].taskListSettings[task.taskListName].taskSlots > 0) && (failedTasksList.indexOf(task.taskListName) === -1)) ;
+                        var level = unsafeWindow.client.dataModel.model.ent.main.itemassignmentcategories.categories.filter(function(entry) {
+                                return entry.name == task.taskName;
+                            })
+                        level = (level[0]) ? level[0].currentrank : 0;
+                        console.log(level, task.taskListName, (charSettingsList[curCharName].taskListSettings[task.taskListName].stopTaskAtLevel == 0 || charSettingsList[curCharName].taskListSettings[task.taskListName].stopTaskAtLevel > level));
+                        return ((charSettingsList[curCharName].taskListSettings[task.taskListName].taskSlots > 0) 
+                                && (failedTasksList.indexOf(task.taskListName) === -1)
+                                && (charSettingsList[curCharName].taskListSettings[task.taskListName].stopTaskAtLevel == 0 || charSettingsList[curCharName].taskListSettings[task.taskListName].stopTaskAtLevel > level));
                     })
                     .sort(function(a, b) {
                         return (charSettingsList[curCharName].taskListSettings[a.taskListName].taskPriority - charSettingsList[curCharName].taskListSettings[b.taskListName].taskPriority);
@@ -2418,13 +2455,21 @@ function addProfile(profession, profile, base){
             return entry.name == prof.taskName;
         })[0].currentrank;
         var list = profile.level[level];
-        if(list.length <= i) {
-            console.log("Task list exhausted for ", prof.taskListName, " at level ", level, " profile: ", profile.profileName);
+        
+        var taskBlocked = ((getSetting('professionSettings','stopNotLeadership') == 20 && prof.taskName != 'Leadership' && level >= 20) || 
+            (getSetting('professionSettings','stopNotLeadership') == 25 && prof.taskName != 'Leadership' && level >= 25) ||
+            (getSetting('professionSettings','stopAlchemyAt3') && prof.taskName == 'Alchemy' && level > 3));
+        
+        if(list.length <= i || taskBlocked) {
+            if (!taskBlocked) console.log("Task list exhausted for ", prof.taskListName, " at level ", level, " profile: ", profile.profileName);
+            else console.warn("Task list blocked for ", prof.taskListName, " at level ", level, " profile: ", profile.profileName);
+            
             failedTasksList.push(prof.taskListName);
             if (typeof failedProfiles[prof.taskListName] === 'undefined') {
                 failedProfiles[prof.taskListName] = [];
-                failedProfiles[prof.taskListName].push(profile.profileName);
             }
+            failedProfiles[prof.taskListName].push(profile.profileName);
+            
             dfdNextRun.resolve(delay.SHORT);
             //switchChar();
             return false;
@@ -3244,7 +3289,7 @@ function addProfile(profession, profile, base){
 
         if (getSetting('generalSettings','openInvocation')) {
             var _pbags = unsafeWindow.client.dataModel.model.ent.main.inventory.playerbags;
-            var _cRewardPat = /Invocation_Rp_Bag/;
+            var _cRewardPat = /Invocation_Rp_Bag|Invocation_Reward_Celestial_Artifact_Equipment_Box|Invocation_Reward_Celestial_Artifacts_Box|Invocation_Reward_Celestial_Enchantments_Box/;
             console.log("Opening Invocation Rewards");
             $.each(_pbags, function(bi, bag) {
                 bag.slots.forEach(function(slot) {
@@ -3262,6 +3307,7 @@ function addProfile(profession, profile, base){
         // MAC-NW (endchanges)
 
         // Updating statistics
+        console.log('Updating statistics');
         var _stat = charStatisticsList[curCharName].general;
         var _chardata = unsafeWindow.client.dataModel.model.ent.main.currencies;
         _stat.lastVisit = Date.now();
@@ -3290,27 +3336,55 @@ function addProfile(profession, profile, base){
             charStatisticsList[curCharName].trackedResources[ri] = 0;
         });
 
-        /*
-        unsafeWindow.client.dataModel.model.ent.main.inventory.bags            
-        .filter(function(bag) {
-                return bag.bagid == "CraftingResources"
-            })
-            .forEach(function(bag) {
-            });
-
-        */
-        client.dataModel.model.ent.main.inventory.tradebag
-            .forEach(function(slot) {
+        // Counting main inventory bags
+        charStatisticsList[curCharName].general.emptyBagSlots = 0;
+        unsafeWindow.client.dataModel.model.ent.main.inventory.playerbags
+        .forEach(function (bag) {
+            bag.slots.forEach( function (slot, slotNum) {
+                if (!slot) {
+                    charStatisticsList[curCharName].general.emptyBagSlots += 1;
+                    return;
+                }
                 trackResources.forEach(function(resource, ri) {
-                    if (slot && slot.name === resource.name) {
-                        charStatisticsList[curCharName].trackedResources[ri] += slot.count;
+                    if (slot.name === resource.name) {
+                        if ((resource.unbound && !slot.bound && !slot.boundtoaccount) ||
+                            (resource.btc && slot.bound && !slot.boundtoaccount) ||
+                            (resource.bta && slot.boundtoaccount)) {
+                            charStatisticsList[curCharName].trackedResources[ri] += slot.count;
+                        }
                     }
                 });
             });
+        });
 
+        // Counting the rest of the bags
+        trackResources.forEach(function(resource, ri) {
+            unsafeWindow.client.dataModel.model.ent.main.inventory.bags
+            .filter(function(bag) {
+                    return ((["CraftingResources", "Overflow", "CraftingInventory"].indexOf(bag.bagid) > -1) || (resource.bank && bag.bagid == "Bank"));
+                })
+                .forEach(function(bag) {
+                    bag.slots.forEach( function (slot, slotNum) {
+                        if (slot && slot.name === resource.name) {
+                            if ((resource.unbound && !slot.bound && !slot.boundtoaccount) ||
+                                (resource.btc && slot.bound && !slot.boundtoaccount) ||
+                                (resource.bta && slot.boundtoaccount)) {
+                                charStatisticsList[curCharName].trackedResources[ri] += slot.count;
+                            }
+                        }
+                    });                    
+                });
+        });
+        
         // Slot assignment
         unsafeWindow.client.dataModel.model.ent.main.itemassignments.assignments.forEach(function(slot, ix) {
-            charStatisticsList[curCharName].slotUse[ix] = slot.category;
+            if (!slot.islockedslot && slot.category !== "None") {
+                charStatisticsList[curCharName].slotUse[ix] = slot.category;
+            } else if (slot.islockedslot) {
+                charStatisticsList[curCharName].slotUse[ix] = "----"; // Locked Slot
+            } else {
+                charStatisticsList[curCharName].slotUse[ix] = "OPEN"; // Un-Assigned Slot!!!
+            }
         });
 
         // Workers and tools assignment and qty
@@ -3520,7 +3594,8 @@ function addProfile(profession, profile, base){
      */
 
     function process() {
-
+        waitingNextChar = false;
+    
         // Calculating last daily reset time
         var today = new Date();
         var todayRest = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 10,0,0));
@@ -3575,6 +3650,7 @@ function addProfile(profession, profile, base){
 
         // Continue again later
         dfdNextRun.done(function(delayTimer) {
+            waitingNextChar = true;
             dfdNextRun = $.Deferred();
             timerHandle = window.setTimeout(function() {
                 process();
@@ -3807,7 +3883,7 @@ function addProfile(profession, profile, base){
                 table.professionRanks td { height: 14px; } \
                 td.ranked2, td.tranked2 { border-bottom: solid 1px #555; border-top: dashed 1px #888 }\
                 #resource_tracker {overflow-x:auto;}\
-                table.withRotation td.rotate, table.withRotation th.rotate { height: 250px; } \
+                table.withRotation td.rotate, table.withRotation th.rotate { height: 125px; } \
                 table.withRotation td.rotate, table.withRotation th.rotate > div { transform: translate(0, 30px) rotate(290deg); width: 30px; } \
                 table.withRotation td.rotate, table.withRotation th.rotate > div > span { border-bottom: 1px solid #ccc; padding: 5px 10px; white-space: nowrap; } \
                 table.withRotation td { border-right: 1px solid #ccc;} \
@@ -3821,7 +3897,8 @@ function addProfile(profession, profile, base){
                 select.customProfiles { margin: 10px }\
                 textarea.customProfiles { width: 500px; height: 350px; margin: 10px 0; }\
                 .custom_profiles_delete { height: 16px; } #custom__profiles__viewbase_btn { height: 16px; } .custom_profiles_view {height: 16px; margin: 0 4px; }\
-                .custom_resources_delete { height: 16px; } .customResources input { margin: 10px }\
+                .custom_resources_delete { height: 16px; } .customResources input:not([type='checkbox']) { margin: 3px 10px } .customResources label { margin-right: 10px; }\
+                .customResources input[type='checkbox'] { margin-right: 10px } .customResources button { margin: 0 10px } div.customResources { margin: 10px 0;} \
                 #settingsPanel table {border-collapse: collapse; }\
                 tr.totals > td { border-top: 1px solid grey; padding-top: 3px; } \
                 .rarity_Gold {color: blue; } .rarity_Silver {color: green; } .rarity_Special {color: purple; }  \
@@ -3942,18 +4019,24 @@ function addProfile(profession, profile, base){
                     });
                     str += '</table><br/>';
                 });
-                
-                str += '<div>Resources</div>';
-                str += inv_tbl_head;
-                var bag = _inventory.tradebag;
-                bag = bag.slice(0,slotCnt);
-                bag.forEach( function (slot, slotNum) {
-                    if (!slot) return;
-                    str += '<tr><td>' + slotNum + 
-                        '</td><td>' + slot.count + '</td><td class=" rarity_' + slot.rarity + '">' + slot.name +
-                        '</td><td>' + slot.rarity + '</td><td>' + (slot.bound || slot.boundtoaccount) +  '</td></tr>';
+
+
+                _inventory.bags.filter(function(bag) {
+                    return (["CraftingResources", "Overflow", "CraftingInventory", "Bank"].indexOf(bag.bagid) != -1);
                 })
-                str += '</table>';
+                .forEach(function(bag) {
+                    str += '<div>' + bag.bagid + '</div>';
+                    str += inv_tbl_head;
+                    bag.slots.forEach( function (slot, slotNum) {
+                        if (!slot) return;
+                        str += '<tr><td>' + slotNum + 
+                            '</td><td>' + slot.count + '</td><td class=" rarity_' + slot.rarity + '">' + slot.name +
+                            '</td><td>' + slot.rarity + '</td><td>' + (slot.bound || slot.boundtoaccount) +  '</td></tr>';
+                    });
+                    str += '</table><br />';
+                });
+        
+                
                 
                 $('<div id="dialog-inventory" title="Inventory listing">' + str + '</div>').dialog({
                       resizable: true,
@@ -4024,7 +4107,7 @@ function addProfile(profession, profile, base){
                 temp_html += '<td>' + cProfile.baseProfile + '</td>';
                 if (typeof cProfile.profile === 'object')
                     temp_html += '<td>' + cProfile.profile.profileName + '</td>';
-                temp_html += '<td><button class="custom_profiles_view" value=' + idx + '></button><button class="custom_profiles_delete" value=' + idx + '></button></td>';
+                temp_html += '<td><button class="custom_profiles_view" value=' + idx + '></button><button class="custom_profiles_delete" value=' + idx + '></button></td></tr>';
             });
             temp_html += '</table>';
             tab.html(temp_html);
@@ -4136,16 +4219,25 @@ function addProfile(profession, profile, base){
             temp_html += '<input type="text" name="" id="custom_resource_fname" \>';
             temp_html += '<label>Inventory name: </label>';
             temp_html += '<input type="text" name="" id="custom_resource_name" \>';
-            temp_html += '<button id="custom_resources_add_btn">Add</button></div>';
+            temp_html += '<br />'
+            temp_html += '<input type="checkbox" name="" id="custom_resource_countbank" \><label>Count in bank</label>';
+            temp_html += '<input type="checkbox" name="" id="custom_resource_unbound" checked="checked" \><label>unbound </label>';
+            temp_html += '<input type="checkbox" name="" id="custom_resource_btc" checked="checked" \><label>BtC </label>';
+            temp_html += '<input type="checkbox" name="" id="custom_resource_bta" checked="checked" \><label>BtA </label>';
+            temp_html += '<button id="custom_resources_add_btn">Add</button>';
             temp_html += '</div>';
-            temp_html += '<table><tr><th>#</th><th>Resource Name</th><th><th></tr>';
+            temp_html += '<table><tr><th>#</th><th>Resource Name</th><th>bank</th><th>unbound</th><th>BtC</th><th>BtA</th><th><th></tr>';
 
             trackResources.forEach(function (trRes, idx) {
                 temp_html += '<tr><td>' + (idx+1) + '</td>';
                 temp_html += '<td>' + trRes.fname + '</td>';
-                temp_html += '<td><button class="custom_resources_delete" value=' + idx + '></button></td>';
+                temp_html += '<td><span class=" ui-icon ' + (trRes.bank ? 'ui-icon-check' : 'ui-icon-close') + '"></span></td>'; 
+                temp_html += '<td><span class=" ui-icon ' + (trRes.unbound ? 'ui-icon-check' : 'ui-icon-close') + '"></span></td>'; 
+                temp_html += '<td><span class=" ui-icon ' + (trRes.btc ? 'ui-icon-check' : 'ui-icon-close') + '"></span></td>'; 
+                temp_html += '<td><span class=" ui-icon ' + (trRes.bta ? 'ui-icon-check' : 'ui-icon-close') + '"></span></td>'; 
+                temp_html += '<td><button class="custom_resources_delete" value=' + idx + '></button></td></tr>';
             });
-            temp_html += '</table>';
+            temp_html += '</table><br /><button id="custom_resources_reset">Reset to default</button>';
             tab.html(temp_html);
 
             $( ".custom_resources_delete" ).button({
@@ -4175,11 +4267,36 @@ function addProfile(profession, profile, base){
                     unsafeWindow.location.href = current_Gateway;
                 }, 0);
             });
+            
+            $( "#custom_resources_reset" ).button();
+            $( "#custom_resources_reset" ).click( function(e) {
+                if ( !loggedAccount ) {
+                    var str = "Tracked resource could not be removed, make sure you are logged in.";
+                    $('<div id="dialog-error-inventory" title="Error deleting tracked resource">' + str + '</div>').dialog({
+                          resizable: true,
+                          width: 500,
+                          modal: false,
+                        });
+                    return;
+                }
+                GM_deleteValue("tracked_resources");
+                charNamesList.forEach( function (charName) {
+                    charStatisticsList[charName].trackedResources = [];
+                    GM_setValue("statistics__char__" + charName + "@" + loggedAccount , JSON.stringify(charStatisticsList[charName]));
+                });
+                window.setTimeout(function() {
+                    unsafeWindow.location.href = current_Gateway;
+                }, 0);
+            });
 
             $('#custom_resources_add_btn').button();
             $('#custom_resources_add_btn').click( function (e) {
                 var _fname = $("#custom_resource_fname").val();
                 var _name = $("#custom_resource_name").val();
+                var _bank = $("#custom_resource_countbank").prop('checked');
+                var _unbound = $("#custom_resource_unbound").prop('checked');
+                var _btc = $("#custom_resource_btc").prop('checked');
+                var _bta = $("#custom_resource_bta").prop('checked');
                 if ( _fname.length == 0 || _name.length == 0) {
 					var str = "Tracked resource could not be added. You have to enter both values!";
                     $('<div id="dialog-error-inventory" title="Error adding tracked resource">' + str + '</div>').dialog({
@@ -4189,12 +4306,14 @@ function addProfile(profession, profile, base){
                         });
                     return;
                 }
-                trackResources.push({ fname: _fname, name: _name });
+                trackResources.push({ fname: _fname, name: _name, bank: _bank, unbound: _unbound, btc: _btc, bta: _bta });
                 GM_setValue("tracked_resources", JSON.stringify(trackResources));
                 window.setTimeout(function() {
                     unsafeWindow.location.href = current_Gateway;
                 }, 0);
             });
+
+
 
             $("#script_settings").tabs({ active: false, collapsible: true });
             setEventHandlers = true;
@@ -4290,7 +4409,7 @@ function addProfile(profession, profile, base){
                 var task_tab = addTab(char_tabs[0], "Tasks");
 
                 // Creating the Tasks custom tab
-                var tableHTML = $('<table><thead><tr><th>Task name</th><th># of slots</th><th>profile</th><th>priority</th></tr></thead><tbody>');
+                var tableHTML = $('<table><thead><tr><th>Task name</th><th># of slots</th><th>profile</th><th>priority</th><th>stop at lvl</th></tr></thead><tbody>');
                 
                 var _slotOptions = [];
                 for (var i = 0; i < 10; i++) 
@@ -4299,6 +4418,9 @@ function addProfile(profession, profile, base){
                         value: i
                     });
                 var _priorityOptions = [{name:'high',value:0},{name:'medium',value:1},{name:'low',value:2}];
+                var _stopTaskAtLevelOptions = []; 
+                    _stopTaskAtLevelOptions.push({name: 'none', value: 0}); 
+                    for (var i = 1; i < 26; i++) _stopTaskAtLevelOptions.push({name: i, value: i});
 
                 tasklist.forEach(function(task) {
                     if (!task.taskActive) return;
@@ -4312,19 +4434,24 @@ function addProfile(profession, profile, base){
                     var _slots = {scope: 'char_task', group: 'taskListSettings', name: task.taskListName, sub_name: 'taskSlots', opts: _slotOptions ,title: task.taskListName, type: 'select', pane: 'tasks1', tooltip: 'Number of slots to assign to ' + task.taskListName};
                     var _profile = {scope: 'char_task', group: 'taskListSettings', name: task.taskListName, sub_name: 'taskProfile', opts: _profileNames ,title: task.taskListName, type: 'select', pane: 'tasks1', tooltip: ''};
                     var _priority = {scope: 'char_task', group: 'taskListSettings', name: task.taskListName, sub_name: 'taskPriority', opts: _priorityOptions ,title: task.taskListName, type: 'select', pane: 'tasks1', tooltip: ''};
+                    var _stop = {scope: 'char_task', group: 'taskListSettings', name: task.taskListName, sub_name: 'stopTaskAtLevel', opts: _stopTaskAtLevelOptions ,title: task.taskListName, type: 'select', pane: 'tasks1', tooltip: ''};                    
 
                     var _slt = createInput(_slots, charName, 'settingsInput', 'settingsLabel');
                     var _prf = createInput(_profile, charName, 'settingsInput', 'settingsLabel');
                     var _pr = createInput(_priority, charName, 'settingsInput', 'settingsLabel');
+                    var _stp = createInput(_stop, charName, 'settingsInput', 'settingsLabel');
+                    
                     var tr = $("<tr>");
                     $("<td>").append(_slt.label).appendTo(tr);
                     $("<td>").append(_slt.input).appendTo(tr);
                     $("<td>").append(_prf.input).appendTo(tr);
                     $("<td>").append(_pr.input).appendTo(tr);
+                    $("<td>").append(_stp.input).appendTo(tr);
                     tr.appendTo(tableHTML);
                 });
                 task_tab.append(tableHTML);
 
+                
                 // Manual Slots allocation tab
                 var task2_tab = addTab(char_tabs[0], "Manual Tasks");
                 
@@ -4783,12 +4910,14 @@ function addProfile(profession, profile, base){
 
         // Resource tracker update.
         html = "<table class='withRotation'><tr><th class='rotate'><div><span>Character Name</div></span></th>";
+        html += "<th class='rotate'><div><span>Main bags empty slots</div></span></th>";
         trackResources.forEach(function(item) {
             html += "<th class='rotate'><div><span>" + item.fname + "</div></span></th>";
         })
         html += '</tr>';
         charNamesList.forEach(function(charName) {
             html += '<tr><td>' + charName + '</td>';
+            html += '<td>' + charStatisticsList[charName].general.emptyBagSlots + '</td>';
             charStatisticsList[charName].trackedResources.forEach(function(count) {
                 html += '<td>' + count + '</td>';
             })
@@ -4876,13 +5005,14 @@ function addProfile(profession, profile, base){
                 console.log("Reseting for " + charNamesList[value-1]);
                 chartimers[parseInt(value)-1] = null;
                 updateCounters();
-                clearTimeout(timerHandle);
-                curCharNum = GM_setValue("curCharNum_" + loggedAccount, parseInt(value)-1);
-                timerHandle = window.setTimeout(function() {
-                    process();
-                }, delay.SHORT);
+                if (waitingNextChar) {
+                    clearTimeout(timerHandle);
+                    curCharNum = GM_setValue("curCharNum_" + loggedAccount, parseInt(value)-1);
+                    timerHandle = window.setTimeout(function() {
+                        process();
+                    }, delay.SHORT);
+                }
             } 
-            
         });
     }
 
@@ -4973,6 +5103,13 @@ function addProfile(profession, profile, base){
                 limit: 0
             };
         }
+        if (getSetting('vendorSettings', 'vendorHealingPots')) {
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Potion_Healing(|_[1-5])$/,
+                limit: 0
+            };
+        }        
+        
         if (getSetting('vendorSettings', 'vendorJunk')) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Item_Snowworks_/,
@@ -4996,6 +5133,22 @@ function addProfile(profession, profile, base){
             };
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Object_Decoration_/,
+                limit: 0
+            };
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Object_Gem_/,
+                limit: 0
+            };
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Object_Jewelry_/,
+                limit: 0
+            };
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Object_Mug_/,
+                limit: 0
+            };
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Object_Trinket_/,
                 limit: 0
             };
             _vendorItems[_vendorItems.length] = {
@@ -5091,6 +5244,10 @@ function addProfile(profession, profile, base){
                 'settings.profession.smartLeadership.tooltip': 'Try to spread and fill non-common assets and supplement with common if needed',
                 'settings.profession.skipPatrol': 'Skip Patrol task if > 10 claims',
                 'settings.profession.skipPatrol.tooltip': 'Skip &quot;Patrol the Mines&quot; leadership task if there are more than 10 mining claims in the inventory (Never, Always, On AD profile, if Leadership level is &gt;= 20, or both of the above )',
+                'settings.profession.stopNotLeadership': 'Stop NON-Leadership task at level: ',
+                'settings.profession.stopNotLeadership.tooltip': 'Block All professions except Leadership at level 20 or 25 and above. Make sure you have Leadership set.',
+                'settings.profession.stopAlchemyAt3': 'Stop Alchemy leveling at level 3',
+                'settings.profession.stopAlchemyAt3.tooltip': 'Block Alchemy tasks at level 3 and above. Make sure you have other tasks set.',
                 'settings.consolid.consolidate': 'Consolidate AD via ZAX',
                 'settings.consolid.consolidate.tooltip': 'Automatically attempt to post, cancel and withdraw AD via ZAX and consolidate to designated character',
                 'settings.consolid.bankerName': 'Character Name of Banker',
@@ -5098,7 +5255,7 @@ function addProfile(profession, profile, base){
                 'settings.consolid.minToTransfer': 'Min AD for Transfer',
                 'settings.consolid.minToTransfer.tooltip': 'Enter minimum AD limit for it to be considered for transfer off a character',
                 'settings.consolid.minCharBalance': 'Min Character balance',
-                'settings.consolid.minCharBalance,tooltip': 'Enter the amount of AD to always keep available on characters',
+                'settings.consolid.minCharBalance.tooltip': 'Enter the amount of AD to always keep available on characters',
                 'settings.consolid.transferRate': 'AD per Zen Rate (in zen)',
                 'settings.consolid.transferRate.tooltip': 'Enter default rate to use for transferring through ZAX',
 
@@ -5173,7 +5330,7 @@ function addProfile(profession, profile, base){
                 'settings.consolid.minToTransfer': 'Min AD do transferowania',
                 'settings.consolid.minToTransfer.tooltip': 'Minimalna ilość Diamentów Astralnych, przy której nastąpi próba przeniesienia do bankiera',
                 'settings.consolid.minCharBalance': 'Min AD do pozostawienia',
-                'settings.consolid.minCharBalance,tooltip': 'Minimalna ilość Diamentów Astralnych, które powinny pozostać na koncie postaci',
+                'settings.consolid.minCharBalance.tooltip': 'Minimalna ilość Diamentów Astralnych, które powinny pozostać na koncie postaci',
                 'settings.consolid.transferRate': 'Stawka AD za Zen',
                 'settings.consolid.transferRate.tooltip': 'Domyślna stawka Diamentów Astralnych za ZEN użyta do transferowania',
             },
