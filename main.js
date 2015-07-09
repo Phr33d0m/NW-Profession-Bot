@@ -2136,9 +2136,9 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'general', name: 'active',     type:'checkbox',    pane: 'main_not_tab',    title: 'Active',   tooltip: 'The char will be processed by the script',
             onchange: function(newValue, elm) {
                 if (newValue) {
-                    $("#"+elm.id).parents('.ui-accordion-content').prev().removeClass('inactive');
+                    $(elm).parents('.ui-accordion-content').prev().removeClass('inactive');
                 } else {
-                    $("#"+elm.id).parents('.ui-accordion-content').prev().addClass('inactive');
+                    $(elm).parents('.ui-accordion-content').prev().addClass('inactive');
                 }
             }
         },
@@ -5434,7 +5434,7 @@ function addProfile(profession, profile, base){
                 'settings.profession.stopNotLeadership': 'Wstrzymaj profesje inne od Przywództwa na poziomie',
                 'settings.profession.stopNotLeadership.tooltip': 'Nie uruchamiaj zadań profesji innej od Przywództwa po osiągnięciu poziomu. Upewnij się, ze masz ustawione Przywództwo.',
                 'settings.profession.stopAlchemyAt3': 'Wstrzymaj naukę Alchemii na poziomie 3',
-                'settings.profession.stopAlchemyAt3.tooltip': 'Wstrzymaj naukę Alchemii na poziomie 3 lub wyższym. Upewnij się, że masz ustawione inne profesje.',
+                'settings.profession.stopAlchemyAt3.tooltip': 'Wstrzymaj naukę Alchemii na poziomie 3 lub wyższym. Upewnij się, że masz ustawione inne profesje.',
                 'settings.consolid.consolidate': 'Konsoliduj AD przez ZAX',
                 'settings.consolid.consolidate.tooltip': 'Automatycznie próbuj wysyłać Diamenty Astralne przez wymianę ZEN i wypłacać na jednej postaci',
                 'settings.consolid.bankerName': 'Nazwa Bankiera',
