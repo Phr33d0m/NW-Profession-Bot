@@ -1234,6 +1234,10 @@ Rares:
         Hvy_Armorsmithing_Tier3_Plate_Boots_Special_6 : "Plate Boots +6",
         Hvy_Armorsmithing_Tier3_Plate_Gloves_Special_6 : "Plate Gauntlets +6",
         Hvy_Armorsmithing_Tier3_Plate_Helm_Special_6 : "Plate Helm +6",
+        Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Tank : "Defender's Exquisite Elemental Chainmail",
+        Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Dps : "Warrior's Exquisite Elemental Chainmail",
+        Crafted_Hvy_Armorsmithing_T4_Purple_Pants_Tank : "Defender's Exquisite Elemental Chausses",
+        Crafted_Hvy_Armorsmithing_T4_Purple_Pants_Dps : "Warrior's Exquisite Elemental Chausses"
     },
     Tailoring : {
         Tailoring_Tier0_Intro : "Hire your first Weaver",
