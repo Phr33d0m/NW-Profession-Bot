@@ -5260,7 +5260,7 @@ function addProfile(profession, profile, base){
                 limit: 0
             };
             _vendorItems[_vendorItems.length] = {
-                pattern: /_Green_T[1-7]_Unid$/,
+                pattern: /_Green_T[1-6]_Unid$/,
                 limit: 0
             }; // Unidentified Green Gear
             _vendorItems[_vendorItems.length] = {
