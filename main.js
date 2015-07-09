@@ -2061,11 +2061,11 @@ function addProfile(profession, profile, base){
         {scope: 'account', group: 'consolidationSettings', name:'transferRate',   type:'text',     pane:'bank', title: tr('settings.consolid.transferRate'),   tooltip: tr('settings.consolid.transferRate.tooltip')},
 
         {scope: 'char', group: 'general', name: 'active',     type:'checkbox',    pane: 'main_not_tab',    title: 'Active',   tooltip: 'The char will be processed by the script',
-            onchange: function(newValue) {
+            onchange: function(newValue, elm) {
                 if (newValue) {
-                    $(":focus").parents('.ui-accordion-content').prev().removeClass('inactive');
+                    $("#"+elm.id).parents('.ui-accordion-content').prev().removeClass('inactive');
                 } else {
-                    $(":focus").parents('.ui-accordion-content').prev().addClass('inactive');
+                    $("#"+elm.id).parents('.ui-accordion-content').prev().addClass('inactive');
                 }
             }
         },
@@ -4407,7 +4407,7 @@ function addProfile(profession, profile, base){
             var wrp = $('<div id="charSettingsAccordion">');
             $("#char_settings").append(wrp);
             charNamesList.forEach( function(charName, idx) {
-                if (charSettingsList[charNamesList[idx]].general.active) {
+                if (charSettingsList[charName].general.active) {
                     wrp.append('<h3>' + charName + '</h3>');
                 } else {
                     wrp.append("<h3 class='inactive'>" + charName + '</h3>');
