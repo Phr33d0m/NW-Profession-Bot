@@ -1945,6 +1945,7 @@ function addProfile(profession, profile, base){
         generalSettings: {
             refineAD: true,
             openRewards: false,
+            openCelestialBox: false,
             openInvocation: true,
             keepOneUnopened: false,
             runSCA: 'free',
@@ -1996,6 +1997,7 @@ function addProfile(profession, profile, base){
         generalSettings: {
             refineAD: true,
             openRewards: false,
+            openCelestialBox: false,
             openInvocation: true,
             keepOneUnopened: false,
             runSCA: 'free',
@@ -2092,6 +2094,7 @@ function addProfile(profession, profile, base){
             opts: [ { name: '1',  value: 1},  { name: '2',  value: 2},  { name: '3',  value: 3}], },
         
         {scope: 'account', group: 'generalSettings', name: 'openRewards', title: tr('settings.general.openrewards'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openrewards.tooltip')},
+        {scope: 'account', group: 'generalSettings', name: 'openCelestialBox', title: tr('settings.general.opencelestial'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.opencelestial.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'keepOneUnopened', title: tr('settings.general.keepOneUnopened'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.keepOneUnopened.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'openInvocation', title: tr('settings.general.openInvocation'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openInvocation.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'refineAD', title: tr('settings.general.refinead'),           type: 'checkbox', pane: 'main', tooltip: tr('settings.general.refinead.tooltip')},
@@ -2135,6 +2138,7 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'general', name:'manualTaskSlots',    type:'checkbox',    pane:'main_not_tab',    title:'Use manual task allocation tab',   tooltip:'Per slot profile allocation'},
         
         {scope: 'char', group: 'generalSettings', name: 'openRewards', title: tr('settings.general.openrewards'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openrewards.tooltip')},
+        {scope: 'char', group: 'generalSettings', name: 'openCelestialBox', title: tr('settings.general.opencelestial'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.opencelestial.tooltip')},
         {scope: 'char', group: 'generalSettings', name: 'keepOneUnopened', title: tr('settings.general.keepOneUnopened'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.keepOneUnopened.tooltip')},
         {scope: 'char', group: 'generalSettings', name: 'openInvocation', title: tr('settings.general.openInvocation'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openInvocation.tooltip')},
         {scope: 'char', group: 'generalSettings', name: 'refineAD',    title: tr('settings.general.keepOneUnopened'),           type: 'checkbox', pane: 'main', tooltip: tr('settings.general.refinead.tooltip')},
@@ -3357,9 +3361,30 @@ function addProfile(profession, profile, base){
             });
         }
 
+        if (getSetting('generalSettings','openCelestialBox')) {
+            var _pbags = unsafeWindow.client.dataModel.model.ent.main.inventory.playerbags;
+            var _cRewardPat = /Invocation_Reward_Celestial_Artifact_Equipment_Box|Invocation_Reward_Celestial_Artifacts_Box|Invocation_Reward_Celestial_Enchantments_Box/;
+            console.log("Opening Celestial Boxes");
+            $.each(_pbags, function(bi, bag) {
+                bag.slots.forEach(function(slot) {
+                    if (slot && _cRewardPat.test(slot.name)) {
+                        if (slot.count >= 99)
+                            slot.count = 99;
+
+                        var reserve = getSetting('generalSettings', 'keepOneUnopened') ? 1 : 0;
+                        for (i = 1; i <= (slot.count - reserve); i++) {
+                            window.setTimeout(function() {
+                                client.sendCommand('GatewayInventory_OpenRewardPack', slot.uid);
+                            }, 500);
+                        }
+                    }
+                });
+            });
+        }
+
         if (getSetting('generalSettings','openInvocation')) {
             var _pbags = unsafeWindow.client.dataModel.model.ent.main.inventory.playerbags;
-            var _cRewardPat = /Invocation_Rp_Bag|Invocation_Reward_Celestial_Artifact_Equipment_Box|Invocation_Reward_Celestial_Artifacts_Box|Invocation_Reward_Celestial_Enchantments_Box/;
+            var _cRewardPat = /Invocation_Rp_Bag/;
             console.log("Opening Invocation Rewards");
             $.each(_pbags, function(bi, bag) {
                 bag.slots.forEach(function(slot) {
@@ -5292,10 +5317,10 @@ function addProfile(profession, profile, base){
                 'settings.main.nw_password.tooltip': '',
                 'settings.main.savenexttime': 'Save next process times',
                 'settings.main.savenexttime.tooltip': 'Save the next proffesion times persistently',
-                //'settings.main.charcount': 'Enter number of characters to use (Save and Apply to update settings form)',
-                //'settings.main.charcount.tooltip': 'Enter number of characters to use (Save and Apply to update settings form)',
                 'settings.general.openrewards': 'Open Reward Chests',
                 'settings.general.openrewards.tooltip': 'Enable opening of leadership chests on character switch',
+                'settings.general.opencelestial': 'Open Celestial Chests',
+                'settings.general.opencelestial.tooltip': 'Open Chests buyed for Celestial Coins',
                 'settings.general.openInvocation': 'Open Invocation Rewards',
                 'settings.general.openInvocation.tooltip': 'Enable opening rewards from invocation',
                 'settings.general.keepOneUnopened': 'Keep one reward box unopened',
@@ -5371,12 +5396,12 @@ function addProfile(profession, profile, base){
                 'settings.main.nw_password.tooltip': '',
                 'settings.main.savenexttime': 'Zapisuj czas następnego zadania',
                 'settings.main.savenexttime.tooltip': 'Zapisuj czas następnego zadania w danych międzysesyjnych',
-                //'settings.main.charcount': 'Wprowadź liczbę postaci (naciśnij "Zapisz i zastosuj" aby odświerzyć formularz)',
-                //'settings.main.charcount.tooltip': 'Wprowadź liczbę postaci (naciśnij "Save and Apply" aby odświerzyć formularz)',
                 'settings.general.openrewards': 'Otwieraj skrzynki',
                 'settings.general.openrewards.tooltip': 'Otwieraj skrzynki z zadań Przywództwa przy zmianie postaci',
                 'settings.general.openInvocation': 'Otwieraj nagrody z inwokacji',
                 'settings.general.openInvocation.tooltip': 'Otwieraj nagrody z inwokacji - zajmują masę miejsca, bo się nie łączą w stosy',
+                'settings.general.opencelestial': 'Otwieraj skrzynki za monety',
+                'settings.general.opencelestial.tooltip': 'Otwieraj skrzynki kupione za 13 monet z inwokacji',
                 'settings.general.keepOneUnopened': 'Pozostaw jedną skrzynkę nieotwartą',
                 'settings.general.keepOneUnopened.tooltip': 'Potrzebne do zarezerwowania miejsca na nagrody',
                 'settings.general.refinead': 'Szlifuj diamenty',
@@ -5393,6 +5418,10 @@ function addProfile(profession, profile, base){
                 'settings.profession.smartLeadership.tooltip': 'Próbuje przydzielić jak najmniej zwykłych pracowników do zadań przywództwa',
                 'settings.profession.skipPatrol': 'Pomiń zadanie Patrol jeśli masz >10 zezwoleń',
                 'settings.profession.skipPatrol.tooltip': 'Pomiń zadanie Przywództwa &quot;Patroluj kopalnie&quot; jeśli masz więcej niż 10 pozwoleń górniczych (Nigdy, Zawsze, Gdy wybrany profil to AD, jeśli poziom Przywództwa is &gt;= 20, lub jeśli obydwa poprzednie)',
+                'settings.profession.stopNotLeadership': 'Wstrzymaj profesje inne od Przywództwa na poziomie',
+                'settings.profession.stopNotLeadership.tooltip': 'Nie uruchamiaj zadań profesji innej od Przywództwa po osiągnięciu poziomu. Upewnij się, ze masz ustawione Przywództwo.',
+                'settings.profession.stopAlchemyAt3': 'Wstrzymaj naukę Alchemii na poziomie 3',
+                'settings.profession.stopAlchemyAt3.tooltip': 'Wstrzymaj naukę Alchemii na poziomie 3 lub wyższym. Upewnij się, że masz ustawione inne profesje.',
                 'settings.consolid.consolidate': 'Konsoliduj AD przez ZAX',
                 'settings.consolid.consolidate.tooltip': 'Automatycznie próbuj wysyłać Diamenty Astralne przez wymianę ZEN i wypłacać na jednej postaci',
                 'settings.consolid.bankerName': 'Nazwa Bankiera',
