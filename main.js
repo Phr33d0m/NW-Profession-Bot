@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.1
+// @version 4.2
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -37,6 +37,13 @@ Developers & Contributors
 - WloBeb
 
 RELEASE NOTES
+4.2
+- Added "Resource Tracker" tab
+- Added "to buy" notification for missing resources
+- Added new professions & some hotfixes for some profiles
+- New profile syntax
+- addProfile() functionality changed a bit to adapt to our new profile syntax
+- A lot of fixes here and there
 4.1
 - Added failsafe to prevent script getting stuck when can't claim task result
 - AddProfile() improved (thanks dlebedynskyi)
@@ -68,7 +75,7 @@ http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
 
 // Make sure it's running on the main page, no frames
 
-var scriptVersion = 4.1;
+var scriptVersion = 4.2;
 var forceSettingsResetOnUpgrade = true;
 var forceResetOnVerBelow = 3.5;
 
@@ -1193,6 +1200,76 @@ function addProfile(profession, profile, base){
         },
     });
 
+     addProfile("Platesmithing", {
+        profileName: "craft purple lvl 25",
+        isProfileActive: true,
+        level: {
+            25: ["Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Tank", //Defender's Exquisite Elemental Chainmail
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Dps", //Warrior's Exquisite Elemental Chainmail
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Pants_Tank",//Defender's Exquisite Elemental Chausses
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Pants_Dps", //Warrior's Exquisite Elemental Chausses
+            	 "Hvy_Armorsmithing_Tier3_Refine_Basic"//Mithral plates
+            ]
+        }
+    }, "21->25 gather");
+
+     addProfile("Platesmithing", {
+        profileName: "craft Exq. Tank shirt",
+        isProfileActive: true,
+        level: {
+            25: ["Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Tank", //Defender's Exquisite Elemental Chainmail
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Dps", //Warrior's Exquisite Elemental Chainmail
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Pants_Tank",//Defender's Exquisite Elemental Chausses
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Pants_Dps", //Warrior's Exquisite Elemental Chausses
+            	 "Crafted_Hvy_Armorsmithing_T4_Green_Shirt_Tank",
+            	 "Hvy_Armorsmithing_Tier3_Refine_Basic"//Mithral plates
+            ]
+        }
+    }, "21->25 gather");
+
+     addProfile("Platesmithing", {
+        profileName: "craft Exq. Warrior shirt",
+        isProfileActive: true,
+        level: {
+            25: ["Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Dps", //Warrior's Exquisite Elemental Chainmail
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Tank", //Defender's Exquisite Elemental Chainmail
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Pants_Tank",//Defender's Exquisite Elemental Chausses
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Pants_Dps", //Warrior's Exquisite Elemental Chausses
+            	 "Crafted_Hvy_Armorsmithing_T4_Green_Shirt_Dps",
+            	 "Hvy_Armorsmithing_Tier3_Refine_Basic"//Mithral plates
+            ]
+        }
+    }, "21->25 gather");
+
+	addProfile("Platesmithing", {
+        profileName: "craft Exq. Tank pants",
+        isProfileActive: true,
+        level: {
+            25: ["Crafted_Hvy_Armorsmithing_T4_Purple_Pants_Tank",//Defender's Exquisite Elemental Chausses
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Pants_Dps", //Warrior's Exquisite Elemental Chausses
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Dps", //Warrior's Exquisite Elemental Chainmail
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Tank", //Defender's Exquisite Elemental Chainmail
+            	 "Crafted_Hvy_Armorsmithing_T4_Green_Pants_Tank",
+            	 "Hvy_Armorsmithing_Tier3_Refine_Basic"//Mithral plates
+            ]
+        }
+    }, "21->25 gather");
+
+    addProfile("Platesmithing", {
+        profileName: "craft Exq. Warrior pants",
+        isProfileActive: true,
+        level: {
+            25: ["Crafted_Hvy_Armorsmithing_T4_Purple_Pants_Dps", //Warrior's Exquisite Elemental Chausses
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Dps", //Warrior's Exquisite Elemental Chainmail
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Shirt_Tank", //Defender's Exquisite Elemental Chainmail
+            	 "Crafted_Hvy_Armorsmithing_T4_Purple_Pants_Tank",//Defender's Exquisite Elemental Chausses
+            	 "Crafted_Hvy_Armorsmithing_T4_Green_Pants_Dps",
+            	 "Hvy_Armorsmithing_Tier3_Refine_Basic"//Mithral plates
+            ]
+        }
+    }, "21->25 gather");
+
+
     addProfile("Platesmithing", {
         profileName: "Wondrous Sprocket",
         isProfileActive: false,
@@ -1862,10 +1939,13 @@ function addProfile(profession, profile, base){
             trainAssets: true,
             smartLeadershipAssets: true,
             skipPatrolTask: 'AD&Lvl20',
+            stopNotLeadership: 0,
+            stopAlchemyAt3: false,
         },
         generalSettings: {
             refineAD: true,
             openRewards: false,
+            openCelestialBox: false,
             openInvocation: true,
             keepOneUnopened: false,
             runSCA: 'free',
@@ -1911,10 +1991,13 @@ function addProfile(profession, profile, base){
             trainAssets: true,
             skipPatrolTask: 'AD&Lvl20',
             smartLeadershipAssets: true,
+            stopNotLeadership: 0,
+            stopAlchemyAt3: false,
         },
         generalSettings: {
             refineAD: true,
             openRewards: false,
+            openCelestialBox: false,
             openInvocation: true,
             keepOneUnopened: false,
             runSCA: 'free',
@@ -1941,6 +2024,7 @@ function addProfile(profession, profile, base){
         defaultCharSettings.taskListSettings[task.taskListName].taskSlots = task.taskDefaultSlotNum;
         defaultCharSettings.taskListSettings[task.taskListName].taskProfile = profileNames[0].value;
         defaultCharSettings.taskListSettings[task.taskListName].taskPriority = task.taskDefaultPriority;
+        defaultCharSettings.taskListSettings[task.taskListName].stopTaskAtLevel = 0;
     });
 
     for (var i = 0; i < 9; i++) {
@@ -2010,6 +2094,7 @@ function addProfile(profession, profile, base){
             opts: [ { name: '1',  value: 1},  { name: '2',  value: 2},  { name: '3',  value: 3}], },
         
         {scope: 'account', group: 'generalSettings', name: 'openRewards', title: tr('settings.general.openrewards'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openrewards.tooltip')},
+        {scope: 'account', group: 'generalSettings', name: 'openCelestialBox', title: tr('settings.general.opencelestial'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.opencelestial.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'keepOneUnopened', title: tr('settings.general.keepOneUnopened'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.keepOneUnopened.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'openInvocation', title: tr('settings.general.openInvocation'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openInvocation.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'refineAD', title: tr('settings.general.refinead'),           type: 'checkbox', pane: 'main', tooltip: tr('settings.general.refinead.tooltip')},
@@ -2024,6 +2109,9 @@ function addProfile(profession, profile, base){
         {scope: 'account', group: 'professionSettings', name: 'smartLeadershipAssets', type:'checkbox',  pane: 'prof', title: tr('settings.profession.smartLeadership'), tooltip: tr('settings.profession.smartLeadership.tooltip')},
         {scope: 'account', group: 'professionSettings', name: 'skipPatrolTask',        type:'select',    pane: 'prof', title: tr('settings.profession.skipPatrol'),      tooltip: tr('settings.profession.skipPatrol.tooltip'),
             opts:[{name:'never',value:'never'},{name:'always',value:'always'},{name:'AD profile',value:'ad'},{name:'Leadership lvl 20',value:'ld20'},{name:'AD&Lvl20',value:'AD&Lvl20'}]},
+        {scope: 'account', group: 'professionSettings', name: 'stopNotLeadership',        type:'select',    pane: 'prof', title: tr('settings.profession.stopNotLeadership'),      tooltip: tr('settings.profession.stopNotLeadership.tooltip'),
+            opts:[{name:'never',value:'0'},{name: '20' ,value: 20},{name: '25' ,value: 25}]},
+        {scope: 'account', group: 'professionSettings', name: 'stopAlchemyAt3',        type:'checkbox',    pane: 'prof', title: tr('settings.profession.stopAlchemyAt3'),      tooltip: tr('settings.profession.stopAlchemyAt3.tooltip')},
         {scope: 'account', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
         {scope: 'account', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Node Kit Stacks',  tooltip:'Limit skill kits stacks to 50, vendor kits unusable by class, remove all if player has one bag or full bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorAltarsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Altar Stacks',  tooltip:'Limit Altars to 80,remove all if player has one bag or full bags'},
@@ -2042,14 +2130,23 @@ function addProfile(profession, profile, base){
         {scope: 'account', group: 'consolidationSettings', name:'consolidate',    type:'checkbox', pane:'bank', title: tr('settings.consolid.consolidate'),    tooltip: tr('settings.consolid.consolidate.tooltip') ,border:true},
         {scope: 'account', group: 'consolidationSettings', name:'bankCharName',   type:'text',     pane:'bank', title: tr('settings.consolid.bankerName'),     tooltip: tr('settings.consolid.bankerName.tooltip')},
         {scope: 'account', group: 'consolidationSettings', name:'minToTransfer',  type:'text',     pane:'bank', title: tr('settings.consolid.minToTransfer'),  tooltip: tr('settings.consolid.minToTransfer.tooltip')},
-        {scope: 'account', group: 'consolidationSettings', name:'minCharBalance', type:'text',     pane:'bank', title: tr('settings.consolid.minCharBalance'), tooltip: tr('settings.consolid.minCharBalance,tooltip')},
+        {scope: 'account', group: 'consolidationSettings', name:'minCharBalance', type:'text',     pane:'bank', title: tr('settings.consolid.minCharBalance'), tooltip: tr('settings.consolid.minCharBalance.tooltip')},
         {scope: 'account', group: 'consolidationSettings', name:'transferRate',   type:'text',     pane:'bank', title: tr('settings.consolid.transferRate'),   tooltip: tr('settings.consolid.transferRate.tooltip')},
 
-        {scope: 'char', group: 'general', name: 'active',     type:'checkbox',    pane: 'main_not_tab',    title: 'Active',   tooltip: 'The char will be processed by the script'},
+        {scope: 'char', group: 'general', name: 'active',     type:'checkbox',    pane: 'main_not_tab',    title: 'Active',   tooltip: 'The char will be processed by the script',
+            onchange: function(newValue, elm) {
+                if (newValue) {
+                    $(elm).parents('.ui-accordion-content').prev().removeClass('inactive');
+                } else {
+                    $(elm).parents('.ui-accordion-content').prev().addClass('inactive');
+                }
+            }
+        },
         {scope: 'char', group: 'general', name:'overrideGlobalSettings',    type:'checkbox',    pane:'main_not_tab',    title:'Override account settings for this char',   tooltip:''},
         {scope: 'char', group: 'general', name:'manualTaskSlots',    type:'checkbox',    pane:'main_not_tab',    title:'Use manual task allocation tab',   tooltip:'Per slot profile allocation'},
         
         {scope: 'char', group: 'generalSettings', name: 'openRewards', title: tr('settings.general.openrewards'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openrewards.tooltip')},
+        {scope: 'char', group: 'generalSettings', name: 'openCelestialBox', title: tr('settings.general.opencelestial'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.opencelestial.tooltip')},
         {scope: 'char', group: 'generalSettings', name: 'keepOneUnopened', title: tr('settings.general.keepOneUnopened'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.keepOneUnopened.tooltip')},
         {scope: 'char', group: 'generalSettings', name: 'openInvocation', title: tr('settings.general.openInvocation'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openInvocation.tooltip')},
         {scope: 'char', group: 'generalSettings', name: 'refineAD',    title: tr('settings.general.keepOneUnopened'),           type: 'checkbox', pane: 'main', tooltip: tr('settings.general.refinead.tooltip')},
@@ -2065,6 +2162,10 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'professionSettings', name: 'smartLeadershipAssets', type:'checkbox',  pane: 'prof', title: tr('settings.profession.smartLeadership'), tooltip: tr('settings.profession.smartLeadership.tooltip')},
         {scope: 'char', group: 'professionSettings', name: 'skipPatrolTask',        type: 'select',   pane: 'prof', title: tr('settings.profession.skipPatrol'),      tooltip: tr('settings.profession.skipPatrol.tooltip'),
             opts:[{name:'never',value:'never'},{name:'always',value:'always'},{name:'AD profile',value:'ad'},{name:'Leadership lvl 20',value:'ld20'},{name:'AD&Lvl20',value:'AD&Lvl20'}]},
+        {scope: 'char', group: 'professionSettings', name: 'stopNotLeadership',        type:'select',    pane: 'prof', title: tr('settings.profession.stopNotLeadership'),      tooltip: tr('settings.profession.stopNotLeadership.tooltip'),
+            opts:[{name:'never',value:0},{name: '20' ,value: 20},{name: '25' ,value: 25}]},
+        {scope: 'char', group: 'professionSettings', name: 'stopAlchemyAt3',        type:'checkbox',    pane: 'prof', title: tr('settings.profession.stopAlchemyAt3'),      tooltip: tr('settings.profession.stopAlchemyAt3.tooltip')},
+        
         {scope: 'char', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
         {scope: 'char', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Altar Node Kit Stacks',  tooltip:'Limit skill kits stacks to 50/Altars80, vendor kits unusable by class, remove all if player has one bag or full bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorAltarsLimit', type:'checkbox', pane:'vend', title:'Vendor/Maintain Altar Stacks',  tooltip:'Limit Altars to 80,remove all if player has one bag or full bags'},
@@ -2082,7 +2183,7 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'vendorSettings', name:'vendorHealingPots',     type:'checkbox', pane:'vend',   title:'Auto Vendor healing potions (1-60)',     tooltip:'Auto Vendor healing potions (lvl 60)'},        
         {scope: 'char', group: 'consolidationSettings', name:'consolidate',    type:'checkbox', pane:'bank', title: tr('settings.consolid.consolidate'),    tooltip: tr('settings.consolid.consolidate.tooltip'), border:true},
         {scope: 'char', group: 'consolidationSettings', name:'minToTransfer',  type:'text',     pane:'bank', title: tr('settings.consolid.minToTransfer'),  tooltip: tr('settings.consolid.minToTransfer.tooltip')},
-        {scope: 'char', group: 'consolidationSettings', name:'minCharBalance', type:'text',     pane:'bank', title: tr('settings.consolid.minCharBalance'), tooltip: tr('settings.consolid.minCharBalance,tooltip')},
+        {scope: 'char', group: 'consolidationSettings', name:'minCharBalance', type:'text',     pane:'bank', title: tr('settings.consolid.minCharBalance'), tooltip: tr('settings.consolid.minCharBalance.tooltip')},
         
         
         
@@ -2216,7 +2317,14 @@ function addProfile(profession, profile, base){
                 console.log("Prioritizing task lists.");
                 var charTaskList = tasklist
                     .filter(function(task) {
-                        return ((charSettingsList[curCharName].taskListSettings[task.taskListName].taskSlots > 0) && (failedTasksList.indexOf(task.taskListName) === -1)) ;
+                        var level = unsafeWindow.client.dataModel.model.ent.main.itemassignmentcategories.categories.filter(function(entry) {
+                                return entry.name == task.taskName;
+                            })
+                        level = (level[0]) ? level[0].currentrank : 0;
+                        console.log(level, task.taskListName, (charSettingsList[curCharName].taskListSettings[task.taskListName].stopTaskAtLevel == 0 || charSettingsList[curCharName].taskListSettings[task.taskListName].stopTaskAtLevel > level));
+                        return ((charSettingsList[curCharName].taskListSettings[task.taskListName].taskSlots > 0) 
+                                && (failedTasksList.indexOf(task.taskListName) === -1)
+                                && (charSettingsList[curCharName].taskListSettings[task.taskListName].stopTaskAtLevel == 0 || charSettingsList[curCharName].taskListSettings[task.taskListName].stopTaskAtLevel > level));
                     })
                     .sort(function(a, b) {
                         return (charSettingsList[curCharName].taskListSettings[a.taskListName].taskPriority - charSettingsList[curCharName].taskListSettings[b.taskListName].taskPriority);
@@ -2429,8 +2537,15 @@ function addProfile(profession, profile, base){
             return entry.name == prof.taskName;
         })[0].currentrank;
         var list = profile.level[level];
-        if(list.length <= i) {
-            console.log("Task list exhausted for ", prof.taskListName, " at level ", level, " profile: ", profile.profileName);
+        
+        var taskBlocked = ((getSetting('professionSettings','stopNotLeadership') == 20 && prof.taskName != 'Leadership' && level >= 20) || 
+            (getSetting('professionSettings','stopNotLeadership') == 25 && prof.taskName != 'Leadership' && level >= 25) ||
+            (getSetting('professionSettings','stopAlchemyAt3') && prof.taskName == 'Alchemy' && level > 3));
+        
+        if(list.length <= i || taskBlocked) {
+            if (!taskBlocked) console.log("Task list exhausted for ", prof.taskListName, " at level ", level, " profile: ", profile.profileName);
+            else console.warn("Task list blocked for ", prof.taskListName, " at level ", level, " profile: ", profile.profileName);
+            
             failedTasksList.push(prof.taskListName);
             if (typeof failedProfiles[prof.taskListName] === 'undefined') {
                 failedProfiles[prof.taskListName] = [];
@@ -3254,6 +3369,27 @@ function addProfile(profession, profile, base){
             });
         }
 
+        if (getSetting('generalSettings','openCelestialBox')) {
+            var _pbags = unsafeWindow.client.dataModel.model.ent.main.inventory.playerbags;
+            var _cRewardPat = /Invocation_Reward_Celestial_Artifact_Equipment_Box|Invocation_Reward_Celestial_Artifacts_Box|Invocation_Reward_Celestial_Enchantments_Box/;
+            console.log("Opening Celestial Boxes");
+            $.each(_pbags, function(bi, bag) {
+                bag.slots.forEach(function(slot) {
+                    if (slot && _cRewardPat.test(slot.name)) {
+                        if (slot.count >= 99)
+                            slot.count = 99;
+
+                        var reserve = getSetting('generalSettings', 'keepOneUnopened') ? 1 : 0;
+                        for (i = 1; i <= (slot.count - reserve); i++) {
+                            window.setTimeout(function() {
+                                client.sendCommand('GatewayInventory_OpenRewardPack', slot.uid);
+                            }, 500);
+                        }
+                    }
+                });
+            });
+        }
+
         if (getSetting('generalSettings','openInvocation')) {
             var _pbags = unsafeWindow.client.dataModel.model.ent.main.inventory.playerbags;
             var _cRewardPat = /Invocation_Rp_Bag/;
@@ -3831,6 +3967,7 @@ function addProfile(profession, profile, base){
                 #settingsPanel{position: fixed; overflow: auto; right: 0px; top: 0px; width: 650px;max-height:100%;font: 12px sans-serif; text-align: left; display: block; z-index: 1001;}\
                 #settings_title{font-weight: bolder; background: none repeat scroll 0% 0% rgb(204, 204, 204); border-bottom: 1px solid rgb(102, 102, 102); padding: 3px;}\
                 #settingsPanelButtonContainer {background: none repeat scroll 0% 0% rgb(204, 204, 204); border-top: 1px solid rgb(102, 102, 102);padding: 3px;text-align:center} \
+                #charSettingsAccordion h3.inactive {color: LightGray ;}\
                 #charPanel {width:98%;max-height:550px;overflow:auto;display:block;padding:3px;}\
                 .inventory-container {float: left; clear: none; width: 270px; margin-right: 20px;}\
                 #prinfopane {position: fixed; top: 5px; left: 200px; display: block; z-index: 1000;}\
@@ -4265,7 +4402,7 @@ function addProfile(profession, profile, base){
                 var _btc = $("#custom_resource_btc").prop('checked');
                 var _bta = $("#custom_resource_bta").prop('checked');
                 if ( _fname.length == 0 || _name.length == 0) {
-					var str = "Tracked resource could not be added. You have to enter both values!";
+                    var str = "Tracked resource could not be added. You have to enter both values!";
                     $('<div id="dialog-error-inventory" title="Error adding tracked resource">' + str + '</div>').dialog({
                           resizable: true,
                           width: 500,
@@ -4365,7 +4502,11 @@ function addProfile(profession, profile, base){
             var wrp = $('<div id="charSettingsAccordion">');
             $("#char_settings").append(wrp);
             charNamesList.forEach( function(charName, idx) {
-                wrp.append('<h3>' + charName + '</h3>');
+                if (charSettingsList[charName].general.active) {
+                    wrp.append('<h3>' + charName + '</h3>');
+                } else {
+                    wrp.append("<h3 class='inactive'>" + charName + '</h3>');
+                }
                 var wrp2 = $('<div id="charContainer' + idx + '">');
                 wrp.append(wrp2);
                 addInputsUL(wrp2[0], 'char', 'main_not_tab', charName);
@@ -4376,7 +4517,7 @@ function addProfile(profession, profile, base){
                 var task_tab = addTab(char_tabs[0], "Tasks");
 
                 // Creating the Tasks custom tab
-                var tableHTML = $('<table><thead><tr><th>Task name</th><th># of slots</th><th>profile</th><th>priority</th></tr></thead><tbody>');
+                var tableHTML = $('<table><thead><tr><th>Task name</th><th># of slots</th><th>profile</th><th>priority</th><th>stop at lvl</th></tr></thead><tbody>');
                 
                 var _slotOptions = [];
                 for (var i = 0; i < 10; i++) 
@@ -4385,6 +4526,9 @@ function addProfile(profession, profile, base){
                         value: i
                     });
                 var _priorityOptions = [{name:'high',value:0},{name:'medium',value:1},{name:'low',value:2}];
+                var _stopTaskAtLevelOptions = []; 
+                    _stopTaskAtLevelOptions.push({name: 'none', value: 0}); 
+                    for (var i = 1; i < 26; i++) _stopTaskAtLevelOptions.push({name: i, value: i});
 
                 tasklist.forEach(function(task) {
                     if (!task.taskActive) return;
@@ -4398,19 +4542,24 @@ function addProfile(profession, profile, base){
                     var _slots = {scope: 'char_task', group: 'taskListSettings', name: task.taskListName, sub_name: 'taskSlots', opts: _slotOptions ,title: task.taskListName, type: 'select', pane: 'tasks1', tooltip: 'Number of slots to assign to ' + task.taskListName};
                     var _profile = {scope: 'char_task', group: 'taskListSettings', name: task.taskListName, sub_name: 'taskProfile', opts: _profileNames ,title: task.taskListName, type: 'select', pane: 'tasks1', tooltip: ''};
                     var _priority = {scope: 'char_task', group: 'taskListSettings', name: task.taskListName, sub_name: 'taskPriority', opts: _priorityOptions ,title: task.taskListName, type: 'select', pane: 'tasks1', tooltip: ''};
+                    var _stop = {scope: 'char_task', group: 'taskListSettings', name: task.taskListName, sub_name: 'stopTaskAtLevel', opts: _stopTaskAtLevelOptions ,title: task.taskListName, type: 'select', pane: 'tasks1', tooltip: ''};                    
 
                     var _slt = createInput(_slots, charName, 'settingsInput', 'settingsLabel');
                     var _prf = createInput(_profile, charName, 'settingsInput', 'settingsLabel');
                     var _pr = createInput(_priority, charName, 'settingsInput', 'settingsLabel');
+                    var _stp = createInput(_stop, charName, 'settingsInput', 'settingsLabel');
+                    
                     var tr = $("<tr>");
                     $("<td>").append(_slt.label).appendTo(tr);
                     $("<td>").append(_slt.input).appendTo(tr);
                     $("<td>").append(_prf.input).appendTo(tr);
                     $("<td>").append(_pr.input).appendTo(tr);
+                    $("<td>").append(_stp.input).appendTo(tr);
                     tr.appendTo(tableHTML);
                 });
                 task_tab.append(tableHTML);
 
+                
                 // Manual Slots allocation tab
                 var task2_tab = addTab(char_tabs[0], "Manual Tasks");
                 
@@ -5111,9 +5260,17 @@ function addProfile(profession, profile, base){
                 limit: 0
             };
             _vendorItems[_vendorItems.length] = {
-                pattern: /_Green_T[1-5]_Unid$/,
+                pattern: /_Green_T[1-6]_Unid$/,
                 limit: 0
             }; // Unidentified Green Gear
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Object_Trinket_/,
+                limit: 0
+            }; 
+             _vendorItems[_vendorItems.length] = {
+                pattern: /^Object_Skill_/,
+                limit: 0
+            };
         }
         
         if (getSetting('vendorSettings', 'vendorProfResults')) {
@@ -5181,10 +5338,10 @@ function addProfile(profession, profile, base){
                 'settings.main.nw_password.tooltip': '',
                 'settings.main.savenexttime': 'Save next process times',
                 'settings.main.savenexttime.tooltip': 'Save the next proffesion times persistently',
-                //'settings.main.charcount': 'Enter number of characters to use (Save and Apply to update settings form)',
-                //'settings.main.charcount.tooltip': 'Enter number of characters to use (Save and Apply to update settings form)',
                 'settings.general.openrewards': 'Open Reward Chests',
                 'settings.general.openrewards.tooltip': 'Enable opening of leadership chests on character switch',
+                'settings.general.opencelestial': 'Open Celestial Chests',
+                'settings.general.opencelestial.tooltip': 'Open Chests buyed for Celestial Coins',
                 'settings.general.openInvocation': 'Open Invocation Rewards',
                 'settings.general.openInvocation.tooltip': 'Enable opening rewards from invocation',
                 'settings.general.keepOneUnopened': 'Keep one reward box unopened',
@@ -5203,6 +5360,10 @@ function addProfile(profession, profile, base){
                 'settings.profession.smartLeadership.tooltip': 'Try to spread and fill non-common assets and supplement with common if needed',
                 'settings.profession.skipPatrol': 'Skip Patrol task if > 10 claims',
                 'settings.profession.skipPatrol.tooltip': 'Skip &quot;Patrol the Mines&quot; leadership task if there are more than 10 mining claims in the inventory (Never, Always, On AD profile, if Leadership level is &gt;= 20, or both of the above )',
+                'settings.profession.stopNotLeadership': 'Stop NON-Leadership task at level: ',
+                'settings.profession.stopNotLeadership.tooltip': 'Block All professions except Leadership at level 20 or 25 and above. Make sure you have Leadership set.',
+                'settings.profession.stopAlchemyAt3': 'Stop Alchemy leveling at level 3',
+                'settings.profession.stopAlchemyAt3.tooltip': 'Block Alchemy tasks at level 3 and above. Make sure you have other tasks set.',
                 'settings.consolid.consolidate': 'Consolidate AD via ZAX',
                 'settings.consolid.consolidate.tooltip': 'Automatically attempt to post, cancel and withdraw AD via ZAX and consolidate to designated character',
                 'settings.consolid.bankerName': 'Character Name of Banker',
@@ -5210,7 +5371,7 @@ function addProfile(profession, profile, base){
                 'settings.consolid.minToTransfer': 'Min AD for Transfer',
                 'settings.consolid.minToTransfer.tooltip': 'Enter minimum AD limit for it to be considered for transfer off a character',
                 'settings.consolid.minCharBalance': 'Min Character balance',
-                'settings.consolid.minCharBalance,tooltip': 'Enter the amount of AD to always keep available on characters',
+                'settings.consolid.minCharBalance.tooltip': 'Enter the amount of AD to always keep available on characters',
                 'settings.consolid.transferRate': 'AD per Zen Rate (in zen)',
                 'settings.consolid.transferRate.tooltip': 'Enter default rate to use for transferring through ZAX',
 
@@ -5256,12 +5417,12 @@ function addProfile(profession, profile, base){
                 'settings.main.nw_password.tooltip': '',
                 'settings.main.savenexttime': 'Zapisuj czas następnego zadania',
                 'settings.main.savenexttime.tooltip': 'Zapisuj czas następnego zadania w danych międzysesyjnych',
-                //'settings.main.charcount': 'Wprowadź liczbę postaci (naciśnij "Zapisz i zastosuj" aby odświerzyć formularz)',
-                //'settings.main.charcount.tooltip': 'Wprowadź liczbę postaci (naciśnij "Save and Apply" aby odświerzyć formularz)',
                 'settings.general.openrewards': 'Otwieraj skrzynki',
                 'settings.general.openrewards.tooltip': 'Otwieraj skrzynki z zadań Przywództwa przy zmianie postaci',
                 'settings.general.openInvocation': 'Otwieraj nagrody z inwokacji',
                 'settings.general.openInvocation.tooltip': 'Otwieraj nagrody z inwokacji - zajmują masę miejsca, bo się nie łączą w stosy',
+                'settings.general.opencelestial': 'Otwieraj skrzynki za monety',
+                'settings.general.opencelestial.tooltip': 'Otwieraj skrzynki kupione za 13 monet z inwokacji',
                 'settings.general.keepOneUnopened': 'Pozostaw jedną skrzynkę nieotwartą',
                 'settings.general.keepOneUnopened.tooltip': 'Potrzebne do zarezerwowania miejsca na nagrody',
                 'settings.general.refinead': 'Szlifuj diamenty',
@@ -5278,6 +5439,10 @@ function addProfile(profession, profile, base){
                 'settings.profession.smartLeadership.tooltip': 'Próbuje przydzielić jak najmniej zwykłych pracowników do zadań przywództwa',
                 'settings.profession.skipPatrol': 'Pomiń zadanie Patrol jeśli masz >10 zezwoleń',
                 'settings.profession.skipPatrol.tooltip': 'Pomiń zadanie Przywództwa &quot;Patroluj kopalnie&quot; jeśli masz więcej niż 10 pozwoleń górniczych (Nigdy, Zawsze, Gdy wybrany profil to AD, jeśli poziom Przywództwa is &gt;= 20, lub jeśli obydwa poprzednie)',
+                'settings.profession.stopNotLeadership': 'Wstrzymaj profesje inne od Przywództwa na poziomie',
+                'settings.profession.stopNotLeadership.tooltip': 'Nie uruchamiaj zadań profesji innej od Przywództwa po osiągnięciu poziomu. Upewnij się, ze masz ustawione Przywództwo.',
+                'settings.profession.stopAlchemyAt3': 'Wstrzymaj naukę Alchemii na poziomie 3',
+                'settings.profession.stopAlchemyAt3.tooltip': 'Wstrzymaj naukę Alchemii na poziomie 3 lub wyższym. Upewnij się, że masz ustawione inne profesje.',
                 'settings.consolid.consolidate': 'Konsoliduj AD przez ZAX',
                 'settings.consolid.consolidate.tooltip': 'Automatycznie próbuj wysyłać Diamenty Astralne przez wymianę ZEN i wypłacać na jednej postaci',
                 'settings.consolid.bankerName': 'Nazwa Bankiera',
@@ -5285,7 +5450,7 @@ function addProfile(profession, profile, base){
                 'settings.consolid.minToTransfer': 'Min AD do transferowania',
                 'settings.consolid.minToTransfer.tooltip': 'Minimalna ilość Diamentów Astralnych, przy której nastąpi próba przeniesienia do bankiera',
                 'settings.consolid.minCharBalance': 'Min AD do pozostawienia',
-                'settings.consolid.minCharBalance,tooltip': 'Minimalna ilość Diamentów Astralnych, które powinny pozostać na koncie postaci',
+                'settings.consolid.minCharBalance.tooltip': 'Minimalna ilość Diamentów Astralnych, które powinny pozostać na koncie postaci',
                 'settings.consolid.transferRate': 'Stawka AD za Zen',
                 'settings.consolid.transferRate.tooltip': 'Domyślna stawka Diamentów Astralnych za ZEN użyta do transferowania',
             },
