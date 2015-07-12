@@ -2281,7 +2281,8 @@ function addProfile(profession, profile, base){
 
     function page_GUARD() {
         // Do nothing on the guard screen
-        dfdNextRun.resolve(delay.LONG);
+        // dfdNextRun.resolve(delay.LONG);
+        PauseSettings("pause");
     }
 
     /**
