@@ -39,6 +39,10 @@ Developers & Contributors
 RELEASE NOTES
 4.2.1
 - Pause script on GUARD page
+- Track celestial coins as well
+- Add Summer Event profession
+- Add 'stop at lvl' opttion for each profession
+- Inactive characters are now greyed out
 4.2
 - Added "Resource Tracker" tab
 - Added "to buy" notification for missing resources
