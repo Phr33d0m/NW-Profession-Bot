@@ -81,7 +81,7 @@ http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
 
 // Make sure it's running on the main page, no frames
 
-var scriptVersion = 4.2.1;
+var scriptVersion = 4.2;
 var forceSettingsResetOnUpgrade = true;
 var forceResetOnVerBelow = 3.5;
 
