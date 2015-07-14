@@ -5378,7 +5378,7 @@ function addProfile(profession, profile, base){
                 'settings.general.openrewards': 'Open Reward Chests',
                 'settings.general.openrewards.tooltip': 'Enable opening of leadership chests on character switch',
                 'settings.general.opencelestial': 'Open Celestial Chests',
-                'settings.general.opencelestial.tooltip': 'Open Chests buyed for Celestial Coins',
+                'settings.general.opencelestial.tooltip': 'Open Chests bought with Celestial Coins',
                 'settings.general.openInvocation': 'Open Invocation Rewards',
                 'settings.general.openInvocation.tooltip': 'Enable opening rewards from invocation',
                 'settings.general.keepOneUnopened': 'Keep one reward box unopened',
