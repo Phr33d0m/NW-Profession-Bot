@@ -28,7 +28,7 @@ You can change the update by changing "Update URL" field in the edit window of t
 Works on | Doesn't work on
 ---------|----------------
 Google Chrome / Chromium + Tampermonkey (updated versions) | Firefox + GreaseMonkey
-Opera + Tampermonkey (updated versions) | Opera + VioletMonkey 
+Opera + Tampermonkey (updated versions) | Opera + ViolentMonkey 
 
 
 ### Contributing
