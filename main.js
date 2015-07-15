@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.2
+// @version 4.3
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -37,6 +37,14 @@ Developers & Contributors
 - WloBeb
 
 RELEASE NOTES
+4.3
+- Small hotfix & ready for release
+4.2.1
+- Pause script on GUARD page
+- Track celestial coins as well
+- Add Summer Event profession
+- Add 'stop at lvl' opttion for each profession
+- Inactive characters are now greyed out
 4.2
 - Added "Resource Tracker" tab
 - Added "to buy" notification for missing resources
@@ -75,7 +83,7 @@ http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
 
 // Make sure it's running on the main page, no frames
 
-var scriptVersion = 4.2;
+var scriptVersion = 4.3;
 var forceSettingsResetOnUpgrade = true;
 var forceResetOnVerBelow = 3.5;
 
@@ -1738,6 +1746,27 @@ function addProfile(profession, profile, base){
         },
     });
 
+    definedTask["SummerEvent"] = {
+        taskListName: "SummerEvent",
+        taskName: "SummerEvent",
+        taskDefaultPriority: 1,
+        taskDefaultSlotNum: 0,
+        taskActive: true,
+        taskDescription: "",
+        profiles: [{
+            profileName: "Altars",
+            isProfileActive: true,
+            level: {
+                0:["Event_Summer_Tier0_Intro"],
+                1:["Event_Summer_Tier1_Rankup","Event_Summer_Tier1_Caprese","Event_Summer_Tier1_Cornchowder","Event_Summer_Tier1_Watermelonsorbet"],
+                2:["Event_Summer_Tier2_Rankup","Event_Summer_Tier2_Summerfeast",
+                    "Event_Summer_Tier2_Partypoppers","Event_Summer_Tier2_Fireworks",
+                    "Event_Summer_Tier2_Festivalgarblower","Event_Summer_Tier2_Festivalgarbupper",
+                    "Event_Summer_Tier2_Festivalgarbhead"],
+                3:["Event_Summer_Tier3_Sunite_Altar","Event_Summer_Tier3_Festivalgarb_Permanent"],
+            }
+        }]
+    };      
 
     // Profession priority list by order
     var tasklist = [
@@ -1753,6 +1782,7 @@ function addProfile(profession, profile, base){
         definedTask["BlackIce"],
         definedTask["WinterEvent"],
         definedTask["SiegeEvent"],
+        definedTask["SummerEvent"],
     ];
 
     var customProfiles = [];  // [ { taskName: 'name', baseProfile: 'profileName' / null, profile: JSON.parsed_from_input }, { } ....]
@@ -1778,13 +1808,14 @@ function addProfile(profession, profile, base){
             rad: 0,
             rBI: 0,
             BI: 0,
-            refined: 0,
+            refined: [0, 0, 0, 0, 0, 0, 0, 0],
             refineLimitLeft: 0,
             emptyBagSlots: 0,
             activeSlots: 0,
+            celestial: 0,
         },
         professions: {
-            // Names must match unsafeWindow.client.dataModel.model.ent.main.itemassignmentcategories.categories.displayname
+            // Names must match unsafeWindow.client.dataModel.model.ent.main.itemassignmentcategories.categories[n].displayname
             "Leadership": { level: 0, workersUsed: [], workersUnused: [] },
             "Alchemy": { level: 0, workersUsed: [], workersUnused: [] },
             "Jewelcrafting": { level: 0, workersUsed: [], workersUnused: [] },
@@ -1795,7 +1826,9 @@ function addProfile(profession, profile, base){
             "Leatherworking": { level: 0, workersUsed: [], workersUnused: [] },
             "Tailoring": { level: 0, workersUsed: [], workersUnused: [] },
             "Black Ice Shaping": { level: 0, workersUsed: [], workersUnused: [] },
-            /*
+        
+        /*
+           "SummerEvent": { level: 0, workersUsed: [], workersUnused: [] },
             "Winter Event":     { level: 0, workersUsed: [], workersUnused: [] },
             "Siege Event":      { level: 0, workersUsed: [], workersUnused: [] },
             */
@@ -2256,7 +2289,8 @@ function addProfile(profession, profile, base){
 
     function page_GUARD() {
         // Do nothing on the guard screen
-        dfdNextRun.resolve(delay.LONG);
+        // dfdNextRun.resolve(delay.LONG);
+        PauseSettings("pause");
     }
 
     /**
@@ -3293,13 +3327,23 @@ function addProfile(profession, profile, base){
     function switchChar() {
 
         // detect if daily reset occurs (no more frequently than every 16 hours)
-        var oldRefineToday = charStatisticsList[curCharName].general.refined | 0;
+        var oldRefineToday = charStatisticsList[curCharName].general.refined[0] | 0;
         var newRefineToday = unsafeWindow.client.dataModel.model.ent.main.currencies.diamondsconverted | 0;
         if (newRefineToday < oldRefineToday) {
             if (accountSettings.generalSettings.SCADailyReset < Date.now() - 16*60*60*1000) {
                 accountSettings.generalSettings.SCADailyReset = Date.now();
                 GM_setValue("settings__account__" + loggedAccount, JSON.stringify(accountSettings));
             }
+        }
+
+        if (newRefineToday < oldRefineToday || charStatisticsList[curCharName].general.lastVisit < lastDailyResetTime) {
+            if (!Array.isArray(charStatisticsList[curCharName].general.refined)) {
+                var temp = [0,0,0,0,0,0,0,0];
+                temp[0] = charStatisticsList[curCharName].general.refined;
+                charStatisticsList[curCharName].general.refined = temp;
+            }
+            charStatisticsList[curCharName].general.refined.unshift(0);
+            charStatisticsList[curCharName].general.refined.length = 8;
         }
 
         var refined_diamonds = 0;
@@ -3419,10 +3463,11 @@ function addProfile(profession, profile, base){
         _stat.diamonds = parseInt(_chardata.diamonds + refined_diamonds);
         _stat.rBI = parseInt(_chardata.rawblackice);
         _stat.BI = parseInt(_chardata.blackice);
-        _stat.refined = parseInt(_chardata.diamondsconverted + refined_diamonds);
+        _stat.refined[0] = parseInt(_chardata.diamondsconverted + refined_diamonds);
         _stat.diamondsconvertleft = parseInt(_chardata.refineLimitLeft);
         _stat.activeSlots = unsafeWindow.client.dataModel.model.ent.main.itemassignments.active;
-
+        _stat.celestial = parseInt(_chardata.celestial);
+        
         //clearing
         charStatisticsList[curCharName].trackedResources = [];
         $.each(charStatisticsList[curCharName].tools, function(name, obj) {
@@ -4477,6 +4522,9 @@ function addProfile(profession, profile, base){
             //Statisitcs Tabs
             var temp_tab = addTab("#info_tabs", tr('tab.counters'));
             temp_tab.append("<div id='rcounters'></div>");
+
+            temp_tab = addTab("#info_tabs", tr('tab.refine_hist'));
+            temp_tab.append("<div id='refine_hist'></div>");
             
             temp_tab = addTab("#info_tabs", tr('tab.visits'));
             temp_tab.append("<div id='sca_v'></div>");
@@ -4894,7 +4942,7 @@ function addProfile(profession, profile, base){
             total[0] += charStatisticsList[charName].general.refineCounter;
             total[1] += charStatisticsList[charName].general.diamonds;
             total[2] += charStatisticsList[charName].general.gold;
-            total[3] += outdated ? 0 : charStatisticsList[charName].general.refined;
+            total[3] += outdated ? 0 : (charStatisticsList[charName].general.refined[0] | 0);
 
             html += "<tr>";
             html += "<td>" + charName + "</td>";
@@ -4906,7 +4954,7 @@ function addProfile(profession, profile, base){
             html += "<td>" + formatNum(charStatisticsList[charName].general.gold) + "</td>";
             html += "<td>" + formatNum(charStatisticsList[charName].general.rBI) + "</td>";
             html += "<td>" + formatNum(charStatisticsList[charName].general.BI) + "</td>";
-            html += "<td>" + (outdated ? "0*" : formatNum(charStatisticsList[charName].general.refined)) + "</td>";
+            html += "<td>" + (outdated ? "0*" : formatNum(charStatisticsList[charName].general.refined[0] | 0)) + "</td>";
             //html += "<td>" + formatNum(charStatisticsList[charName].general.refineLimitLeft) + "</td>";
             html += "</tr>";
         });
@@ -4929,12 +4977,46 @@ function addProfile(profession, profile, base){
             updateCounters();
         });
 
+        //refine_hist
+        var total = [];
+        var html = '<table>';
+        html += "<tr><th>Character Name</th>"
+        for (var i = 0; i < 8; i++) {
+            html += "<th>" + (-1 * i) + "</th>";
+            total[i] = 0;
+        }
+        html += "</tr>";
+
+        charNamesList.forEach(function(charName) {
+            var outdated = (charStatisticsList[charName].general.lastVisit < lastDailyResetTime);
+
+            html += "<tr>";
+            html += "<td>" + charName + "</td>";
+            html += "<td>" + (outdated ? "0*" : formatNum(charStatisticsList[charName].general.refined[0] | 0)) + "</td>";
+            for (var i = 1; i < 8; i++) {
+                html += "<td>" + formatNum(charStatisticsList[charName].general.refined[i] | 0) + "</td>";
+                total[i] += charStatisticsList[charName].general.refined[i] | 0;
+            }
+            html += "</tr>";
+            total[0] += outdated ? 0 : charStatisticsList[charName].general.refined[0] | 0;
+
+        });
+        html += "<tr class='totals'><td>Totals (without AD in ZAX):</td>";
+        for (var i = 0; i < 8; i++) {
+            html += "<td>" + formatNum(total[i]) + "</td>";
+        }
+        html += "</tr></table><br />";
+        
+        var tsum = 0; for (var i = 1; i < 8; i++) tsum += total[i];
+        html += "Total (1 - 7): " + formatNum(tsum);
+        $('#refine_hist').html(html);
+
         // Worker tab update.
         html = '<table class="professionRanks">';
         var temp = "";
         html += "<tr><th>Char name</th>";
         var options = "";
-        var workerTabSelects = ["Leadership", "Alchemy", "Leadership"];
+        var workerTabSelects = ["Leadership", "Alchemy", "Jewelcrafting"];
         $.each(charStatisticsList[charNamesList[0]].professions, function(profession) {
             options += "<option value='" + profession + "'>" + profession + "</option>";
         })
@@ -5019,6 +5101,7 @@ function addProfile(profession, profile, base){
         // Resource tracker update.
         html = "<table class='withRotation'><tr><th class='rotate'><div><span>Character Name</div></span></th>";
         html += "<th class='rotate'><div><span>Main bags empty slots</div></span></th>";
+        html += "<th class='rotate'><div><span>Celestials</div></span></th>";
         trackResources.forEach(function(item) {
             html += "<th class='rotate'><div><span>" + item.fname + "</div></span></th>";
         })
@@ -5026,6 +5109,7 @@ function addProfile(profession, profile, base){
         charNamesList.forEach(function(charName) {
             html += '<tr><td>' + charName + '</td>';
             html += '<td>' + charStatisticsList[charName].general.emptyBagSlots + '</td>';
+            html += '<td>' + charStatisticsList[charName].general.celestial + '</td>';
             charStatisticsList[charName].trackedResources.forEach(function(count) {
                 html += '<td>' + count + '</td>';
             })
@@ -5310,6 +5394,7 @@ function addProfile(profession, profile, base){
                 'tab.copySettings': 'Settings Copy',
                 'tab.other': 'Other',
                 'tab.counters': 'Refine Counters',
+                'tab.refine_hist': 'Refine-7',
                 'tab.visits': 'SCA & Visits',
                 'tab.workers': 'Workers',
                 'tab.tools': 'Tools',
@@ -5341,7 +5426,7 @@ function addProfile(profession, profile, base){
                 'settings.general.openrewards': 'Open Reward Chests',
                 'settings.general.openrewards.tooltip': 'Enable opening of leadership chests on character switch',
                 'settings.general.opencelestial': 'Open Celestial Chests',
-                'settings.general.opencelestial.tooltip': 'Open Chests buyed for Celestial Coins',
+                'settings.general.opencelestial.tooltip': 'Open Chests bought with Celestial Coins',
                 'settings.general.openInvocation': 'Open Invocation Rewards',
                 'settings.general.openInvocation.tooltip': 'Enable opening rewards from invocation',
                 'settings.general.keepOneUnopened': 'Keep one reward box unopened',
