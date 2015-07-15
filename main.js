@@ -1808,7 +1808,7 @@ function addProfile(profession, profile, base){
             rad: 0,
             rBI: 0,
             BI: 0,
-            refined: 0,
+            refined: [0, 0, 0, 0, 0, 0, 0, 0],
             refineLimitLeft: 0,
             emptyBagSlots: 0,
             activeSlots: 0,
@@ -3327,13 +3327,23 @@ function addProfile(profession, profile, base){
     function switchChar() {
 
         // detect if daily reset occurs (no more frequently than every 16 hours)
-        var oldRefineToday = charStatisticsList[curCharName].general.refined | 0;
+        var oldRefineToday = charStatisticsList[curCharName].general.refined[0] | 0;
         var newRefineToday = unsafeWindow.client.dataModel.model.ent.main.currencies.diamondsconverted | 0;
         if (newRefineToday < oldRefineToday) {
             if (accountSettings.generalSettings.SCADailyReset < Date.now() - 16*60*60*1000) {
                 accountSettings.generalSettings.SCADailyReset = Date.now();
                 GM_setValue("settings__account__" + loggedAccount, JSON.stringify(accountSettings));
             }
+        }
+
+        if (newRefineToday < oldRefineToday || charStatisticsList[curCharName].general.lastVisit < lastDailyResetTime) {
+            if (!Array.isArray(charStatisticsList[curCharName].general.refined)) {
+                var temp = [0,0,0,0,0,0,0,0];
+                temp[0] = charStatisticsList[curCharName].general.refined;
+                charStatisticsList[curCharName].general.refined = temp;
+            }
+            charStatisticsList[curCharName].general.refined.unshift(0);
+            charStatisticsList[curCharName].general.refined.length = 8;
         }
 
         var refined_diamonds = 0;
@@ -3453,7 +3463,7 @@ function addProfile(profession, profile, base){
         _stat.diamonds = parseInt(_chardata.diamonds + refined_diamonds);
         _stat.rBI = parseInt(_chardata.rawblackice);
         _stat.BI = parseInt(_chardata.blackice);
-        _stat.refined = parseInt(_chardata.diamondsconverted + refined_diamonds);
+        _stat.refined[0] = parseInt(_chardata.diamondsconverted + refined_diamonds);
         _stat.diamondsconvertleft = parseInt(_chardata.refineLimitLeft);
         _stat.activeSlots = unsafeWindow.client.dataModel.model.ent.main.itemassignments.active;
         _stat.celestial = parseInt(_chardata.celestial);
@@ -4512,6 +4522,9 @@ function addProfile(profession, profile, base){
             //Statisitcs Tabs
             var temp_tab = addTab("#info_tabs", tr('tab.counters'));
             temp_tab.append("<div id='rcounters'></div>");
+
+            temp_tab = addTab("#info_tabs", tr('tab.refine_hist'));
+            temp_tab.append("<div id='refine_hist'></div>");
             
             temp_tab = addTab("#info_tabs", tr('tab.visits'));
             temp_tab.append("<div id='sca_v'></div>");
@@ -4929,7 +4942,7 @@ function addProfile(profession, profile, base){
             total[0] += charStatisticsList[charName].general.refineCounter;
             total[1] += charStatisticsList[charName].general.diamonds;
             total[2] += charStatisticsList[charName].general.gold;
-            total[3] += outdated ? 0 : charStatisticsList[charName].general.refined;
+            total[3] += outdated ? 0 : (charStatisticsList[charName].general.refined[0] | 0);
 
             html += "<tr>";
             html += "<td>" + charName + "</td>";
@@ -4941,7 +4954,7 @@ function addProfile(profession, profile, base){
             html += "<td>" + formatNum(charStatisticsList[charName].general.gold) + "</td>";
             html += "<td>" + formatNum(charStatisticsList[charName].general.rBI) + "</td>";
             html += "<td>" + formatNum(charStatisticsList[charName].general.BI) + "</td>";
-            html += "<td>" + (outdated ? "0*" : formatNum(charStatisticsList[charName].general.refined)) + "</td>";
+            html += "<td>" + (outdated ? "0*" : formatNum(charStatisticsList[charName].general.refined[0] | 0)) + "</td>";
             //html += "<td>" + formatNum(charStatisticsList[charName].general.refineLimitLeft) + "</td>";
             html += "</tr>";
         });
@@ -4963,6 +4976,40 @@ function addProfile(profession, profile, base){
             });
             updateCounters();
         });
+
+        //refine_hist
+        var total = [];
+        var html = '<table>';
+        html += "<tr><th>Character Name</th>"
+        for (var i = 0; i < 8; i++) {
+            html += "<th>" + (-1 * i) + "</th>";
+            total[i] = 0;
+        }
+        html += "</tr>";
+
+        charNamesList.forEach(function(charName) {
+            var outdated = (charStatisticsList[charName].general.lastVisit < lastDailyResetTime);
+
+            html += "<tr>";
+            html += "<td>" + charName + "</td>";
+            html += "<td>" + (outdated ? "0*" : formatNum(charStatisticsList[charName].general.refined[0] | 0)) + "</td>";
+            for (var i = 1; i < 8; i++) {
+                html += "<td>" + formatNum(charStatisticsList[charName].general.refined[i] | 0) + "</td>";
+                total[i] += charStatisticsList[charName].general.refined[i] | 0;
+            }
+            html += "</tr>";
+            total[0] += outdated ? 0 : charStatisticsList[charName].general.refined[0] | 0;
+
+        });
+        html += "<tr class='totals'><td>Totals (without AD in ZAX):</td>";
+        for (var i = 0; i < 8; i++) {
+            html += "<td>" + formatNum(total[i]) + "</td>";
+        }
+        html += "</tr></table><br />";
+        
+        var tsum = 0; for (var i = 1; i < 8; i++) tsum += total[i];
+        html += "Total (1 - 7): " + formatNum(tsum);
+        $('#refine_hist').html(html);
 
         // Worker tab update.
         html = '<table class="professionRanks">';
@@ -5347,6 +5394,7 @@ function addProfile(profession, profile, base){
                 'tab.copySettings': 'Settings Copy',
                 'tab.other': 'Other',
                 'tab.counters': 'Refine Counters',
+                'tab.refine_hist': 'Refine-7',
                 'tab.visits': 'SCA & Visits',
                 'tab.workers': 'Workers',
                 'tab.tools': 'Tools',
