@@ -4978,13 +4978,16 @@ function addProfile(profession, profile, base){
         });
 
         //refine_hist
-        var total = [];
+        var total = []; 
+        var slotSum = 0;
         var html = '<table>';
         html += "<tr><th>Character Name</th>"
         for (var i = 0; i < 8; i++) {
             html += "<th>" + (-1 * i) + "</th>";
             total[i] = 0;
         }
+        html += "<th>avg</th>"
+        html += "<th>per slot</th>"
         html += "</tr>";
 
         charNamesList.forEach(function(charName) {
@@ -4993,18 +4996,27 @@ function addProfile(profession, profile, base){
             html += "<tr>";
             html += "<td>" + charName + "</td>";
             html += "<td>" + (outdated ? "0*" : formatNum(charStatisticsList[charName].general.refined[0] | 0)) + "</td>";
+            var sum = 0; var cnt = 0;
             for (var i = 1; i < 8; i++) {
-                html += "<td>" + formatNum(charStatisticsList[charName].general.refined[i] | 0) + "</td>";
-                total[i] += charStatisticsList[charName].general.refined[i] | 0;
+                var refined = charStatisticsList[charName].general.refined[i] | 0
+                sum += refined; if (refined) cnt++;
+                html += "<td>" + formatNum(refined) + "</td>";
+                total[i] += refined;
             }
+            html += "<td>" + formatNum(sum/cnt) + "</td>";
+            html += "<td>" + formatNum(sum / cnt / (charStatisticsList[charName].general.activeSlots)) + "</td>";
             html += "</tr>";
             total[0] += outdated ? 0 : charStatisticsList[charName].general.refined[0] | 0;
-
+            slotSum += charStatisticsList[charName].general.activeSlots;
         });
         html += "<tr class='totals'><td>Totals (without AD in ZAX):</td>";
+        var sum = 0; var cnt = 0;
         for (var i = 0; i < 8; i++) {
             html += "<td>" + formatNum(total[i]) + "</td>";
+            sum += total[i]; if (total[i]) cnt++;
         }
+        html += "<td>" + formatNum(sum/cnt) + "</td>";
+        html += "<td>" + formatNum(sum / cnt / slotSum) + "</td>";
         html += "</tr></table><br />";
         
         var tsum = 0; for (var i = 1; i < 8; i++) tsum += total[i];
