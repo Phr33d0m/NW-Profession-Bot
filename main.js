@@ -5010,16 +5010,18 @@ function addProfile(profession, profile, base){
             slotSum += charStatisticsList[charName].general.activeSlots;
         });
         html += "<tr class='totals'><td>Totals (without AD in ZAX):</td>";
-        var sum = 0; var cnt = 0;
+        var tsum = 0; var cnt = 0; 
+        for (var i = 1; i < 8; i++) { 
+            tsum += total[i]; if (total[i]) cnt++;
+        }
+        
         for (var i = 0; i < 8; i++) {
             html += "<td>" + formatNum(total[i]) + "</td>";
-            sum += total[i]; if (total[i]) cnt++;
         }
-        html += "<td>" + formatNum(sum/cnt) + "</td>";
-        html += "<td>" + formatNum(sum / cnt / slotSum) + "</td>";
+        html += "<td>" + formatNum(tsum/cnt) + "</td>";
+        html += "<td>" + formatNum(tsum / cnt / slotSum) + "</td>";
         html += "</tr></table><br />";
         
-        var tsum = 0; for (var i = 1; i < 8; i++) tsum += total[i];
         html += "Total (1 - 7): " + formatNum(tsum);
         $('#refine_hist').html(html);
 
