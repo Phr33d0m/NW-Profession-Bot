@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.3
+// @version 4.3.1
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -1909,6 +1909,7 @@ function addProfile(profession, profile, base){
             autoReload: false,
             scriptDelayFactor: 1,
             maxCollectTaskAttempts: 2,
+            defaultVisitTime: 4*60*60*1000,   // 4 hours default
         }
     };
 
@@ -2092,7 +2093,9 @@ function addProfile(profession, profile, base){
         else console.warn("accountSettings value could not been reached for " + group + " " + name);
         return null;
     }
-
+    
+    var defaultVisitTimeOpts = [];  defaultVisitTimeOpts.push({  name: 'none',  value: 0});
+    for (var i = 1; i <= 24; i++)   defaultVisitTimeOpts.push({  name: i,  value: i*60*60*1000});
 
     // UI Settings 
     var settingnames = [
@@ -2125,6 +2128,9 @@ function addProfile(profession, profile, base){
         {scope: 'script', group: 'general', name: 'saveCharNextTime', title: tr('settings.main.savenexttime'),   type: 'checkbox', pane: 'main', tooltip: tr('settings.main.savenexttime.tooltip')},
         {scope: 'script', group: 'general', name: 'maxCollectTaskAttempts', title: 'Number of attempts to collect task result',   type: 'select', pane: 'main', tooltip: 'After this number of attempts the the script will continue without collecting',
             opts: [ { name: '1',  value: 1},  { name: '2',  value: 2},  { name: '3',  value: 3}], },
+        {scope: 'script', group: 'general', name: 'defaultVisitTime', title: 'Default process re-process time for all empty slots (in hours)',   type: 'select', pane: 'main', tooltip: 'Default process re-process time for all empty slots',
+            opts: defaultVisitTimeOpts, },
+        
         
         {scope: 'account', group: 'generalSettings', name: 'openRewards', title: tr('settings.general.openrewards'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openrewards.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'openCelestialBox', title: tr('settings.general.opencelestial'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.opencelestial.tooltip')},
@@ -2545,6 +2551,8 @@ function addProfile(profession, profile, base){
             console.log("Next finished task at " + next.toLocaleString());
         } else {
             console.log("No next finishing date found!!");
+            if (scriptSettings.general.defaultVisitTime) return (new Date( new Date().getTime() + scriptSettings.general.defaultVisitTime));
+                
         }
         return next;
     }
@@ -4009,7 +4017,7 @@ function addProfile(profession, profile, base){
             AddCss("\
                 #settingsButton{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); display: block; position: fixed; overflow: auto; right: 0px; top: 0px; padding: 3px; z-index: 1000;}\
                 #pauseButton{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); display: block; position: fixed; overflow: auto; right: 23px; top: 0px; padding: 3px; z-index: 1000;}\
-                #settingsPanel{position: fixed; overflow: auto; right: 0px; top: 0px; width: 650px;max-height:100%;font: 12px sans-serif; text-align: left; display: block; z-index: 1001;}\
+                #settingsPanel{position: fixed; overflow: auto; right: 0px; top: 0px; width: 700px;max-height:100%;font: 12px sans-serif; text-align: left; display: block; z-index: 1001;}\
                 #settings_title{font-weight: bolder; background: none repeat scroll 0% 0% rgb(204, 204, 204); border-bottom: 1px solid rgb(102, 102, 102); padding: 3px;}\
                 #settingsPanelButtonContainer {background: none repeat scroll 0% 0% rgb(204, 204, 204); border-top: 1px solid rgb(102, 102, 102);padding: 3px;text-align:center} \
                 #charSettingsAccordion h3.inactive {color: LightGray ;}\
@@ -4978,13 +4986,16 @@ function addProfile(profession, profile, base){
         });
 
         //refine_hist
-        var total = [];
+        var total = []; 
+        var slotSum = 0;
         var html = '<table>';
         html += "<tr><th>Character Name</th>"
         for (var i = 0; i < 8; i++) {
             html += "<th>" + (-1 * i) + "</th>";
             total[i] = 0;
         }
+        html += "<th>avg</th>"
+        html += "<th>per slot</th>"
         html += "</tr>";
 
         charNamesList.forEach(function(charName) {
@@ -4993,21 +5004,32 @@ function addProfile(profession, profile, base){
             html += "<tr>";
             html += "<td>" + charName + "</td>";
             html += "<td>" + (outdated ? "0*" : formatNum(charStatisticsList[charName].general.refined[0] | 0)) + "</td>";
+            var sum = 0; var cnt = 0;
             for (var i = 1; i < 8; i++) {
-                html += "<td>" + formatNum(charStatisticsList[charName].general.refined[i] | 0) + "</td>";
-                total[i] += charStatisticsList[charName].general.refined[i] | 0;
+                var refined = charStatisticsList[charName].general.refined[i] | 0
+                sum += refined; if (refined) cnt++;
+                html += "<td>" + formatNum(refined) + "</td>";
+                total[i] += refined;
             }
+            html += "<td>" + formatNum(sum/cnt) + "</td>";
+            html += "<td>" + formatNum(sum / cnt / (charStatisticsList[charName].general.activeSlots)) + "</td>";
             html += "</tr>";
             total[0] += outdated ? 0 : charStatisticsList[charName].general.refined[0] | 0;
-
+            slotSum += charStatisticsList[charName].general.activeSlots;
         });
         html += "<tr class='totals'><td>Totals (without AD in ZAX):</td>";
+        var tsum = 0; var cnt = 0; 
+        for (var i = 1; i < 8; i++) { 
+            tsum += total[i]; if (total[i]) cnt++;
+        }
+        
         for (var i = 0; i < 8; i++) {
             html += "<td>" + formatNum(total[i]) + "</td>";
         }
+        html += "<td>" + formatNum(tsum/cnt) + "</td>";
+        html += "<td>" + formatNum(tsum / cnt / slotSum) + "</td>";
         html += "</tr></table><br />";
         
-        var tsum = 0; for (var i = 1; i < 8; i++) tsum += total[i];
         html += "Total (1 - 7): " + formatNum(tsum);
         $('#refine_hist').html(html);
 
@@ -5359,7 +5381,7 @@ function addProfile(profession, profile, base){
         
         if (getSetting('vendorSettings', 'vendorProfResults')) {
             _vendorItems[_vendorItems.length] = {
-                pattern: /^Crafted_(Jewelcrafting_Waist_Offense_3|Jewelcrafting_Neck_Defense_3|Jewelcrafting_Waist_Defense_3|Med_Armorsmithing_T3_Chain_Armor_Set_1|Med_Armorsmithing_T3_Chain_Pants2|Med_Armorsmithing_T3_Chain_Shirt2|Med_Armorsmithing_T3_Chain_Helm_Set_1|Med_Armorsmithing_T3_Chain_Pants|Med_Armorsmithing_T3_Chain_Boots_Set_1|Hvy_Armorsmithing_T3_Plate_Armor_Set_1|Hvy_Armorsmithing_T3_Plate_Pants2|Hvy_Armorsmithing_T3_Plate_Shirt2|Hvy_Armorsmithing_T3_Plate_Helm_Set_1|Hvy_Armorsmithing_T3_Plate_Boots_Set_1|Leatherworking_T3_Leather_Armor_Set_1|Leatherworking_T3_Leather_Pants2|Leatherworking_T3_Leather_Shirt2|Leatherworking_T3_Leather_Helm_Set_1|Leatherworking_T3_Leather_Boots_Set_1|Tailoring_T3_Cloth_Armor_Set_3|Tailoring_T3_Cloth_Armor_Set_2|Tailoring_T3_Cloth_Armor_Set_1|Tailoring_T3_Cloth_Pants2_Set2|Tailoring_T3_Cloth_Shirt2|Tailoring_T3_Cloth_Helm_Set_1|Artificing_T3_Pactblade_Temptation_5|Artificing_T3_Icon_Virtuous_5|Weaponsmithing_T3_Dagger_4)$/,
+                pattern: /^Crafted_(Jewelcrafting_Waist_Offense_3|Jewelcrafting_Neck_Defense_3|Jewelcrafting_Waist_Defense_3|Med_Armorsmithing_T3_Chain_Armor_Set_1|Med_Armorsmithing_T3_Chain_Pants2|Med_Armorsmithing_T3_Chain_Shirt2|Med_Armorsmithing_T3_Chain_Helm_Set_1|Med_Armorsmithing_T3_Chain_Pants|Med_Armorsmithing_T3_Chain_Boots_Set_1|Hvy_Armorsmithing_T3_Plate_Armor_Set_1|Hvy_Armorsmithing_T3_Plate_Pants2|Hvy_Armorsmithing_T3_Plate_Shirt2|Hvy_Armorsmithing_T3_Plate_Helm_Set_1|Hvy_Armorsmithing_T3_Plate_Boots_Set_1|Leatherworking_T3_Leather_Armor_Set_1|Leatherworking_T3_Leather_Pants2|Leatherworking_T3_Leather_Shirt2|Leatherworking_T3_Leather_Helm_Set_1|Leatherworking_T3_Leather_Boots_Set_1|Tailoring_T3_Cloth_Armor_Set_3|Tailoring_T3_Cloth_Armor_Set_2|Tailoring_T3_Cloth_Armor_Set_1|Tailoring_T3_Cloth_Pants2_Set2|Tailoring_T3_Cloth_Shirt2|Tailoring_T3_Cloth_Helm_Set_1|Artificing_T3_Pactblade_Temptation_5|Artificing_T3_Icon_Virtuous_5|Weaponsmithing_T3_Dagger_4)|^Potion_Unstable_([1-6])*$/,
                 limit: 0
             };
         }
