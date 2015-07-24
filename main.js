@@ -1909,6 +1909,7 @@ function addProfile(profession, profile, base){
             autoReload: false,
             scriptDelayFactor: 1,
             maxCollectTaskAttempts: 2,
+            defaultVisitTime: 4*60*60*1000,   // 4 hours default
         }
     };
 
@@ -2092,7 +2093,9 @@ function addProfile(profession, profile, base){
         else console.warn("accountSettings value could not been reached for " + group + " " + name);
         return null;
     }
-
+    
+    var defaultVisitTimeOpts = [];  defaultVisitTimeOpts.push({  name: 'none',  value: 0});
+    for (var i = 1; i <= 24; i++)   defaultVisitTimeOpts.push({  name: i,  value: i*60*60*1000});
 
     // UI Settings 
     var settingnames = [
@@ -2125,6 +2128,9 @@ function addProfile(profession, profile, base){
         {scope: 'script', group: 'general', name: 'saveCharNextTime', title: tr('settings.main.savenexttime'),   type: 'checkbox', pane: 'main', tooltip: tr('settings.main.savenexttime.tooltip')},
         {scope: 'script', group: 'general', name: 'maxCollectTaskAttempts', title: 'Number of attempts to collect task result',   type: 'select', pane: 'main', tooltip: 'After this number of attempts the the script will continue without collecting',
             opts: [ { name: '1',  value: 1},  { name: '2',  value: 2},  { name: '3',  value: 3}], },
+        {scope: 'script', group: 'general', name: 'defaultVisitTime', title: 'Default process re-process time for all empty slots (in hours)',   type: 'select', pane: 'main', tooltip: 'Default process re-process time for all empty slots',
+            opts: defaultVisitTimeOpts, },
+        
         
         {scope: 'account', group: 'generalSettings', name: 'openRewards', title: tr('settings.general.openrewards'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openrewards.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'openCelestialBox', title: tr('settings.general.opencelestial'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.opencelestial.tooltip')},
@@ -2545,6 +2551,8 @@ function addProfile(profession, profile, base){
             console.log("Next finished task at " + next.toLocaleString());
         } else {
             console.log("No next finishing date found!!");
+            if (scriptSettings.general.defaultVisitTime) return (new Date( new Date().getTime() + scriptSettings.general.defaultVisitTime));
+                
         }
         return next;
     }
