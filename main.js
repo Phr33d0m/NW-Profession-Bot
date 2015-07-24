@@ -2549,10 +2549,15 @@ function addProfile(profession, profile, base){
         });
         if (next) {
             console.log("Next finished task at " + next.toLocaleString());
-        } else {
+        } 
+        else {
             console.log("No next finishing date found!!");
-            if (scriptSettings.general.defaultVisitTime) return (new Date( new Date().getTime() + scriptSettings.general.defaultVisitTime));
-                
+            if (scriptSettings.general.defaultVisitTime) {
+                var tdate = new Date();
+                tdate.setTime( tdate.getTime() + parseInt(scriptSettings.general.defaultVisitTime));
+                console.log("Setting next date using default: ", tdate);
+                return tdate;
+            }
         }
         return next;
     }
