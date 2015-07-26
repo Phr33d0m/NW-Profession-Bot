@@ -2188,7 +2188,7 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'generalSettings', name: 'openCelestialBox', title: tr('settings.general.opencelestial'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.opencelestial.tooltip')},
         {scope: 'char', group: 'generalSettings', name: 'keepOneUnopened', title: tr('settings.general.keepOneUnopened'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.keepOneUnopened.tooltip')},
         {scope: 'char', group: 'generalSettings', name: 'openInvocation', title: tr('settings.general.openInvocation'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openInvocation.tooltip')},
-        {scope: 'char', group: 'generalSettings', name: 'refineAD',    title: tr('settings.general.keepOneUnopened'),           type: 'checkbox', pane: 'main', tooltip: tr('settings.general.refinead.tooltip')},
+        {scope: 'char', group: 'generalSettings', name: 'refineAD',    title: tr('settings.general.refinead'),           type: 'checkbox', pane: 'main', tooltip: tr('settings.general.refinead.tooltip')},
         {scope: 'char', group: 'generalSettings', name: 'runSCA',    title: tr('settings.general.runSCA'),               type: 'select',   pane: 'main', tooltip: tr('settings.general.runSCA.tooltip'),
             opts: [ { name: 'never',        value: 'never'}, 
                     { name: 'free time',    value: 'free'}, 
