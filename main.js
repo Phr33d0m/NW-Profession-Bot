@@ -1913,7 +1913,7 @@ function addProfile(profession, profile, base){
             autoReload: false,
             scriptDelayFactor: 1,
             maxCollectTaskAttempts: 2,
-            defaultVisitTime: 4*60*60*1000,   // 4 hours default
+            defaultVisitTime: 1*60*60*1000,   // 1 hour default
             leadershipTaskTimeout: 5*60*1000, // 5 minutes default
             leadershipTaskTimeoutRearm: 1*60*1000, // 1 minutes default
         }
@@ -4119,7 +4119,7 @@ function addProfile(profession, profile, base){
                 .custom_resources_delete { height: 16px; } .customResources input:not([type='checkbox']) { margin: 3px 10px } .customResources label { margin-right: 10px; }\
                 .customResources input[type='checkbox'] { margin-right: 10px } .customResources button { margin: 0 10px } div.customResources { margin: 10px 0;} \
                 #settingsPanel table {border-collapse: collapse; }\
-                tr.totals > td { border-top: 1px solid grey; padding-top: 3px; } \
+                tr.totals > td { border-top: 1px solid grey; padding-top: 3px; color: #000080 } \
                 .rarity_Gold {color: blue; } .rarity_Silver {color: green; } .rarity_Special {color: purple; }  \
                 #dialog-inventory { overflow-y: scroll; font: 10px Arial; } #dialog-inventory table { width: 100% } #dialog-inventory table th { text-align: left; font-weight: bold; }\
                 .slt_None {color: red;} .slt_Lead {color: blue;} .slt_Alch {color: green;} .slt_Jewe {color: gold;} .slt_Leat {color: brown;}\
@@ -5253,16 +5253,21 @@ function addProfile(profession, profile, base){
         trackResources.forEach(function(item) {
             html += "<th class='rotate'><div><span>" + item.fname + "</div></span></th>";
         })
+        var total = []; for (var i = 0; i < trackResources.length; i++) total[i] = 0;
         html += '</tr>';
         charNamesList.forEach(function(charName) {
             html += '<tr><td>' + charName + '</td>';
             html += '<td>' + charStatisticsList[charName].general.emptyBagSlots + '</td>';
             html += '<td>' + charStatisticsList[charName].general.celestial + '</td>';
-            charStatisticsList[charName].trackedResources.forEach(function(count) {
+            charStatisticsList[charName].trackedResources.forEach(function(count, idx) {
                 html += '<td>' + count + '</td>';
+                total[idx] += count;
             })
             html += '</tr>';
         })
+        html += "<tr class=\" totals\"><td>Totals:</td><td>--</td><td>--</td>";
+        for (var i = 0; i < total.length; i++) html += "<td>" + total[i] + "</td>";
+        html += "</tr>";
         html += "</table>";
         $('#resource_tracker').html(html);
 
@@ -5330,6 +5335,7 @@ function addProfile(profession, profile, base){
         html += "<div style='margin: 5px 0;'> Last SCA reset (test #2): " + (new Date(lastDailyResetTime)).toLocaleString() + "</div>";
         $('#sca_v').html(html);
         $('#sca_v').append("<br /><br /><button id='settings_sca'>Cycle SCA</button>");
+        $('#sca_v').append("<br /><br /><button id='reset_all_char_times_btn'>Reset All Visit Tiems</button>");
         
         $('#settings_sca').button();
         $("#settings_sca").click(function() {
@@ -5337,6 +5343,15 @@ function addProfile(profession, profile, base){
             unsafeWindow.location.hash = unsafeWindow.location.hash.replace(/\)\/.+/, ')' + "/adventures");
             processSwordCoastDailies();
         });
+
+        $('#reset_all_char_times_btn').button();
+        $("#reset_all_char_times_btn").click(function() {
+            charNamesList.forEach(function (timer, idx) { chartimers[idx] = null });
+            window.setTimeout(function() {
+                unsafeWindow.location.href = current_Gateway;
+            }, 0);
+        });
+
 
         $('.visitReset').button();
         $(".visitReset").click(function() {
@@ -5355,6 +5370,8 @@ function addProfile(profession, profile, base){
             } 
         });
     }
+
+
 
     function vendorJunk(evnt) {
         var _vendorItems = [];
