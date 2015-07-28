@@ -5346,7 +5346,11 @@ function addProfile(profession, profile, base){
 
         $('#reset_all_char_times_btn').button();
         $("#reset_all_char_times_btn").click(function() {
-            charNamesList.forEach(function (timer, idx) { chartimers[idx] = null });
+            charNamesList.forEach(function (charName, idx) { 
+                chartimers[idx] = null;
+                charStatisticsList[charName].general.nextTask = null;
+                GM_setValue("statistics__char__" + charName + "@" + loggedAccount , JSON.stringify(charStatisticsList[charName]));
+            });
             window.setTimeout(function() {
                 unsafeWindow.location.href = current_Gateway;
             }, 0);
