@@ -1694,6 +1694,22 @@ function addProfile(profession, profile, base){
     };
 
     addProfile("Alchemy", {
+        profileName : "mass refining",
+        isProfileActive : true,
+        useMassTask : true,
+        level : {
+            2: ["Alchemy_Tier1_Refine_Basic_Mass", "Alchemy_Tier1_Gather_Basic_Mass"],
+            3: "+25",
+            7: ["Alchemy_Tier2_Refine_Basic_Mass", "Alchemy_Tier2_Gather_Components_Mass"],
+            8 : "+25",
+            14: ["Alchemy_Tier3_Refine_Basic_Mass", "Alchemy_Tier3_Gather_Components_Mass"],
+            15 : "+25",
+            21: ["Alchemy_Tier4_Refine_Basic_Mass", "Alchemy_Tier4_Gather_Components_Mass"],
+            22 : "+25",
+        },
+    });
+
+    addProfile("Alchemy", {
         profileName: "Elemental Aggregate",
         level: {
             24: ["Alchemy_Tier4_Create_Elemental_Aggregate", "Alchemy_Tier4_Experiment_Rank25", "Alchemy_Tier4_Experimentation_Rank24", "Alchemy_Tier4_Aquaregia_2", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components", "Alchemy_Tier1_Gather_Basic"],
@@ -1736,6 +1752,16 @@ function addProfile(profession, profile, base){
         level: {
             1: ["Alchemy_Tier1_Refine_Basic", "Alchemy_Tier1_Gather_Components"],
             2: "+25",
+        },
+    });
+
+    addProfile("Alchemy", {
+        profileName : "Mass Blue & Green Vitriol",
+        isProfileActive : true,
+        useMassTask : true,
+        level : {
+            2: ["Alchemy_Tier1_Refine_Basic_Mass", "Alchemy_Tier1_Gather_Basic_Mass"],
+            3: "+25",
         },
     });
 
