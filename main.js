@@ -5367,7 +5367,7 @@ function addProfile(profession, profile, base){
         html += "<div style='margin: 5px 0;'> Last SCA reset (test #2): " + (new Date(lastDailyResetTime)).toLocaleString() + "</div>";
         $('#sca_v').html(html);
         $('#sca_v').append("<br /><br /><button id='settings_sca'>Cycle SCA</button>");
-        $('#sca_v').append("<br /><br /><button id='reset_all_char_times_btn'>Reset All Visit Tiems</button>");
+        $('#sca_v').append("&nbsp;&nbsp;<button id='reset_all_char_times_btn'>Reset All Visit Times</button>");
         
         $('#settings_sca').button();
         $("#settings_sca").click(function() {
