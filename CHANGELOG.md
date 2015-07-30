@@ -1,6 +1,14 @@
 RELEASE NOTES
 =============
 
+4.4
+---
+- Added leadership manual mode
+- Now vendors all unstable potions
+- Added a tab with weekly refine history
+- Added resource totals line
+- Added alchemy mass refining
+
 4.3
 ---
 - Pause script on GUARD page

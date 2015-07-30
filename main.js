@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.3.2
+// @version 4.4
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -37,6 +37,12 @@ Developers & Contributors
 - WloBeb
 
 RELEASE NOTES
+4.4
+- Added leadership manual mode
+- Now vendors all unstable potions
+- Added a tab with weekly refine history
+- Added resource totals line
+- Added alchemy mass refining
 4.3
 - Small hotfix & ready for release
 4.2.1
@@ -83,7 +89,7 @@ http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
 
 // Make sure it's running on the main page, no frames
 
-var scriptVersion = 4.3;
+var scriptVersion = 4.4;
 var forceSettingsResetOnUpgrade = true;
 var forceResetOnVerBelow = 3.5;
 
