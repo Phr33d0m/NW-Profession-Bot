@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.4
+// @version 4.4.1
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -37,6 +37,8 @@ Developers & Contributors
 - WloBeb
 
 RELEASE NOTES
+4.4.1
+- Replaced BlackIce with Blackice
 4.4
 - Added leadership manual mode
 - Now vendors all unstable potions
