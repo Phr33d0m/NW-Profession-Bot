@@ -1,6 +1,10 @@
 RELEASE NOTES
 =============
 
+4.4.1
+---
+- Fixed Black Ice Shaping
+
 4.4
 ---
 - Added leadership manual mode
