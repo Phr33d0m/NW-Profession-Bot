@@ -38,7 +38,7 @@ Developers & Contributors
 
 RELEASE NOTES
 4.4.1
-- Replaced BlackIce with Blackice
+- Fixed Black Ice Shaping
 4.4
 - Added leadership manual mode
 - Now vendors all unstable potions
