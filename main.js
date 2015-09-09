@@ -1806,6 +1806,7 @@ function addProfile(profession, profile, base){
             emptyBagSlots: 0,
             activeSlots: 0,
             celestial: 0,
+            ardent: 0,
         },
         professions: {
             // Names must match unsafeWindow.client.dataModel.model.ent.main.itemassignmentcategories.categories[n].displayname
@@ -3532,6 +3533,7 @@ function addProfile(profession, profile, base){
         _stat.diamondsconvertleft = parseInt(_chardata.refineLimitLeft);
         _stat.activeSlots = unsafeWindow.client.dataModel.model.ent.main.itemassignments.active;
         _stat.celestial = parseInt(_chardata.celestial);
+        _stat.ardent = parseInt(_chardata.ardent);
         
         //clearing
         charStatisticsList[curCharName].trackedResources = [];
@@ -5261,6 +5263,7 @@ function addProfile(profession, profile, base){
         html = "<table class='withRotation'><tr><th class='rotate'><div><span>Character Name</div></span></th>";
         html += "<th class='rotate'><div><span>Main bags empty slots</div></span></th>";
         html += "<th class='rotate'><div><span>Celestials</div></span></th>";
+        html += "<th class='rotate'><div><span>Ardents</div></span></th>";
         trackResources.forEach(function(item) {
             html += "<th class='rotate'><div><span>" + item.fname + "</div></span></th>";
         })
@@ -5270,6 +5273,7 @@ function addProfile(profession, profile, base){
             html += '<tr><td>' + charName + '</td>';
             html += '<td>' + charStatisticsList[charName].general.emptyBagSlots + '</td>';
             html += '<td>' + charStatisticsList[charName].general.celestial + '</td>';
+            html += '<td>' + charStatisticsList[charName].general.ardent + '</td>';
             charStatisticsList[charName].trackedResources.forEach(function(count, idx) {
                 html += '<td>' + count + '</td>';
                 total[idx] += count;
