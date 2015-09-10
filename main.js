@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.4
+// @version 4.4.2
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -37,51 +37,8 @@ Developers & Contributors
 - WloBeb
 
 RELEASE NOTES
-4.4
-- Added leadership manual mode
-- Now vendors all unstable potions
-- Added a tab with weekly refine history
-- Added resource totals line
-- Added alchemy mass refining
-4.3
-- Small hotfix & ready for release
-4.2.1
-- Pause script on GUARD page
-- Track celestial coins as well
-- Add Summer Event profession
-- Add 'stop at lvl' opttion for each profession
-- Inactive characters are now greyed out
-4.2
-- Added "Resource Tracker" tab
-- Added "to buy" notification for missing resources
-- Added new professions & some hotfixes for some profiles
-- New profile syntax
-- addProfile() functionality changed a bit to adapt to our new profile syntax
-- A lot of fixes here and there
-4.1
-- Added failsafe to prevent script getting stuck when can't claim task result
-- AddProfile() improved (thanks dlebedynskyi)
-- Added Failed task tracker to prevent script lockup on failed tasks
-- Added settings copy tab
-- Added script version display
-- Added Settings Listing to Advanced tab
-- Added Item Listing to Advanced tab (thanks WloBeb script idea)
-- Override display at visit tab
-- Various fixes
-4.0
-- Per slot task & profile allocation tab (functional)
-- Settings are saved per account / char.
-- Settings are saved via event - should fix the freeze (save button removed).
-- Chars always loaded from the model.
-- Settings UI updated on log in.
-- UI functions add for easier refactoring
-- Per char setting override.
-- Per char automatic daily SCA.
-- Profession next visit tab + reset added.
-- Inital support for multiple tab run in the same browser.
-- Translation support (thanks WloBeb)
-- Profile adjustments
-- addProfile() for easier profiles (thanks WloBeb, dlebedynskyi)
+4.4.2
+- Added option to auto vendor enchants & runes Rank 4
 
 Check Changelog.txt for the full changelog:
 http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
@@ -89,6 +46,8 @@ http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
 
 // Make sure it's running on the main page, no frames
 
+
+var microVersion = "4.4.2";
 var scriptVersion = 4.4;
 var forceSettingsResetOnUpgrade = true;
 var forceResetOnVerBelow = 3.5;
@@ -727,9 +686,9 @@ function addProfile(profession, profile, base){
         }]
     };
 
-    definedTask["BlackIce"] = {
-        taskListName: "BlackIce",
-        taskName: "BlackIce",
+    definedTask["Blackice"] = {
+        taskListName: "Blackice",
+        taskName: "Blackice",
         taskDefaultPriority: 1,
         taskDefaultSlotNum: 0,
         taskActive: true,
@@ -1813,7 +1772,7 @@ function addProfile(profession, profile, base){
         definedTask["Platesmithing"],
         definedTask["Leatherworking"],
         definedTask["Tailoring"],
-        definedTask["BlackIce"],
+        definedTask["Blackice"],
         definedTask["WinterEvent"],
         definedTask["SiegeEvent"],
         definedTask["SummerEvent"],
@@ -2005,6 +1964,7 @@ function addProfile(profession, profile, base){
             vendorEnchR1: false,
             vendorEnchR2: false,
             vendorEnchR3: false,
+            vendorEnchR4: false,
         },
         professionSettings: {
             fillOptionals: true,
@@ -2057,6 +2017,7 @@ function addProfile(profession, profile, base){
             vendorEnchR1: false,
             vendorEnchR2: false,
             vendorEnchR3: false,
+            vendorEnchR4: false,
         },
         professionSettings: {
             fillOptionals: true,
@@ -2217,6 +2178,7 @@ function addProfile(profession, profile, base){
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorEnchR4',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 4',    tooltip:'Vendor all Rank 4 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'consolidationSettings', name:'consolidate',    type:'checkbox', pane:'bank', title: tr('settings.consolid.consolidate'),    tooltip: tr('settings.consolid.consolidate.tooltip') ,border:true},
         {scope: 'account', group: 'consolidationSettings', name:'bankCharName',   type:'text',     pane:'bank', title: tr('settings.consolid.bankerName'),     tooltip: tr('settings.consolid.bankerName.tooltip')},
         {scope: 'account', group: 'consolidationSettings', name:'minToTransfer',  type:'text',     pane:'bank', title: tr('settings.consolid.minToTransfer'),  tooltip: tr('settings.consolid.minToTransfer.tooltip')},
@@ -2270,6 +2232,7 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorEnchR4',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 4',    tooltip:'Vendor all Rank 4 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorHealingPots',     type:'checkbox', pane:'vend',   title:'Auto Vendor healing potions (1-60)',     tooltip:'Auto Vendor healing potions (lvl 60)'},        
         {scope: 'char', group: 'consolidationSettings', name:'consolidate',    type:'checkbox', pane:'bank', title: tr('settings.consolid.consolidate'),    tooltip: tr('settings.consolid.consolidate.tooltip'), border:true},
         {scope: 'char', group: 'consolidationSettings', name:'minToTransfer',  type:'text',     pane:'bank', title: tr('settings.consolid.minToTransfer'),  tooltip: tr('settings.consolid.minToTransfer.tooltip')},
@@ -4181,7 +4144,7 @@ function addProfile(profession, profile, base){
                 <div id="settings_title">\
                 <span class="ui-icon ui-icon-wrench" style="float: left;"></span>\
                 <span id="settings_close" class="ui-icon ui-icon-closethick" title="Click to hide preferences" style="float: right; cursor: pointer; display: block;"\></span>\
-                <span style="margin:3px">Settings (script version ' + scriptVersion + ')</span>\
+                <span style="margin:3px">Settings (version ' + microVersion + ')</span>\
                 </div>\
                 <div id="script_settings"><ul></ul></div>\
                 <div id="account_settings">\
@@ -4326,7 +4289,7 @@ function addProfile(profession, profile, base){
 
             $('#list_settings_btn').button();
             $('#list_settings_btn').click(function() {
-                var str = 'Script Settings (script version ' + scriptVersion + ')\n';
+                var str = 'Script Settings (version ' + microVersion + ')\n';
                 var tempObj;
                 tempObj = $.extend(true, {}, scriptSettings);
                 tempObj.autoLoginAccount = "";
@@ -5479,6 +5442,16 @@ function addProfile(profession, profile, base){
             };
             _vendorItems[_vendorItems.length] = {
                 pattern: /^T3_Runestone/,
+                limit: 0
+            };
+        }
+        if (getSetting('vendorSettings', 'vendorEnchR4')) {
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^T4_Enchantment/,
+                limit: 0
+            };
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^T4_Runestone/,
                 limit: 0
             };
         }

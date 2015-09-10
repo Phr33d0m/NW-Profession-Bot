@@ -1,6 +1,14 @@
 RELEASE NOTES
 =============
 
+4.4.2
+---
+- Added option to auto vendor enchants & runes Rank 4
+
+4.4.1
+---
+- Fixed Black Ice Shaping
+
 4.4
 ---
 - Added leadership manual mode
