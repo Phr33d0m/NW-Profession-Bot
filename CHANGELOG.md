@@ -1,6 +1,10 @@
 RELEASE NOTES
 =============
 
+4.4.3
+---
+- Added Ardent Coins to the Resource Tracker
+
 4.4.2
 ---
 - Added option to auto vendor enchants & runes Rank 4

@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.4.2
+// @version 4.4.3
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -37,8 +37,8 @@ Developers & Contributors
 - WloBeb
 
 RELEASE NOTES
-4.4.2
-- Added option to auto vendor enchants & runes Rank 4
+4.4.3
+- Added Ardent Coins to the Resource Tracker
 
 Check Changelog.txt for the full changelog:
 http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
@@ -47,7 +47,7 @@ http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
 // Make sure it's running on the main page, no frames
 
 
-var microVersion = "4.4.2";
+var microVersion = "4.4.3";
 var scriptVersion = 4.4;
 var forceSettingsResetOnUpgrade = true;
 var forceResetOnVerBelow = 3.5;
@@ -5280,7 +5280,7 @@ function addProfile(profession, profile, base){
             })
             html += '</tr>';
         })
-        html += "<tr class=\" totals\"><td>Totals:</td><td>--</td><td>--</td>";
+        html += "<tr class=\" totals\"><td>Totals:</td><td>--</td><td>--</td><td>--</td>";
         for (var i = 0; i < total.length; i++) html += "<td>" + total[i] + "</td>";
         html += "</tr>";
         html += "</table>";
