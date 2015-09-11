@@ -2131,8 +2131,8 @@ function addProfile(profession, profile, base){
             opts: [ { name: '1',  value: 1},  { name: '2',  value: 2},  { name: '3',  value: 3}], },
         {scope: 'script', group: 'general', name: 'defaultVisitTime', title: 'Default process re-process time for all empty slots (in hours)',   type: 'select', pane: 'main', tooltip: 'Default process re-process time for all empty slots',
             opts: defaultVisitTimeOpts, },
-        {scope: 'script', group: 'general', name: 'unasignedSlotRecheck', title: 'Recheck unasigned slots every: (in hours)',   type: 'select', pane: 'main', tooltip: 'If the char has unasigned slot the script will recheck if the user set it manually',
-            opts: [ { name: "don\'t check",  value: 0},  { name: '0.5',  value: 0.5*60*60*1000},  { name: '1',  value: 1*60*60*1000},  { name: '2',  value: 2*60*60*1000},  { name: '3',  value: 3*60*60*1000},  { name: '4',  value: 4*60*60*1000}], },
+        {scope: 'script', group: 'general', name: 'unasignedSlotRecheck', title: 'Recheck unasigned slots every:',   type: 'select', pane: 'main', tooltip: 'If the char has unasigned slot the script will recheck if the user set it manually',
+            opts: [ { name: "don\'t check",  value: 0}, { name: '5min',  value: 5*60*1000},  { name: '30min',  value: 0.5*60*60*1000},  { name: '1hr',  value: 1*60*60*1000},  { name: '2hrs',  value: 2*60*60*1000},  { name: '3hrs',  value: 3*60*60*1000},  { name: '4hrs',  value: 4*60*60*1000}], },
 
         {scope: 'script', group: 'general', name: 'leadershipTaskTimeout', title: 'Timeout in manual leadership mode (in minutes)',   type: 'select', pane: 'manual', 
             tooltip: 'In manual leadership mode the script will wait this long for you to manually assign a leadership task',
