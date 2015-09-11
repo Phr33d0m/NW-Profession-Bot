@@ -2096,6 +2096,9 @@ function addProfile(profession, profile, base){
     }
     
     var defaultVisitTimeOpts = [];  defaultVisitTimeOpts.push({  name: 'none',  value: 0});
+    defaultVisitTimeOpts.push({  name: '5min',  value: 5*60*1000});
+    defaultVisitTimeOpts.push({  name: '15min',  value: 15*60*1000});
+    defaultVisitTimeOpts.push({  name: '30min',  value: 30*60*1000});
     for (var i = 1; i <= 24; i++)   defaultVisitTimeOpts.push({  name: i,  value: i*60*60*1000});
 
     // UI Settings 
