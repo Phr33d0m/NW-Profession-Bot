@@ -1951,6 +1951,7 @@ function addProfile(profession, profile, base){
     var defaultAccountSettings = {
         vendorSettings: {
             vendorJunk: false,
+            vendorInvocationBlessingsAll: false,
             vendorKitsLimit: false,
             vendorAltarsLimit: false,
             vendorKitsAll: false,
@@ -2004,6 +2005,7 @@ function addProfile(profession, profile, base){
         },
         vendorSettings: {
             vendorJunk: false,
+            vendorInvocationBlessingsAll: false,
             vendorKitsLimit: false,
             vendorAltarsLimit: false,
             vendorKitsAll: false,
@@ -2165,6 +2167,7 @@ function addProfile(profession, profile, base){
             opts:[{name:'never',value:'0'},{name: '20' ,value: 20},{name: '25' ,value: 25}]},
         {scope: 'account', group: 'professionSettings', name: 'stopAlchemyAt3',        type:'checkbox',    pane: 'prof', title: tr('settings.profession.stopAlchemyAt3'),      tooltip: tr('settings.profession.stopAlchemyAt3.tooltip')},
         {scope: 'account', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorInvocationBlessingsAll',  type:'checkbox',     pane:'vend',   title:'Vendor All Invocation Blessings',     tooltip:'Vendor all Invocation Blessings'},
         {scope: 'account', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Node Kit Stacks',  tooltip:'Limit skill kits stacks to 50, vendor kits unusable by class, remove all if player has one bag or full bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorAltarsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Altar Stacks',  tooltip:'Limit Altars to 80,remove all if player has one bag or full bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorKitsAll',   type:'checkbox', pane:'vend',   title:'Vendor All Node Kits',   tooltip:'Sell ALL skill kits.'},
@@ -2220,6 +2223,7 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'professionSettings', name: 'stopAlchemyAt3',        type:'checkbox',    pane: 'prof', title: tr('settings.profession.stopAlchemyAt3'),      tooltip: tr('settings.profession.stopAlchemyAt3.tooltip')},
         
         {scope: 'char', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorInvocationBlessingsAll',  type:'checkbox',     pane:'vend',   title:'Vendor All Invocation Blessings',     tooltip:'Vendor All Invocation Blessings'},
         {scope: 'char', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Altar Node Kit Stacks',  tooltip:'Limit skill kits stacks to 50/Altars80, vendor kits unusable by class, remove all if player has one bag or full bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorAltarsLimit', type:'checkbox', pane:'vend', title:'Vendor/Maintain Altar Stacks',  tooltip:'Limit Altars to 80,remove all if player has one bag or full bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorKitsAll',   type:'checkbox', pane:'vend',   title:'Vendor All Node Kits',   tooltip:'Sell ALL skill kits.'},
@@ -5395,6 +5399,12 @@ function addProfile(profession, profile, base){
     function vendorJunk(evnt) {
         var _vendorItems = [];
         var _sellCount = 0;
+        if (getSetting('vendorSettings', 'vendorInvocationBlessingsAll')) {
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Invocation_Random_Buff$/,
+                limit: 0
+            };
+        }
         if (getSetting('vendorSettings', 'vendorKitsLimit')) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Item_Consumable_Skill/,
