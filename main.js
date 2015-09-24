@@ -3320,7 +3320,7 @@ function addProfile(profession, profile, base){
                     _bagUnused++;
                 }
                 // Match items to exclude from auto vendoring, dont add to _tmpBag: Exclude pattern list - bound - Epic Quality - Blue Quality
-                else if (_excludeItems.test(slot.name) || slot.bound || slot.rarity == "Special" || slot.rarity == "Gold") {
+                else if (_excludeItems.test(slot.name) || slot.rarity == "Special" || slot.rarity == "Gold") {
                     _bagUsed++;
                 }
                 // Match everything else
@@ -3360,7 +3360,7 @@ function addProfile(profession, profile, base){
         _tmpBag.forEach(function(slot) {
             for (i = 0; i < _items.length; i++) {
                 var _Limit = (parseInt(_items[i].limit) > 99) ? 99 : _items[i].limit;
-                if (slot && _items[i].pattern.test(slot.name) && !slot.bound) {
+                if (slot && _items[i].pattern.test(slot.name)) {
                     // Node Kits vendor logic for restricted bag space
                     if (getSetting('vendorSettings', 'vendorKitsLimit') && /^Item_Consumable_Skill/.test(slot.name)) {
                         if (_bagCount < 2 || _bagUnused < 6 ||
