@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.4.3
+// @version 4.4.4
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -37,6 +37,8 @@ Developers & Contributors
 - WloBeb
 
 RELEASE NOTES
+4.4.4
+- Added option to vendor Invocation Blessings
 4.4.3
 - Added Ardent Coins to the Resource Tracker
 
@@ -47,7 +49,7 @@ http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
 // Make sure it's running on the main page, no frames
 
 
-var microVersion = "4.4.3";
+var microVersion = "4.4.4";
 var scriptVersion = 4.4;
 var forceSettingsResetOnUpgrade = true;
 var forceResetOnVerBelow = 3.5;
@@ -1951,6 +1953,7 @@ function addProfile(profession, profile, base){
     var defaultAccountSettings = {
         vendorSettings: {
             vendorJunk: false,
+            vendorInvocationBlessingsAll: false,
             vendorKitsLimit: false,
             vendorAltarsLimit: false,
             vendorKitsAll: false,
@@ -2004,6 +2007,7 @@ function addProfile(profession, profile, base){
         },
         vendorSettings: {
             vendorJunk: false,
+            vendorInvocationBlessingsAll: false,
             vendorKitsLimit: false,
             vendorAltarsLimit: false,
             vendorKitsAll: false,
@@ -2165,6 +2169,7 @@ function addProfile(profession, profile, base){
             opts:[{name:'never',value:'0'},{name: '20' ,value: 20},{name: '25' ,value: 25}]},
         {scope: 'account', group: 'professionSettings', name: 'stopAlchemyAt3',        type:'checkbox',    pane: 'prof', title: tr('settings.profession.stopAlchemyAt3'),      tooltip: tr('settings.profession.stopAlchemyAt3.tooltip')},
         {scope: 'account', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorInvocationBlessingsAll',  type:'checkbox',     pane:'vend',   title:'Vendor All Invocation Blessings',     tooltip:'Vendor all Invocation Blessings'},
         {scope: 'account', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Node Kit Stacks',  tooltip:'Limit skill kits stacks to 50, vendor kits unusable by class, remove all if player has one bag or full bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorAltarsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Altar Stacks',  tooltip:'Limit Altars to 80,remove all if player has one bag or full bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorKitsAll',   type:'checkbox', pane:'vend',   title:'Vendor All Node Kits',   tooltip:'Sell ALL skill kits.'},
@@ -2220,6 +2225,7 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'professionSettings', name: 'stopAlchemyAt3',        type:'checkbox',    pane: 'prof', title: tr('settings.profession.stopAlchemyAt3'),      tooltip: tr('settings.profession.stopAlchemyAt3.tooltip')},
         
         {scope: 'char', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorInvocationBlessingsAll',  type:'checkbox',     pane:'vend',   title:'Vendor All Invocation Blessings',     tooltip:'Vendor All Invocation Blessings'},
         {scope: 'char', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Altar Node Kit Stacks',  tooltip:'Limit skill kits stacks to 50/Altars80, vendor kits unusable by class, remove all if player has one bag or full bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorAltarsLimit', type:'checkbox', pane:'vend', title:'Vendor/Maintain Altar Stacks',  tooltip:'Limit Altars to 80,remove all if player has one bag or full bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorKitsAll',   type:'checkbox', pane:'vend',   title:'Vendor All Node Kits',   tooltip:'Sell ALL skill kits.'},
@@ -3316,7 +3322,7 @@ function addProfile(profession, profile, base){
                     _bagUnused++;
                 }
                 // Match items to exclude from auto vendoring, dont add to _tmpBag: Exclude pattern list - bound - Epic Quality - Blue Quality
-                else if (_excludeItems.test(slot.name) || slot.bound || slot.rarity == "Special" || slot.rarity == "Gold") {
+                else if (_excludeItems.test(slot.name) || slot.rarity == "Special" || slot.rarity == "Gold") {
                     _bagUsed++;
                 }
                 // Match everything else
@@ -3356,7 +3362,7 @@ function addProfile(profession, profile, base){
         _tmpBag.forEach(function(slot) {
             for (i = 0; i < _items.length; i++) {
                 var _Limit = (parseInt(_items[i].limit) > 99) ? 99 : _items[i].limit;
-                if (slot && _items[i].pattern.test(slot.name) && !slot.bound) {
+                if (slot && _items[i].pattern.test(slot.name)) {
                     // Node Kits vendor logic for restricted bag space
                     if (getSetting('vendorSettings', 'vendorKitsLimit') && /^Item_Consumable_Skill/.test(slot.name)) {
                         if (_bagCount < 2 || _bagUnused < 6 ||
@@ -5395,6 +5401,12 @@ function addProfile(profession, profile, base){
     function vendorJunk(evnt) {
         var _vendorItems = [];
         var _sellCount = 0;
+        if (getSetting('vendorSettings', 'vendorInvocationBlessingsAll')) {
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Invocation_Random_Buff$/,
+                limit: 0
+            };
+        }
         if (getSetting('vendorSettings', 'vendorKitsLimit')) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Item_Consumable_Skill/,
