@@ -39,8 +39,6 @@ Developers & Contributors
 RELEASE NOTES
 4.4.4
 - Added option to vendor Invocation Blessings
-4.4.3
-- Added Ardent Coins to the Resource Tracker
 
 Check Changelog.txt for the full changelog:
 http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt

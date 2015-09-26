@@ -1,6 +1,10 @@
 RELEASE NOTES
 =============
 
+4.4.4
+---
+- Added option to vendor Invocation Blessings
+
 4.4.3
 ---
 - Added Ardent Coins to the Resource Tracker
