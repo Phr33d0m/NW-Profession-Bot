@@ -3281,7 +3281,7 @@ function addProfile(profession, profile, base){
         var _tmpBag = [];
         var _profitems = [];
         // Pattern for items to leave out of auto vendoring (safeguard)
-        var _excludeItems = /(Gemfood|Gem_Upgrade_Resource|Artifact|Hoard|Coffer|Fuse|Ward|Preservation|Armor_Enhancement|Weapon_Enhancement|T[5-9]_Enchantment|T[5-9]_Runestones|T10_Enchantment|T10_Runestones|4c_Personal|Item_Potion_Companion_Xp|Gateway_Rewardpack|Consumable_Id_Scroll|Dungeon_Delve_Key)/; // edited by RottenMind 17.01.2015
+        var _excludeItems = /(Gemfood|Gem_Upgrade_Resource_R[4-9]|Artifact|Hoard|Coffer|Fuse|Ward|Preservation|Armor_Enhancement|Weapon_Enhancement|T[5-9]_Enchantment|T[5-9]_Runestones|T10_Enchantment|T10_Runestones|4c_Personal|Item_Potion_Companion_Xp|Gateway_Rewardpack|Consumable_Id_Scroll|Dungeon_Delve_Key)/; // edited by RottenMind 17.01.2015
 
             /** Profession leveling result item cleanup logic for T1-4 crafted results
              * Created by RM on 14.1.2015.
