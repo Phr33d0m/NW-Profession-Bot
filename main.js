@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.4.4
+// @version 4.4.5
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -37,6 +37,8 @@ Developers & Contributors
 - WloBeb
 
 RELEASE NOTES
+4.4.5
+- Added bound items to the potion and portable alter vendor lists.
 4.4.4
 - Added option to vendor Invocation Blessings
 
@@ -47,7 +49,7 @@ http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
 // Make sure it's running on the main page, no frames
 
 
-var microVersion = "4.4.4";
+var microVersion = "4.4.5";
 var scriptVersion = 4.4;
 var forceSettingsResetOnUpgrade = true;
 var forceResetOnVerBelow = 3.5;
@@ -5425,7 +5427,7 @@ function addProfile(profession, profile, base){
         }
         if (getSetting('vendorSettings', 'vendorAltarsAll')) {
             _vendorItems[_vendorItems.length] = {
-                pattern: /^Item_Portable_Altar$/,
+                pattern: /^Item_Portable_Altar(_Bound)?$/,
                 limit: 0
             };
         }
@@ -5471,40 +5473,40 @@ function addProfile(profession, profile, base){
         }
         if (getSetting('vendorSettings', 'vendorPots1')) {
             _vendorItems[_vendorItems.length] = {
-                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)$/,
+                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)(_Bound)?$/,
                 limit: 0
             };
         }
         if (getSetting('vendorSettings', 'vendorPots2')) {
             _vendorItems[_vendorItems.length] = {
-                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_2$/,
+                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_2(_Bound)?$/,
                 limit: 0
             };
         }
         if (getSetting('vendorSettings', 'vendorPots3')) {
             _vendorItems[_vendorItems.length] = {
-                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_3$/,
+                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_3(_Bound)?$/,
                 limit: 0
             };
         }
         if (getSetting('vendorSettings', 'vendorPots4')) {
             _vendorItems[_vendorItems.length] = {
-                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_4$/,
+                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_4(_Bound)?$/,
                 limit: 0
             };
         }
         if(getSetting('vendorSettings', 'vendorPots5')) {
             _vendorItems[_vendorItems.length] = {
-                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_5$/,
+                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_5(_Bound)?$/,
                 limit: 0
             };
         }
         if (getSetting('vendorSettings', 'vendorHealingPots')) {
             _vendorItems[_vendorItems.length] = {
-                pattern: /^Potion_Healing(|_[1-5])$/,
+                pattern: /^Potion_Healing(_[1-5])?(_Bound)?$/,
                 limit: 0
             };
-        }        
+        }
         
         if (getSetting('vendorSettings', 'vendorJunk')) {
             _vendorItems[_vendorItems.length] = {
