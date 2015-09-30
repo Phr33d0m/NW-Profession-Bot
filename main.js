@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.4.5
+// @version 4.4.6
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -37,10 +37,8 @@ Developers & Contributors
 - WloBeb
 
 RELEASE NOTES
-4.4.5
-- Added bound items to the potion and portable alter vendor lists.
-4.4.4
-- Added option to vendor Invocation Blessings
+4.4.6
+- Added option to vendor Lesser Marks.
 
 Check Changelog.txt for the full changelog:
 http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
@@ -49,7 +47,7 @@ http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
 // Make sure it's running on the main page, no frames
 
 
-var microVersion = "4.4.5";
+var microVersion = "4.4.6";
 var scriptVersion = 4.4;
 var forceSettingsResetOnUpgrade = true;
 var forceResetOnVerBelow = 3.5;
@@ -1969,6 +1967,7 @@ function addProfile(profession, profile, base){
             vendorEnchR2: false,
             vendorEnchR3: false,
             vendorEnchR4: false,
+            vendorLesserMarks: false,
         },
         professionSettings: {
             fillOptionals: true,
@@ -2023,6 +2022,7 @@ function addProfile(profession, profile, base){
             vendorEnchR2: false,
             vendorEnchR3: false,
             vendorEnchR4: false,
+            vendorLesserMarks: false,
         },
         professionSettings: {
             fillOptionals: true,
@@ -2185,6 +2185,7 @@ function addProfile(profession, profile, base){
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR4',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 4',    tooltip:'Vendor all Rank 4 enchantments & runestones found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorLesserMarks',    type:'checkbox', pane:'vend',   title:'Auto Vendor Lesser Marks',    tooltip:'Vendor all Lesser Marks found in player bags'},
         {scope: 'account', group: 'consolidationSettings', name:'consolidate',    type:'checkbox', pane:'bank', title: tr('settings.consolid.consolidate'),    tooltip: tr('settings.consolid.consolidate.tooltip') ,border:true},
         {scope: 'account', group: 'consolidationSettings', name:'bankCharName',   type:'text',     pane:'bank', title: tr('settings.consolid.bankerName'),     tooltip: tr('settings.consolid.bankerName.tooltip')},
         {scope: 'account', group: 'consolidationSettings', name:'minToTransfer',  type:'text',     pane:'bank', title: tr('settings.consolid.minToTransfer'),  tooltip: tr('settings.consolid.minToTransfer.tooltip')},
@@ -2235,12 +2236,13 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'vendorSettings', name:'vendorPots2',     type:'checkbox', pane:'vend',   title:'Auto Vendor lesser potions (lvl 15)',tooltip:'Vendor all lesser potions (lvl 15) found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorPots3',     type:'checkbox', pane:'vend',   title:'Auto Vendor potions (lvl 30)',       tooltip:'Vendor all potions (lvl 30) found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorPots4',     type:'checkbox', pane:'vend',   title:'Auto Vendor greater potions (lvl 45)',   tooltip:'Vendor all greater potions (lvl 45) found in player bags'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorPots5',     type:'checkbox', pane:'vend',   title:'Auto Vendor major potions (lvl 60)',     tooltip:'Auto Vendor major potions (lvl 60)'},        
+        {scope: 'char', group: 'vendorSettings', name:'vendorPots5',     type:'checkbox', pane:'vend',   title:'Auto Vendor major potions (lvl 60)',     tooltip:'Auto Vendor major potions (lvl 60)'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorHealingPots',     type:'checkbox', pane:'vend',   title:'Auto Vendor healing potions (1-60)',     tooltip:'Auto Vendor healing potions (lvl 60)'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR4',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 4',    tooltip:'Vendor all Rank 4 enchantments & runestones found in player bags'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorHealingPots',     type:'checkbox', pane:'vend',   title:'Auto Vendor healing potions (1-60)',     tooltip:'Auto Vendor healing potions (lvl 60)'},        
+        {scope: 'char', group: 'vendorSettings', name:'vendorLesserMarks',    type:'checkbox', pane:'vend',   title:'Auto Vendor Lesser Marks',    tooltip:'Vendor all Lesser Marks found in player bags'},
         {scope: 'char', group: 'consolidationSettings', name:'consolidate',    type:'checkbox', pane:'bank', title: tr('settings.consolid.consolidate'),    tooltip: tr('settings.consolid.consolidate.tooltip'), border:true},
         {scope: 'char', group: 'consolidationSettings', name:'minToTransfer',  type:'text',     pane:'bank', title: tr('settings.consolid.minToTransfer'),  tooltip: tr('settings.consolid.minToTransfer.tooltip')},
         {scope: 'char', group: 'consolidationSettings', name:'minCharBalance', type:'text',     pane:'bank', title: tr('settings.consolid.minCharBalance'), tooltip: tr('settings.consolid.minCharBalance.tooltip')},
@@ -5468,6 +5470,12 @@ function addProfile(profession, profile, base){
             };
             _vendorItems[_vendorItems.length] = {
                 pattern: /^T4_Runestone/,
+                limit: 0
+            };
+        }
+        if (getSetting('vendorSettings', 'vendorLesserMarks')) {
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^(Gem_Upgrade_Resource_R[1-2]|Artifact_Upgrade_Resource_R1_[A-Z])$/,
                 limit: 0
             };
         }

@@ -1,6 +1,10 @@
 RELEASE NOTES
 =============
 
+4.4.6
+---
+- Added option to vendor Lesser Marks.
+
 4.4.5
 ---
 - Added bound items to the potion and portable alter vendor lists.
