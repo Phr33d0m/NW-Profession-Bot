@@ -429,6 +429,37 @@ function addProfile(profession, profile, base){
         taskDefaultSlotNum: 9,
         taskDescription: "",
         profiles: [{
+            profileName: "RP",
+            isProfileActive: true,
+            level: {
+                0: ["Leadership_Tier0_Intro_1"],
+                1: ["Leadership_Tier0_Intro_5", "Leadership_Tier0_Intro_4", "Leadership_Tier0_Intro_3", "Leadership_Tier0_Intro_2"],
+                2: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
+                3: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
+                4: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
+                5: ["Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
+                6: ["Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
+                7: ["Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
+                8: ["Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
+                9: ["Leadership_Tier1_5_Explore", "Leadership_Tier2_9_Chart", "Leadership_Tier1_4_Protect"],
+                10: ["Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
+                11: ["Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
+                12: ["Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
+                13: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+                14: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+                15: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+                16: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+                17: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+                18: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+                19: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+                20: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+                21: ["Leadership_Tier4_21_Training", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
+                22: ["Leadership_Tier4_21_Training", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
+                23: ["Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_21_Training", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
+                24: ["Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_21r_Killelemental", "Leadership_Tier4_21_Training", "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier3_20_Destroy", "Leadership_Tier1_5_Explore"],
+                25: ["Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_21r_Killelemental", "Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier4_25r_Huntexperiment", "Leadership_Tier4_25_Battleelementalcultists", "Leadership_Tier4_21_Training", "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier3_20_Destroy", "Leadership_Tier1_5_Explore"],
+            },
+        }, {
             profileName: "AD",
             isProfileActive: true,
             level: {
@@ -501,17 +532,12 @@ function addProfile(profession, profile, base){
                 17: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
                 18: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
                 19: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
-                //20
-
                 20: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
                 21: ["Leadership_Tier4_21_Training", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
                 22: ["Leadership_Tier4_21_Training", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
                 23: ["Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_21_Training", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
                 24: ["Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_21_Training", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                25: ["Leadership_Tier4_25r_Huntexperiment", "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier3_13r_Protectdiamonds",
-                    "Leadership_Tier3_20_Destroy", "Leadership_Tier2_12_Taxes", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_25_Battleelementalcultists", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle",
-                    "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-                ],
+                25: ["Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_21r_Killelemental", "Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier4_25r_Huntexperiment", "Leadership_Tier4_25_Battleelementalcultists", "Leadership_Tier4_21_Training", "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier3_20_Destroy", "Leadership_Tier1_5_Explore"],
             },
         }]
     };
@@ -594,46 +620,6 @@ function addProfile(profession, profile, base){
                     "Leadership_Tier4_21r_Killelemental",
                     "Leadership_Tier4_25_Battleelementalcultists",
                     "Leadership_Tier4_25r_Huntexperiment",
-                    //"Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_21_Training",
-                    "Leadership_Tier3_20r_Master2",
-                    "Leadership_Tier3_20r_Master1",
-                    "Leadership_Tier3_20r_Master3",
-                    "Leadership_Tier3_20_Destroy",
-                    "Leadership_Tier1_5_Explore"
-                ]
-            }
-        }, 'XP');
-
-    addProfile('Leadership',{
-        "profileName": "RP",
-            "level": {
-                "24": [
-                    "Leadership_Tier4_24r_Killdragon",
-                    "Leadership_Tier4_24_Wizardsseneschal",
-                    "Leadership_Tier4_22_Guardclerics",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_23r_Securepilgrimage",
-                    //"Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_21_Training",
-                    "Leadership_Tier3_20r_Master2",
-                    "Leadership_Tier3_20r_Master1",
-                    "Leadership_Tier3_20r_Master3",
-                    "Leadership_Tier3_20_Destroy",
-                    "Leadership_Tier1_5_Explore"
-                ],
-                "25": [
-                    "Leadership_Tier4_24r_Killdragon",
-                    "Leadership_Tier4_24_Wizardsseneschal",
-                    "Leadership_Tier4_22_Guardclerics",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_23r_Securepilgrimage",
-                    "Leadership_Tier4_25r_Huntexperiment",
-                    "Leadership_Tier4_25_Battleelementalcultists",
                     //"Leadership_Tier4_22r_Capturebandithq",
                     "Leadership_Tier4_21_Training",
                     "Leadership_Tier3_20r_Master2",
