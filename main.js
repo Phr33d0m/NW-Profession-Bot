@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.4.6
+// @version 4.4.7
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -37,8 +37,8 @@ Developers & Contributors
 - WloBeb
 
 RELEASE NOTES
-4.4.6
-- Added option to vendor Lesser Marks.
+4.4.7
+- Updated the Leadership RP Boxes profile to focus on XP until level 24, and then go for Resonant Bags, Thaumaturgic Bags, and Enchanted Coffers.
 
 Check Changelog.txt for the full changelog:
 http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
@@ -47,7 +47,7 @@ http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
 // Make sure it's running on the main page, no frames
 
 
-var microVersion = "4.4.6";
+var microVersion = "4.4.7";
 var scriptVersion = 4.4;
 var forceSettingsResetOnUpgrade = true;
 var forceResetOnVerBelow = 3.5;
@@ -554,7 +554,7 @@ function addProfile(profession, profile, base){
                 "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_12_Taxes", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
             ],
         }
-    }, "AD");
+    }, "XP");
 
     addProfile("Leadership", {
         profileName: "Assets",
@@ -568,49 +568,16 @@ function addProfile(profession, profile, base){
     addProfile('Leadership',{
         "profileName": "RP Boxes",
             "level": {
-                "21": [
-                    "Leadership_Tier4_21_Training",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier3_20r_Master2",
-                    "Leadership_Tier3_20r_Master1",
-                    "Leadership_Tier3_20r_Master3",
-                    "Leadership_Tier3_20_Destroy",
-                    "Leadership_Tier1_5_Explore"
-                ],
-                "22": [
-                    "Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_21_Training",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier3_20r_Master2",
-                    "Leadership_Tier3_20r_Master1",
-                    "Leadership_Tier3_20r_Master3",
-                    "Leadership_Tier3_20_Destroy",
-                    "Leadership_Tier1_5_Explore"
-                ],
-                "23": [
-                    "Leadership_Tier4_23r_Securepilgrimage",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_21_Training",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier3_20r_Master2",
-                    "Leadership_Tier3_20r_Master1",
-                    "Leadership_Tier3_20r_Master3",
-                    "Leadership_Tier3_20_Destroy",
-                    "Leadership_Tier1_5_Explore"
-                ],
                 "24": [
                     "Leadership_Tier4_24r_Killdragon",
-                    "Leadership_Tier4_23r_Securepilgrimage",
                     "Leadership_Tier4_24_Wizardsseneschal",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_21_Training",
                     "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_22_Guardclerics",
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_21_Training",
                     "Leadership_Tier3_20r_Master2",
                     "Leadership_Tier3_20r_Master1",
                     "Leadership_Tier3_20r_Master3",
@@ -618,16 +585,17 @@ function addProfile(profession, profile, base){
                     "Leadership_Tier1_5_Explore"
                 ],
                 "25": [
-                    "Leadership_Tier4_25r_Huntexperiment",
-                    "Leadership_Tier4_25_Battleelementalcultists",
                     "Leadership_Tier4_24r_Killdragon",
-                    "Leadership_Tier4_23r_Securepilgrimage",
                     "Leadership_Tier4_24_Wizardsseneschal",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_21_Training",
                     "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_22_Guardclerics",
+                    "Leadership_Tier4_25_Battleelementalcultists",
+                    "Leadership_Tier4_25r_Huntexperiment",
+                    //"Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_21_Training",
                     "Leadership_Tier3_20r_Master2",
                     "Leadership_Tier3_20r_Master1",
                     "Leadership_Tier3_20r_Master3",
@@ -635,7 +603,7 @@ function addProfile(profession, profile, base){
                     "Leadership_Tier1_5_Explore"
                 ]
             }
-        }, 'AD');
+        }, 'XP');
 
     definedTask["WinterEvent"] = {
         taskListName: "WinterEvent",
