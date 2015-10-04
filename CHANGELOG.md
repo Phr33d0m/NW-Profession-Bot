@@ -1,6 +1,10 @@
 RELEASE NOTES
 =============
 
+4.4.8
+---
+- Updated the Leadership RP Boxes profile to prioritise for Resonant Bags, Enchanted Coffers, and Artifact Paraphenalia.
+
 4.4.7
 ---
 - Updated the Leadership RP Boxes profile to focus on XP until level 24, and then go for Resonant Bags, Thaumaturgic Bags, and Enchanted Coffers.
