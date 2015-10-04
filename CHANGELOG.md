@@ -1,6 +1,10 @@
 RELEASE NOTES
 =============
 
+4.4.9
+---
+- Added Leadership RP profile that focuses on Resonant Bags, Artifact Paraphenalia, and Thaumaturgic Bags instead of Enchanted Coffers.
+
 4.4.8
 ---
 - Updated the Leadership RP Boxes profile to prioritise for Resonant Bags, Enchanted Coffers, and Artifact Paraphenalia.
