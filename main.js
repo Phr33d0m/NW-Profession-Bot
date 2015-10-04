@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.4.8
+// @version 4.4.9
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -37,8 +37,8 @@ Developers & Contributors
 - WloBeb
 
 RELEASE NOTES
-4.4.8
-- Updated the Leadership RP Boxes profile to prioritise for Resonant Bags, Enchanted Coffers, and Artifact Paraphenalia.
+4.4.9
+- Added Leadership RP profile that focuses on Resonant Bags, Artifact Paraphenalia, and Thaumaturgic Bags instead of Enchanted Coffers.
 
 Check Changelog.txt for the full changelog:
 http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
@@ -47,7 +47,7 @@ http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
 // Make sure it's running on the main page, no frames
 
 
-var microVersion = "4.4.8";
+var microVersion = "4.4.9";
 var scriptVersion = 4.4;
 var forceSettingsResetOnUpgrade = true;
 var forceResetOnVerBelow = 3.5;
@@ -594,6 +594,46 @@ function addProfile(profession, profile, base){
                     "Leadership_Tier4_21r_Killelemental",
                     "Leadership_Tier4_25_Battleelementalcultists",
                     "Leadership_Tier4_25r_Huntexperiment",
+                    //"Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_21_Training",
+                    "Leadership_Tier3_20r_Master2",
+                    "Leadership_Tier3_20r_Master1",
+                    "Leadership_Tier3_20r_Master3",
+                    "Leadership_Tier3_20_Destroy",
+                    "Leadership_Tier1_5_Explore"
+                ]
+            }
+        }, 'XP');
+
+    addProfile('Leadership',{
+        "profileName": "RP",
+            "level": {
+                "24": [
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_22_Guardclerics",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    //"Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_21_Training",
+                    "Leadership_Tier3_20r_Master2",
+                    "Leadership_Tier3_20r_Master1",
+                    "Leadership_Tier3_20r_Master3",
+                    "Leadership_Tier3_20_Destroy",
+                    "Leadership_Tier1_5_Explore"
+                ],
+                "25": [
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_22_Guardclerics",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_25r_Huntexperiment",
+                    "Leadership_Tier4_25_Battleelementalcultists",
                     //"Leadership_Tier4_22r_Capturebandithq",
                     "Leadership_Tier4_21_Training",
                     "Leadership_Tier3_20r_Master2",
