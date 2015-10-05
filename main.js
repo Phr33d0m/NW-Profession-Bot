@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.4.9
+// @version 4.4.10
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -37,8 +37,9 @@ Developers & Contributors
 - WloBeb
 
 RELEASE NOTES
-4.4.9
-- Added Leadership RP profile that focuses on Resonant Bags, Artifact Paraphenalia, and Thaumaturgic Bags instead of Enchanted Coffers.
+4.4.10
+- Added option to vendor superior potions.
+- Made RP the default Leadership profile.
 
 Check Changelog.txt for the full changelog:
 http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
@@ -47,7 +48,7 @@ http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
 // Make sure it's running on the main page, no frames
 
 
-var microVersion = "4.4.9";
+var microVersion = "4.4.10";
 var scriptVersion = 4.4;
 var forceSettingsResetOnUpgrade = true;
 var forceResetOnVerBelow = 3.5;
@@ -1956,7 +1957,9 @@ function addProfile(profession, profile, base){
             vendorPots3: false,
             vendorPots4: false,
             vendorPots5: false,
+            vendorPots6: false,
             vendorHealingPots: false,
+            vendorHealingPotsAll: false,
             vendorEnchR1: false,
             vendorEnchR2: false,
             vendorEnchR3: false,
@@ -2011,7 +2014,9 @@ function addProfile(profession, profile, base){
             vendorPots3: false,
             vendorPots4: false,
             vendorPots5: false,
+            vendorPots6: false,
             vendorHealingPots: false,
+            vendorHealingPotsAll: false,
             vendorEnchR1: false,
             vendorEnchR2: false,
             vendorEnchR3: false,
@@ -2141,18 +2146,18 @@ function addProfile(profession, profile, base){
         {scope: 'script', group: 'general', name: 'leadershipSound', title: 'Volume of notification in manual leadership mode',   type: 'select', pane: 'manual', 
             tooltip: 'Volume of the sound to be played',
             opts: [ { name: 'off',  value: 0}, { name: 'very soft',  value: 12}, { name: 'soft',  value: 25}, { name: 'medium',  value: 50}, { name: 'loud',  value: 75}, { name: 'full',  value: 100} ], },
-        
-        
+
+
         {scope: 'account', group: 'generalSettings', name: 'openRewards', title: tr('settings.general.openrewards'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openrewards.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'openCelestialBox', title: tr('settings.general.opencelestial'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.opencelestial.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'keepOneUnopened', title: tr('settings.general.keepOneUnopened'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.keepOneUnopened.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'openInvocation', title: tr('settings.general.openInvocation'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openInvocation.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'refineAD', title: tr('settings.general.refinead'),           type: 'checkbox', pane: 'main', tooltip: tr('settings.general.refinead.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'runSCA', title: tr('settings.general.runSCA'),               type: 'select',   pane: 'main', tooltip: tr('settings.general.runSCA.tooltip'),
-            opts: [ { name: 'never',        value: 'never'}, 
-                    { name: 'free time',    value: 'free'}, 
+            opts: [ { name: 'never',        value: 'never'},
+                    { name: 'free time',    value: 'free'},
                     { name: 'always',       value: 'always'}],
-            },        
+            },
         {scope: 'account', group: 'professionSettings', name: 'fillOptionals',         type: 'checkbox', pane: 'prof', title: tr('settings.profession.fillOptionals'),   tooltip: tr('settings.profession.fillOptionals.tooltip')},
         {scope: 'account', group: 'professionSettings', name: 'autoPurchaseRes',       type: 'checkbox', pane: 'prof', title: tr('settings.profession.autoPurchase'),    tooltip: tr('settings.profession.autoPurchase.tooltip')},
         {scope: 'account', group: 'professionSettings', name: 'trainAssets',           type:'checkbox',  pane: 'prof', title: tr('settings.profession.trainAssets'),     tooltip: tr('settings.profession.trainAssets.tooltip')},
@@ -2174,7 +2179,9 @@ function addProfile(profession, profile, base){
         {scope: 'account', group: 'vendorSettings', name:'vendorPots3',     type:'checkbox', pane:'vend',   title:'Auto Vendor potions (lvl 30)',       tooltip:'Vendor all potions (lvl 30) found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorPots4',     type:'checkbox', pane:'vend',   title:'Auto Vendor greater potions (lvl 45)',   tooltip:'Vendor all greater potions (lvl 45) found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorPots5',     type:'checkbox', pane:'vend',   title:'Auto Vendor major potions (lvl 60)',     tooltip:'Auto Vendor major potions (lvl 60)'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorPots6',     type:'checkbox', pane:'vend',   title:'Auto Vendor superior potions (lvl 70)',     tooltip:'Auto Vendor superior potions (lvl 70)'},
         {scope: 'account', group: 'vendorSettings', name:'vendorHealingPots',     type:'checkbox', pane:'vend',   title:'Auto Vendor healing potions (1-60)',     tooltip:'Auto Vendor healing potions (lvl 60)'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorHealingPotsAll',     type:'checkbox', pane:'vend',   title:'Auto Vendor all healing potions',     tooltip:'Auto Vendor all healing potions'},
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
@@ -2231,7 +2238,9 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'vendorSettings', name:'vendorPots3',     type:'checkbox', pane:'vend',   title:'Auto Vendor potions (lvl 30)',       tooltip:'Vendor all potions (lvl 30) found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorPots4',     type:'checkbox', pane:'vend',   title:'Auto Vendor greater potions (lvl 45)',   tooltip:'Vendor all greater potions (lvl 45) found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorPots5',     type:'checkbox', pane:'vend',   title:'Auto Vendor major potions (lvl 60)',     tooltip:'Auto Vendor major potions (lvl 60)'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorPots6',     type:'checkbox', pane:'vend',   title:'Auto Vendor superior potions (lvl 70)',     tooltip:'Auto Vendor superior potions (lvl 70)'},
         {scope: 'char', group: 'vendorSettings', name:'vendorHealingPots',     type:'checkbox', pane:'vend',   title:'Auto Vendor healing potions (1-60)',     tooltip:'Auto Vendor healing potions (lvl 60)'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorHealingPotsAll',     type:'checkbox', pane:'vend',   title:'Auto Vendor healing potions (1-70)',     tooltip:'Auto Vendor healing potions (lvl 70)'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
@@ -5503,13 +5512,25 @@ function addProfile(profession, profile, base){
                 limit: 0
             };
         }
+        if(getSetting('vendorSettings', 'vendorPots6')) {
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_6(_Bound)?$/,
+                limit: 0
+            };
+        }
         if (getSetting('vendorSettings', 'vendorHealingPots')) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Potion_Healing(_[1-5])?(_Bound)?$/,
                 limit: 0
             };
         }
-        
+        if (getSetting('vendorSettings', 'vendorHealingPotsAll')) {
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Potion_Healing(_[1-9])?(_Bound)?$/,
+                limit: 0
+            };
+        }
+
         if (getSetting('vendorSettings', 'vendorJunk')) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Item_Snowworks_/,
@@ -5564,14 +5585,14 @@ function addProfile(profession, profile, base){
                 limit: 0
             };
         }
-        
+
         if (getSetting('vendorSettings', 'vendorProfResults')) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Crafted_(Jewelcrafting_Waist_Offense_3|Jewelcrafting_Neck_Defense_3|Jewelcrafting_Waist_Defense_3|Med_Armorsmithing_T3_Chain_Armor_Set_1|Med_Armorsmithing_T3_Chain_Pants2|Med_Armorsmithing_T3_Chain_Shirt2|Med_Armorsmithing_T3_Chain_Helm_Set_1|Med_Armorsmithing_T3_Chain_Pants|Med_Armorsmithing_T3_Chain_Boots_Set_1|Hvy_Armorsmithing_T3_Plate_Armor_Set_1|Hvy_Armorsmithing_T3_Plate_Pants2|Hvy_Armorsmithing_T3_Plate_Shirt2|Hvy_Armorsmithing_T3_Plate_Helm_Set_1|Hvy_Armorsmithing_T3_Plate_Boots_Set_1|Leatherworking_T3_Leather_Armor_Set_1|Leatherworking_T3_Leather_Pants2|Leatherworking_T3_Leather_Shirt2|Leatherworking_T3_Leather_Helm_Set_1|Leatherworking_T3_Leather_Boots_Set_1|Tailoring_T3_Cloth_Armor_Set_3|Tailoring_T3_Cloth_Armor_Set_2|Tailoring_T3_Cloth_Armor_Set_1|Tailoring_T3_Cloth_Pants2_Set2|Tailoring_T3_Cloth_Shirt2|Tailoring_T3_Cloth_Helm_Set_1|Artificing_T3_Pactblade_Temptation_5|Artificing_T3_Icon_Virtuous_5|Weaponsmithing_T3_Dagger_4)|^Potion_Unstable_([1-6])*$/,
                 limit: 0
             };
         }
-        
+
         if (_vendorItems.length > 0) {
             console.log("Attempting to vendor selected items...");
             _sellCount = vendorItemsLimited(_vendorItems);
