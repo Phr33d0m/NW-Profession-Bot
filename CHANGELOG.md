@@ -1,6 +1,11 @@
 RELEASE NOTES
 =============
 
+4.4.10
+---
+- Added option to vendor superior potions.
+- Made RP the default Leadership profile.
+
 4.4.9
 ---
 - Added Leadership RP profile that focuses on Resonant Bags, Artifact Paraphenalia, and Thaumaturgic Bags instead of Enchanted Coffers.
