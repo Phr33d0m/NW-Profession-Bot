@@ -5484,37 +5484,37 @@ function addProfile(profession, profile, base){
         }
         if (getSetting('vendorSettings', 'vendorPots1')) {
             _vendorItems[_vendorItems.length] = {
-                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)(_Bound)?$/,
+                pattern: /^Potion_(Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)(_Bound)?$/,
                 limit: 0
             };
         }
         if (getSetting('vendorSettings', 'vendorPots2')) {
             _vendorItems[_vendorItems.length] = {
-                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_2(_Bound)?$/,
+                pattern: /^Potion_(Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_2(_Bound)?$/,
                 limit: 0
             };
         }
         if (getSetting('vendorSettings', 'vendorPots3')) {
             _vendorItems[_vendorItems.length] = {
-                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_3(_Bound)?$/,
+                pattern: /^Potion_(Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_3(_Bound)?$/,
                 limit: 0
             };
         }
         if (getSetting('vendorSettings', 'vendorPots4')) {
             _vendorItems[_vendorItems.length] = {
-                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_4(_Bound)?$/,
+                pattern: /^Potion_(Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_4(_Bound)?$/,
                 limit: 0
             };
         }
         if(getSetting('vendorSettings', 'vendorPots5')) {
             _vendorItems[_vendorItems.length] = {
-                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_5(_Bound)?$/,
+                pattern: /^Potion_(Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_5(_Bound)?$/,
                 limit: 0
             };
         }
         if(getSetting('vendorSettings', 'vendorPots6')) {
             _vendorItems[_vendorItems.length] = {
-                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_6(_Bound)?$/,
+                pattern: /^Potion_(Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_6(_Bound)?$/,
                 limit: 0
             };
         }
