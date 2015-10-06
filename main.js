@@ -3026,7 +3026,7 @@ function addProfile(profession, profile, base){
 
             var $assets = $("div.modal-item-list a").has("img[src*='_Resource_'],img[src*='_Assets_'],img[src*='_Tools_'],img[src*='_Tool_'],img[src*='_Jewelersloupe_'],img[src*='_Bezelpusher_']"); //edited by RottenMind
             var $persons = $("div.modal-item-list a").has("img[src*='_Follower_']");
-            var quality = [".Special", ".Gold", ".Silver", ".Bronze"];
+            var quality = [".Mythic", ".Legendary", ".Special", ".Gold", ".Silver", ".Bronze"];
             var ic,
                 $it;
 
@@ -3333,8 +3333,8 @@ function addProfile(profession, profile, base){
                 if (slot === null || !slot || slot === undefined) {
                     _bagUnused++;
                 }
-                // Match items to exclude from auto vendoring, dont add to _tmpBag: Exclude pattern list - bound - Epic Quality - Blue Quality
-                else if (_excludeItems.test(slot.name) || slot.rarity == "Special") {
+                // Match items to exclude from auto vendoring, dont add to _tmpBag: Exclude pattern list - bound - Epic Quality - Legendary Quality - Mythic Quality
+                else if (_excludeItems.test(slot.name) || slot.rarity == "Special" || slot.rarity == "Legendary" || slot.rarity == "Mythic") {
                     _bagUsed++;
                 }
                 // Match everything else
@@ -4151,7 +4151,7 @@ function addProfile(profession, profile, base){
                 .customResources input[type='checkbox'] { margin-right: 10px } .customResources button { margin: 0 10px } div.customResources { margin: 10px 0;} \
                 #settingsPanel table {border-collapse: collapse; }\
                 tr.totals > td { border-top: 1px solid grey; padding-top: 3px; color: #000080 } \
-                .rarity_Gold {color: blue; } .rarity_Silver {color: green; } .rarity_Special {color: purple; }  \
+                .rarity_Gold {color: blue; } .rarity_Silver {color: green; } .rarity_Special {color: purple; } .rarity_Legendary {color: orange; } .rarity_Mythic {color: teal; }  \
                 #dialog-inventory { overflow-y: scroll; font: 10px Arial; } #dialog-inventory table { width: 100% } #dialog-inventory table th { text-align: left; font-weight: bold; }\
                 .slt_None {color: red;} .slt_Lead {color: blue;} .slt_Alch {color: green;} .slt_Jewe {color: gold;} .slt_Leat {color: brown;}\
                 #copy_settings_to { width: 200px; height: 350px; margin: 5px 0;} #copy_settings_from { margin: 5px 0;}\
