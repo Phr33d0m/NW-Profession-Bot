@@ -3334,7 +3334,7 @@ function addProfile(profession, profile, base){
                     _bagUnused++;
                 }
                 // Match items to exclude from auto vendoring, dont add to _tmpBag: Exclude pattern list - bound - Epic Quality - Blue Quality
-                else if (_excludeItems.test(slot.name) || slot.rarity == "Special" || slot.rarity == "Gold") {
+                else if (_excludeItems.test(slot.name) || slot.rarity == "Special") {
                     _bagUsed++;
                 }
                 // Match everything else
