@@ -1,6 +1,10 @@
 RELEASE NOTES
 =============
 
+4.5
+---
+- Added option to vendor Unidentified Items.
+
 4.4.10
 ---
 - Added option to vendor superior potions.

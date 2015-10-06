@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.4.10
+// @version 4.5
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -37,9 +37,8 @@ Developers & Contributors
 - WloBeb
 
 RELEASE NOTES
-4.4.10
-- Added option to vendor superior potions.
-- Made RP the default Leadership profile.
+4.5
+- Added option to vendor Unidentified Items.
 
 Check Changelog.txt for the full changelog:
 http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
@@ -48,8 +47,8 @@ http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
 // Make sure it's running on the main page, no frames
 
 
-var microVersion = "4.4.10";
-var scriptVersion = 4.4;
+var microVersion = "4.5.0";
+var scriptVersion = 4.5;
 var forceSettingsResetOnUpgrade = true;
 var forceResetOnVerBelow = 3.5;
 
@@ -1946,6 +1945,8 @@ function addProfile(profession, profile, base){
     var defaultAccountSettings = {
         vendorSettings: {
             vendorJunk: false,
+            vendorGreenUnidAll: false,
+            vendorBlueUnidAll: false,
             vendorInvocationBlessingsAll: false,
             vendorKitsLimit: false,
             vendorAltarsLimit: false,
@@ -2003,6 +2004,8 @@ function addProfile(profession, profile, base){
         },
         vendorSettings: {
             vendorJunk: false,
+            vendorGreenUnidAll: false,
+            vendorBlueUnidAll: false,
             vendorInvocationBlessingsAll: false,
             vendorKitsLimit: false,
             vendorAltarsLimit: false,
@@ -2167,26 +2170,28 @@ function addProfile(profession, profile, base){
         {scope: 'account', group: 'professionSettings', name: 'stopNotLeadership',        type:'select',    pane: 'prof', title: tr('settings.profession.stopNotLeadership'),      tooltip: tr('settings.profession.stopNotLeadership.tooltip'),
             opts:[{name:'never',value:'0'},{name: '20' ,value: 20},{name: '25' ,value: 25}]},
         {scope: 'account', group: 'professionSettings', name: 'stopAlchemyAt3',        type:'checkbox',    pane: 'prof', title: tr('settings.profession.stopAlchemyAt3'),      tooltip: tr('settings.profession.stopAlchemyAt3.tooltip')},
-        {scope: 'account', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Vendor junk..',     tooltip:'Vendor all junk items (currently) winterfest fireworks+lanterns'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorGreenUnidAll',  type:'checkbox',     pane:'vend',   title:'Vendor All Green Unidentified Items',     tooltip:'Vendor all green unidentified items'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorBlueUnidAll',  type:'checkbox',     pane:'vend',   title:'Vendor All Blue Unidentified Items',     tooltip:'Vendor all blue unidentified items'},
         {scope: 'account', group: 'vendorSettings', name:'vendorInvocationBlessingsAll',  type:'checkbox',     pane:'vend',   title:'Vendor All Invocation Blessings',     tooltip:'Vendor all Invocation Blessings'},
         {scope: 'account', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Node Kit Stacks',  tooltip:'Limit skill kits stacks to 50, vendor kits unusable by class, remove all if player has one bag or full bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorAltarsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Altar Stacks',  tooltip:'Limit Altars to 80,remove all if player has one bag or full bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorKitsAll',   type:'checkbox', pane:'vend',   title:'Vendor All Node Kits',   tooltip:'Sell ALL skill kits.'},
         {scope: 'account', group: 'vendorSettings', name:'vendorAltarsAll', type:'checkbox', pane:'vend',   title:'Vendor All Altar',       tooltip:'Sell ALL Altars.'},
         {scope: 'account', group: 'vendorSettings', name:'vendorProfResults',type:'checkbox',pane:'vend',   title:'Vendor/Maintain Prof Crafted Levelup Items',    tooltip:'Vendor off Tier 1 to 5 items produced and reused for leveling crafting professions.'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorPots1',     type:'checkbox', pane:'vend',   title:'Auto Vendor minor potions (lvl 1)',  tooltip:'Vendor all minor potions (lvl 1) found in player bags'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorPots2',     type:'checkbox', pane:'vend',   title:'Auto Vendor lesser potions (lvl 15)',tooltip:'Vendor all lesser potions (lvl 15) found in player bags'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorPots3',     type:'checkbox', pane:'vend',   title:'Auto Vendor potions (lvl 30)',       tooltip:'Vendor all potions (lvl 30) found in player bags'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorPots4',     type:'checkbox', pane:'vend',   title:'Auto Vendor greater potions (lvl 45)',   tooltip:'Vendor all greater potions (lvl 45) found in player bags'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorPots5',     type:'checkbox', pane:'vend',   title:'Auto Vendor major potions (lvl 60)',     tooltip:'Auto Vendor major potions (lvl 60)'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorPots6',     type:'checkbox', pane:'vend',   title:'Auto Vendor superior potions (lvl 70)',     tooltip:'Auto Vendor superior potions (lvl 70)'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorHealingPots',     type:'checkbox', pane:'vend',   title:'Auto Vendor healing potions (1-60)',     tooltip:'Auto Vendor healing potions (lvl 60)'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorHealingPotsAll',     type:'checkbox', pane:'vend',   title:'Auto Vendor all healing potions',     tooltip:'Auto Vendor all healing potions'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorEnchR4',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 4',    tooltip:'Vendor all Rank 4 enchantments & runestones found in player bags'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorLesserMarks',    type:'checkbox', pane:'vend',   title:'Auto Vendor Lesser Marks',    tooltip:'Vendor all Lesser Marks found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorPots1',     type:'checkbox', pane:'vend',   title:'Vendor minor potions (lvl 1)',  tooltip:'Vendor all minor potions (lvl 1) found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorPots2',     type:'checkbox', pane:'vend',   title:'Vendor lesser potions (lvl 15)',tooltip:'Vendor all lesser potions (lvl 15) found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorPots3',     type:'checkbox', pane:'vend',   title:'Vendor potions (lvl 30)',       tooltip:'Vendor all potions (lvl 30) found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorPots4',     type:'checkbox', pane:'vend',   title:'Vendor greater potions (lvl 45)',   tooltip:'Vendor all greater potions (lvl 45) found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorPots5',     type:'checkbox', pane:'vend',   title:'Vendor major potions (lvl 60)',     tooltip:'Auto Vendor major potions (lvl 60)'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorPots6',     type:'checkbox', pane:'vend',   title:'Vendor superior potions (lvl 70)',     tooltip:'Auto Vendor superior potions (lvl 70)'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorHealingPots',     type:'checkbox', pane:'vend',   title:'Vendor healing potions (1-60)',     tooltip:'Auto Vendor healing potions (lvl 60)'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorHealingPotsAll',     type:'checkbox', pane:'vend',   title:'Vendor all healing potions',     tooltip:'Auto Vendor all healing potions'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorEnchR4',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 4',    tooltip:'Vendor all Rank 4 enchantments & runestones found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorLesserMarks',    type:'checkbox', pane:'vend',   title:'Vendor Lesser Marks',    tooltip:'Vendor all Lesser Marks found in player bags'},
         {scope: 'account', group: 'consolidationSettings', name:'consolidate',    type:'checkbox', pane:'bank', title: tr('settings.consolid.consolidate'),    tooltip: tr('settings.consolid.consolidate.tooltip') ,border:true},
         {scope: 'account', group: 'consolidationSettings', name:'bankCharName',   type:'text',     pane:'bank', title: tr('settings.consolid.bankerName'),     tooltip: tr('settings.consolid.bankerName.tooltip')},
         {scope: 'account', group: 'consolidationSettings', name:'minToTransfer',  type:'text',     pane:'bank', title: tr('settings.consolid.minToTransfer'),  tooltip: tr('settings.consolid.minToTransfer.tooltip')},
@@ -2226,26 +2231,28 @@ function addProfile(profession, profile, base){
             opts:[{name:'never',value:0},{name: '20' ,value: 20},{name: '25' ,value: 25}]},
         {scope: 'char', group: 'professionSettings', name: 'stopAlchemyAt3',        type:'checkbox',    pane: 'prof', title: tr('settings.profession.stopAlchemyAt3'),      tooltip: tr('settings.profession.stopAlchemyAt3.tooltip')},
         
-        {scope: 'char', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Vendor junk..',     tooltip:'Vendor all junk items (currently) winterfest fireworks+lanterns'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorGreenUnidAll',  type:'checkbox',     pane:'vend',   title:'Vendor All Green Unidentified Items',     tooltip:'Vendor all green unidentified items'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorBlueUnidAll',  type:'checkbox',     pane:'vend',   title:'Vendor All Blue Unidentified Items',     tooltip:'Vendor all blue unidentified items'},
         {scope: 'char', group: 'vendorSettings', name:'vendorInvocationBlessingsAll',  type:'checkbox',     pane:'vend',   title:'Vendor All Invocation Blessings',     tooltip:'Vendor All Invocation Blessings'},
         {scope: 'char', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Altar Node Kit Stacks',  tooltip:'Limit skill kits stacks to 50/Altars80, vendor kits unusable by class, remove all if player has one bag or full bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorAltarsLimit', type:'checkbox', pane:'vend', title:'Vendor/Maintain Altar Stacks',  tooltip:'Limit Altars to 80,remove all if player has one bag or full bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorKitsAll',   type:'checkbox', pane:'vend',   title:'Vendor All Node Kits',   tooltip:'Sell ALL skill kits.'},
         {scope: 'char', group: 'vendorSettings', name:'vendorAltarsAll', type:'checkbox', pane:'vend',   title:'Vendor All Altar',       tooltip:'Sell ALL Altars.'},
         {scope: 'char', group: 'vendorSettings', name:'vendorProfResults',type:'checkbox',pane:'vend',   title:'Vendor/Maintain Prof Crafted Levelup Items',    tooltip:'Vendor off Tier 1 to 5 items produced and reused for leveling crafting professions.'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorPots1',     type:'checkbox', pane:'vend',   title:'Auto Vendor minor potions (lvl 1)',  tooltip:'Vendor all minor potions (lvl 1) found in player bags'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorPots2',     type:'checkbox', pane:'vend',   title:'Auto Vendor lesser potions (lvl 15)',tooltip:'Vendor all lesser potions (lvl 15) found in player bags'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorPots3',     type:'checkbox', pane:'vend',   title:'Auto Vendor potions (lvl 30)',       tooltip:'Vendor all potions (lvl 30) found in player bags'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorPots4',     type:'checkbox', pane:'vend',   title:'Auto Vendor greater potions (lvl 45)',   tooltip:'Vendor all greater potions (lvl 45) found in player bags'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorPots5',     type:'checkbox', pane:'vend',   title:'Auto Vendor major potions (lvl 60)',     tooltip:'Auto Vendor major potions (lvl 60)'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorPots6',     type:'checkbox', pane:'vend',   title:'Auto Vendor superior potions (lvl 70)',     tooltip:'Auto Vendor superior potions (lvl 70)'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorHealingPots',     type:'checkbox', pane:'vend',   title:'Auto Vendor healing potions (1-60)',     tooltip:'Auto Vendor healing potions (lvl 60)'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorHealingPotsAll',     type:'checkbox', pane:'vend',   title:'Auto Vendor healing potions (1-70)',     tooltip:'Auto Vendor healing potions (lvl 70)'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorEnchR4',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 4',    tooltip:'Vendor all Rank 4 enchantments & runestones found in player bags'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorLesserMarks',    type:'checkbox', pane:'vend',   title:'Auto Vendor Lesser Marks',    tooltip:'Vendor all Lesser Marks found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorPots1',     type:'checkbox', pane:'vend',   title:'Vendor minor potions (lvl 1)',  tooltip:'Vendor all minor potions (lvl 1) found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorPots2',     type:'checkbox', pane:'vend',   title:'Vendor lesser potions (lvl 15)',tooltip:'Vendor all lesser potions (lvl 15) found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorPots3',     type:'checkbox', pane:'vend',   title:'Vendor potions (lvl 30)',       tooltip:'Vendor all potions (lvl 30) found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorPots4',     type:'checkbox', pane:'vend',   title:'Vendor greater potions (lvl 45)',   tooltip:'Vendor all greater potions (lvl 45) found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorPots5',     type:'checkbox', pane:'vend',   title:'Vendor major potions (lvl 60)',     tooltip:'Auto Vendor major potions (lvl 60)'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorPots6',     type:'checkbox', pane:'vend',   title:'Vendor superior potions (lvl 70)',     tooltip:'Auto Vendor superior potions (lvl 70)'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorHealingPots',     type:'checkbox', pane:'vend',   title:'Vendor healing potions (1-60)',     tooltip:'Auto Vendor healing potions (lvl 60)'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorHealingPotsAll',     type:'checkbox', pane:'vend',   title:'Vendor healing potions (1-70)',     tooltip:'Auto Vendor healing potions (lvl 70)'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorEnchR4',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 4',    tooltip:'Vendor all Rank 4 enchantments & runestones found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorLesserMarks',    type:'checkbox', pane:'vend',   title:'Vendor Lesser Marks',    tooltip:'Vendor all Lesser Marks found in player bags'},
         {scope: 'char', group: 'consolidationSettings', name:'consolidate',    type:'checkbox', pane:'bank', title: tr('settings.consolid.consolidate'),    tooltip: tr('settings.consolid.consolidate.tooltip'), border:true},
         {scope: 'char', group: 'consolidationSettings', name:'minToTransfer',  type:'text',     pane:'bank', title: tr('settings.consolid.minToTransfer'),  tooltip: tr('settings.consolid.minToTransfer.tooltip')},
         {scope: 'char', group: 'consolidationSettings', name:'minCharBalance', type:'text',     pane:'bank', title: tr('settings.consolid.minCharBalance'), tooltip: tr('settings.consolid.minCharBalance.tooltip')},
@@ -5571,17 +5578,22 @@ function addProfile(profession, profile, base){
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Object_Trinket_/,
                 limit: 0
-            };
-            _vendorItems[_vendorItems.length] = {
-                pattern: /_Green_T[1-6]_Unid$/,
-                limit: 0
-            }; // Unidentified Green Gear
-            _vendorItems[_vendorItems.length] = {
-                pattern: /^Object_Trinket_/,
-                limit: 0
             }; 
              _vendorItems[_vendorItems.length] = {
                 pattern: /^Object_Skill_/,
+                limit: 0
+            };
+        }
+
+        if (getSetting('vendorSettings', 'vendorGreenUnidAll')) {
+            _vendorItems[_vendorItems.length] = {
+                pattern: /_Green_T[1-9]_Unid$/,
+                limit: 0
+            };
+        }
+        if (getSetting('vendorSettings', 'vendorBlueUnidAll')) {
+            _vendorItems[_vendorItems.length] = {
+                pattern: /_Blue_T[1-9]_Unid$/,
                 limit: 0
             };
         }
