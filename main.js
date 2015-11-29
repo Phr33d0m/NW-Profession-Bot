@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.5
+// @version 4.6
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -37,8 +37,10 @@ Developers & Contributors
 - WloBeb
 
 RELEASE NOTES
-4.5
-- Added option to vendor Unidentified Items.
+4.6
+- Removed AD profiles from leadership.
+- Added rare leadership task "Capture Bandit Leader".
+- Will now choose leadership assets based on speed first if smart leadership asset allocation is disabled.
 
 Check Changelog.txt for the full changelog:
 http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
@@ -47,8 +49,8 @@ http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
 // Make sure it's running on the main page, no frames
 
 
-var microVersion = "4.5.0";
-var scriptVersion = 4.5;
+var microVersion = "4.6.0";
+var scriptVersion = 4.6;
 var forceSettingsResetOnUpgrade = true;
 var forceResetOnVerBelow = 3.5;
 
@@ -352,7 +354,7 @@ function addProfile(profession, profile, base){
     var newProfile = jQuery.extend(true, profileBase, profile),
         baseProfile;
     //getting base to extend
-      base = base ||  (professionSet.taskListName === 'Leadership' ? 'XP' : 'default');
+      base = base ||  (professionSet.taskListName === 'Leadership' ? 'RP' : 'default');
       if(base && typeof base === 'string') {
         var existing = professionSet.profiles.filter(function(e) {return e.profileName === base;});
         if(existing && existing.length) {baseProfile = existing[0];}
@@ -454,133 +456,13 @@ function addProfile(profession, profile, base){
                 19: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
                 20: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
                 21: ["Leadership_Tier4_21_Training", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
-                22: ["Leadership_Tier4_21_Training", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                23: ["Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_21_Training", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                24: ["Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_21r_Killelemental", "Leadership_Tier4_21_Training", "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier3_20_Destroy", "Leadership_Tier1_5_Explore"],
-                25: ["Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_21r_Killelemental", "Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier4_25r_Huntexperiment", "Leadership_Tier4_25_Battleelementalcultists", "Leadership_Tier4_21_Training", "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier3_20_Destroy", "Leadership_Tier1_5_Explore"],
-            },
-        }, {
-            profileName: "AD",
-            isProfileActive: true,
-            level: {
-                0: ["Leadership_Tier0_Intro_1"],
-                1: ["Leadership_Tier0_Intro_5", "Leadership_Tier0_Intro_4", "Leadership_Tier0_Intro_3", "Leadership_Tier0_Intro_2"],
-                2: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
-                3: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
-                4: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
-                5: ["Leadership_Tier1_4_Protect", "Leadership_Tier1_5_Explore", "Leadership_Tier1_2_Guardduty"],
-                6: ["Leadership_Tier1_4_Protect", "Leadership_Tier1_5_Explore", "Leadership_Tier1_2_Guardduty"],
-                7: ["Leadership_Tier1_4_Protect", "Leadership_Tier1_5_Explore", "Leadership_Tier1_2_Guardduty"],
-                8: ["Leadership_Tier1_4_Protect", "Leadership_Tier1_5_Explore", "Leadership_Tier1_2_Guardduty"],
-                9: ["Leadership_Tier1_4_Protect", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                // Begin prioritizing "Battle Undead"
-                10: ["Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                11: ["Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                12: ["Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                // Add "protect diamonds rare" and the patrol quest as a backup
-                13: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                14: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                15: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                // AD Production mode: Spellplague + Battle Undead
-                16: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                17: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier3_17_Deliver", "Leadership_Tier2_12_Taxes", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                18: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier3_17_Deliver", "Leadership_Tier2_12_Taxes", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                19: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier3_17_Deliver", "Leadership_Tier2_12_Taxes", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                // 20
-
-                20: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_20_Destroy", "Leadership_Tier2_12_Taxes",
-                    "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-                ],
-                21: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_20_Destroy", "Leadership_Tier2_12_Taxes",
-                    "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-                ],
-                22: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_20_Destroy",
-                    "Leadership_Tier2_12_Taxes", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-                ],
-                23: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_20_Destroy",
-                    "Leadership_Tier2_12_Taxes", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-                ],
-                24: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_20_Destroy",
-                    "Leadership_Tier2_12_Taxes", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-                ],
-                25: ["Leadership_Tier4_25r_Huntexperiment", "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier3_13r_Protectdiamonds",
-                    "Leadership_Tier3_20_Destroy", "Leadership_Tier2_12_Taxes", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_25_Battleelementalcultists", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle",
-                    "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-                ],
-            },
-        }, {
-            profileName: "XP",
-            isProfileActive: true,
-            level: {
-                0: ["Leadership_Tier0_Intro_1"],
-                1: ["Leadership_Tier0_Intro_5", "Leadership_Tier0_Intro_4", "Leadership_Tier0_Intro_3", "Leadership_Tier0_Intro_2"],
-                2: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
-                3: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
-                4: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
-                5: ["Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
-                6: ["Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
-                7: ["Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
-                8: ["Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
-                9: ["Leadership_Tier1_5_Explore", "Leadership_Tier2_9_Chart", "Leadership_Tier1_4_Protect"],
-                10: ["Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
-                11: ["Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
-                12: ["Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty"],
-                13: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
-                14: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
-                15: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
-                16: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
-                17: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
-                18: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
-                19: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
-                20: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
-                21: ["Leadership_Tier4_21_Training", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
-                22: ["Leadership_Tier4_21_Training", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                23: ["Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_21_Training", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                24: ["Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_21_Training", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                25: ["Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_21r_Killelemental", "Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier4_25r_Huntexperiment", "Leadership_Tier4_25_Battleelementalcultists", "Leadership_Tier4_21_Training", "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier3_20_Destroy", "Leadership_Tier1_5_Explore"],
+                22: ["Leadership_Tier4_21_Training", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
+                23: ["Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_21_Training", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
+                24: ["Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_21r_Killelemental", "Leadership_Tier4_21_Training", "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier3_20_Destroy", "Leadership_Tier1_5_Explore"],
+                25: ["Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_21r_Killelemental", "Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier4_25r_Huntexperiment", "Leadership_Tier4_25_Battleelementalcultists", "Leadership_Tier4_21_Training", "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier3_20_Destroy", "Leadership_Tier1_5_Explore"],
             },
         }]
     };
-
-    addProfile("Leadership", {
-        profileName: "Resource/AD",
-        level: {
-            // DL
-            16: ["Leadership_Tier3_16r_Buildshelters", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_16_Fight", "Leadership_Tier3_13_Patrol", "Leadership_Tier3_17_Deliver", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-            17: ["Leadership_Tier3_16r_Buildshelters", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_17_Deliver", "Leadership_Tier3_13_Patrol", "Leadership_Tier3_17_Deliver", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-            18: ["Leadership_Tier3_16r_Buildshelters", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_17r_Raidmines", "Leadership_Tier3_13_Patrol", "Leadership_Tier3_17_Deliver", , "Leadership_Tier3_17_Deliver", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-            19: ["Leadership_Tier3_16r_Buildshelters", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_17r_Raidmines", "Leadership_Tier3_13_Patrol", "Leadership_Tier3_17_Deliver", , "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-            // 20
-            20: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3",
-                "Leadership_Tier3_20_Destroy", "Leadership_Tier3_18_Resell", "Leadership_Tier3_13r_Protectdiamonds",
-                "Leadership_Tier3_16r_Buildshelters", "Leadership_Tier3_13_Patrol", "Leadership_Tier3_19_Acquire", "Leadership_Tier3_17_Deliver",
-                "Leadership_Tier3_15_Rescue", "Leadership_Tier2_9_Chart", "Leadership_Tier2_12_Taxes", "Leadership_Tier1_5_Explore"
-            ],
-            21: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_21r_Killelemental",
-                "Leadership_Tier3_20_Destroy", "Leadership_Tier4_21_Protectmagic",
-                "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_12_Taxes", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-            ],
-            22: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_21r_Killelemental",
-                "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier3_20_Destroy", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_22_Guardclerics",
-                "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_12_Taxes", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-            ],
-            23: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3",
-                "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier4_21r_Killelemental",
-                "Leadership_Tier4_23_Guardnoble", "Leadership_Tier3_20_Destroy", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_22_Guardclerics",
-                "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_12_Taxes", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-            ],
-            24: ["Leadership_Tier4_24r_Killdragon",
-                "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_23r_Securepilgrimage",
-                "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_23_Guardnoble", "Leadership_Tier3_20_Destroy", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_21r_Killelemental",
-                "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_12_Taxes", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-            ],
-            25: ["Leadership_Tier4_25r_Huntexperiment", "Leadership_Tier4_24r_Killdragon",
-                "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_23r_Securepilgrimage",
-                "Leadership_Tier4_25_Battleelementalcultists", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_23_Guardnoble", "Leadership_Tier3_20_Destroy", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_21r_Killelemental",
-                "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_12_Taxes", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-            ],
-        }
-    }, "XP");
 
     addProfile("Leadership", {
         profileName: "Assets",
@@ -592,15 +474,16 @@ function addProfile(profession, profile, base){
     });
 
     addProfile('Leadership',{
-        "profileName": "RP Boxes",
+        "profileName": "Boxes",
             "level": {
                 "24": [
+                    "Leadership_Tier4_22r_Capturebandithq",
                     "Leadership_Tier4_24r_Killdragon",
                     "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_21_Protectmagic",
                     "Leadership_Tier4_23_Guardnoble",
                     "Leadership_Tier4_23r_Securepilgrimage",
                     "Leadership_Tier4_22_Guardclerics",
-                    "Leadership_Tier4_21_Protectmagic",
                     "Leadership_Tier4_21r_Killelemental",
                     //"Leadership_Tier4_22r_Capturebandithq",
                     "Leadership_Tier4_21_Training",
@@ -611,12 +494,13 @@ function addProfile(profession, profile, base){
                     "Leadership_Tier1_5_Explore"
                 ],
                 "25": [
+                    "Leadership_Tier4_22r_Capturebandithq",
                     "Leadership_Tier4_24r_Killdragon",
                     "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_21_Protectmagic",
                     "Leadership_Tier4_23_Guardnoble",
                     "Leadership_Tier4_23r_Securepilgrimage",
                     "Leadership_Tier4_22_Guardclerics",
-                    "Leadership_Tier4_21_Protectmagic",
                     "Leadership_Tier4_21r_Killelemental",
                     "Leadership_Tier4_25_Battleelementalcultists",
                     "Leadership_Tier4_25r_Huntexperiment",
@@ -629,7 +513,7 @@ function addProfile(profession, profile, base){
                     "Leadership_Tier1_5_Explore"
                 ]
             }
-        }, 'XP');
+        }, 'RP');
 
     definedTask["WinterEvent"] = {
         taskListName: "WinterEvent",
@@ -1972,7 +1856,6 @@ function addProfile(profession, profile, base){
             autoPurchaseRes: true,
             trainAssets: true,
             smartLeadershipAssets: true,
-            skipPatrolTask: 'AD&Lvl20',
             stopNotLeadership: 0,
             stopAlchemyAt3: false,
         },
@@ -2030,7 +1913,6 @@ function addProfile(profession, profile, base){
             fillOptionals: true,
             autoPurchaseRes: true,
             trainAssets: true,
-            skipPatrolTask: 'AD&Lvl20',
             smartLeadershipAssets: true,
             stopNotLeadership: 0,
             stopAlchemyAt3: false,
@@ -2165,8 +2047,6 @@ function addProfile(profession, profile, base){
         {scope: 'account', group: 'professionSettings', name: 'autoPurchaseRes',       type: 'checkbox', pane: 'prof', title: tr('settings.profession.autoPurchase'),    tooltip: tr('settings.profession.autoPurchase.tooltip')},
         {scope: 'account', group: 'professionSettings', name: 'trainAssets',           type:'checkbox',  pane: 'prof', title: tr('settings.profession.trainAssets'),     tooltip: tr('settings.profession.trainAssets.tooltip')},
         {scope: 'account', group: 'professionSettings', name: 'smartLeadershipAssets', type:'checkbox',  pane: 'prof', title: tr('settings.profession.smartLeadership'), tooltip: tr('settings.profession.smartLeadership.tooltip')},
-        {scope: 'account', group: 'professionSettings', name: 'skipPatrolTask',        type:'select',    pane: 'prof', title: tr('settings.profession.skipPatrol'),      tooltip: tr('settings.profession.skipPatrol.tooltip'),
-            opts:[{name:'never',value:'never'},{name:'always',value:'always'},{name:'AD profile',value:'ad'},{name:'Leadership lvl 20',value:'ld20'},{name:'AD&Lvl20',value:'AD&Lvl20'}]},
         {scope: 'account', group: 'professionSettings', name: 'stopNotLeadership',        type:'select',    pane: 'prof', title: tr('settings.profession.stopNotLeadership'),      tooltip: tr('settings.profession.stopNotLeadership.tooltip'),
             opts:[{name:'never',value:'0'},{name: '20' ,value: 20},{name: '25' ,value: 25}]},
         {scope: 'account', group: 'professionSettings', name: 'stopAlchemyAt3',        type:'checkbox',    pane: 'prof', title: tr('settings.profession.stopAlchemyAt3'),      tooltip: tr('settings.profession.stopAlchemyAt3.tooltip')},
@@ -2225,8 +2105,6 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'professionSettings', name: 'autoPurchaseRes',       type: 'checkbox', pane: 'prof', title: tr('settings.profession.autoPurchase'),    tooltip: tr('settings.profession.autoPurchase.tooltip')},
         {scope: 'char', group: 'professionSettings', name: 'trainAssets',           type:'checkbox',  pane: 'prof', title: tr('settings.profession.trainAssets'),     tooltip: tr('settings.profession.trainAssets.tooltip')},
         {scope: 'char', group: 'professionSettings', name: 'smartLeadershipAssets', type:'checkbox',  pane: 'prof', title: tr('settings.profession.smartLeadership'), tooltip: tr('settings.profession.smartLeadership.tooltip')},
-        {scope: 'char', group: 'professionSettings', name: 'skipPatrolTask',        type: 'select',   pane: 'prof', title: tr('settings.profession.skipPatrol'),      tooltip: tr('settings.profession.skipPatrol.tooltip'),
-            opts:[{name:'never',value:'never'},{name:'always',value:'always'},{name:'AD profile',value:'ad'},{name:'Leadership lvl 20',value:'ld20'},{name:'AD&Lvl20',value:'AD&Lvl20'}]},
         {scope: 'char', group: 'professionSettings', name: 'stopNotLeadership',        type:'select',    pane: 'prof', title: tr('settings.profession.stopNotLeadership'),      tooltip: tr('settings.profession.stopNotLeadership.tooltip'),
             opts:[{name:'never',value:0},{name: '20' ,value: 20},{name: '25' ,value: 25}]},
         {scope: 'char', group: 'professionSettings', name: 'stopAlchemyAt3',        type:'checkbox',    pane: 'prof', title: tr('settings.profession.stopAlchemyAt3'),      tooltip: tr('settings.profession.stopAlchemyAt3.tooltip')},
@@ -2789,17 +2667,6 @@ function addProfile(profession, profile, base){
 
     function searchForTask(taskname, profname, profile, professionLevel) {
         // Return first object that matches exact craft name
-        // edited by WloBeb - start Patrol the Mines task only if char has less than 10 Mining Claims
-        var skip_setting = getSetting('professionSettings', 'skipPatrolTask');
-            
-        if (taskname == "Leadership_Tier3_13_Patrol" && (skip_setting == 'always' ||
-            (skip_setting == 'ad' && profile.profileName == "AD") || (skip_setting == 'ld20' && professionLevel >= 20) ||
-            (skip_setting == 'AD&Lvl20' && professionLevel >= 20 && profile.profileName == "AD"))) {
-            if (countResource("Crafting_Resource_Mining_Claim") >= 10) {
-                console.log("Too many Mining Claims: skiping");
-                return false;
-            }
-        }
 
         var thisTask = unsafeWindow.client.dataModel.model.craftinglist['craft_' + profname].entries.filter(function(entry) {
             return entry.def && entry.def.name == taskname;
@@ -3034,45 +2901,67 @@ function addProfile(profession, profile, base){
 
             // Try to avoid using up higher rank assets needlessly
             if (prof.taskName === "Leadership") {
-                var mercenarys = $('div.modal-item-list a.Bronze img[src*="Crafting_Follower_Leader_Generic_T1_01"]').parent().parent();
-                var guards = $('div.modal-item-list a.Bronze img[src*="Crafting_Follower_Leader_Guard_T2_01"]').parent().parent();
-                var footmen = $('div.modal-item-list a.Bronze img[src*="Crafting_Follower_Leader_Private_T2_01"]').parent().parent();
 
-                var T3_Epic = 0;
-                var T3_Rare = 0;
-                var T3_Uncommon = 0;
-                var usedCommon;
-                
-                var _enableSmartLeadership = getSetting('professionSettings','smartLeadershipAssets'); 
-                if (_enableSmartLeadership) {
-                    T3_Epic = countResource("Crafting_Asset_Craftsman_Leadership_T3_Epic"); // number of heroes in inventory
-                    T3_Rare = countResource("Crafting_Asset_Craftsman_Leadership_T3_Rare"); // number of adventurers in inventory
-                    T3_Uncommon = countResource("Crafting_Asset_Craftsman_Leadership_T3_Uncommon"); // number of man-at-arms in inventory
-                    usedCommon = countUsedResource("Crafting_Asset_Craftsman_Leadership_T3_Common") + countUsedResource("Crafting_Asset_Craftsman_Leadership_T2_Common") + countUsedResource("Crafting_Asset_Craftsman_Leadership_T1_Common_1"); //number of used mercenarys, guards and footmans
-                }
+                var _enableSmartLeadership = getSetting('professionSettings','smartLeadershipAssets');
 
-                if (!(_enableSmartLeadership) || (_enableSmartLeadership && (T3_Epic + T3_Rare + T3_Uncommon + usedCommon < parseInt(charSettingsList[curCharName].taskListSettings["Leadership"].taskSlots) * 2))) {
-                    if (mercenarys.length) {
-                        clicked = true;
-                        mercenarys[0].click();
-                    } else if (guards.length) {
-                        clicked = true;
-                        guards[0].click();
-                    } else if (footmen.length) {
-                        clicked = true;
-                        footmen[0].click();
+                // if smart leadership assets is not selected, check for persons for best speed, in descending order
+                if (!_enableSmartLeadership) {
+                    for (ic in quality) {
+                        if (quality[ic] == ".Bronze") {
+                            break;
+                        }
+                        $it = $persons.filter(quality[ic]);
+                        if ($it.length) {
+                            $it[0].click();
+                            clicked = true;
+                            break;
+                        }
                     }
                 }
+
+                if (!clicked) {
+                    var mercenarys = $('div.modal-item-list a.Bronze img[src*="Crafting_Follower_Leader_Generic_T1_01"]').parent().parent();
+                    var guards = $('div.modal-item-list a.Bronze img[src*="Crafting_Follower_Leader_Guard_T2_01"]').parent().parent();
+                    var footmen = $('div.modal-item-list a.Bronze img[src*="Crafting_Follower_Leader_Private_T2_01"]').parent().parent();
+
+                    var T3_Epic = 0;
+                    var T3_Rare = 0;
+                    var T3_Uncommon = 0;
+                    var usedCommon;
+
+                    if (_enableSmartLeadership) {
+                        T3_Epic = countResource("Crafting_Asset_Craftsman_Leadership_T3_Epic"); // number of heroes in inventory
+                        T3_Rare = countResource("Crafting_Asset_Craftsman_Leadership_T3_Rare"); // number of adventurers in inventory
+                        T3_Uncommon = countResource("Crafting_Asset_Craftsman_Leadership_T3_Uncommon"); // number of man-at-arms in inventory
+                        usedCommon = countUsedResource("Crafting_Asset_Craftsman_Leadership_T3_Common") + countUsedResource("Crafting_Asset_Craftsman_Leadership_T2_Common") + countUsedResource("Crafting_Asset_Craftsman_Leadership_T1_Common_1"); //number of used mercenarys, guards and footmans
+                    }
+
+                    if ((!_enableSmartLeadership) || (_enableSmartLeadership && (T3_Epic + T3_Rare + T3_Uncommon + usedCommon < parseInt(charSettingsList[curCharName].taskListSettings["Leadership"].taskSlots) * 2))) {
+                        if (mercenarys.length) {
+                            clicked = true;
+                            mercenarys[0].click();
+                        } else if (guards.length) {
+                            clicked = true;
+                            guards[0].click();
+                        } else if (footmen.length) {
+                            clicked = true;
+                            footmen[0].click();
+                        }
+                    }
+                }
+
             }
 
 
             // check resources & assets for best quality, in descending order
-            for (ic in quality) {
-                $it = $assets.filter(quality[ic]);
-                if ($it.length) {
-                    $it[0].click();
-                    clicked = true;
-                    break;
+            if (!clicked) {
+                for (ic in quality) {
+                    $it = $assets.filter(quality[ic]);
+                    if ($it.length) {
+                        $it[0].click();
+                        clicked = true;
+                        break;
+                    }
                 }
             }
 
@@ -5685,8 +5574,6 @@ function addProfile(profession, profile, base){
                 'settings.profession.trainAssets.tooltip': 'Enable training/upgrading of asset worker resources',
                 'settings.profession.smartLeadership': 'Smart Asset allocation for leadership',
                 'settings.profession.smartLeadership.tooltip': 'Try to spread and fill non-common assets and supplement with common if needed',
-                'settings.profession.skipPatrol': 'Skip Patrol task if > 10 claims',
-                'settings.profession.skipPatrol.tooltip': 'Skip &quot;Patrol the Mines&quot; leadership task if there are more than 10 mining claims in the inventory (Never, Always, On AD profile, if Leadership level is &gt;= 20, or both of the above )',
                 'settings.profession.stopNotLeadership': 'Stop NON-Leadership task at level: ',
                 'settings.profession.stopNotLeadership.tooltip': 'Block All professions except Leadership at level 20 or 25 and above. Make sure you have Leadership set.',
                 'settings.profession.stopAlchemyAt3': 'Stop Alchemy leveling at level 3',
@@ -5764,8 +5651,6 @@ function addProfile(profession, profile, base){
                 'settings.profession.trainAssets.tooltip': 'Pozwól na trenowanie/ulepszanie zwykłych pracowników',
                 'settings.profession.smartLeadership': 'Inteligentny przydział pracowników do Przywództwa',
                 'settings.profession.smartLeadership.tooltip': 'Próbuje przydzielić jak najmniej zwykłych pracowników do zadań przywództwa',
-                'settings.profession.skipPatrol': 'Pomiń zadanie Patrol jeśli masz >10 zezwoleń',
-                'settings.profession.skipPatrol.tooltip': 'Pomiń zadanie Przywództwa &quot;Patroluj kopalnie&quot; jeśli masz więcej niż 10 pozwoleń górniczych (Nigdy, Zawsze, Gdy wybrany profil to AD, jeśli poziom Przywództwa is &gt;= 20, lub jeśli obydwa poprzednie)',
                 'settings.profession.stopNotLeadership': 'Wstrzymaj profesje inne od Przywództwa na poziomie',
                 'settings.profession.stopNotLeadership.tooltip': 'Nie uruchamiaj zadań profesji innej od Przywództwa po osiągnięciu poziomu. Upewnij się, ze masz ustawione Przywództwo.',
                 'settings.profession.stopAlchemyAt3': 'Wstrzymaj naukę Alchemii na poziomie 3',
