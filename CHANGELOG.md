@@ -1,6 +1,12 @@
 RELEASE NOTES
 =============
 
+4.6
+---
+- Removed AD profiles from leadership.
+- Added rare leadership task "Capture Bandit Leader".
+- Will now choose leadership assets based on speed first if smart leadership asset allocation is disabled.
+
 4.5
 ---
 - Added option to vendor Unidentified Items.
