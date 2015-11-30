@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.6.1
+// @version 4.6.2
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -49,7 +49,7 @@ http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
 // Make sure it's running on the main page, no frames
 
 
-var microVersion = "4.6.1";
+var microVersion = "4.6.2";
 var scriptVersion = 4.6;
 var forceSettingsResetOnUpgrade = true;
 var forceResetOnVerBelow = 3.5;
@@ -2912,7 +2912,8 @@ function addProfile(profession, profile, base){
                 var usedCommon = countUsedResource("Crafting_Asset_Craftsman_Leadership_T3_Common") + countUsedResource("Crafting_Asset_Craftsman_Leadership_T2_Common") + countUsedResource("Crafting_Asset_Craftsman_Leadership_T1_Common_1"); //number of used mercenarys, guards and footmans
 
                 // if smart leadership asset allocation is not selected, check for persons for best speed, in descending order
-                if ((!_enableSmartLeadership) && ((profile.profileName != "RP") || (professionLevel < 24) || (taskname == "Leadership_Tier4_22r_Capturebandithq") || (taskname == "Leadership_Tier4_24r_Killdragon") || (taskname == "Leadership_Tier4_24_Wizardsseneschal") || (T3_Epic + T3_Rare + T3_Uncommon > 6))) {
+                //if ((!_enableSmartLeadership) && ((profile.profileName != "RP") || (professionLevel < 24) || (taskname == "Leadership_Tier4_22r_Capturebandithq") || (taskname == "Leadership_Tier4_24r_Killdragon") || (taskname == "Leadership_Tier4_24_Wizardsseneschal") || (T3_Epic + T3_Rare + T3_Uncommon > 6))) {
+                if (!_enableSmartLeadership) {
                     for (ic in quality) {
                         if (quality[ic] == ".Bronze") {
                             break;
