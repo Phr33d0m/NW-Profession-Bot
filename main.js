@@ -2578,7 +2578,7 @@ function addProfile(profession, profile, base){
                 var def = $.Deferred();
                 var buttonList = $('.taskdetails-assets:eq(1)').find("button");
                 if (buttonList.length && getSetting('professionSettings','fillOptionals')) {
-                    SelectItemFor(buttonList, 0, def, prof);
+                    SelectItemFor(buttonList, 0, def, prof, taskName, prof.taskName, profile, level);
                 } else {
                     def.resolve();
                 }
@@ -2887,7 +2887,7 @@ function addProfile(profession, profile, base){
      * @param {Deferred} jQuery Deferred object to resolve when all of the assets have been assigned
      */
 
-    function SelectItemFor(buttonListIn, i, def, prof) {
+    function SelectItemFor(buttonListIn, i, def, prof, taskname, profname, profile, professionLevel) {
         buttonListIn[i].click();
         WaitForState("").done(function() {
 
@@ -2903,9 +2903,16 @@ function addProfile(profession, profile, base){
             if (prof.taskName === "Leadership") {
 
                 var _enableSmartLeadership = getSetting('professionSettings','smartLeadershipAssets');
+                var mercenarys = $('div.modal-item-list a.Bronze img[src*="Crafting_Follower_Leader_Generic_T1_01"]').parent().parent();
+                var guards = $('div.modal-item-list a.Bronze img[src*="Crafting_Follower_Leader_Guard_T2_01"]').parent().parent();
+                var footmen = $('div.modal-item-list a.Bronze img[src*="Crafting_Follower_Leader_Private_T2_01"]').parent().parent();
+                var T3_Epic = countResource("Crafting_Asset_Craftsman_Leadership_T3_Epic"); // number of heroes in inventory
+                var T3_Rare = countResource("Crafting_Asset_Craftsman_Leadership_T3_Rare"); // number of adventurers in inventory
+                var T3_Uncommon = countResource("Crafting_Asset_Craftsman_Leadership_T3_Uncommon"); // number of man-at-arms in inventory
+                var usedCommon = countUsedResource("Crafting_Asset_Craftsman_Leadership_T3_Common") + countUsedResource("Crafting_Asset_Craftsman_Leadership_T2_Common") + countUsedResource("Crafting_Asset_Craftsman_Leadership_T1_Common_1"); //number of used mercenarys, guards and footmans
 
-                // if smart leadership assets is not selected, check for persons for best speed, in descending order
-                if (!_enableSmartLeadership) {
+                // if smart leadership asset allocation is not selected, check for persons for best speed, in descending order
+                if ((!_enableSmartLeadership) && ((profile.profileName != "RP") || (professionLevel < 24) || (taskname == "Leadership_Tier4_22r_Capturebandithq") || (taskname == "Leadership_Tier4_24r_Killdragon") || (taskname == "Leadership_Tier4_24_Wizardsseneschal") || (T3_Epic + T3_Rare + T3_Uncommon > 6))) {
                     for (ic in quality) {
                         if (quality[ic] == ".Bronze") {
                             break;
@@ -2920,22 +2927,6 @@ function addProfile(profession, profile, base){
                 }
 
                 if (!clicked) {
-                    var mercenarys = $('div.modal-item-list a.Bronze img[src*="Crafting_Follower_Leader_Generic_T1_01"]').parent().parent();
-                    var guards = $('div.modal-item-list a.Bronze img[src*="Crafting_Follower_Leader_Guard_T2_01"]').parent().parent();
-                    var footmen = $('div.modal-item-list a.Bronze img[src*="Crafting_Follower_Leader_Private_T2_01"]').parent().parent();
-
-                    var T3_Epic = 0;
-                    var T3_Rare = 0;
-                    var T3_Uncommon = 0;
-                    var usedCommon;
-
-                    if (_enableSmartLeadership) {
-                        T3_Epic = countResource("Crafting_Asset_Craftsman_Leadership_T3_Epic"); // number of heroes in inventory
-                        T3_Rare = countResource("Crafting_Asset_Craftsman_Leadership_T3_Rare"); // number of adventurers in inventory
-                        T3_Uncommon = countResource("Crafting_Asset_Craftsman_Leadership_T3_Uncommon"); // number of man-at-arms in inventory
-                        usedCommon = countUsedResource("Crafting_Asset_Craftsman_Leadership_T3_Common") + countUsedResource("Crafting_Asset_Craftsman_Leadership_T2_Common") + countUsedResource("Crafting_Asset_Craftsman_Leadership_T1_Common_1"); //number of used mercenarys, guards and footmans
-                    }
-
                     if ((!_enableSmartLeadership) || (_enableSmartLeadership && (T3_Epic + T3_Rare + T3_Uncommon + usedCommon < parseInt(charSettingsList[curCharName].taskListSettings["Leadership"].taskSlots) * 2))) {
                         if (mercenarys.length) {
                             clicked = true;
@@ -2992,7 +2983,7 @@ function addProfile(profession, profile, base){
                 // Get the new set of select buttons created since the other ones are removed when the asset loads
                 var buttonList = $('.taskdetails-assets:eq(1)').find("button");
                 if (i < buttonList.length - 1) {
-                    SelectItemFor(buttonList, i + 1, def, prof);
+                    SelectItemFor(buttonList, i + 1, def, prof, taskname, profname, profile, professionLevel);
                 } else {
                     // Let main loop continue
                     def.resolve();
