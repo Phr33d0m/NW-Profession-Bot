@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.6
+// @version 4.6.1
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -49,7 +49,7 @@ http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
 // Make sure it's running on the main page, no frames
 
 
-var microVersion = "4.6.0";
+var microVersion = "4.6.1";
 var scriptVersion = 4.6;
 var forceSettingsResetOnUpgrade = true;
 var forceResetOnVerBelow = 3.5;
