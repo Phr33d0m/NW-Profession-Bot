@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.6.2
+// @version 4.7
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -37,10 +37,11 @@ Developers & Contributors
 - WloBeb
 
 RELEASE NOTES
-4.6
-- Removed AD profiles from leadership.
-- Added rare leadership task "Capture Bandit Leader".
-- Will now choose leadership assets based on speed first if smart leadership asset allocation is disabled.
+4.7
+- Settings reset to defaults.
+- Added a lot of default tracked resources.
+- Added "Distilled Potion of Superior Healing" to Alchemy.
+- Added "RP (Stacked Assets)" to Leadership.
 
 Check Changelog.txt for the full changelog:
 http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
@@ -49,10 +50,10 @@ http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
 // Make sure it's running on the main page, no frames
 
 
-var microVersion = "4.6.2";
-var scriptVersion = 4.6;
+var microVersion = "4.7.0";
+var scriptVersion = 4.7;
 var forceSettingsResetOnUpgrade = true;
-var forceResetOnVerBelow = 3.5;
+var forceResetOnVerBelow = 4.7;
 
 if(window.self !== window.top) {
     throw "";
@@ -289,7 +290,7 @@ function _select_Gateway() { // Check for Gateway used to
     var ver = parseFloat(GM_getValue("script_version", 0));
     
     if ((ver < forceResetOnVerBelow) && forceSettingsResetOnUpgrade) {
-        var str = "Detected an upgrade from old version or fresh install.<br />Procceding will wipe all saved settings.<br />Please set characters to active after log in.";  
+        var str = "Detected an upgrade from old version or fresh install.<br />Proceeding will wipe all saved settings.<br />Please set characters to active after log in.";  
         $('<div id="dialog-confirm" title="Setting wipe confirm">' + str + '</div>').dialog({
               resizable: true,
               width: 500,
@@ -474,6 +475,46 @@ function addProfile(profession, profile, base){
     });
 
     addProfile('Leadership',{
+        "profileName": "RP (Stacked Assets)",
+            "level": {
+                "24": [
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_22_Guardclerics",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_21_Training",
+                    "Leadership_Tier3_20r_Master2",
+                    "Leadership_Tier3_20r_Master1",
+                    "Leadership_Tier3_20r_Master3",
+                    "Leadership_Tier3_20_Destroy",
+                    "Leadership_Tier1_5_Explore"
+                ],
+                "25": [
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_22_Guardclerics",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_25r_Huntexperiment",
+                    "Leadership_Tier4_25_Battleelementalcultists",
+                    "Leadership_Tier4_21_Training",
+                    "Leadership_Tier3_20r_Master2",
+                    "Leadership_Tier3_20r_Master1",
+                    "Leadership_Tier3_20r_Master3",
+                    "Leadership_Tier3_20_Destroy",
+                    "Leadership_Tier1_5_Explore"
+                ]
+            }
+        }, 'RP');
+
+    addProfile('Leadership',{
         "profileName": "Boxes",
             "level": {
                 "24": [
@@ -485,7 +526,6 @@ function addProfile(profession, profile, base){
                     "Leadership_Tier4_23r_Securepilgrimage",
                     "Leadership_Tier4_22_Guardclerics",
                     "Leadership_Tier4_21r_Killelemental",
-                    //"Leadership_Tier4_22r_Capturebandithq",
                     "Leadership_Tier4_21_Training",
                     "Leadership_Tier3_20r_Master2",
                     "Leadership_Tier3_20r_Master1",
@@ -504,7 +544,6 @@ function addProfile(profession, profile, base){
                     "Leadership_Tier4_21r_Killelemental",
                     "Leadership_Tier4_25_Battleelementalcultists",
                     "Leadership_Tier4_25r_Huntexperiment",
-                    //"Leadership_Tier4_22r_Capturebandithq",
                     "Leadership_Tier4_21_Training",
                     "Leadership_Tier3_20r_Master2",
                     "Leadership_Tier3_20r_Master1",
@@ -567,7 +606,7 @@ function addProfile(profession, profile, base){
     definedTask["Blackice"] = {
         taskListName: "Blackice",
         taskName: "Blackice",
-        taskDefaultPriority: 1,
+        taskDefaultPriority: 0,
         taskDefaultSlotNum: 0,
         taskActive: true,
         taskDescription: "",
@@ -1585,9 +1624,16 @@ function addProfile(profession, profile, base){
     addProfile("Alchemy", {
         profileName: "Potency Superior",
         level: {
-            25: ["Alchemy_Tier4_Experimentation_Rank25", "Alchemy_Tier4_Potency_Potion_Superior", "Alchemy_Tier4_Create_Elemental_Aggregate", "Alchemy_Tier3_Potency_Potion_Major", "Alchemy_Tier2_Aquaregia", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
+            25: ["Alchemy_Tier4_Experimentation_Rank25", "Alchemy_Tier4_Potency_Potion_Superior", "Alchemy_Tier4_Aquaregia_2", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
         }
-    }); 
+    });
+    addProfile("Alchemy", {
+        profileName: "Distilled Potion of Superior Healing",
+        level: {
+            24: ["Alchemy_Tier4_Healing_Potion_Superior_Distilled"],
+            25: ["Alchemy_Tier4_Healing_Potion_Superior_Distilled"],
+        }
+    });
 
     addProfile("Alchemy", {
         profileName: "Blue & Green Vitriol",
@@ -1733,29 +1779,197 @@ function addProfile(profession, profile, base){
     var toolList = toolListDefinition();
 
     var defaultTrackResources = [{
-        fname: 'Aqua Regia',
-        name: 'Crafting_Resource_Aquaregia',
+        fname: 'Tome of Experience',
+        name: 'Item_Potion_Xp_Account',
         bank: false, unbound: true, btc: true, bta: true
     }, {
-        fname: 'Aqua Vitae',
-        name: 'Crafting_Resource_Aquavitae',
+        fname: 'Coalescent Ward (Invocation)',
+        name: 'Fuse_Ward_Coalescent_Invocation',
         bank: false, unbound: true, btc: true, bta: true
     }, {
-        fname: 'Residuum',
-        name: 'Crafting_Resource_Residuum',
+        fname: 'Preservation Ward (Invocation)',
+        name: 'Fuse_Ward_Preservation_Invocation',
         bank: false, unbound: true, btc: true, bta: true
     }, {
-        fname: 'Mining Claim',
-        name: 'Crafting_Resource_Mining_Claim',
+        fname: 'Superior Mark of Potency',
+        name: 'Gem_Upgrade_Resource_R5',
         bank: false, unbound: true, btc: true, bta: true
     }, {
-        fname: 'Elemental Aggregate',
-        name: 'Crafting_Resource_Elemental_Aggregate',
+        fname: 'Greater Mark of Potency',
+        name: 'Gem_Upgrade_Resource_R4',
         bank: false, unbound: true, btc: true, bta: true
+    }, {
+        fname: 'Greater Mark of Power',
+        name: 'Artifact_Upgrade_Resource_R3_A',
+        bank: false, unbound: true, btc: true, bta: true
+    }, {
+        fname: 'Greater Mark of Stability',
+        name: 'Artifact_Upgrade_Resource_R3_B',
+        bank: false, unbound: true, btc: true, bta: true
+    }, {
+        fname: 'Greater Mark of Union',
+        name: 'Artifact_Upgrade_Resource_R3_C',
+        bank: false, unbound: true, btc: true, bta: true
+    }, {
+        fname: 'Mark of Potency',
+        name: 'Gem_Upgrade_Resource_R3',
+        bank: false, unbound: true, btc: true, bta: true
+    }, {
+        fname: 'Mark of Power',
+        name: 'Artifact_Upgrade_Resource_R2_A',
+        bank: false, unbound: true, btc: true, bta: true
+    }, {
+        fname: 'Mark of Stability',
+        name: 'Artifact_Upgrade_Resource_R2_B',
+        bank: false, unbound: true, btc: true, bta: true
+    }, {
+        fname: 'Mark of Union',
+        name: 'Artifact_Upgrade_Resource_R2_C',
+        bank: false, unbound: true, btc: true, bta: true
+    }, {
+        fname: 'Lesser Mark of Potency',
+        name: 'Gem_Upgrade_Resource_R2',
+        bank: false, unbound: true, btc: true, bta: true
+    }, {
+        fname: 'Lesser Mark of Power',
+        name: 'Artifact_Upgrade_Resource_R1_A',
+        bank: false, unbound: true, btc: true, bta: true
+    }, {
+        fname: 'Lesser Mark of Stability',
+        name: 'Artifact_Upgrade_Resource_R1_B',
+        bank: false, unbound: true, btc: true, bta: true
+    }, {
+        fname: 'Lesser Mark of Union',
+        name: 'Artifact_Upgrade_Resource_R1_C',
+        bank: false, unbound: true, btc: true, bta: true
+    }, {
+        fname: 'Greater Resonance Stone',
+        name: 'Artifactgear_Food_R4_A',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Greater Thaumaturgic Stone',
+        name: 'Gemfood_Stone_R4',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Greater Power Stone',
+        name: 'Artifactfood_R4_A',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Greater Stability Stone',
+        name: 'Artifactfood_R4_B',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Greater Union Stone',
+        name: 'Artifactfood_R4_C',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Black Opal',
+        name: 'Gemfood_R5',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Resonance Stone',
+        name: 'Artifactgear_Food_R3_A',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Thaumaturgic Stone',
+        name: 'Gemfood_Stone_R3',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Power Stone',
+        name: 'Artifactfood_R3_A',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Stability Stone',
+        name: 'Artifactfood_R3_B',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Union Stone',
+        name: 'Artifactfood_R3_C',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Flawless Sapphire',
+        name: 'Gemfood_R4',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Aquamarine',
+        name: 'Gemfood_R3',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Lesser Resonance Stone',
+        name: 'Artifactgear_Food_R2_A',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Lesser Thaumaturgic Stone',
+        name: 'Gemfood_Stone_R2',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Lesser Power Stone',
+        name: 'Artifactfood_R2_A',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Lesser Union Stone',
+        name: 'Artifactfood_R2_C',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Lesser Stability Stone',
+        name: 'Artifactfood_R2_B',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Peridot',
+        name: 'Gemfood_R2',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Minor Resonance Stone',
+        name: 'Artifactgear_Food_R1_A',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Minor Thaumaturgic Stone',
+        name: 'Gemfood_Stone_R1',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Minor Power Stone',
+        name: 'Artifactfood_R1_A',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Minor Stability Stone',
+        name: 'Artifactfood_R1_B',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Minor Union Stone',
+        name: 'Artifactfood_R1_C',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'White Pearl',
+        name: 'Gemfood_R1',
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Unified Elements',
         name: 'Crafting_Resource_Elemental_Unified',
-        bank: false, unbound: true, btc: true, bta: true
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Elemental Aggregate',
+        name: 'Crafting_Resource_Elemental_Aggregate',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Residuum',
+        name: 'Crafting_Resource_Residuum',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Aqua Regia',
+        name: 'Crafting_Resource_Aquaregia',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Aqua Vitae',
+        name: 'Crafting_Resource_Aquavitae',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Green Vitriol',
+        name: 'Crafting_Resource_Vitriol_Green',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Blue Vitriol',
+        name: 'Crafting_Resource_Vitriol_Blue',
+        bank: false, unbound: true, btc: false, bta: false
     }, 
 ];
     var trackResources;
@@ -1775,7 +1989,7 @@ function addProfile(profession, profile, base){
             leadershipMode: false,
             leadershipSound: 50,
             language: 'en',
-            scriptDebugMode: true,
+            scriptDebugMode: false,
             scriptAutoReload: false,
             autoLogin: false,
             autoLoginAccount: "",
@@ -1855,7 +2069,7 @@ function addProfile(profession, profile, base){
             fillOptionals: true,
             autoPurchaseRes: true,
             trainAssets: true,
-            smartLeadershipAssets: true,
+            spreadLeadershipAssets: true,
             stopNotLeadership: 0,
             stopAlchemyAt3: false,
         },
@@ -1865,15 +2079,15 @@ function addProfile(profession, profile, base){
             openCelestialBox: false,
             openInvocation: true,
             keepOneUnopened: false,
-            runSCA: 'free',
+            runSCA: 'never',
             SCADailyReset: Date.now() - 24*60*60*1000,
         },
         consolidationSettings: {
             bankCharName: "",
             transferRate: 100,
             consolidate: false,
-            minCharBalance: 10000,
-            minToTransfer: 50000,
+            minCharBalance: 0,
+            minToTransfer: 100,
         },
     };
 
@@ -1913,7 +2127,7 @@ function addProfile(profession, profile, base){
             fillOptionals: true,
             autoPurchaseRes: true,
             trainAssets: true,
-            smartLeadershipAssets: true,
+            spreadLeadershipAssets: true,
             stopNotLeadership: 0,
             stopAlchemyAt3: false,
         },
@@ -1923,12 +2137,12 @@ function addProfile(profession, profile, base){
             openCelestialBox: false,
             openInvocation: true,
             keepOneUnopened: false,
-            runSCA: 'free',
+            runSCA: 'never',
         },
         consolidationSettings: {
             consolidate: false,
-            minCharBalance: 10000,
-            minToTransfer: 50000,
+            minCharBalance: 0,
+            minToTransfer: 100,
         },
         taskListSettings: {},
         taskListSettingsManual: [],
@@ -2046,7 +2260,7 @@ function addProfile(profession, profile, base){
         {scope: 'account', group: 'professionSettings', name: 'fillOptionals',         type: 'checkbox', pane: 'prof', title: tr('settings.profession.fillOptionals'),   tooltip: tr('settings.profession.fillOptionals.tooltip')},
         {scope: 'account', group: 'professionSettings', name: 'autoPurchaseRes',       type: 'checkbox', pane: 'prof', title: tr('settings.profession.autoPurchase'),    tooltip: tr('settings.profession.autoPurchase.tooltip')},
         {scope: 'account', group: 'professionSettings', name: 'trainAssets',           type:'checkbox',  pane: 'prof', title: tr('settings.profession.trainAssets'),     tooltip: tr('settings.profession.trainAssets.tooltip')},
-        {scope: 'account', group: 'professionSettings', name: 'smartLeadershipAssets', type:'checkbox',  pane: 'prof', title: tr('settings.profession.smartLeadership'), tooltip: tr('settings.profession.smartLeadership.tooltip')},
+        {scope: 'account', group: 'professionSettings', name: 'spreadLeadershipAssets', type:'checkbox',  pane: 'prof', title: tr('settings.profession.spreadLeadership'), tooltip: tr('settings.profession.spreadLeadership.tooltip')},
         {scope: 'account', group: 'professionSettings', name: 'stopNotLeadership',        type:'select',    pane: 'prof', title: tr('settings.profession.stopNotLeadership'),      tooltip: tr('settings.profession.stopNotLeadership.tooltip'),
             opts:[{name:'never',value:'0'},{name: '20' ,value: 20},{name: '25' ,value: 25}]},
         {scope: 'account', group: 'professionSettings', name: 'stopAlchemyAt3',        type:'checkbox',    pane: 'prof', title: tr('settings.profession.stopAlchemyAt3'),      tooltip: tr('settings.profession.stopAlchemyAt3.tooltip')},
@@ -2104,7 +2318,7 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'professionSettings', name: 'fillOptionals',         type: 'checkbox', pane: 'prof', title: tr('settings.profession.fillOptionals'),   tooltip: tr('settings.profession.fillOptionals.tooltip')},
         {scope: 'char', group: 'professionSettings', name: 'autoPurchaseRes',       type: 'checkbox', pane: 'prof', title: tr('settings.profession.autoPurchase'),    tooltip: tr('settings.profession.autoPurchase.tooltip')},
         {scope: 'char', group: 'professionSettings', name: 'trainAssets',           type:'checkbox',  pane: 'prof', title: tr('settings.profession.trainAssets'),     tooltip: tr('settings.profession.trainAssets.tooltip')},
-        {scope: 'char', group: 'professionSettings', name: 'smartLeadershipAssets', type:'checkbox',  pane: 'prof', title: tr('settings.profession.smartLeadership'), tooltip: tr('settings.profession.smartLeadership.tooltip')},
+        {scope: 'char', group: 'professionSettings', name: 'spreadLeadershipAssets', type:'checkbox',  pane: 'prof', title: tr('settings.profession.spreadLeadership'), tooltip: tr('settings.profession.spreadLeadership.tooltip')},
         {scope: 'char', group: 'professionSettings', name: 'stopNotLeadership',        type:'select',    pane: 'prof', title: tr('settings.profession.stopNotLeadership'),      tooltip: tr('settings.profession.stopNotLeadership.tooltip'),
             opts:[{name:'never',value:0},{name: '20' ,value: 20},{name: '25' ,value: 25}]},
         {scope: 'char', group: 'professionSettings', name: 'stopAlchemyAt3',        type:'checkbox',    pane: 'prof', title: tr('settings.profession.stopAlchemyAt3'),      tooltip: tr('settings.profession.stopAlchemyAt3.tooltip')},
@@ -2369,7 +2583,7 @@ function addProfile(profession, profile, base){
                 return;
             }
 
-            console.log("Checking SCA Dialy for " + _charName );
+            console.log("Checking SCA Daily for " + _charName );
 
             // Do SCA daily dice roll if the button comes up
             WaitForState(".daily-dice-intro").done(function() {
@@ -2438,7 +2652,7 @@ function addProfile(profession, profile, base){
                 return;
             }
 
-            console.log("Checking SCA Dialy for", _fullCharName, "...");
+            console.log("Checking SCA Daily for", _fullCharName, "...");
 
             // Do SCA daily dice roll if the button comes up
             WaitForState(".daily-dice-intro").done(function() {
@@ -2448,7 +2662,7 @@ function addProfile(profession, profile, base){
                 });
             });
 
-            // If Dice roll dialog is non existant
+            // If Dice roll dialogue is non existent
             WaitForNotState(".modal-window.daily-dice").done(function() {
                 charStatisticsList[charNamesList[_charIndex]].general.lastSCAVisit = Date.now();
                 GM_setValue("statistics__char__" + _fullCharName , JSON.stringify(charStatisticsList[charNamesList[_charIndex]]));
@@ -2487,7 +2701,7 @@ function addProfile(profession, profile, base){
             if (!entry.islockedslot && entry.category == "None" && scriptSettings.general.unasignedSlotRecheck) {
                 var tdate = new Date();
                 tdate.setTime( tdate.getTime() + parseInt(scriptSettings.general.unasignedSlotRecheck));
-                console.log("Found unasigned slot, setting it as: ", tdate);
+                console.log("Found unassigned slot, setting it as: ", tdate);
                 if (!next || tdate < next) {
                     next = tdate;
                 }
@@ -2499,7 +2713,7 @@ function addProfile(profession, profile, base){
             console.log("Next finished task at " + next.toLocaleString());
         } 
         else {
-            console.log("No next finishing date found! All slots unasigned.");
+            console.log("No next finishing date found! All slots unassigned.");
             if (scriptSettings.general.defaultVisitTime) {
                 var tdate = new Date();
                 tdate.setTime( tdate.getTime() + parseInt(scriptSettings.general.defaultVisitTime));
@@ -2902,18 +3116,18 @@ function addProfile(profession, profile, base){
             // Try to avoid using up higher rank assets needlessly
             if (prof.taskName === "Leadership") {
 
-                var _enableSmartLeadership = getSetting('professionSettings','smartLeadershipAssets');
+                var _enableSpreadLeadership = getSetting('professionSettings','spreadLeadershipAssets');
                 var mercenarys = $('div.modal-item-list a.Bronze img[src*="Crafting_Follower_Leader_Generic_T1_01"]').parent().parent();
                 var guards = $('div.modal-item-list a.Bronze img[src*="Crafting_Follower_Leader_Guard_T2_01"]').parent().parent();
                 var footmen = $('div.modal-item-list a.Bronze img[src*="Crafting_Follower_Leader_Private_T2_01"]').parent().parent();
                 var T3_Epic = countResource("Crafting_Asset_Craftsman_Leadership_T3_Epic"); // number of heroes in inventory
                 var T3_Rare = countResource("Crafting_Asset_Craftsman_Leadership_T3_Rare"); // number of adventurers in inventory
                 var T3_Uncommon = countResource("Crafting_Asset_Craftsman_Leadership_T3_Uncommon"); // number of man-at-arms in inventory
-                var usedCommon = countUsedResource("Crafting_Asset_Craftsman_Leadership_T3_Common") + countUsedResource("Crafting_Asset_Craftsman_Leadership_T2_Common") + countUsedResource("Crafting_Asset_Craftsman_Leadership_T1_Common_1"); //number of used mercenarys, guards and footmans
+                var usedCommon = countUsedResource("Crafting_Asset_Craftsman_Leadership_T3_Common") + countUsedResource("Crafting_Asset_Craftsman_Leadership_T2_Common") + countUsedResource("Crafting_Asset_Craftsman_Leadership_T1_Common_1"); //number of used mercenaries, guards and footmen
 
-                // if smart leadership asset allocation is not selected, check for persons for best speed, in descending order
-                //if ((!_enableSmartLeadership) && ((profile.profileName != "RP") || (professionLevel < 24) || (taskname == "Leadership_Tier4_22r_Capturebandithq") || (taskname == "Leadership_Tier4_24r_Killdragon") || (taskname == "Leadership_Tier4_24_Wizardsseneschal") || (T3_Epic + T3_Rare + T3_Uncommon > 6))) {
-                if (!_enableSmartLeadership) {
+                // if spread leadership asset allocation is not selected, check for persons for best speed, in descending order
+                //if ((!_enableSpreadLeadership) && ((profile.profileName != "RP") || (professionLevel < 24) || (taskname == "Leadership_Tier4_22r_Capturebandithq") || (taskname == "Leadership_Tier4_24r_Killdragon") || (taskname == "Leadership_Tier4_24_Wizardsseneschal") || (T3_Epic + T3_Rare + T3_Uncommon > 6))) {
+                if (!_enableSpreadLeadership) {
                     for (ic in quality) {
                         if (quality[ic] == ".Bronze") {
                             break;
@@ -2928,7 +3142,7 @@ function addProfile(profession, profile, base){
                 }
 
                 if (!clicked) {
-                    if ((!_enableSmartLeadership) || (_enableSmartLeadership && (T3_Epic + T3_Rare + T3_Uncommon + usedCommon < parseInt(charSettingsList[curCharName].taskListSettings["Leadership"].taskSlots) * 2))) {
+                    if ((!_enableSpreadLeadership) || (_enableSpreadLeadership && (T3_Epic + T3_Rare + T3_Uncommon + usedCommon < parseInt(charSettingsList[curCharName].taskListSettings["Leadership"].taskSlots) * 2))) {
                         if (mercenarys.length) {
                             clicked = true;
                             mercenarys[0].click();
@@ -3133,14 +3347,14 @@ function addProfile(profession, profile, base){
                     if (parseInt(item.price) == ZenRate && item.ordertype == "Buy") {
                         // cancel/withdraw the order
                         client.withdrawOrder(item.orderid);
-                        console.log("Canceling ZAX offer for " + item.quantity + " ZEN at the rate of " + item.price + " . Total value in AD: " + item.totaltc);
+                        console.log("Cancelling ZAX offer for " + item.quantity + " ZEN at the rate of " + item.price + " . Total value in AD: " + item.totaltc);
                     }
                 });
             } else {
-                console.log("No listings found on ZAX. Skipping ZAX Withrdaw..");
+                console.log("No listings found on ZAX. Skipping ZAX Withdraw..");
             }
         } else {
-            console.log("Zen Exchange data did not load in time for transfer. Skipping ZAX Withrdaw..");
+            console.log("Zen Exchange data did not load in time for transfer. Skipping ZAX Withdraw..");
         }
     }
 
@@ -3148,13 +3362,13 @@ function addProfile(profession, profile, base){
         if (unsafeWindow.client.dataModel.model.exchangeaccountdata) {
             if (parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow) > 0) {
                 unsafeWindow.client.sendCommand("GatewayExchange_ClaimTC", unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
-                console.log("Attempting to withdraw exchange balancees... ClaimTC: " + unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
+                console.log("Attempting to withdraw exchange balances... ClaimTC: " + unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
                 // clear the ad counter zax log
                 zaxdiamonds = 0;
             }
             if (parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc) > 0) {
                 unsafeWindow.client.sendCommand("GatewayExchange_ClaimMTC", unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
-                console.log("Attempting to withdraw exchange balancees... ClaimMT: " + unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
+                console.log("Attempting to withdraw exchange balances... ClaimMT: " + unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
             }
         } else {
             window.setTimeout(claimZaxOffer, delay.SHORT);
@@ -3214,7 +3428,7 @@ function addProfile(profession, profile, base){
                 if (slot === null || !slot || slot === undefined) {
                     _bagUnused++;
                 }
-                // Match items to exclude from auto vendoring, dont add to _tmpBag: Exclude pattern list - bound - Epic Quality - Legendary Quality - Mythic Quality
+                // Match items to exclude from auto vendoring, don't add to _tmpBag: Exclude pattern list - bound - Epic Quality - Legendary Quality - Mythic Quality
                 else if (_excludeItems.test(slot.name) || slot.rarity == "Special" || slot.rarity == "Legendary" || slot.rarity == "Mythic") {
                     _bagUsed++;
                 }
@@ -3938,7 +4152,7 @@ function addProfile(profession, profile, base){
             }
 
             // First check if there's anything we have to withdraw and claim it
-            // Sometimes the system will literally overwrite canceled and unclaimed orders and return AD to that character
+            // Sometimes the system will literally overwrite cancelled and unclaimed orders and return AD to that character
             // Example: if you cancel 5 orders, don't claim them, then create another order and cancel it, that last order
             //          will overwrite one of your previous orders and return the AD to that other character
             var exchangeDiamonds = parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
@@ -4106,7 +4320,7 @@ function addProfile(profession, profile, base){
             
             tab = addTab("#script_settings", tr('tab.advanced'));
             var thtml = "<button id='reset_settings_btn'>Reset ALL Settings</button><br /><br />";
-            thtml += "Must be logged in and at the correct charactar to list it's items.<br />";
+            thtml += "Must be logged in and at the correct character to list it's items.<br />";
             thtml += "<button id='list_inventory_btn'>List Inventory</button><br /><br />";
             thtml += "List settings (display all the configuration and obscure char names to char 1,2... and banker)<br />";
             thtml += "<button id='list_settings_btn'>Dump settings </button><br /><br />";
@@ -5564,8 +5778,8 @@ function addProfile(profession, profile, base){
                 'settings.profession.autoPurchase.tooltip': 'Automatically purchase required resources from gateway shop (100 at a time)',
                 'settings.profession.trainAssets': 'Train Assets',
                 'settings.profession.trainAssets.tooltip': 'Enable training/upgrading of asset worker resources',
-                'settings.profession.smartLeadership': 'Smart Asset allocation for leadership',
-                'settings.profession.smartLeadership.tooltip': 'Try to spread and fill non-common assets and supplement with common if needed',
+                'settings.profession.spreadLeadership': 'Spread Asset allocation for leadership',
+                'settings.profession.spreadLeadership.tooltip': 'Try to spread and fill non-common assets and supplement with common if needed',
                 'settings.profession.stopNotLeadership': 'Stop NON-Leadership task at level: ',
                 'settings.profession.stopNotLeadership.tooltip': 'Block All professions except Leadership at level 20 or 25 and above. Make sure you have Leadership set.',
                 'settings.profession.stopAlchemyAt3': 'Stop Alchemy leveling at level 3',
@@ -5641,8 +5855,8 @@ function addProfile(profession, profile, base){
                 'settings.profession.autoPurchase.tooltip': 'Automatycznie kupuj wynagane surowce profesji ze sklepu (po 100 sztuk równocześnie)',
                 'settings.profession.trainAssets': 'Trenuj pracowników',
                 'settings.profession.trainAssets.tooltip': 'Pozwól na trenowanie/ulepszanie zwykłych pracowników',
-                'settings.profession.smartLeadership': 'Inteligentny przydział pracowników do Przywództwa',
-                'settings.profession.smartLeadership.tooltip': 'Próbuje przydzielić jak najmniej zwykłych pracowników do zadań przywództwa',
+                'settings.profession.spreadLeadership': 'Inteligentny przydział pracowników do Przywództwa',
+                'settings.profession.spreadLeadership.tooltip': 'Próbuje przydzielić jak najmniej zwykłych pracowników do zadań przywództwa',
                 'settings.profession.stopNotLeadership': 'Wstrzymaj profesje inne od Przywództwa na poziomie',
                 'settings.profession.stopNotLeadership.tooltip': 'Nie uruchamiaj zadań profesji innej od Przywództwa po osiągnięciu poziomu. Upewnij się, ze masz ustawione Przywództwo.',
                 'settings.profession.stopAlchemyAt3': 'Wstrzymaj naukę Alchemii na poziomie 3',

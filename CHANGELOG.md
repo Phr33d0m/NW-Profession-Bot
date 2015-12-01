@@ -1,11 +1,18 @@
 RELEASE NOTES
 =============
 
+4.7
+---
+- Settings reset to defaults.
+- Added a lot of default tracked resources.
+- Added "Distilled Potion of Superior Healing" to Alchemy.
+- Added "RP (Stacked Assets)" to Leadership.
+
 4.6
 ---
 - Removed AD profiles from leadership.
 - Added rare leadership task "Capture Bandit Leader".
-- Will now choose leadership assets based on speed first if smart leadership asset allocation is disabled.
+- Will now choose leadership assets based on speed first if spread leadership asset allocation is disabled.
 
 4.5
 ---
