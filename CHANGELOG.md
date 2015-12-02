@@ -1,6 +1,10 @@
 RELEASE NOTES
 =============
 
+4.7.4
+- Replaced "RP & Coffer" with "RP Coffer" in Leadership.
+- Added "RP Double Coffer" to Leadership.
+
 4.7.3
 - Replaced "Boxes" with "RP & Coffer" in Leadership.
 
