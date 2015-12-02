@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.7.1
+// @version 4.7.2
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -37,23 +37,14 @@ Developers & Contributors
 - WloBeb
 
 RELEASE NOTES
-4.7.1
-- Rearranged default tracked resources.
-
-4.7
-- Settings reset to defaults.
-- Added a lot of default tracked resources.
-- Added "Distilled Potion of Superior Healing" to Alchemy.
-- Added "RP (Stacked Assets)" to Leadership.
-
-Check Changelog.txt for the full changelog:
+Check Changelog.txt for the changelog:
 http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
  */
 
 // Make sure it's running on the main page, no frames
 
 
-var microVersion = "4.7.1";
+var microVersion = "4.7.2";
 var scriptVersion = 4.7;
 var forceSettingsResetOnUpgrade = true;
 var forceResetOnVerBelow = 4.7;
@@ -4232,9 +4223,9 @@ function addProfile(profession, profile, base){
                 td.ranked2, td.tranked2 { border-bottom: solid 1px #555; border-top: dashed 1px #888 }\
                 #resource_tracker {overflow-x:auto;}\
                 table.withRotation td.rotate, table.withRotation th.rotate { height: 125px; } \
-                table.withRotation td.rotate, table.withRotation th.rotate > div { transform: translate(0, 30px) rotate(290deg); width: 30px; } \
-                table.withRotation td.rotate, table.withRotation th.rotate > div > span { border-bottom: 1px solid #ccc; padding: 5px 10px; white-space: nowrap; } \
-                table.withRotation td { border-right: 1px solid #ccc;} \
+                table.withRotation td.rotate, table.withRotation th.rotate > div { transform: translate(0, 38px) rotate(290deg); width: 30px; } \
+                table.withRotation td.rotate, table.withRotation th.rotate > div > span { border-bottom: 1px solid #bbb; padding: 0px 0px; white-space: nowrap; } \
+                table.withRotation td { border-right: 1px solid #bbb;} \
                 input[type='checkbox'].settingsInput { margin: 5px 10px 5px 5px;  }\
                 input.settingsInput { margin: 5px 5px; }\
                 label.settingsLabel { margin: 5px 5px; min-width: 150px; display: inline-block; }\
@@ -4248,7 +4239,7 @@ function addProfile(profession, profile, base){
                 .custom_resources_delete { height: 16px; } .customResources input:not([type='checkbox']) { margin: 3px 10px } .customResources label { margin-right: 10px; }\
                 .customResources input[type='checkbox'] { margin-right: 10px } .customResources button { margin: 0 10px } div.customResources { margin: 10px 0;} \
                 #settingsPanel table {border-collapse: collapse; }\
-                tr.totals > td { border-top: 1px solid grey; padding-top: 3px; color: #000080 } \
+                tr.totals > td { border-bottom: 1px solid grey; padding-top: 3px; color: #000080 } \
                 .rarity_Gold {color: blue; } .rarity_Silver {color: green; } .rarity_Special {color: purple; } .rarity_Legendary {color: orange; } .rarity_Mythic {color: teal; }  \
                 #dialog-inventory { overflow-y: scroll; font: 10px Arial; } #dialog-inventory table { width: 100% } #dialog-inventory table th { text-align: left; font-weight: bold; }\
                 .slt_None {color: red;} .slt_Lead {color: blue;} .slt_Alch {color: green;} .slt_Jewe {color: gold;} .slt_Leat {color: brown;}\
@@ -5385,21 +5376,26 @@ function addProfile(profession, profile, base){
         })
         var total = []; for (var i = 0; i < trackResources.length; i++) total[i] = 0;
         html += '</tr>';
+
+        var endhtml = '';
         charNamesList.forEach(function(charName) {
-            html += '<tr><td>' + charName + '</td>';
-            html += '<td>' + charStatisticsList[charName].general.emptyBagSlots + '</td>';
-            html += '<td>' + charStatisticsList[charName].general.celestial + '</td>';
-            html += '<td>' + charStatisticsList[charName].general.ardent + '</td>';
+            endhtml += '<tr><td>' + charName + '</td>';
+            endhtml += '<td>' + charStatisticsList[charName].general.emptyBagSlots + '</td>';
+            endhtml += '<td>' + charStatisticsList[charName].general.celestial + '</td>';
+            endhtml += '<td>' + charStatisticsList[charName].general.ardent + '</td>';
             charStatisticsList[charName].trackedResources.forEach(function(count, idx) {
-                html += '<td>' + count + '</td>';
+                endhtml += '<td>' + count + '</td>';
                 total[idx] += count;
             })
-            html += '</tr>';
+            endhtml += '</tr>';
         })
-        html += "<tr class=\" totals\"><td>Totals:</td><td>--</td><td>--</td><td>--</td>";
+        endhtml += "</table>";
+
+        html += "<tr class=\"totals\"><td>Totals:</td><td>--</td><td>--</td><td>--</td>";
         for (var i = 0; i < total.length; i++) html += "<td>" + total[i] + "</td>";
         html += "</tr>";
-        html += "</table>";
+
+        html += endhtml
         $('#resource_tracker').html(html);
 
 

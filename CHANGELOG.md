@@ -1,6 +1,9 @@
 RELEASE NOTES
 =============
 
+4.7.2
+- Added the tracked resource totals at the top of the list instead of at the bottom.
+
 4.7.1
 - Rearranged default tracked resources.
 
