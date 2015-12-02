@@ -53,7 +53,7 @@ http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
 // Make sure it's running on the main page, no frames
 
 
-var microVersion = "4.7.0";
+var microVersion = "4.7.1";
 var scriptVersion = 4.7;
 var forceSettingsResetOnUpgrade = true;
 var forceResetOnVerBelow = 4.7;
