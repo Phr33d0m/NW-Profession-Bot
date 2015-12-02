@@ -1,6 +1,9 @@
 RELEASE NOTES
 =============
 
+4.7.1
+- Rearranged default tracked resources.
+
 4.7
 ---
 - Settings reset to defaults.
