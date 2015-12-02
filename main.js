@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.7
+// @version 4.7.1
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -37,6 +37,9 @@ Developers & Contributors
 - WloBeb
 
 RELEASE NOTES
+4.7.1
+- Rearranged default tracked resources.
+
 4.7
 - Settings reset to defaults.
 - Added a lot of default tracked resources.
@@ -1779,10 +1782,6 @@ function addProfile(profession, profile, base){
     var toolList = toolListDefinition();
 
     var defaultTrackResources = [{
-        fname: 'Tome of Experience',
-        name: 'Item_Potion_Xp_Account',
-        bank: false, unbound: true, btc: true, bta: true
-    }, {
         fname: 'Coalescent Ward (Invocation)',
         name: 'Fuse_Ward_Coalescent_Invocation',
         bank: false, unbound: true, btc: true, bta: true
@@ -1790,6 +1789,38 @@ function addProfile(profession, profile, base){
         fname: 'Preservation Ward (Invocation)',
         name: 'Fuse_Ward_Preservation_Invocation',
         bank: false, unbound: true, btc: true, bta: true
+    }, {
+        fname: 'Tome of Experience',
+        name: 'Item_Potion_Xp_Account',
+        bank: false, unbound: true, btc: true, bta: true
+    }, {
+        fname: 'Unified Elements',
+        name: 'Crafting_Resource_Elemental_Unified',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Elemental Aggregate',
+        name: 'Crafting_Resource_Elemental_Aggregate',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Residuum',
+        name: 'Crafting_Resource_Residuum',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Aqua Regia',
+        name: 'Crafting_Resource_Aquaregia',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Aqua Vitae',
+        name: 'Crafting_Resource_Aquavitae',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Green Vitriol',
+        name: 'Crafting_Resource_Vitriol_Green',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Blue Vitriol',
+        name: 'Crafting_Resource_Vitriol_Blue',
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Superior Mark of Potency',
         name: 'Gem_Upgrade_Resource_R5',
@@ -1941,34 +1972,6 @@ function addProfile(profession, profile, base){
     }, {
         fname: 'White Pearl',
         name: 'Gemfood_R1',
-        bank: false, unbound: true, btc: false, bta: false
-    }, {
-        fname: 'Unified Elements',
-        name: 'Crafting_Resource_Elemental_Unified',
-        bank: false, unbound: true, btc: false, bta: false
-    }, {
-        fname: 'Elemental Aggregate',
-        name: 'Crafting_Resource_Elemental_Aggregate',
-        bank: false, unbound: true, btc: false, bta: false
-    }, {
-        fname: 'Residuum',
-        name: 'Crafting_Resource_Residuum',
-        bank: false, unbound: true, btc: false, bta: false
-    }, {
-        fname: 'Aqua Regia',
-        name: 'Crafting_Resource_Aquaregia',
-        bank: false, unbound: true, btc: false, bta: false
-    }, {
-        fname: 'Aqua Vitae',
-        name: 'Crafting_Resource_Aquavitae',
-        bank: false, unbound: true, btc: false, bta: false
-    }, {
-        fname: 'Green Vitriol',
-        name: 'Crafting_Resource_Vitriol_Green',
-        bank: false, unbound: true, btc: false, bta: false
-    }, {
-        fname: 'Blue Vitriol',
-        name: 'Crafting_Resource_Vitriol_Blue',
         bank: false, unbound: true, btc: false, bta: false
     }, 
 ];
