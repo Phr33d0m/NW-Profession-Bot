@@ -1,6 +1,9 @@
 RELEASE NOTES
 =============
 
+4.7.3
+- Replaced "Boxes" with "RP & Coffer" in Leadership.
+
 4.7.2
 - Added the tracked resource totals at the top of the list instead of at the bottom.
 

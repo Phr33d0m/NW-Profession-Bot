@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.7.2
+// @version 4.7.3
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -22,6 +22,7 @@
 // ==/UserScript==
 
 /*
+
 Developers & Contributors
 - BigRedBrent
 - Bluep
@@ -39,12 +40,13 @@ Developers & Contributors
 RELEASE NOTES
 Check Changelog.txt for the changelog:
 http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
+
  */
 
 // Make sure it's running on the main page, no frames
 
 
-var microVersion = "4.7.2";
+var microVersion = "4.7.3";
 var scriptVersion = 4.7;
 var forceSettingsResetOnUpgrade = true;
 var forceResetOnVerBelow = 4.7;
@@ -453,20 +455,11 @@ function addProfile(profession, profile, base){
                 21: ["Leadership_Tier4_21_Training", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
                 22: ["Leadership_Tier4_21_Training", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
                 23: ["Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_21_Training", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                24: ["Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_21r_Killelemental", "Leadership_Tier4_21_Training", "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier3_20_Destroy", "Leadership_Tier1_5_Explore"],
-                25: ["Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_21r_Killelemental", "Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier4_25r_Huntexperiment", "Leadership_Tier4_25_Battleelementalcultists", "Leadership_Tier4_21_Training", "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier3_20_Destroy", "Leadership_Tier1_5_Explore"],
+                24: ["Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_21r_Killelemental", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_23r_Securepilgrimage"],
+                25: ["Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_21r_Killelemental", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_25_Battleelementalcultists", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier4_25r_Huntexperiment"],
             },
         }]
     };
-
-    addProfile("Leadership", {
-        profileName: "Assets",
-        isProfileActive: true,
-        level: {
-            3: ["Leadership_Tier3_13_Recruit", "Leadership_Tier2_7_Recruit", "Leadership_Tier1_2_Recruit"],
-            4: '+25'
-        }
-    });
 
     addProfile('Leadership',{
         "profileName": "RP (Stacked Assets)",
@@ -476,40 +469,28 @@ function addProfile(profession, profile, base){
                     "Leadership_Tier4_22r_Capturebandithq",
                     "Leadership_Tier4_24r_Killdragon",
                     "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier4_22_Guardclerics",
                     "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22_Guardclerics",
                     "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_23r_Securepilgrimage",
-                    "Leadership_Tier4_21_Training",
-                    "Leadership_Tier3_20r_Master2",
-                    "Leadership_Tier3_20r_Master1",
-                    "Leadership_Tier3_20r_Master3",
-                    "Leadership_Tier3_20_Destroy",
-                    "Leadership_Tier1_5_Explore"
+                    "Leadership_Tier4_23r_Securepilgrimage"
                 ],
                 "25": [
                     "Leadership_Tier4_24_Wizardsseneschal",
                     "Leadership_Tier4_22r_Capturebandithq",
                     "Leadership_Tier4_24r_Killdragon",
                     "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier4_22_Guardclerics",
                     "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22_Guardclerics",
                     "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_23r_Securepilgrimage",
-                    "Leadership_Tier4_25r_Huntexperiment",
                     "Leadership_Tier4_25_Battleelementalcultists",
-                    "Leadership_Tier4_21_Training",
-                    "Leadership_Tier3_20r_Master2",
-                    "Leadership_Tier3_20r_Master1",
-                    "Leadership_Tier3_20r_Master3",
-                    "Leadership_Tier3_20_Destroy",
-                    "Leadership_Tier1_5_Explore"
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_25r_Huntexperiment"
                 ]
             }
         }, 'RP');
 
     addProfile('Leadership',{
-        "profileName": "Boxes",
+        "profileName": "RP & Coffer",
             "level": {
                 "24": [
                     "Leadership_Tier4_22r_Capturebandithq",
@@ -518,14 +499,8 @@ function addProfile(profession, profile, base){
                     "Leadership_Tier4_21_Protectmagic",
                     "Leadership_Tier4_23_Guardnoble",
                     "Leadership_Tier4_23r_Securepilgrimage",
-                    "Leadership_Tier4_22_Guardclerics",
                     "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier4_21_Training",
-                    "Leadership_Tier3_20r_Master2",
-                    "Leadership_Tier3_20r_Master1",
-                    "Leadership_Tier3_20r_Master3",
-                    "Leadership_Tier3_20_Destroy",
-                    "Leadership_Tier1_5_Explore"
+                    "Leadership_Tier4_22_Guardclerics"
                 ],
                 "25": [
                     "Leadership_Tier4_22r_Capturebandithq",
@@ -533,20 +508,51 @@ function addProfile(profession, profile, base){
                     "Leadership_Tier4_24_Wizardsseneschal",
                     "Leadership_Tier4_21_Protectmagic",
                     "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_23r_Securepilgrimage",
-                    "Leadership_Tier4_22_Guardclerics",
-                    "Leadership_Tier4_21r_Killelemental",
                     "Leadership_Tier4_25_Battleelementalcultists",
-                    "Leadership_Tier4_25r_Huntexperiment",
-                    "Leadership_Tier4_21_Training",
-                    "Leadership_Tier3_20r_Master2",
-                    "Leadership_Tier3_20r_Master1",
-                    "Leadership_Tier3_20r_Master3",
-                    "Leadership_Tier3_20_Destroy",
-                    "Leadership_Tier1_5_Explore"
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22_Guardclerics",
+                    "Leadership_Tier4_25r_Huntexperiment"
                 ]
             }
         }, 'RP');
+
+    addProfile('Leadership',{
+        "profileName": "RP & Coffer (Stacked Assets)",
+            "level": {
+                "24": [
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22_Guardclerics"
+                ],
+                "25": [
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_25_Battleelementalcultists",
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22_Guardclerics",
+                    "Leadership_Tier4_25r_Huntexperiment"
+                ]
+            }
+        }, 'RP');
+
+    addProfile("Leadership", {
+        profileName: "Assets",
+        isProfileActive: true,
+        level: {
+            3: ["Leadership_Tier3_13_Recruit", "Leadership_Tier2_7_Recruit", "Leadership_Tier1_2_Recruit"],
+            4: '+25'
+        }
+    });
 
     definedTask["WinterEvent"] = {
         taskListName: "WinterEvent",
