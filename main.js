@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.7.5
+// @version 4.7.6
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -1836,15 +1836,15 @@ function addProfile(profession, profile, base){
     var defaultTrackResources = [{
         fname: 'Coalescent Ward (Invocation)',
         name: 'Fuse_Ward_Coalescent_Invocation',
-        bank: false, unbound: true, btc: true, bta: true
+        bank: false, unbound: true, btc: false, bta: true
     }, {
         fname: 'Preservation Ward (Invocation)',
         name: 'Fuse_Ward_Preservation_Invocation',
-        bank: false, unbound: true, btc: true, bta: true
+        bank: false, unbound: true, btc: false, bta: true
     }, {
         fname: 'Tome of Experience',
         name: 'Item_Potion_Xp_Account',
-        bank: false, unbound: true, btc: true, bta: true
+        bank: false, unbound: true, btc: false, bta: true
     }, {
         fname: 'Unified Elements',
         name: 'Crafting_Resource_Elemental_Unified',
@@ -1876,7 +1876,23 @@ function addProfile(profession, profile, base){
     }, {
         fname: 'Superior Mark of Potency',
         name: 'Gem_Upgrade_Resource_R5',
-        bank: false, unbound: true, btc: true, bta: true
+        bank: false, unbound: true, btc: false, bta: true
+    }, {
+        fname: 'Greater Mark of Potency',
+        name: 'Gem_Upgrade_Resource_R4',
+        bank: false, unbound: true, btc: false, bta: true
+    }, {
+        fname: 'Greater Mark of Power',
+        name: 'Artifact_Upgrade_Resource_R3_A',
+        bank: false, unbound: true, btc: false, bta: true
+    }, {
+        fname: 'Greater Mark of Stability',
+        name: 'Artifact_Upgrade_Resource_R3_B',
+        bank: false, unbound: true, btc: false, bta: true
+    }, {
+        fname: 'Greater Mark of Union',
+        name: 'Artifact_Upgrade_Resource_R3_C',
+        bank: false, unbound: true, btc: false, bta: true
     }, {
         fname: 'Greater Resonance Stone',
         name: 'Artifactgear_Food_R4_A',
@@ -1902,21 +1918,21 @@ function addProfile(profession, profile, base){
         name: 'Gemfood_R5',
         bank: false, unbound: true, btc: false, bta: false
     }, {
-        fname: 'Greater Mark of Potency',
-        name: 'Gem_Upgrade_Resource_R4',
-        bank: false, unbound: true, btc: true, bta: true
+        fname: 'Mark of Potency',
+        name: 'Gem_Upgrade_Resource_R3',
+        bank: false, unbound: true, btc: false, bta: true
     }, {
-        fname: 'Greater Mark of Power',
-        name: 'Artifact_Upgrade_Resource_R3_A',
-        bank: false, unbound: true, btc: true, bta: true
+        fname: 'Mark of Power',
+        name: 'Artifact_Upgrade_Resource_R2_A',
+        bank: false, unbound: true, btc: false, bta: true
     }, {
-        fname: 'Greater Mark of Stability',
-        name: 'Artifact_Upgrade_Resource_R3_B',
-        bank: false, unbound: true, btc: true, bta: true
+        fname: 'Mark of Stability',
+        name: 'Artifact_Upgrade_Resource_R2_B',
+        bank: false, unbound: true, btc: false, bta: true
     }, {
-        fname: 'Greater Mark of Union',
-        name: 'Artifact_Upgrade_Resource_R3_C',
-        bank: false, unbound: true, btc: true, bta: true
+        fname: 'Mark of Union',
+        name: 'Artifact_Upgrade_Resource_R2_C',
+        bank: false, unbound: true, btc: false, bta: true
     }, {
         fname: 'Resonance Stone',
         name: 'Artifactgear_Food_R3_A',
@@ -1946,21 +1962,21 @@ function addProfile(profession, profile, base){
         name: 'Gemfood_R3',
         bank: false, unbound: true, btc: false, bta: false
     }, {
-        fname: 'Mark of Potency',
-        name: 'Gem_Upgrade_Resource_R3',
-        bank: false, unbound: true, btc: true, bta: true
+        fname: 'Lesser Mark of Potency',
+        name: 'Gem_Upgrade_Resource_R2',
+        bank: false, unbound: true, btc: false, bta: true
     }, {
-        fname: 'Mark of Power',
-        name: 'Artifact_Upgrade_Resource_R2_A',
-        bank: false, unbound: true, btc: true, bta: true
+        fname: 'Lesser Mark of Power',
+        name: 'Artifact_Upgrade_Resource_R1_A',
+        bank: false, unbound: true, btc: false, bta: true
     }, {
-        fname: 'Mark of Stability',
-        name: 'Artifact_Upgrade_Resource_R2_B',
-        bank: false, unbound: true, btc: true, bta: true
+        fname: 'Lesser Mark of Stability',
+        name: 'Artifact_Upgrade_Resource_R1_B',
+        bank: false, unbound: true, btc: false, bta: true
     }, {
-        fname: 'Mark of Union',
-        name: 'Artifact_Upgrade_Resource_R2_C',
-        bank: false, unbound: true, btc: true, bta: true
+        fname: 'Lesser Mark of Union',
+        name: 'Artifact_Upgrade_Resource_R1_C',
+        bank: false, unbound: true, btc: false, bta: true
     }, {
         fname: 'Lesser Resonance Stone',
         name: 'Artifactgear_Food_R2_A',
@@ -1985,22 +2001,6 @@ function addProfile(profession, profile, base){
         fname: 'Peridot',
         name: 'Gemfood_R2',
         bank: false, unbound: true, btc: false, bta: false
-    }, {
-        fname: 'Lesser Mark of Potency',
-        name: 'Gem_Upgrade_Resource_R2',
-        bank: false, unbound: true, btc: true, bta: true
-    }, {
-        fname: 'Lesser Mark of Power',
-        name: 'Artifact_Upgrade_Resource_R1_A',
-        bank: false, unbound: true, btc: true, bta: true
-    }, {
-        fname: 'Lesser Mark of Stability',
-        name: 'Artifact_Upgrade_Resource_R1_B',
-        bank: false, unbound: true, btc: true, bta: true
-    }, {
-        fname: 'Lesser Mark of Union',
-        name: 'Artifact_Upgrade_Resource_R1_C',
-        bank: false, unbound: true, btc: true, bta: true
     }, {
         fname: 'Minor Resonance Stone',
         name: 'Artifactgear_Food_R1_A',
