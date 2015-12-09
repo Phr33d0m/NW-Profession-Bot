@@ -1,6 +1,9 @@
 RELEASE NOTES
 =============
 
+4.7.10
+- Added "Mass Silver & Yellow Vitriol", "Mass Red & Emerald Vitriol", and "Mass Orange & Purple Vitriol" to Alchemy.
+
 4.7.9
 - Added "Silver & Yellow Vitriol", "Red & Emerald Vitriol", and "Orange & Purple Vitriol" to Alchemy.
 
