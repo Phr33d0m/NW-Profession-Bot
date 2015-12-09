@@ -1,7 +1,7 @@
 RELEASE NOTES
 =============
 
-4.7.6
+4.7.7
 - Rearranged default tracked resources.
 
 4.7.4

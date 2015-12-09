@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.7.6
+// @version 4.7.7
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -1990,12 +1990,12 @@ function addProfile(profession, profile, base){
         name: 'Artifactfood_R2_A',
         bank: false, unbound: true, btc: false, bta: false
     }, {
-        fname: 'Lesser Union Stone',
-        name: 'Artifactfood_R2_C',
-        bank: false, unbound: true, btc: false, bta: false
-    }, {
         fname: 'Lesser Stability Stone',
         name: 'Artifactfood_R2_B',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Lesser Union Stone',
+        name: 'Artifactfood_R2_C',
         bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Peridot',
