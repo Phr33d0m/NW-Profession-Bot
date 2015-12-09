@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.7.7
+// @version 4.7.8
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -1872,6 +1872,30 @@ function addProfile(profession, profile, base){
     }, {
         fname: 'Blue Vitriol',
         name: 'Crafting_Resource_Vitriol_Blue',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Silver Vitriol',
+        name: 'Crafting_Resource_Vitriol_Silver',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Yellow Vitriol',
+        name: 'Crafting_Resource_Vitriol_Yellow',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Red Vitriol',
+        name: 'Crafting_Resource_Vitriol_Red',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Emerald Vitriol',
+        name: 'Crafting_Resource_Vitriol_Emerald',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Orange Vitriol',
+        name: 'Crafting_Resource_Vitriol_Orange',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Purple Vitriol',
+        name: 'Crafting_Resource_Vitriol_Purple',
         bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Superior Mark of Potency',

@@ -1,8 +1,11 @@
 RELEASE NOTES
 =============
 
+4.7.8
+- Added all the different color Vitriol to the default tracked resources. (Click the "Reset to default" button under the "Tracked resources" tab to see the changes.)
+
 4.7.7
-- Rearranged default tracked resources.
+- Rearranged default tracked resources. (Click the "Reset to default" button under the "Tracked resources" tab to see the changes.)
 
 4.7.4
 - Replaced "RP & Coffer" with "RP Coffer" in Leadership.
@@ -15,7 +18,7 @@ RELEASE NOTES
 - Added the tracked resource totals at the top of the list instead of at the bottom.
 
 4.7.1
-- Rearranged default tracked resources.
+- Rearranged default tracked resources. (Click the "Reset to default" button under the "Tracked resources" tab to see the changes.)
 
 4.7
 ---
