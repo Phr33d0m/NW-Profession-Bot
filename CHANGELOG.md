@@ -1,6 +1,9 @@
 RELEASE NOTES
 =============
 
+4.7.9
+- Added "Silver & Yellow Vitriol", "Red & Emerald Vitriol", and "Orange & Purple Vitriol" to Alchemy.
+
 4.7.8
 - Added all the different color Vitriol to the default tracked resources. (Click the "Reset to default" button under the "Tracked resources" tab to see the changes.)
 
