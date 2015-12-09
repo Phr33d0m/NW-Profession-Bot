@@ -461,34 +461,6 @@ function addProfile(profession, profile, base){
     };
 
     addProfile('Leadership',{
-        "profileName": "RP (Stacked Assets)",
-            "level": {
-                "24": [
-                    "Leadership_Tier4_24_Wizardsseneschal",
-                    "Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_24r_Killdragon",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier4_22_Guardclerics",
-                    "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_23r_Securepilgrimage"
-                ],
-                "25": [
-                    "Leadership_Tier4_24_Wizardsseneschal",
-                    "Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_24r_Killdragon",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier4_22_Guardclerics",
-                    "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_25_Battleelementalcultists",
-                    "Leadership_Tier4_23r_Securepilgrimage",
-                    "Leadership_Tier4_25r_Huntexperiment"
-                ]
-            }
-        }, 'RP');
-
-    addProfile('Leadership',{
         "profileName": "RP Coffer",
             "level": {
                 "24": [
@@ -505,34 +477,6 @@ function addProfile(profession, profile, base){
                     "Leadership_Tier4_22r_Capturebandithq",
                     "Leadership_Tier4_24r_Killdragon",
                     "Leadership_Tier4_24_Wizardsseneschal",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_25_Battleelementalcultists",
-                    "Leadership_Tier4_23r_Securepilgrimage",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier4_22_Guardclerics",
-                    "Leadership_Tier4_25r_Huntexperiment"
-                ]
-            }
-        }, 'RP');
-
-    addProfile('Leadership',{
-        "profileName": "RP Coffer (Stacked Assets)",
-            "level": {
-                "24": [
-                    "Leadership_Tier4_24_Wizardsseneschal",
-                    "Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_24r_Killdragon",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_23r_Securepilgrimage",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier4_22_Guardclerics"
-                ],
-                "25": [
-                    "Leadership_Tier4_24_Wizardsseneschal",
-                    "Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_24r_Killdragon",
                     "Leadership_Tier4_21_Protectmagic",
                     "Leadership_Tier4_23_Guardnoble",
                     "Leadership_Tier4_25_Battleelementalcultists",
@@ -565,6 +509,62 @@ function addProfile(profession, profile, base){
                     "Leadership_Tier4_25_Battleelementalcultists",
                     "Leadership_Tier4_23r_Securepilgrimage",
                     "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22_Guardclerics",
+                    "Leadership_Tier4_25r_Huntexperiment"
+                ]
+            }
+        }, 'RP');
+
+    addProfile('Leadership',{
+        "profileName": "RP (Stacked Assets)",
+            "level": {
+                "24": [
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22_Guardclerics",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_23r_Securepilgrimage"
+                ],
+                "25": [
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22_Guardclerics",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_25_Battleelementalcultists",
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_25r_Huntexperiment"
+                ]
+            }
+        }, 'RP');
+
+    addProfile('Leadership',{
+        "profileName": "RP Coffer (Stacked Assets)",
+            "level": {
+                "24": [
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22_Guardclerics"
+                ],
+                "25": [
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_25_Battleelementalcultists",
+                    "Leadership_Tier4_23r_Securepilgrimage",
                     "Leadership_Tier4_21r_Killelemental",
                     "Leadership_Tier4_22_Guardclerics",
                     "Leadership_Tier4_25r_Huntexperiment"
