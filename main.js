@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.7.9
+// @version 4.7.10
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -1733,6 +1733,33 @@ function addProfile(profession, profile, base){
         level : {
             2: ["Alchemy_Tier1_Refine_Basic_Mass", "Alchemy_Tier1_Gather_Basic_Mass"],
             3: "+25",
+        },
+    });
+
+    addProfile("Alchemy", {
+        profileName: "Mass Silver & Yellow Vitriol",
+        isProfileActive: true,
+        level: {
+            7: ["Alchemy_Tier2_Refine_Basic_Mass", "Alchemy_Tier2_Gather_Components_Mass"],
+            8: "+25",
+        },
+    });
+
+    addProfile("Alchemy", {
+        profileName: "Mass Red & Emerald Vitriol",
+        isProfileActive: true,
+        level: {
+            14: ["Alchemy_Tier3_Refine_Basic_Mass", "Alchemy_Tier3_Gather_Components_Mass"],
+            15: "+25",
+        },
+    });
+
+    addProfile("Alchemy", {
+        profileName: "Mass Orange & Purple Vitriol",
+        isProfileActive: true,
+        level: {
+            21: ["Alchemy_Tier4_Refine_Basic_Mass", "Alchemy_Tier4_Gather_Components_Mass"],
+            22: "+25",
         },
     });
 
