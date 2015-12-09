@@ -45,9 +45,9 @@ http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/CHANGELOG.md
 // Make sure it's running on the main page, no frames
 
 
-var forceSettingsResetOnUpgrade = true;
 var scriptVersion = 4.7;
 var forceResetOnVerBelow = 4.7;
+var forceSettingsResetOnUpgrade = true;
 var microVersion = GM_info.script.version;
 
 if(window.self !== window.top) {
