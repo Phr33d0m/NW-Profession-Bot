@@ -1,6 +1,9 @@
 RELEASE NOTES
 =============
 
+4.7.12
+- Added crafted rank 3 pants to the vendor list.
+
 4.7.11
 - Fixed "Mass Silver & Yellow Vitriol", "Mass Red & Emerald Vitriol", and "Mass Orange & Purple Vitriol" in Alchemy.
 
