@@ -609,9 +609,9 @@ function addProfile(profession, profile, base){
         }
     });
 
-    definedTask["WinterEvent"] = {
-        taskListName: "WinterEvent",
-        taskName: "WinterEvent",
+    definedTask["Winterevent"] = {
+        taskListName: "Winterevent",
+        taskName: "Winterevent",
         taskDefaultPriority: 1,
         taskDefaultSlotNum: 0,
         taskActive: true,
@@ -1809,7 +1809,7 @@ function addProfile(profession, profile, base){
         definedTask["Leatherworking"],
         definedTask["Tailoring"],
         definedTask["Blackice"],
-        definedTask["WinterEvent"],
+        definedTask["Winterevent"],
         definedTask["SiegeEvent"],
         definedTask["SummerEvent"],
     ];
