@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.4.2
+// @version 4.7.13
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -22,6 +22,7 @@
 // ==/UserScript==
 
 /*
+
 Developers & Contributors
 - BigRedBrent
 - Bluep
@@ -36,21 +37,18 @@ Developers & Contributors
 - Rotten_mind
 - WloBeb
 
-RELEASE NOTES
-4.4.2
-- Added option to auto vendor enchants & runes Rank 4
+RELEASE NOTES:
+http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/CHANGELOG.md
 
-Check Changelog.txt for the full changelog:
-http://rawgit.com/Phr33d0m/NW-Profession-Bot/master/Changelog.txt
  */
 
 // Make sure it's running on the main page, no frames
 
 
-var microVersion = "4.4.2";
-var scriptVersion = 4.4;
+var scriptVersion = 4.7;
+var forceResetOnVerBelow = 4.7;
 var forceSettingsResetOnUpgrade = true;
-var forceResetOnVerBelow = 3.5;
+var microVersion = GM_info.script.version;
 
 if(window.self !== window.top) {
     throw "";
@@ -287,7 +285,7 @@ function _select_Gateway() { // Check for Gateway used to
     var ver = parseFloat(GM_getValue("script_version", 0));
     
     if ((ver < forceResetOnVerBelow) && forceSettingsResetOnUpgrade) {
-        var str = "Detected an upgrade from old version or fresh install.<br />Procceding will wipe all saved settings.<br />Please set characters to active after log in.";  
+        var str = "Detected an upgrade from old version or fresh install.<br />Proceeding will wipe all saved settings.<br />Please set characters to active after log in.";  
         $('<div id="dialog-confirm" title="Setting wipe confirm">' + str + '</div>').dialog({
               resizable: true,
               width: 500,
@@ -352,7 +350,7 @@ function addProfile(profession, profile, base){
     var newProfile = jQuery.extend(true, profileBase, profile),
         baseProfile;
     //getting base to extend
-      base = base ||  (professionSet.taskListName === 'Leadership' ? 'XP' : 'default');
+      base = base ||  (professionSet.taskListName === 'Leadership' ? 'RP' : 'default');
       if(base && typeof base === 'string') {
         var existing = professionSet.profiles.filter(function(e) {return e.profileName === base;});
         if(existing && existing.length) {baseProfile = existing[0];}
@@ -429,56 +427,7 @@ function addProfile(profession, profile, base){
         taskDefaultSlotNum: 9,
         taskDescription: "",
         profiles: [{
-            profileName: "AD",
-            isProfileActive: true,
-            level: {
-                0: ["Leadership_Tier0_Intro_1"],
-                1: ["Leadership_Tier0_Intro_5", "Leadership_Tier0_Intro_4", "Leadership_Tier0_Intro_3", "Leadership_Tier0_Intro_2"],
-                2: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
-                3: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
-                4: ["Leadership_Tier1_Feedtheneedy", "Leadership_Tier1_4_Protect", "Leadership_Tier1_2_Guardduty", "Leadership_Tier1_2_Training"],
-                5: ["Leadership_Tier1_4_Protect", "Leadership_Tier1_5_Explore", "Leadership_Tier1_2_Guardduty"],
-                6: ["Leadership_Tier1_4_Protect", "Leadership_Tier1_5_Explore", "Leadership_Tier1_2_Guardduty"],
-                7: ["Leadership_Tier1_4_Protect", "Leadership_Tier1_5_Explore", "Leadership_Tier1_2_Guardduty"],
-                8: ["Leadership_Tier1_4_Protect", "Leadership_Tier1_5_Explore", "Leadership_Tier1_2_Guardduty"],
-                9: ["Leadership_Tier1_4_Protect", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                // Begin prioritizing "Battle Undead"
-                10: ["Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                11: ["Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                12: ["Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                // Add "protect diamonds rare" and the patrol quest as a backup
-                13: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                14: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                15: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_10_Battle", "Leadership_Tier1_4_Protect", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                // AD Production mode: Spellplague + Battle Undead
-                16: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                17: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier3_17_Deliver", "Leadership_Tier2_12_Taxes", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                18: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier3_17_Deliver", "Leadership_Tier2_12_Taxes", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                19: ["Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier3_17_Deliver", "Leadership_Tier2_12_Taxes", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                // 20
-
-                20: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_20_Destroy", "Leadership_Tier2_12_Taxes",
-                    "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-                ],
-                21: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_20_Destroy", "Leadership_Tier2_12_Taxes",
-                    "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-                ],
-                22: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_20_Destroy",
-                    "Leadership_Tier2_12_Taxes", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-                ],
-                23: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_20_Destroy",
-                    "Leadership_Tier2_12_Taxes", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-                ],
-                24: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_20_Destroy",
-                    "Leadership_Tier2_12_Taxes", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-                ],
-                25: ["Leadership_Tier4_25r_Huntexperiment", "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier3_13r_Protectdiamonds",
-                    "Leadership_Tier3_20_Destroy", "Leadership_Tier2_12_Taxes", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_25_Battleelementalcultists", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle",
-                    "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-                ],
-            },
-        }, {
-            profileName: "XP",
+            profileName: "RP",
             isProfileActive: true,
             level: {
                 0: ["Leadership_Tier0_Intro_1"],
@@ -501,60 +450,155 @@ function addProfile(profession, profile, base){
                 17: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
                 18: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
                 19: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
-                //20
-
                 20: ["Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
                 21: ["Leadership_Tier4_21_Training", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
-                22: ["Leadership_Tier4_21_Training", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                23: ["Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_21_Training", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                24: ["Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_21_Training", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                25: ["Leadership_Tier4_25r_Huntexperiment", "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier3_13r_Protectdiamonds",
-                    "Leadership_Tier3_20_Destroy", "Leadership_Tier2_12_Taxes", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_25_Battleelementalcultists", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle",
-                    "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-                ],
+                22: ["Leadership_Tier4_21_Training", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
+                23: ["Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_21_Training", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
+                24: ["Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_21r_Killelemental", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_23r_Securepilgrimage"],
+                25: ["Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_21r_Killelemental", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_25_Battleelementalcultists", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier4_25r_Huntexperiment"],
             },
         }]
     };
 
-    addProfile("Leadership", {
-        profileName: "Resource/AD",
-        level: {
-            // DL
-            16: ["Leadership_Tier3_16r_Buildshelters", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_16_Fight", "Leadership_Tier3_13_Patrol", "Leadership_Tier3_17_Deliver", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-            17: ["Leadership_Tier3_16r_Buildshelters", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_17_Deliver", "Leadership_Tier3_13_Patrol", "Leadership_Tier3_17_Deliver", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-            18: ["Leadership_Tier3_16r_Buildshelters", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_17r_Raidmines", "Leadership_Tier3_13_Patrol", "Leadership_Tier3_17_Deliver", , "Leadership_Tier3_17_Deliver", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-            19: ["Leadership_Tier3_16r_Buildshelters", "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier3_17r_Raidmines", "Leadership_Tier3_13_Patrol", "Leadership_Tier3_17_Deliver", , "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-            // 20
-            20: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3",
-                "Leadership_Tier3_20_Destroy", "Leadership_Tier3_18_Resell", "Leadership_Tier3_13r_Protectdiamonds",
-                "Leadership_Tier3_16r_Buildshelters", "Leadership_Tier3_13_Patrol", "Leadership_Tier3_19_Acquire", "Leadership_Tier3_17_Deliver",
-                "Leadership_Tier3_15_Rescue", "Leadership_Tier2_9_Chart", "Leadership_Tier2_12_Taxes", "Leadership_Tier1_5_Explore"
-            ],
-            21: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_21r_Killelemental",
-                "Leadership_Tier3_20_Destroy", "Leadership_Tier4_21_Protectmagic",
-                "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_12_Taxes", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-            ],
-            22: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_21r_Killelemental",
-                "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier3_20_Destroy", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_22_Guardclerics",
-                "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_12_Taxes", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-            ],
-            23: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3",
-                "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier4_21r_Killelemental",
-                "Leadership_Tier4_23_Guardnoble", "Leadership_Tier3_20_Destroy", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_22_Guardclerics",
-                "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_12_Taxes", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-            ],
-            24: ["Leadership_Tier4_24r_Killdragon",
-                "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_23r_Securepilgrimage",
-                "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_23_Guardnoble", "Leadership_Tier3_20_Destroy", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_21r_Killelemental",
-                "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_12_Taxes", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-            ],
-            25: ["Leadership_Tier4_25r_Huntexperiment", "Leadership_Tier4_24r_Killdragon",
-                "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_23r_Securepilgrimage",
-                "Leadership_Tier4_25_Battleelementalcultists", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_23_Guardnoble", "Leadership_Tier3_20_Destroy", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_21r_Killelemental",
-                "Leadership_Tier3_13r_Protectdiamonds", "Leadership_Tier2_12_Taxes", "Leadership_Tier3_16_Fight", "Leadership_Tier2_10_Battle", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"
-            ],
-        }
-    }, "AD");
+    addProfile('Leadership',{
+        "profileName": "RP Coffer",
+            "level": {
+                "24": [
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22_Guardclerics"
+                ],
+                "25": [
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_25_Battleelementalcultists",
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22_Guardclerics",
+                    "Leadership_Tier4_25r_Huntexperiment"
+                ]
+            }
+        }, 'RP');
+
+    addProfile('Leadership',{
+        "profileName": "RP Double Coffer",
+            "level": {
+                "24": [
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22_Guardclerics"
+                ],
+                "25": [
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_25_Battleelementalcultists",
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22_Guardclerics",
+                    "Leadership_Tier4_25r_Huntexperiment"
+                ]
+            }
+        }, 'RP');
+
+    addProfile('Leadership',{
+        "profileName": "RP (Stacked Assets)",
+            "level": {
+                "24": [
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22_Guardclerics",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_23r_Securepilgrimage"
+                ],
+                "25": [
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22_Guardclerics",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_25_Battleelementalcultists",
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_25r_Huntexperiment"
+                ]
+            }
+        }, 'RP');
+
+    addProfile('Leadership',{
+        "profileName": "RP Coffer (Stacked Assets)",
+            "level": {
+                "24": [
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22_Guardclerics"
+                ],
+                "25": [
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_25_Battleelementalcultists",
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22_Guardclerics",
+                    "Leadership_Tier4_25r_Huntexperiment"
+                ]
+            }
+        }, 'RP');
+
+    addProfile('Leadership',{
+        "profileName": "RP Double Coffer (Stacked Assets)",
+            "level": {
+                "24": [
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22_Guardclerics"
+                ],
+                "25": [
+                    "Leadership_Tier4_24_Wizardsseneschal",
+                    "Leadership_Tier4_22r_Capturebandithq",
+                    "Leadership_Tier4_24r_Killdragon",
+                    "Leadership_Tier4_23_Guardnoble",
+                    "Leadership_Tier4_25_Battleelementalcultists",
+                    "Leadership_Tier4_23r_Securepilgrimage",
+                    "Leadership_Tier4_21_Protectmagic",
+                    "Leadership_Tier4_21r_Killelemental",
+                    "Leadership_Tier4_22_Guardclerics",
+                    "Leadership_Tier4_25r_Huntexperiment"
+                ]
+            }
+        }, 'RP');
 
     addProfile("Leadership", {
         profileName: "Assets",
@@ -565,81 +609,9 @@ function addProfile(profession, profile, base){
         }
     });
 
-    addProfile('Leadership',{
-        "profileName": "RP Boxes",
-            "level": {
-                "21": [
-                    "Leadership_Tier4_21_Training",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier3_20r_Master2",
-                    "Leadership_Tier3_20r_Master1",
-                    "Leadership_Tier3_20r_Master3",
-                    "Leadership_Tier3_20_Destroy",
-                    "Leadership_Tier1_5_Explore"
-                ],
-                "22": [
-                    "Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_21_Training",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier3_20r_Master2",
-                    "Leadership_Tier3_20r_Master1",
-                    "Leadership_Tier3_20r_Master3",
-                    "Leadership_Tier3_20_Destroy",
-                    "Leadership_Tier1_5_Explore"
-                ],
-                "23": [
-                    "Leadership_Tier4_23r_Securepilgrimage",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_21_Training",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier3_20r_Master2",
-                    "Leadership_Tier3_20r_Master1",
-                    "Leadership_Tier3_20r_Master3",
-                    "Leadership_Tier3_20_Destroy",
-                    "Leadership_Tier1_5_Explore"
-                ],
-                "24": [
-                    "Leadership_Tier4_24r_Killdragon",
-                    "Leadership_Tier4_23r_Securepilgrimage",
-                    "Leadership_Tier4_24_Wizardsseneschal",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_21_Training",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier3_20r_Master2",
-                    "Leadership_Tier3_20r_Master1",
-                    "Leadership_Tier3_20r_Master3",
-                    "Leadership_Tier3_20_Destroy",
-                    "Leadership_Tier1_5_Explore"
-                ],
-                "25": [
-                    "Leadership_Tier4_25r_Huntexperiment",
-                    "Leadership_Tier4_25_Battleelementalcultists",
-                    "Leadership_Tier4_24r_Killdragon",
-                    "Leadership_Tier4_23r_Securepilgrimage",
-                    "Leadership_Tier4_24_Wizardsseneschal",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_21_Training",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier3_20r_Master2",
-                    "Leadership_Tier3_20r_Master1",
-                    "Leadership_Tier3_20r_Master3",
-                    "Leadership_Tier3_20_Destroy",
-                    "Leadership_Tier1_5_Explore"
-                ]
-            }
-        }, 'AD');
-
-    definedTask["WinterEvent"] = {
-        taskListName: "WinterEvent",
-        taskName: "WinterEvent",
+    definedTask["Winterevent"] = {
+        taskListName: "Winterevent",
+        taskName: "Winterevent",
         taskDefaultPriority: 1,
         taskDefaultSlotNum: 0,
         taskActive: true,
@@ -689,7 +661,7 @@ function addProfile(profession, profile, base){
     definedTask["Blackice"] = {
         taskListName: "Blackice",
         taskName: "Blackice",
-        taskDefaultPriority: 1,
+        taskDefaultPriority: 0,
         taskDefaultSlotNum: 0,
         taskActive: true,
         taskDescription: "",
@@ -712,62 +684,62 @@ function addProfile(profession, profile, base){
     };
 
     definedTask["Jewelcrafting"] = {
-        taskListName : "Jewelcrafting",
-        taskName : "Jewelcrafting",
-        taskDefaultPriority : 1,
-        taskDefaultSlotNum : 0,
-        taskActive : true,
-        taskDescription : "",
-        profiles : [{
-            profileName : "default",
-            isProfileActive : true,
-            level : {
-                0 : ["Jewelcrafting_Tier0_Intro"],
-                1 : ["Jewelcrafting_Tier1_Waist_Offense_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                2 : ["Jewelcrafting_Tier1_Waist_Offense_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                3 : ["Jewelcrafting_Tier1_Neck_Offense_1", "Jewelcrafting_Tier1_Waist_Offense_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                4 : ["Jewelcrafting_Tier1_Neck_Offense_1", "Jewelcrafting_Tier1_Waist_Misc_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                5 : ["Jewelcrafting_Tier1_Neck_Offense_1", "Jewelcrafting_Tier1_Waist_Misc_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                6 : ["Jewelcrafting_Tier1_Neck_Misc_1", "Jewelcrafting_Tier1_Waist_Misc_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                7 : ["Jewelcrafting_Tier2_Waist_Offense_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                8 : ["Jewelcrafting_Tier2_Waist_Offense_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                9 : ["Jewelcrafting_Tier2_Neck_Offense_2", "Jewelcrafting_Tier2_Waist_Offense_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                10 : ["Jewelcrafting_Tier2_Waist_Misc_2", "Jewelcrafting_Tier2_Neck_Offense_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                11 : ["Jewelcrafting_Tier2_Waist_Misc_2", "Jewelcrafting_Tier2_Neck_Offense_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                12 : ["Jewelcrafting_Tier2_Waist_Misc_2", "Jewelcrafting_Tier2_Neck_Offense_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                13 : ["Jewelcrafting_Tier2_Neck_Misc_2", "Jewelcrafting_Tier2_Waist_Misc_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                14 : ["Jewelcrafting_Tier3_Waist_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                15 : ["Jewelcrafting_Tier3_Waist_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                16 : ["Jewelcrafting_Tier3_Neck_Offense_3", "Jewelcrafting_Tier3_Waist_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                17 : ["Jewelcrafting_Tier3_Neck_Offense_3", "Jewelcrafting_Tier3_Waist_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                18 : ["Jewelcrafting_Tier3_Neck_Offense_3", "Jewelcrafting_Tier3_Waist_Misc_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                19 : ["Jewelcrafting_Tier3_Neck_Offense_3", "Jewelcrafting_Tier3_Waist_Misc_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+        taskListName: "Jewelcrafting",
+        taskName: "Jewelcrafting",
+        taskDefaultPriority: 1,
+        taskDefaultSlotNum: 0,
+        taskActive: true,
+        taskDescription: "",
+        profiles: [{
+            profileName: "default",
+            isProfileActive: true,
+            level: {
+                0: ["Jewelcrafting_Tier0_Intro"],
+                1: ["Jewelcrafting_Tier1_Waist_Offense_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                2: ["Jewelcrafting_Tier1_Waist_Offense_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                3: ["Jewelcrafting_Tier1_Neck_Offense_1", "Jewelcrafting_Tier1_Waist_Offense_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                4: ["Jewelcrafting_Tier1_Neck_Offense_1", "Jewelcrafting_Tier1_Waist_Misc_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                5: ["Jewelcrafting_Tier1_Neck_Offense_1", "Jewelcrafting_Tier1_Waist_Misc_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                6: ["Jewelcrafting_Tier1_Neck_Misc_1", "Jewelcrafting_Tier1_Waist_Misc_1", "Jewelcrafting_Tier1_Refine_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                7: ["Jewelcrafting_Tier2_Waist_Offense_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                8: ["Jewelcrafting_Tier2_Waist_Offense_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                9: ["Jewelcrafting_Tier2_Neck_Offense_2", "Jewelcrafting_Tier2_Waist_Offense_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                10: ["Jewelcrafting_Tier2_Waist_Misc_2", "Jewelcrafting_Tier2_Neck_Offense_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                11: ["Jewelcrafting_Tier2_Waist_Misc_2", "Jewelcrafting_Tier2_Neck_Offense_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                12: ["Jewelcrafting_Tier2_Waist_Misc_2", "Jewelcrafting_Tier2_Neck_Offense_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                13: ["Jewelcrafting_Tier2_Neck_Misc_2", "Jewelcrafting_Tier2_Waist_Misc_2", "Jewelcrafting_Tier2_Refine_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                14: ["Jewelcrafting_Tier3_Waist_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                15: ["Jewelcrafting_Tier3_Waist_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                16: ["Jewelcrafting_Tier3_Neck_Offense_3", "Jewelcrafting_Tier3_Waist_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                17: ["Jewelcrafting_Tier3_Neck_Offense_3", "Jewelcrafting_Tier3_Waist_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                18: ["Jewelcrafting_Tier3_Neck_Offense_3", "Jewelcrafting_Tier3_Waist_Misc_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                19: ["Jewelcrafting_Tier3_Neck_Offense_3", "Jewelcrafting_Tier3_Waist_Misc_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
                 
-                20 : ["Jewelcrafting_Tier3_Neck_Misc_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                21 : ["Jewelcrafting_Tier3_Neck_Misc_3", "Jewelcrafting_Tier4_Refine_Basic", "Jewelcrafting_Tier4_Gather_Basic", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                22 : ["Jewelcrafting_Tier4_Neck_Base_3", "Jewelcrafting_Tier4_Refine_Basic", "Jewelcrafting_Tier4_Gather_Basic", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                23 : ["Jewelcrafting_Tier4_Neck_Defense_3",  "Jewelcrafting_Tier4_Neck_Offense_3", "Jewelcrafting_Tier4_Gather_Basic", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-                24 : ["Jewelcrafting_Tier4_Neck_Misc_3", "Jewelcrafting_Tier3_Neck_Misc_3", "Jewelcrafting_Tier4_Gather_Basic", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                20: ["Jewelcrafting_Tier3_Neck_Misc_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                21: ["Jewelcrafting_Tier3_Neck_Misc_3", "Jewelcrafting_Tier4_Refine_Basic", "Jewelcrafting_Tier4_Gather_Basic", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                22: ["Jewelcrafting_Tier4_Neck_Base_3", "Jewelcrafting_Tier4_Refine_Basic", "Jewelcrafting_Tier4_Gather_Basic", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                23: ["Jewelcrafting_Tier4_Neck_Defense_3",  "Jewelcrafting_Tier4_Neck_Offense_3", "Jewelcrafting_Tier4_Gather_Basic", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                24: ["Jewelcrafting_Tier4_Neck_Misc_3", "Jewelcrafting_Tier3_Neck_Misc_3", "Jewelcrafting_Tier4_Gather_Basic", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
                 //basic resources  for lvl 16 and 15 items. 
-                25 : ["Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
+                25: ["Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
             },
         }]
     };
 
     addProfile("Jewelcrafting", {
-        profileName : "mass refining",
-        isProfileActive : true,
-        useMassTask : true,
-        level : {
+        profileName: "mass refining",
+        isProfileActive: true,
+        useMassTask: true,
+        level: {
             0: ["Jewelcrafting_Tier0_Intro"],
             1: ["Jewelcrafting_Tier1_Refine_Basic_Mass", "Jewelcrafting_Tier1_Gather_Basic"],
             2: '+25',
             7: ["Jewelcrafting_Tier2_Refine_Basic_Mass"],
-            8 : '+25',
+            8: '+25',
             14: ["Jewelcrafting_Tier3_Refine_Basic_Mass"],
-            15 : '+25',
+            15: '+25',
             21: ["Jewelcrafting_Tier4_Refine_Basic_Mass"],
-            22 : '+25',
+            22: '+25',
         },
     });    
 
@@ -787,7 +759,7 @@ function addProfile(profession, profile, base){
         level: {
             // we care only about neck items that we can start pile up at lvl 16
             16: ["Jewelcrafting_Tier3_Neck_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-            17 : '+25',
+            17: '+25',
             25: ["Jewelcrafting_Tier4_Neck_Offense_4_Purple", //Exquisite Adamant Necklace of Piercing
                   "Jewelcrafting_Tier4_Neck_Misc_4_Purple", // Exquisite Adamant Necklace of Recovery 
                   "Jewelcrafting_Tier4_Neck_Defense_4_Purple",//Exquisite Adamant Necklace of Regeneration
@@ -805,7 +777,7 @@ function addProfile(profession, profile, base){
         level: {
             // we care only about neck items that we can start pile up at lvl 15
             15: ["Jewelcrafting_Tier3_Ring_Offense_3", "Jewelcrafting_Tier3_Refine_Basic", "Jewelcrafting_Tier3_Gather_Basic", "Jewelcrafting_Tier2_Gather_Basic", "Jewelcrafting_Tier1_Gather_Basic"],
-            16 :'+25',
+            16:'+25',
             25: ["Jewelcrafting_Tier4_Ring_Offense_4_Purple", //Exquisite Adamant Ring of Piercing
                 "Jewelcrafting_Tier4_Ring_Misc_4_Purple", //Exquisite Adamant Ring of Recovery
                 "Jewelcrafting_Tier4_Ring_Defense_4_Purple", //Exquisite Adamant Ring of Regeneration
@@ -835,52 +807,52 @@ function addProfile(profession, profile, base){
    
 
     definedTask["Mailsmithing"] = {
-        taskListName : "Mailsmithing",
-        taskName : "Armorsmithing_Med",
-        taskDefaultPriority : 1,
-        taskDefaultSlotNum : 0,
-        taskActive : true,
-        taskDescription : "",
-        profiles : [{
-            profileName : "default",
-            isProfileActive : true,
-            level : {
-                0 : ["Med_Armorsmithing_Tier0_Intro"],
-                1 : ["Med_Armorsmithing_Tier1_Gather_Basic"],
-                2 : ["Med_Armorsmithing_Tier1_Chain_Armor_1", "Med_Armorsmithing_Tier1_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                3 : ["Med_Armorsmithing_Tier1_Chain_Armor_1", "Med_Armorsmithing_Tier1_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                4 : ["Med_Armorsmithing_Tier1_Chain_Armor_1", "Med_Armorsmithing_Tier1_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                5 : ["Med_Armorsmithing_Tier1_Chain_Armor_Set_1", "Med_Armorsmithing_Tier1_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                6 : ["Med_Armorsmithing_Tier1_Chain_Armor_Set_1", "Med_Armorsmithing_Tier1_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                7 : ["Med_Armorsmithing_Tier1_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt", "Med_Armorsmithing_Tier1_Gather_Basic", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                8 : ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                9 : ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                10 : ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt_2", "Med_Armorsmithing_Tier1_Gather_Basic", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                11 : ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_2", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt_2", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                12 : ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_2", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt_2", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                13 : ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_2", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt_2", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                14 : ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_2", "Med_Armorsmithing_Tier3_Chain_Shirt", "Med_Armorsmithing_Tier3_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                15 : ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                16 : ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                17 : ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                18 : ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                19 : ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
-                20 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
-                21 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
-                22 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
-                23 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
-                24 : ["Med_Armorsmithing_Tier3_Chain_Pants"],
-                25 : ["Crafted_Med_Armorsmithing_T4_Refine_Basic", "Crafted_Med_Armorsmithing_T4_Gather_Basic"],
+        taskListName: "Mailsmithing",
+        taskName: "Armorsmithing_Med",
+        taskDefaultPriority: 1,
+        taskDefaultSlotNum: 0,
+        taskActive: true,
+        taskDescription: "",
+        profiles: [{
+            profileName: "default",
+            isProfileActive: true,
+            level: {
+                0: ["Med_Armorsmithing_Tier0_Intro"],
+                1: ["Med_Armorsmithing_Tier1_Gather_Basic"],
+                2: ["Med_Armorsmithing_Tier1_Chain_Armor_1", "Med_Armorsmithing_Tier1_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
+                3: ["Med_Armorsmithing_Tier1_Chain_Armor_1", "Med_Armorsmithing_Tier1_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
+                4: ["Med_Armorsmithing_Tier1_Chain_Armor_1", "Med_Armorsmithing_Tier1_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
+                5: ["Med_Armorsmithing_Tier1_Chain_Armor_Set_1", "Med_Armorsmithing_Tier1_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
+                6: ["Med_Armorsmithing_Tier1_Chain_Armor_Set_1", "Med_Armorsmithing_Tier1_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
+                7: ["Med_Armorsmithing_Tier1_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt", "Med_Armorsmithing_Tier1_Gather_Basic", "Med_Armorsmithing_Tier1_Gather_Basic"],
+                8: ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt", "Med_Armorsmithing_Tier1_Gather_Basic"],
+                9: ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt", "Med_Armorsmithing_Tier1_Gather_Basic"],
+                10: ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt_2", "Med_Armorsmithing_Tier1_Gather_Basic", "Med_Armorsmithing_Tier1_Gather_Basic"],
+                11: ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_2", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt_2", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
+                12: ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_2", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt_2", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
+                13: ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_2", "Med_Armorsmithing_Tier2_Chain_Boots_Set_1", "Med_Armorsmithing_Tier2_Chain_Shirt_2", "Med_Armorsmithing_Tier2_Chain_Pants_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
+                14: ["Med_Armorsmithing_Tier2_Chain_Armor_Set_1", "Med_Armorsmithing_Tier2_Chain_Pants_2", "Med_Armorsmithing_Tier3_Chain_Shirt", "Med_Armorsmithing_Tier3_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
+                15: ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Boots_Set_1", "Med_Armorsmithing_Tier1_Gather_Basic"],
+                16: ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
+                17: ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
+                18: ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
+                19: ["Med_Armorsmithing_Tier3_Chain_Armor_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants2", "Med_Armorsmithing_Tier3_Chain_Shirt2", "Med_Armorsmithing_Tier3_Chain_Helm_Set_1", "Med_Armorsmithing_Tier3_Chain_Pants", "Med_Armorsmithing_Tier1_Gather_Basic"],
+                20: ["Med_Armorsmithing_Tier3_Chain_Pants"],
+                21: ["Med_Armorsmithing_Tier3_Chain_Pants"],
+                22: ["Med_Armorsmithing_Tier3_Chain_Pants"],
+                23: ["Med_Armorsmithing_Tier3_Chain_Pants"],
+                24: ["Med_Armorsmithing_Tier3_Chain_Pants"],
+                25: ["Crafted_Med_Armorsmithing_T4_Refine_Basic", "Crafted_Med_Armorsmithing_T4_Gather_Basic"],
                 
             }
         }]
     };
     
     addProfile("Mailsmithing", {
-        profileName : "mass refining",
-        isProfileActive : true,
-        useMassTask : true,
-        level : {
+        profileName: "mass refining",
+        isProfileActive: true,
+        useMassTask: true,
+        level: {
             0: ["Med_Armorsmithing_Tier0_Intro"],
             1: ["Med_Armorsmithing_Tier1_Refine_Basic_Mass", "Med_Armorsmithing_Tier1_Gather_Basic"],
             2: "+25",
@@ -1150,10 +1122,10 @@ function addProfile(profession, profile, base){
     };
 
     addProfile("Platesmithing", {
-        profileName : "mass refining",
-        isProfileActive : true,
-        useMassTask : true,
-        level : {
+        profileName: "mass refining",
+        isProfileActive: true,
+        useMassTask: true,
+        level: {
             0: ["Hvy_Armorsmithing_Tier0_Intro"],
             1: ["Hvy_Armorsmithing_Tier1_Refine_Basic_Mass", "Hvy_Armorsmithing_Tier1_Gather_Basic"],
             2: "+25",
@@ -1255,52 +1227,52 @@ function addProfile(profession, profile, base){
     });
 
     definedTask["Leatherworking"] = {
-        taskListName : "Leatherworking",
-        taskName : "Leatherworking",
-        taskDefaultPriority : 1,
-        taskDefaultSlotNum : 0,
-        taskActive : true,
-        taskDescription : "",
-        profiles : [{
-            profileName : "default",
-            isProfileActive : true,
-            level : {
-                0 : ["Leatherworking_Tier0_Intro_1"],
-                1 : ["Leatherworking_Tier1_Leather_Boots_1", "Leatherworking_Tier1_Leather_Shirt_1", "Leatherworking_Tier1_Gather_Basic"],
-                2 : ["Leatherworking_Tier1_Leather_Armor_1", "Leatherworking_Tier1_Leather_Pants_1", "Leatherworking_Tier1_Gather_Basic"],
-                3 : ["Leatherworking_Tier1_Leather_Armor_1", "Leatherworking_Tier1_Leather_Boots_Set_1", "Leatherworking_Tier1_Gather_Basic"],
-                4 : ["Leatherworking_Tier1_Leather_Armor_1", "Leatherworking_Tier1_Leather_Boots_Set_1", "Leatherworking_Tier1_Gather_Basic"],
-                5 : ["Leatherworking_Tier1_Leather_Armor_Set_1", "Leatherworking_Tier1_Leather_Boots_Set_1", "Leatherworking_Tier1_Gather_Basic"],
-                6 : ["Leatherworking_Tier1_Leather_Armor_Set_1", "Leatherworking_Tier1_Leather_Boots_Set_1", "Leatherworking_Tier1_Gather_Basic"],
-                7 : ["Leatherworking_Tier1_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt", "Leatherworking_Tier1_Gather_Basic"],
-                8 : ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt", "Leatherworking_Tier1_Gather_Basic"],
-                9 : ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt", "Leatherworking_Tier1_Gather_Basic"],
-                10 : ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt_2", "Leatherworking_Tier1_Gather_Basic"],
-                11 : ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_2", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt_2", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier1_Gather_Basic"],
-                12 : ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_2", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt_2", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier1_Gather_Basic"],
-                13 : ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_2", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt_2", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier1_Gather_Basic"],
-                14 : ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_2", "Ornate Leatherworking_Tier1_Leather_Shirt_1", "Leatherworking_Tier3_Leather_Boots_Set_1", "Leatherworking_Tier1_Gather_Basic"],
-                15 : ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Boots_Set_1", "Leatherworking_Tier1_Gather_Basic"],
-                16 : ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants2", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Helm_Set_1", "Leatherworking_Tier3_Leather_Pants", "Leatherworking_Tier1_Gather_Basic"],
-                17 : ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants2", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Helm_Set_1", "Leatherworking_Tier3_Leather_Pants", "Leatherworking_Tier1_Gather_Basic"],
-                18 : ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants2", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Helm_Set_1", "Leatherworking_Tier3_Leather_Pants", "Leatherworking_Tier1_Gather_Basic"],
-                19 : ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants2", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Helm_Set_1", "Leatherworking_Tier3_Leather_Pants", "Leatherworking_Tier1_Gather_Basic"],
+        taskListName: "Leatherworking",
+        taskName: "Leatherworking",
+        taskDefaultPriority: 1,
+        taskDefaultSlotNum: 0,
+        taskActive: true,
+        taskDescription: "",
+        profiles: [{
+            profileName: "default",
+            isProfileActive: true,
+            level: {
+                0: ["Leatherworking_Tier0_Intro_1"],
+                1: ["Leatherworking_Tier1_Leather_Boots_1", "Leatherworking_Tier1_Leather_Shirt_1", "Leatherworking_Tier1_Gather_Basic"],
+                2: ["Leatherworking_Tier1_Leather_Armor_1", "Leatherworking_Tier1_Leather_Pants_1", "Leatherworking_Tier1_Gather_Basic"],
+                3: ["Leatherworking_Tier1_Leather_Armor_1", "Leatherworking_Tier1_Leather_Boots_Set_1", "Leatherworking_Tier1_Gather_Basic"],
+                4: ["Leatherworking_Tier1_Leather_Armor_1", "Leatherworking_Tier1_Leather_Boots_Set_1", "Leatherworking_Tier1_Gather_Basic"],
+                5: ["Leatherworking_Tier1_Leather_Armor_Set_1", "Leatherworking_Tier1_Leather_Boots_Set_1", "Leatherworking_Tier1_Gather_Basic"],
+                6: ["Leatherworking_Tier1_Leather_Armor_Set_1", "Leatherworking_Tier1_Leather_Boots_Set_1", "Leatherworking_Tier1_Gather_Basic"],
+                7: ["Leatherworking_Tier1_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt", "Leatherworking_Tier1_Gather_Basic"],
+                8: ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt", "Leatherworking_Tier1_Gather_Basic"],
+                9: ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt", "Leatherworking_Tier1_Gather_Basic"],
+                10: ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt_2", "Leatherworking_Tier1_Gather_Basic"],
+                11: ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_2", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt_2", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier1_Gather_Basic"],
+                12: ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_2", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt_2", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier1_Gather_Basic"],
+                13: ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_2", "Leatherworking_Tier2_Leather_Boots_Set_1", "Leatherworking_Tier2_Leather_Shirt_2", "Leatherworking_Tier2_Leather_Pants_1", "Leatherworking_Tier1_Gather_Basic"],
+                14: ["Leatherworking_Tier2_Leather_Armor_Set_1", "Leatherworking_Tier2_Leather_Pants_2", "Ornate Leatherworking_Tier1_Leather_Shirt_1", "Leatherworking_Tier3_Leather_Boots_Set_1", "Leatherworking_Tier1_Gather_Basic"],
+                15: ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Boots_Set_1", "Leatherworking_Tier1_Gather_Basic"],
+                16: ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants2", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Helm_Set_1", "Leatherworking_Tier3_Leather_Pants", "Leatherworking_Tier1_Gather_Basic"],
+                17: ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants2", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Helm_Set_1", "Leatherworking_Tier3_Leather_Pants", "Leatherworking_Tier1_Gather_Basic"],
+                18: ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants2", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Helm_Set_1", "Leatherworking_Tier3_Leather_Pants", "Leatherworking_Tier1_Gather_Basic"],
+                19: ["Leatherworking_Tier3_Leather_Armor_Set_1", "Leatherworking_Tier3_Leather_Pants2", "Leatherworking_Tier3_Leather_Shirt2", "Leatherworking_Tier3_Leather_Helm_Set_1", "Leatherworking_Tier3_Leather_Pants", "Leatherworking_Tier1_Gather_Basic"],
                 //19:["Leather Armor +4","Fancy Leather Pants","Fancy Leather Shirt","Leather Helm +4","Ornate Leather Pants","Upgrade Tanner","Upgrade Skinner","Hire an additional Skinner"],
-                20 : ["Leatherworking_Tier3_Leather_Pants"],
-                21 : ["Leatherworking_Tier3_Leather_Pants"],
-                22 : ["Leatherworking_Tier3_Leather_Pants"],
-                23 : ["Leatherworking_Tier3_Leather_Pants"],
-                24 : ["Leatherworking_Tier3_Leather_Pants"],
-                25 : ["Leatherworking_Tier4_Refine_Basic", "Leatherworking_Tier4_Gather_Basic"],
+                20: ["Leatherworking_Tier3_Leather_Pants"],
+                21: ["Leatherworking_Tier3_Leather_Pants"],
+                22: ["Leatherworking_Tier3_Leather_Pants"],
+                23: ["Leatherworking_Tier3_Leather_Pants"],
+                24: ["Leatherworking_Tier3_Leather_Pants"],
+                25: ["Leatherworking_Tier4_Refine_Basic", "Leatherworking_Tier4_Gather_Basic"],
             },
         }  ]
     };
     
     addProfile("Leatherworking", {
-        profileName : "mass refining",
-        isProfileActive : true,
-        useMassTask : true,
-        level : {
+        profileName: "mass refining",
+        isProfileActive: true,
+        useMassTask: true,
+        level: {
             0: ["Leatherworking_Tier0_Intro_1"],
             1: ["Leatherworking_Tier1_Refine_Basic_Mass", "Leatherworking_Tier1_Gather_Basic"],
             2: "+25",
@@ -1444,10 +1416,10 @@ function addProfile(profession, profile, base){
     };
 
     addProfile("Tailoring", {
-        profileName : "mass refining",
-        isProfileActive : true,
-        useMassTask : true,
-        level : {
+        profileName: "mass refining",
+        isProfileActive: true,
+        useMassTask: true,
+        level: {
             0: ["Tailoring_Tier0_Intro"],
             1: ["Tailoring_Tier1_Refine_Basic_Mass", "Tailoring_Tier1_Gather_Basic"],
             2: "+25",
@@ -1499,12 +1471,12 @@ function addProfile(profession, profile, base){
                 5: ["Artificing_Tier1_Pactblade_Convergence_2", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier1_Gather_Basic"],
                 6: ["Artificing_Tier1_Pactblade_Convergence_2", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier1_Gather_Basic"],
                 7: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
-                8: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
-                9: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
-                10: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
-                11: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
-                12: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
-                13: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier1_Icon_Virtuous_2", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
+                8: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier2_Icon_Virtuous_3", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
+                9: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier2_Icon_Virtuous_3", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
+                10: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier2_Icon_Virtuous_3", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
+                11: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier2_Icon_Virtuous_3", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
+                12: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier2_Icon_Virtuous_3", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
+                13: ["Artificing_Tier2_Pactblade_Temptation_3", "Artificing_Tier2_Icon_Virtuous_3", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
                 14: ["Artificing_Tier3_Pactblade_Temptation_4", "Artificing_Tier3_Icon_Virtuous_4", "Artificing_Tier3_Refine_Basic", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
                 15: ["Artificing_Tier3_Pactblade_Temptation_4", "Artificing_Tier3_Icon_Virtuous_4", "Artificing_Tier3_Refine_Basic", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
                 16: ["Artificing_Tier3_Pactblade_Temptation_4", "Artificing_Tier3_Icon_Virtuous_4", "Artificing_Tier3_Refine_Basic", "Artificing_Tier2_Refine_Basic", "Artificing_Tier1_Gather_Basic"],
@@ -1523,10 +1495,10 @@ function addProfile(profession, profile, base){
     };
 
     addProfile("Artificing", {
-        profileName : "mass refining",
-        isProfileActive : true,
-        useMassTask : true,
-        level : {
+        profileName: "mass refining",
+        isProfileActive: true,
+        useMassTask: true,
+        level: {
             0: ["Artificing_Tier0_Intro_1"],
             1: ["Artificing_Tier1_Refine_Basic_Mass", "Artificing_Tier1_Gather_Basic"],
             2: "+25",
@@ -1592,10 +1564,10 @@ function addProfile(profession, profile, base){
     };
 
     addProfile("Weaponsmithing", {
-        profileName : "mass refining",
-        isProfileActive : true,
-        useMassTask : true,
-        level : {
+        profileName: "mass refining",
+        isProfileActive: true,
+        useMassTask: true,
+        level: {
             0: ["Weaponsmithing_Tier0_Intro"],
             1: ["Weaponsmithing_Tier1_Refine_Basic_Mass", "Weaponsmithing_Tier1_Gather_Basic"],
             2: "+25",
@@ -1659,18 +1631,18 @@ function addProfile(profession, profile, base){
     };
 
     addProfile("Alchemy", {
-        profileName : "mass refining",
-        isProfileActive : true,
-        useMassTask : true,
-        level : {
+        profileName: "mass refining",
+        isProfileActive: true,
+        useMassTask: true,
+        level: {
             2: ["Alchemy_Tier1_Refine_Basic_Mass", "Alchemy_Tier1_Gather_Basic_Mass"],
             3: "+25",
             7: ["Alchemy_Tier2_Refine_Basic_Mass", "Alchemy_Tier2_Gather_Components_Mass"],
-            8 : "+25",
+            8: "+25",
             14: ["Alchemy_Tier3_Refine_Basic_Mass", "Alchemy_Tier3_Gather_Components_Mass"],
-            15 : "+25",
+            15: "+25",
             21: ["Alchemy_Tier4_Refine_Basic_Mass", "Alchemy_Tier4_Gather_Components_Mass"],
-            22 : "+25",
+            22: "+25",
         },
     });
 
@@ -1707,9 +1679,16 @@ function addProfile(profession, profile, base){
     addProfile("Alchemy", {
         profileName: "Potency Superior",
         level: {
-            25: ["Alchemy_Tier4_Experimentation_Rank25", "Alchemy_Tier4_Potency_Potion_Superior", "Alchemy_Tier4_Create_Elemental_Aggregate", "Alchemy_Tier3_Potency_Potion_Major", "Alchemy_Tier2_Aquaregia", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
+            25: ["Alchemy_Tier4_Experimentation_Rank25", "Alchemy_Tier4_Potency_Potion_Superior", "Alchemy_Tier4_Aquaregia_2", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
         }
-    }); 
+    });
+    addProfile("Alchemy", {
+        profileName: "Distilled Potion of Superior Healing",
+        level: {
+            24: ["Alchemy_Tier4_Healing_Potion_Superior_Distilled"],
+            25: ["Alchemy_Tier4_Healing_Potion_Superior_Distilled"],
+        }
+    });
 
     addProfile("Alchemy", {
         profileName: "Blue & Green Vitriol",
@@ -1721,12 +1700,69 @@ function addProfile(profession, profile, base){
     });
 
     addProfile("Alchemy", {
-        profileName : "Mass Blue & Green Vitriol",
-        isProfileActive : true,
-        useMassTask : true,
-        level : {
+        profileName: "Silver & Yellow Vitriol",
+        isProfileActive: true,
+        level: {
+            7: ["Alchemy_Tier2_Refine_Basic", "Alchemy_Tier2_Gather_Components"],
+            8: "+25",
+        },
+    });
+
+    addProfile("Alchemy", {
+        profileName: "Red & Emerald Vitriol",
+        isProfileActive: true,
+        level: {
+            14: ["Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Components"],
+            15: "+25",
+        },
+    });
+
+    addProfile("Alchemy", {
+        profileName: "Orange & Purple Vitriol",
+        isProfileActive: true,
+        level: {
+            21: ["Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components"],
+            22: "+25",
+        },
+    });
+
+    addProfile("Alchemy", {
+        profileName: "Mass Blue & Green Vitriol",
+        isProfileActive: true,
+        useMassTask: true,
+        level: {
             2: ["Alchemy_Tier1_Refine_Basic_Mass", "Alchemy_Tier1_Gather_Basic_Mass"],
             3: "+25",
+        },
+    });
+
+    addProfile("Alchemy", {
+        profileName: "Mass Silver & Yellow Vitriol",
+        isProfileActive: true,
+        useMassTask: true,
+        level: {
+            7: ["Alchemy_Tier2_Refine_Basic_Mass", "Alchemy_Tier2_Gather_Components_Mass"],
+            8: "+25",
+        },
+    });
+
+    addProfile("Alchemy", {
+        profileName: "Mass Red & Emerald Vitriol",
+        isProfileActive: true,
+        useMassTask: true,
+        level: {
+            14: ["Alchemy_Tier3_Refine_Basic_Mass", "Alchemy_Tier3_Gather_Components_Mass"],
+            15: "+25",
+        },
+    });
+
+    addProfile("Alchemy", {
+        profileName: "Mass Orange & Purple Vitriol",
+        isProfileActive: true,
+        useMassTask: true,
+        level: {
+            21: ["Alchemy_Tier4_Refine_Basic_Mass", "Alchemy_Tier4_Gather_Components_Mass"],
+            22: "+25",
         },
     });
 
@@ -1773,7 +1809,7 @@ function addProfile(profession, profile, base){
         definedTask["Leatherworking"],
         definedTask["Tailoring"],
         definedTask["Blackice"],
-        definedTask["WinterEvent"],
+        definedTask["Winterevent"],
         definedTask["SiegeEvent"],
         definedTask["SummerEvent"],
     ];
@@ -1806,6 +1842,7 @@ function addProfile(profession, profile, base){
             emptyBagSlots: 0,
             activeSlots: 0,
             celestial: 0,
+            ardent: 0,
         },
         professions: {
             // Names must match unsafeWindow.client.dataModel.model.ent.main.itemassignmentcategories.categories[n].displayname
@@ -1854,29 +1891,221 @@ function addProfile(profession, profile, base){
     var toolList = toolListDefinition();
 
     var defaultTrackResources = [{
-        fname: 'Aqua Regia',
-        name: 'Crafting_Resource_Aquaregia',
-        bank: false, unbound: true, btc: true, bta: true
+        fname: 'Coalescent Ward (Invocation)',
+        name: 'Fuse_Ward_Coalescent_Invocation',
+        bank: false, unbound: true, btc: false, bta: true
     }, {
-        fname: 'Aqua Vitae',
-        name: 'Crafting_Resource_Aquavitae',
-        bank: false, unbound: true, btc: true, bta: true
+        fname: 'Preservation Ward (Invocation)',
+        name: 'Fuse_Ward_Preservation_Invocation',
+        bank: false, unbound: true, btc: false, bta: true
     }, {
-        fname: 'Residuum',
-        name: 'Crafting_Resource_Residuum',
-        bank: false, unbound: true, btc: true, bta: true
-    }, {
-        fname: 'Mining Claim',
-        name: 'Crafting_Resource_Mining_Claim',
-        bank: false, unbound: true, btc: true, bta: true
-    }, {
-        fname: 'Elemental Aggregate',
-        name: 'Crafting_Resource_Elemental_Aggregate',
-        bank: false, unbound: true, btc: true, bta: true
+        fname: 'Tome of Experience',
+        name: 'Item_Potion_Xp_Account',
+        bank: false, unbound: true, btc: false, bta: true
     }, {
         fname: 'Unified Elements',
         name: 'Crafting_Resource_Elemental_Unified',
-        bank: false, unbound: true, btc: true, bta: true
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Elemental Aggregate',
+        name: 'Crafting_Resource_Elemental_Aggregate',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Residuum',
+        name: 'Crafting_Resource_Residuum',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Aqua Regia',
+        name: 'Crafting_Resource_Aquaregia',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Aqua Vitae',
+        name: 'Crafting_Resource_Aquavitae',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Green Vitriol',
+        name: 'Crafting_Resource_Vitriol_Green',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Blue Vitriol',
+        name: 'Crafting_Resource_Vitriol_Blue',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Silver Vitriol',
+        name: 'Crafting_Resource_Vitriol_Silver',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Yellow Vitriol',
+        name: 'Crafting_Resource_Vitriol_Yellow',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Red Vitriol',
+        name: 'Crafting_Resource_Vitriol_Red',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Emerald Vitriol',
+        name: 'Crafting_Resource_Vitriol_Emerald',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Orange Vitriol',
+        name: 'Crafting_Resource_Vitriol_Orange',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Purple Vitriol',
+        name: 'Crafting_Resource_Vitriol_Purple',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Superior Mark of Potency',
+        name: 'Gem_Upgrade_Resource_R5',
+        bank: false, unbound: true, btc: false, bta: true
+    }, {
+        fname: 'Greater Mark of Potency',
+        name: 'Gem_Upgrade_Resource_R4',
+        bank: false, unbound: true, btc: false, bta: true
+    }, {
+        fname: 'Greater Mark of Power',
+        name: 'Artifact_Upgrade_Resource_R3_A',
+        bank: false, unbound: true, btc: false, bta: true
+    }, {
+        fname: 'Greater Mark of Stability',
+        name: 'Artifact_Upgrade_Resource_R3_B',
+        bank: false, unbound: true, btc: false, bta: true
+    }, {
+        fname: 'Greater Mark of Union',
+        name: 'Artifact_Upgrade_Resource_R3_C',
+        bank: false, unbound: true, btc: false, bta: true
+    }, {
+        fname: 'Greater Resonance Stone',
+        name: 'Artifactgear_Food_R4_A',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Greater Thaumaturgic Stone',
+        name: 'Gemfood_Stone_R4',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Greater Power Stone',
+        name: 'Artifactfood_R4_A',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Greater Stability Stone',
+        name: 'Artifactfood_R4_B',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Greater Union Stone',
+        name: 'Artifactfood_R4_C',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Black Opal',
+        name: 'Gemfood_R5',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Mark of Potency',
+        name: 'Gem_Upgrade_Resource_R3',
+        bank: false, unbound: true, btc: false, bta: true
+    }, {
+        fname: 'Mark of Power',
+        name: 'Artifact_Upgrade_Resource_R2_A',
+        bank: false, unbound: true, btc: false, bta: true
+    }, {
+        fname: 'Mark of Stability',
+        name: 'Artifact_Upgrade_Resource_R2_B',
+        bank: false, unbound: true, btc: false, bta: true
+    }, {
+        fname: 'Mark of Union',
+        name: 'Artifact_Upgrade_Resource_R2_C',
+        bank: false, unbound: true, btc: false, bta: true
+    }, {
+        fname: 'Resonance Stone',
+        name: 'Artifactgear_Food_R3_A',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Thaumaturgic Stone',
+        name: 'Gemfood_Stone_R3',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Power Stone',
+        name: 'Artifactfood_R3_A',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Stability Stone',
+        name: 'Artifactfood_R3_B',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Union Stone',
+        name: 'Artifactfood_R3_C',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Flawless Sapphire',
+        name: 'Gemfood_R4',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Aquamarine',
+        name: 'Gemfood_R3',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Lesser Mark of Potency',
+        name: 'Gem_Upgrade_Resource_R2',
+        bank: false, unbound: true, btc: false, bta: true
+    }, {
+        fname: 'Lesser Mark of Power',
+        name: 'Artifact_Upgrade_Resource_R1_A',
+        bank: false, unbound: true, btc: false, bta: true
+    }, {
+        fname: 'Lesser Mark of Stability',
+        name: 'Artifact_Upgrade_Resource_R1_B',
+        bank: false, unbound: true, btc: false, bta: true
+    }, {
+        fname: 'Lesser Mark of Union',
+        name: 'Artifact_Upgrade_Resource_R1_C',
+        bank: false, unbound: true, btc: false, bta: true
+    }, {
+        fname: 'Lesser Resonance Stone',
+        name: 'Artifactgear_Food_R2_A',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Lesser Thaumaturgic Stone',
+        name: 'Gemfood_Stone_R2',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Lesser Power Stone',
+        name: 'Artifactfood_R2_A',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Lesser Stability Stone',
+        name: 'Artifactfood_R2_B',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Lesser Union Stone',
+        name: 'Artifactfood_R2_C',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Peridot',
+        name: 'Gemfood_R2',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Minor Resonance Stone',
+        name: 'Artifactgear_Food_R1_A',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Minor Thaumaturgic Stone',
+        name: 'Gemfood_Stone_R1',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Minor Power Stone',
+        name: 'Artifactfood_R1_A',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Minor Stability Stone',
+        name: 'Artifactfood_R1_B',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'Minor Union Stone',
+        name: 'Artifactfood_R1_C',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: 'White Pearl',
+        name: 'Gemfood_R1',
+        bank: false, unbound: true, btc: false, bta: false
     }, 
 ];
     var trackResources;
@@ -1896,7 +2125,7 @@ function addProfile(profession, profile, base){
             leadershipMode: false,
             leadershipSound: 50,
             language: 'en',
-            scriptDebugMode: true,
+            scriptDebugMode: false,
             scriptAutoReload: false,
             autoLogin: false,
             autoLoginAccount: "",
@@ -1950,6 +2179,9 @@ function addProfile(profession, profile, base){
     var defaultAccountSettings = {
         vendorSettings: {
             vendorJunk: false,
+            vendorGreenUnidAll: false,
+            vendorBlueUnidAll: false,
+            vendorInvocationBlessingsAll: false,
             vendorKitsLimit: false,
             vendorAltarsLimit: false,
             vendorKitsAll: false,
@@ -1960,18 +2192,20 @@ function addProfile(profession, profile, base){
             vendorPots3: false,
             vendorPots4: false,
             vendorPots5: false,
+            vendorPots6: false,
             vendorHealingPots: false,
+            vendorHealingPotsAll: false,
             vendorEnchR1: false,
             vendorEnchR2: false,
             vendorEnchR3: false,
             vendorEnchR4: false,
+            vendorLesserMarks: false,
         },
         professionSettings: {
             fillOptionals: true,
             autoPurchaseRes: true,
             trainAssets: true,
-            smartLeadershipAssets: true,
-            skipPatrolTask: 'AD&Lvl20',
+            spreadLeadershipAssets: true,
             stopNotLeadership: 0,
             stopAlchemyAt3: false,
         },
@@ -1981,15 +2215,15 @@ function addProfile(profession, profile, base){
             openCelestialBox: false,
             openInvocation: true,
             keepOneUnopened: false,
-            runSCA: 'free',
+            runSCA: 'never',
             SCADailyReset: Date.now() - 24*60*60*1000,
         },
         consolidationSettings: {
             bankCharName: "",
             transferRate: 100,
             consolidate: false,
-            minCharBalance: 10000,
-            minToTransfer: 50000,
+            minCharBalance: 0,
+            minToTransfer: 100,
         },
     };
 
@@ -2003,6 +2237,9 @@ function addProfile(profession, profile, base){
         },
         vendorSettings: {
             vendorJunk: false,
+            vendorGreenUnidAll: false,
+            vendorBlueUnidAll: false,
+            vendorInvocationBlessingsAll: false,
             vendorKitsLimit: false,
             vendorAltarsLimit: false,
             vendorKitsAll: false,
@@ -2013,18 +2250,20 @@ function addProfile(profession, profile, base){
             vendorPots3: false,
             vendorPots4: false,
             vendorPots5: false,
+            vendorPots6: false,
             vendorHealingPots: false,
+            vendorHealingPotsAll: false,
             vendorEnchR1: false,
             vendorEnchR2: false,
             vendorEnchR3: false,
             vendorEnchR4: false,
+            vendorLesserMarks: false,
         },
         professionSettings: {
             fillOptionals: true,
             autoPurchaseRes: true,
             trainAssets: true,
-            skipPatrolTask: 'AD&Lvl20',
-            smartLeadershipAssets: true,
+            spreadLeadershipAssets: true,
             stopNotLeadership: 0,
             stopAlchemyAt3: false,
         },
@@ -2034,12 +2273,12 @@ function addProfile(profession, profile, base){
             openCelestialBox: false,
             openInvocation: true,
             keepOneUnopened: false,
-            runSCA: 'free',
+            runSCA: 'never',
         },
         consolidationSettings: {
             consolidate: false,
-            minCharBalance: 10000,
-            minToTransfer: 50000,
+            minCharBalance: 0,
+            minToTransfer: 100,
         },
         taskListSettings: {},
         taskListSettingsManual: [],
@@ -2142,43 +2381,47 @@ function addProfile(profession, profile, base){
         {scope: 'script', group: 'general', name: 'leadershipSound', title: 'Volume of notification in manual leadership mode',   type: 'select', pane: 'manual', 
             tooltip: 'Volume of the sound to be played',
             opts: [ { name: 'off',  value: 0}, { name: 'very soft',  value: 12}, { name: 'soft',  value: 25}, { name: 'medium',  value: 50}, { name: 'loud',  value: 75}, { name: 'full',  value: 100} ], },
-        
-        
+
+
         {scope: 'account', group: 'generalSettings', name: 'openRewards', title: tr('settings.general.openrewards'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openrewards.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'openCelestialBox', title: tr('settings.general.opencelestial'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.opencelestial.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'keepOneUnopened', title: tr('settings.general.keepOneUnopened'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.keepOneUnopened.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'openInvocation', title: tr('settings.general.openInvocation'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openInvocation.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'refineAD', title: tr('settings.general.refinead'),           type: 'checkbox', pane: 'main', tooltip: tr('settings.general.refinead.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'runSCA', title: tr('settings.general.runSCA'),               type: 'select',   pane: 'main', tooltip: tr('settings.general.runSCA.tooltip'),
-            opts: [ { name: 'never',        value: 'never'}, 
-                    { name: 'free time',    value: 'free'}, 
+            opts: [ { name: 'never',        value: 'never'},
+                    { name: 'free time',    value: 'free'},
                     { name: 'always',       value: 'always'}],
-            },        
+            },
         {scope: 'account', group: 'professionSettings', name: 'fillOptionals',         type: 'checkbox', pane: 'prof', title: tr('settings.profession.fillOptionals'),   tooltip: tr('settings.profession.fillOptionals.tooltip')},
         {scope: 'account', group: 'professionSettings', name: 'autoPurchaseRes',       type: 'checkbox', pane: 'prof', title: tr('settings.profession.autoPurchase'),    tooltip: tr('settings.profession.autoPurchase.tooltip')},
         {scope: 'account', group: 'professionSettings', name: 'trainAssets',           type:'checkbox',  pane: 'prof', title: tr('settings.profession.trainAssets'),     tooltip: tr('settings.profession.trainAssets.tooltip')},
-        {scope: 'account', group: 'professionSettings', name: 'smartLeadershipAssets', type:'checkbox',  pane: 'prof', title: tr('settings.profession.smartLeadership'), tooltip: tr('settings.profession.smartLeadership.tooltip')},
-        {scope: 'account', group: 'professionSettings', name: 'skipPatrolTask',        type:'select',    pane: 'prof', title: tr('settings.profession.skipPatrol'),      tooltip: tr('settings.profession.skipPatrol.tooltip'),
-            opts:[{name:'never',value:'never'},{name:'always',value:'always'},{name:'AD profile',value:'ad'},{name:'Leadership lvl 20',value:'ld20'},{name:'AD&Lvl20',value:'AD&Lvl20'}]},
+        {scope: 'account', group: 'professionSettings', name: 'spreadLeadershipAssets', type:'checkbox',  pane: 'prof', title: tr('settings.profession.spreadLeadership'), tooltip: tr('settings.profession.spreadLeadership.tooltip')},
         {scope: 'account', group: 'professionSettings', name: 'stopNotLeadership',        type:'select',    pane: 'prof', title: tr('settings.profession.stopNotLeadership'),      tooltip: tr('settings.profession.stopNotLeadership.tooltip'),
             opts:[{name:'never',value:'0'},{name: '20' ,value: 20},{name: '25' ,value: 25}]},
         {scope: 'account', group: 'professionSettings', name: 'stopAlchemyAt3',        type:'checkbox',    pane: 'prof', title: tr('settings.profession.stopAlchemyAt3'),      tooltip: tr('settings.profession.stopAlchemyAt3.tooltip')},
-        {scope: 'account', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Vendor junk..',     tooltip:'Vendor all junk items (currently) winterfest fireworks+lanterns'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorGreenUnidAll',  type:'checkbox',     pane:'vend',   title:'Vendor All Green Unidentified Items',     tooltip:'Vendor all green unidentified items'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorBlueUnidAll',  type:'checkbox',     pane:'vend',   title:'Vendor All Blue Unidentified Items',     tooltip:'Vendor all blue unidentified items'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorInvocationBlessingsAll',  type:'checkbox',     pane:'vend',   title:'Vendor All Invocation Blessings',     tooltip:'Vendor all Invocation Blessings'},
         {scope: 'account', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Node Kit Stacks',  tooltip:'Limit skill kits stacks to 50, vendor kits unusable by class, remove all if player has one bag or full bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorAltarsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Altar Stacks',  tooltip:'Limit Altars to 80,remove all if player has one bag or full bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorKitsAll',   type:'checkbox', pane:'vend',   title:'Vendor All Node Kits',   tooltip:'Sell ALL skill kits.'},
         {scope: 'account', group: 'vendorSettings', name:'vendorAltarsAll', type:'checkbox', pane:'vend',   title:'Vendor All Altar',       tooltip:'Sell ALL Altars.'},
         {scope: 'account', group: 'vendorSettings', name:'vendorProfResults',type:'checkbox',pane:'vend',   title:'Vendor/Maintain Prof Crafted Levelup Items',    tooltip:'Vendor off Tier 1 to 5 items produced and reused for leveling crafting professions.'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorPots1',     type:'checkbox', pane:'vend',   title:'Auto Vendor minor potions (lvl 1)',  tooltip:'Vendor all minor potions (lvl 1) found in player bags'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorPots2',     type:'checkbox', pane:'vend',   title:'Auto Vendor lesser potions (lvl 15)',tooltip:'Vendor all lesser potions (lvl 15) found in player bags'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorPots3',     type:'checkbox', pane:'vend',   title:'Auto Vendor potions (lvl 30)',       tooltip:'Vendor all potions (lvl 30) found in player bags'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorPots4',     type:'checkbox', pane:'vend',   title:'Auto Vendor greater potions (lvl 45)',   tooltip:'Vendor all greater potions (lvl 45) found in player bags'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorPots5',     type:'checkbox', pane:'vend',   title:'Auto Vendor major potions (lvl 60)',     tooltip:'Auto Vendor major potions (lvl 60)'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorHealingPots',     type:'checkbox', pane:'vend',   title:'Auto Vendor healing potions (1-60)',     tooltip:'Auto Vendor healing potions (lvl 60)'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorEnchR4',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 4',    tooltip:'Vendor all Rank 4 enchantments & runestones found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorPots1',     type:'checkbox', pane:'vend',   title:'Vendor minor potions (lvl 1)',  tooltip:'Vendor all minor potions (lvl 1) found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorPots2',     type:'checkbox', pane:'vend',   title:'Vendor lesser potions (lvl 15)',tooltip:'Vendor all lesser potions (lvl 15) found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorPots3',     type:'checkbox', pane:'vend',   title:'Vendor potions (lvl 30)',       tooltip:'Vendor all potions (lvl 30) found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorPots4',     type:'checkbox', pane:'vend',   title:'Vendor greater potions (lvl 45)',   tooltip:'Vendor all greater potions (lvl 45) found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorPots5',     type:'checkbox', pane:'vend',   title:'Vendor major potions (lvl 60)',     tooltip:'Vendor major potions (lvl 60)'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorPots6',     type:'checkbox', pane:'vend',   title:'Vendor superior potions (lvl 70)',     tooltip:'Vendor superior potions (lvl 70)'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorHealingPots',     type:'checkbox', pane:'vend',   title:'Vendor Healing Potions (1-60)',     tooltip:'Vendor healing potions (lvl 60)'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorHealingPotsAll',     type:'checkbox', pane:'vend',   title:'Vendor All Healing Potions',     tooltip:'Vendor all healing potions'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorEnchR4',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 4',    tooltip:'Vendor all Rank 4 enchantments & runestones found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorLesserMarks',    type:'checkbox', pane:'vend',   title:'Vendor Lesser Marks',    tooltip:'Vendor all Lesser Marks found in player bags'},
         {scope: 'account', group: 'consolidationSettings', name:'consolidate',    type:'checkbox', pane:'bank', title: tr('settings.consolid.consolidate'),    tooltip: tr('settings.consolid.consolidate.tooltip') ,border:true},
         {scope: 'account', group: 'consolidationSettings', name:'bankCharName',   type:'text',     pane:'bank', title: tr('settings.consolid.bankerName'),     tooltip: tr('settings.consolid.bankerName.tooltip')},
         {scope: 'account', group: 'consolidationSettings', name:'minToTransfer',  type:'text',     pane:'bank', title: tr('settings.consolid.minToTransfer'),  tooltip: tr('settings.consolid.minToTransfer.tooltip')},
@@ -2211,29 +2454,33 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'professionSettings', name: 'fillOptionals',         type: 'checkbox', pane: 'prof', title: tr('settings.profession.fillOptionals'),   tooltip: tr('settings.profession.fillOptionals.tooltip')},
         {scope: 'char', group: 'professionSettings', name: 'autoPurchaseRes',       type: 'checkbox', pane: 'prof', title: tr('settings.profession.autoPurchase'),    tooltip: tr('settings.profession.autoPurchase.tooltip')},
         {scope: 'char', group: 'professionSettings', name: 'trainAssets',           type:'checkbox',  pane: 'prof', title: tr('settings.profession.trainAssets'),     tooltip: tr('settings.profession.trainAssets.tooltip')},
-        {scope: 'char', group: 'professionSettings', name: 'smartLeadershipAssets', type:'checkbox',  pane: 'prof', title: tr('settings.profession.smartLeadership'), tooltip: tr('settings.profession.smartLeadership.tooltip')},
-        {scope: 'char', group: 'professionSettings', name: 'skipPatrolTask',        type: 'select',   pane: 'prof', title: tr('settings.profession.skipPatrol'),      tooltip: tr('settings.profession.skipPatrol.tooltip'),
-            opts:[{name:'never',value:'never'},{name:'always',value:'always'},{name:'AD profile',value:'ad'},{name:'Leadership lvl 20',value:'ld20'},{name:'AD&Lvl20',value:'AD&Lvl20'}]},
+        {scope: 'char', group: 'professionSettings', name: 'spreadLeadershipAssets', type:'checkbox',  pane: 'prof', title: tr('settings.profession.spreadLeadership'), tooltip: tr('settings.profession.spreadLeadership.tooltip')},
         {scope: 'char', group: 'professionSettings', name: 'stopNotLeadership',        type:'select',    pane: 'prof', title: tr('settings.profession.stopNotLeadership'),      tooltip: tr('settings.profession.stopNotLeadership.tooltip'),
             opts:[{name:'never',value:0},{name: '20' ,value: 20},{name: '25' ,value: 25}]},
         {scope: 'char', group: 'professionSettings', name: 'stopAlchemyAt3',        type:'checkbox',    pane: 'prof', title: tr('settings.profession.stopAlchemyAt3'),      tooltip: tr('settings.profession.stopAlchemyAt3.tooltip')},
         
-        {scope: 'char', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Auto Vendor junk..',     tooltip:'Vendor all (currently) winterfest fireworks+lanterns'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorJunk',  type:'checkbox',     pane:'vend',   title:'Vendor junk..',     tooltip:'Vendor all junk items (currently) winterfest fireworks+lanterns'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorGreenUnidAll',  type:'checkbox',     pane:'vend',   title:'Vendor All Green Unidentified Items',     tooltip:'Vendor all green unidentified items'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorBlueUnidAll',  type:'checkbox',     pane:'vend',   title:'Vendor All Blue Unidentified Items',     tooltip:'Vendor all blue unidentified items'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorInvocationBlessingsAll',  type:'checkbox',     pane:'vend',   title:'Vendor All Invocation Blessings',     tooltip:'Vendor All Invocation Blessings'},
         {scope: 'char', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Altar Node Kit Stacks',  tooltip:'Limit skill kits stacks to 50/Altars80, vendor kits unusable by class, remove all if player has one bag or full bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorAltarsLimit', type:'checkbox', pane:'vend', title:'Vendor/Maintain Altar Stacks',  tooltip:'Limit Altars to 80,remove all if player has one bag or full bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorKitsAll',   type:'checkbox', pane:'vend',   title:'Vendor All Node Kits',   tooltip:'Sell ALL skill kits.'},
         {scope: 'char', group: 'vendorSettings', name:'vendorAltarsAll', type:'checkbox', pane:'vend',   title:'Vendor All Altar',       tooltip:'Sell ALL Altars.'},
         {scope: 'char', group: 'vendorSettings', name:'vendorProfResults',type:'checkbox',pane:'vend',   title:'Vendor/Maintain Prof Crafted Levelup Items',    tooltip:'Vendor off Tier 1 to 5 items produced and reused for leveling crafting professions.'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorPots1',     type:'checkbox', pane:'vend',   title:'Auto Vendor minor potions (lvl 1)',  tooltip:'Vendor all minor potions (lvl 1) found in player bags'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorPots2',     type:'checkbox', pane:'vend',   title:'Auto Vendor lesser potions (lvl 15)',tooltip:'Vendor all lesser potions (lvl 15) found in player bags'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorPots3',     type:'checkbox', pane:'vend',   title:'Auto Vendor potions (lvl 30)',       tooltip:'Vendor all potions (lvl 30) found in player bags'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorPots4',     type:'checkbox', pane:'vend',   title:'Auto Vendor greater potions (lvl 45)',   tooltip:'Vendor all greater potions (lvl 45) found in player bags'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorPots5',     type:'checkbox', pane:'vend',   title:'Auto Vendor major potions (lvl 60)',     tooltip:'Auto Vendor major potions (lvl 60)'},        
-        {scope: 'char', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorEnchR4',    type:'checkbox', pane:'vend',   title:'Auto Vendor enchants & runes Rank 4',    tooltip:'Vendor all Rank 4 enchantments & runestones found in player bags'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorHealingPots',     type:'checkbox', pane:'vend',   title:'Auto Vendor healing potions (1-60)',     tooltip:'Auto Vendor healing potions (lvl 60)'},        
+        {scope: 'char', group: 'vendorSettings', name:'vendorPots1',     type:'checkbox', pane:'vend',   title:'Vendor minor potions (lvl 1)',  tooltip:'Vendor all minor potions (lvl 1) found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorPots2',     type:'checkbox', pane:'vend',   title:'Vendor lesser potions (lvl 15)',tooltip:'Vendor all lesser potions (lvl 15) found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorPots3',     type:'checkbox', pane:'vend',   title:'Vendor potions (lvl 30)',       tooltip:'Vendor all potions (lvl 30) found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorPots4',     type:'checkbox', pane:'vend',   title:'Vendor greater potions (lvl 45)',   tooltip:'Vendor all greater potions (lvl 45) found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorPots5',     type:'checkbox', pane:'vend',   title:'Vendor major potions (lvl 60)',     tooltip:'Vendor major potions (lvl 60)'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorPots6',     type:'checkbox', pane:'vend',   title:'Vendor superior potions (lvl 70)',     tooltip:'Vendor superior potions (lvl 70)'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorHealingPots',     type:'checkbox', pane:'vend',   title:'Vendor Healing Potions (1-60)',     tooltip:'Vendor healing potions (lvl 60)'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorHealingPotsAll',     type:'checkbox', pane:'vend',   title:'Vendor All Healing Potions',     tooltip:'Vendor all healing potions'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorEnchR1',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 1',    tooltip:'Vendor all Rank 1 enchantments & runestones found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorEnchR4',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 4',    tooltip:'Vendor all Rank 4 enchantments & runestones found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorLesserMarks',    type:'checkbox', pane:'vend',   title:'Vendor Lesser Marks',    tooltip:'Vendor all Lesser Marks found in player bags'},
         {scope: 'char', group: 'consolidationSettings', name:'consolidate',    type:'checkbox', pane:'bank', title: tr('settings.consolid.consolidate'),    tooltip: tr('settings.consolid.consolidate.tooltip'), border:true},
         {scope: 'char', group: 'consolidationSettings', name:'minToTransfer',  type:'text',     pane:'bank', title: tr('settings.consolid.minToTransfer'),  tooltip: tr('settings.consolid.minToTransfer.tooltip')},
         {scope: 'char', group: 'consolidationSettings', name:'minCharBalance', type:'text',     pane:'bank', title: tr('settings.consolid.minCharBalance'), tooltip: tr('settings.consolid.minCharBalance.tooltip')},
@@ -2472,7 +2719,7 @@ function addProfile(profession, profile, base){
                 return;
             }
 
-            console.log("Checking SCA Dialy for " + _charName );
+            console.log("Checking SCA Daily for " + _charName );
 
             // Do SCA daily dice roll if the button comes up
             WaitForState(".daily-dice-intro").done(function() {
@@ -2541,7 +2788,7 @@ function addProfile(profession, profile, base){
                 return;
             }
 
-            console.log("Checking SCA Dialy for", _fullCharName, "...");
+            console.log("Checking SCA Daily for", _fullCharName, "...");
 
             // Do SCA daily dice roll if the button comes up
             WaitForState(".daily-dice-intro").done(function() {
@@ -2551,7 +2798,7 @@ function addProfile(profession, profile, base){
                 });
             });
 
-            // If Dice roll dialog is non existant
+            // If Dice roll dialogue is non existent
             WaitForNotState(".modal-window.daily-dice").done(function() {
                 charStatisticsList[charNamesList[_charIndex]].general.lastSCAVisit = Date.now();
                 GM_setValue("statistics__char__" + _fullCharName , JSON.stringify(charStatisticsList[charNamesList[_charIndex]]));
@@ -2590,7 +2837,7 @@ function addProfile(profession, profile, base){
             if (!entry.islockedslot && entry.category == "None" && scriptSettings.general.unasignedSlotRecheck) {
                 var tdate = new Date();
                 tdate.setTime( tdate.getTime() + parseInt(scriptSettings.general.unasignedSlotRecheck));
-                console.log("Found unasigned slot, setting it as: ", tdate);
+                console.log("Found unassigned slot, setting it as: ", tdate);
                 if (!next || tdate < next) {
                     next = tdate;
                 }
@@ -2602,7 +2849,7 @@ function addProfile(profession, profile, base){
             console.log("Next finished task at " + next.toLocaleString());
         } 
         else {
-            console.log("No next finishing date found! All slots unasigned.");
+            console.log("No next finishing date found! All slots unassigned.");
             if (scriptSettings.general.defaultVisitTime) {
                 var tdate = new Date();
                 tdate.setTime( tdate.getTime() + parseInt(scriptSettings.general.defaultVisitTime));
@@ -2681,7 +2928,7 @@ function addProfile(profession, profile, base){
                 var def = $.Deferred();
                 var buttonList = $('.taskdetails-assets:eq(1)').find("button");
                 if (buttonList.length && getSetting('professionSettings','fillOptionals')) {
-                    SelectItemFor(buttonList, 0, def, prof);
+                    SelectItemFor(buttonList, 0, def, prof, taskName, prof.taskName, profile, level);
                 } else {
                     def.resolve();
                 }
@@ -2770,17 +3017,6 @@ function addProfile(profession, profile, base){
 
     function searchForTask(taskname, profname, profile, professionLevel) {
         // Return first object that matches exact craft name
-        // edited by WloBeb - start Patrol the Mines task only if char has less than 10 Mining Claims
-        var skip_setting = getSetting('professionSettings', 'skipPatrolTask');
-            
-        if (taskname == "Leadership_Tier3_13_Patrol" && (skip_setting == 'always' ||
-            (skip_setting == 'ad' && profile.profileName == "AD") || (skip_setting == 'ld20' && professionLevel >= 20) ||
-            (skip_setting == 'AD&Lvl20' && professionLevel >= 20 && profile.profileName == "AD"))) {
-            if (countResource("Crafting_Resource_Mining_Claim") >= 10) {
-                console.log("Too many Mining Claims: skiping");
-                return false;
-            }
-        }
 
         var thisTask = unsafeWindow.client.dataModel.model.craftinglist['craft_' + profname].entries.filter(function(entry) {
             return entry.def && entry.def.name == taskname;
@@ -3001,13 +3237,13 @@ function addProfile(profession, profile, base){
      * @param {Deferred} jQuery Deferred object to resolve when all of the assets have been assigned
      */
 
-    function SelectItemFor(buttonListIn, i, def, prof) {
+    function SelectItemFor(buttonListIn, i, def, prof, taskname, profname, profile, professionLevel) {
         buttonListIn[i].click();
         WaitForState("").done(function() {
 
             var $assets = $("div.modal-item-list a").has("img[src*='_Resource_'],img[src*='_Assets_'],img[src*='_Tools_'],img[src*='_Tool_'],img[src*='_Jewelersloupe_'],img[src*='_Bezelpusher_']"); //edited by RottenMind
             var $persons = $("div.modal-item-list a").has("img[src*='_Follower_']");
-            var quality = [".Special", ".Gold", ".Silver", ".Bronze"];
+            var quality = [".Mythic", ".Legendary", ".Special", ".Gold", ".Silver", ".Bronze"];
             var ic,
                 $it;
 
@@ -3015,45 +3251,59 @@ function addProfile(profession, profile, base){
 
             // Try to avoid using up higher rank assets needlessly
             if (prof.taskName === "Leadership") {
+
+                var _enableSpreadLeadership = getSetting('professionSettings','spreadLeadershipAssets');
                 var mercenarys = $('div.modal-item-list a.Bronze img[src*="Crafting_Follower_Leader_Generic_T1_01"]').parent().parent();
                 var guards = $('div.modal-item-list a.Bronze img[src*="Crafting_Follower_Leader_Guard_T2_01"]').parent().parent();
                 var footmen = $('div.modal-item-list a.Bronze img[src*="Crafting_Follower_Leader_Private_T2_01"]').parent().parent();
+                var T3_Epic = countResource("Crafting_Asset_Craftsman_Leadership_T3_Epic"); // number of heroes in inventory
+                var T3_Rare = countResource("Crafting_Asset_Craftsman_Leadership_T3_Rare"); // number of adventurers in inventory
+                var T3_Uncommon = countResource("Crafting_Asset_Craftsman_Leadership_T3_Uncommon"); // number of man-at-arms in inventory
+                var usedCommon = countUsedResource("Crafting_Asset_Craftsman_Leadership_T3_Common") + countUsedResource("Crafting_Asset_Craftsman_Leadership_T2_Common") + countUsedResource("Crafting_Asset_Craftsman_Leadership_T1_Common_1"); //number of used mercenaries, guards and footmen
 
-                var T3_Epic = 0;
-                var T3_Rare = 0;
-                var T3_Uncommon = 0;
-                var usedCommon;
-                
-                var _enableSmartLeadership = getSetting('professionSettings','smartLeadershipAssets'); 
-                if (_enableSmartLeadership) {
-                    T3_Epic = countResource("Crafting_Asset_Craftsman_Leadership_T3_Epic"); // number of heroes in inventory
-                    T3_Rare = countResource("Crafting_Asset_Craftsman_Leadership_T3_Rare"); // number of adventurers in inventory
-                    T3_Uncommon = countResource("Crafting_Asset_Craftsman_Leadership_T3_Uncommon"); // number of man-at-arms in inventory
-                    usedCommon = countUsedResource("Crafting_Asset_Craftsman_Leadership_T3_Common") + countUsedResource("Crafting_Asset_Craftsman_Leadership_T2_Common") + countUsedResource("Crafting_Asset_Craftsman_Leadership_T1_Common_1"); //number of used mercenarys, guards and footmans
-                }
-
-                if (!(_enableSmartLeadership) || (_enableSmartLeadership && (T3_Epic + T3_Rare + T3_Uncommon + usedCommon < parseInt(charSettingsList[curCharName].taskListSettings["Leadership"].taskSlots) * 2))) {
-                    if (mercenarys.length) {
-                        clicked = true;
-                        mercenarys[0].click();
-                    } else if (guards.length) {
-                        clicked = true;
-                        guards[0].click();
-                    } else if (footmen.length) {
-                        clicked = true;
-                        footmen[0].click();
+                // if spread leadership asset allocation is not selected, check for persons for best speed, in descending order
+                //if ((!_enableSpreadLeadership) && ((profile.profileName != "RP") || (professionLevel < 24) || (taskname == "Leadership_Tier4_22r_Capturebandithq") || (taskname == "Leadership_Tier4_24r_Killdragon") || (taskname == "Leadership_Tier4_24_Wizardsseneschal") || (T3_Epic + T3_Rare + T3_Uncommon > 6))) {
+                if (!_enableSpreadLeadership) {
+                    for (ic in quality) {
+                        if (quality[ic] == ".Bronze") {
+                            break;
+                        }
+                        $it = $persons.filter(quality[ic]);
+                        if ($it.length) {
+                            $it[0].click();
+                            clicked = true;
+                            break;
+                        }
                     }
                 }
+
+                if (!clicked) {
+                    if ((!_enableSpreadLeadership) || (_enableSpreadLeadership && (T3_Epic + T3_Rare + T3_Uncommon + usedCommon < parseInt(charSettingsList[curCharName].taskListSettings["Leadership"].taskSlots) * 2))) {
+                        if (mercenarys.length) {
+                            clicked = true;
+                            mercenarys[0].click();
+                        } else if (guards.length) {
+                            clicked = true;
+                            guards[0].click();
+                        } else if (footmen.length) {
+                            clicked = true;
+                            footmen[0].click();
+                        }
+                    }
+                }
+
             }
 
 
             // check resources & assets for best quality, in descending order
-            for (ic in quality) {
-                $it = $assets.filter(quality[ic]);
-                if ($it.length) {
-                    $it[0].click();
-                    clicked = true;
-                    break;
+            if (!clicked) {
+                for (ic in quality) {
+                    $it = $assets.filter(quality[ic]);
+                    if ($it.length) {
+                        $it[0].click();
+                        clicked = true;
+                        break;
+                    }
                 }
             }
 
@@ -3084,7 +3334,7 @@ function addProfile(profession, profile, base){
                 // Get the new set of select buttons created since the other ones are removed when the asset loads
                 var buttonList = $('.taskdetails-assets:eq(1)').find("button");
                 if (i < buttonList.length - 1) {
-                    SelectItemFor(buttonList, i + 1, def, prof);
+                    SelectItemFor(buttonList, i + 1, def, prof, taskname, profname, profile, professionLevel);
                 } else {
                     // Let main loop continue
                     def.resolve();
@@ -3233,14 +3483,14 @@ function addProfile(profession, profile, base){
                     if (parseInt(item.price) == ZenRate && item.ordertype == "Buy") {
                         // cancel/withdraw the order
                         client.withdrawOrder(item.orderid);
-                        console.log("Canceling ZAX offer for " + item.quantity + " ZEN at the rate of " + item.price + " . Total value in AD: " + item.totaltc);
+                        console.log("Cancelling ZAX offer for " + item.quantity + " ZEN at the rate of " + item.price + " . Total value in AD: " + item.totaltc);
                     }
                 });
             } else {
-                console.log("No listings found on ZAX. Skipping ZAX Withrdaw..");
+                console.log("No listings found on ZAX. Skipping ZAX Withdraw..");
             }
         } else {
-            console.log("Zen Exchange data did not load in time for transfer. Skipping ZAX Withrdaw..");
+            console.log("Zen Exchange data did not load in time for transfer. Skipping ZAX Withdraw..");
         }
     }
 
@@ -3248,13 +3498,13 @@ function addProfile(profession, profile, base){
         if (unsafeWindow.client.dataModel.model.exchangeaccountdata) {
             if (parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow) > 0) {
                 unsafeWindow.client.sendCommand("GatewayExchange_ClaimTC", unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
-                console.log("Attempting to withdraw exchange balancees... ClaimTC: " + unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
+                console.log("Attempting to withdraw exchange balances... ClaimTC: " + unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
                 // clear the ad counter zax log
                 zaxdiamonds = 0;
             }
             if (parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc) > 0) {
                 unsafeWindow.client.sendCommand("GatewayExchange_ClaimMTC", unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
-                console.log("Attempting to withdraw exchange balancees... ClaimMT: " + unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
+                console.log("Attempting to withdraw exchange balances... ClaimMT: " + unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimmtc);
             }
         } else {
             window.setTimeout(claimZaxOffer, delay.SHORT);
@@ -3274,7 +3524,7 @@ function addProfile(profession, profile, base){
         var _tmpBag = [];
         var _profitems = [];
         // Pattern for items to leave out of auto vendoring (safeguard)
-        var _excludeItems = /(Gemfood|Gem_Upgrade_Resource|Artifact|Hoard|Coffer|Fuse|Ward|Preservation|Armor_Enhancement|Weapon_Enhancement|T[5-9]_Enchantment|T[5-9]_Runestones|T10_Enchantment|T10_Runestones|4c_Personal|Item_Potion_Companion_Xp|Gateway_Rewardpack|Consumable_Id_Scroll|Dungeon_Delve_Key)/; // edited by RottenMind 17.01.2015
+        var _excludeItems = /(Gemfood|Gem_Upgrade_Resource_R[3-9]|Artifact(?!_Upgrade_Resource_R1_)|Hoard|Coffer|Fuse|Ward|Preservation|Armor_Enhancement|Weapon_Enhancement|T[5-9]_Enchantment|T[5-9]_Runestones|T10_Enchantment|T10_Runestones|4c_Personal|Item_Potion_Companion_Xp|Gateway_Rewardpack|Consumable_Id_Scroll|Dungeon_Delve_Key)/; // edited by RottenMind 17.01.2015
 
             /** Profession leveling result item cleanup logic for T1-4 crafted results
              * Created by RM on 14.1.2015.
@@ -3314,8 +3564,8 @@ function addProfile(profession, profile, base){
                 if (slot === null || !slot || slot === undefined) {
                     _bagUnused++;
                 }
-                // Match items to exclude from auto vendoring, dont add to _tmpBag: Exclude pattern list - bound - Epic Quality - Blue Quality
-                else if (_excludeItems.test(slot.name) || slot.bound || slot.rarity == "Special" || slot.rarity == "Gold") {
+                // Match items to exclude from auto vendoring, don't add to _tmpBag: Exclude pattern list - bound - Epic Quality - Legendary Quality - Mythic Quality
+                else if (_excludeItems.test(slot.name) || slot.rarity == "Special" || slot.rarity == "Legendary" || slot.rarity == "Mythic") {
                     _bagUsed++;
                 }
                 // Match everything else
@@ -3355,7 +3605,7 @@ function addProfile(profession, profile, base){
         _tmpBag.forEach(function(slot) {
             for (i = 0; i < _items.length; i++) {
                 var _Limit = (parseInt(_items[i].limit) > 99) ? 99 : _items[i].limit;
-                if (slot && _items[i].pattern.test(slot.name) && !slot.bound) {
+                if (slot && _items[i].pattern.test(slot.name)) {
                     // Node Kits vendor logic for restricted bag space
                     if (getSetting('vendorSettings', 'vendorKitsLimit') && /^Item_Consumable_Skill/.test(slot.name)) {
                         if (_bagCount < 2 || _bagUnused < 6 ||
@@ -3532,6 +3782,7 @@ function addProfile(profession, profile, base){
         _stat.diamondsconvertleft = parseInt(_chardata.refineLimitLeft);
         _stat.activeSlots = unsafeWindow.client.dataModel.model.ent.main.itemassignments.active;
         _stat.celestial = parseInt(_chardata.celestial);
+        _stat.ardent = parseInt(_chardata.ardent);
         
         //clearing
         charStatisticsList[curCharName].trackedResources = [];
@@ -4037,7 +4288,7 @@ function addProfile(profession, profile, base){
             }
 
             // First check if there's anything we have to withdraw and claim it
-            // Sometimes the system will literally overwrite canceled and unclaimed orders and return AD to that character
+            // Sometimes the system will literally overwrite cancelled and unclaimed orders and return AD to that character
             // Example: if you cancel 5 orders, don't claim them, then create another order and cancel it, that last order
             //          will overwrite one of your previous orders and return the AD to that other character
             var exchangeDiamonds = parseInt(unsafeWindow.client.dataModel.model.exchangeaccountdata.readytoclaimescrow);
@@ -4114,9 +4365,9 @@ function addProfile(profession, profile, base){
                 td.ranked2, td.tranked2 { border-bottom: solid 1px #555; border-top: dashed 1px #888 }\
                 #resource_tracker {overflow-x:auto;}\
                 table.withRotation td.rotate, table.withRotation th.rotate { height: 125px; } \
-                table.withRotation td.rotate, table.withRotation th.rotate > div { transform: translate(0, 30px) rotate(290deg); width: 30px; } \
-                table.withRotation td.rotate, table.withRotation th.rotate > div > span { border-bottom: 1px solid #ccc; padding: 5px 10px; white-space: nowrap; } \
-                table.withRotation td { border-right: 1px solid #ccc;} \
+                table.withRotation td.rotate, table.withRotation th.rotate > div { transform: translate(0, 38px) rotate(290deg); width: 30px; } \
+                table.withRotation td.rotate, table.withRotation th.rotate > div > span { border-bottom: 1px solid #bbb; padding: 0px 0px; white-space: nowrap; } \
+                table.withRotation td { border-right: 1px solid #bbb;} \
                 input[type='checkbox'].settingsInput { margin: 5px 10px 5px 5px;  }\
                 input.settingsInput { margin: 5px 5px; }\
                 label.settingsLabel { margin: 5px 5px; min-width: 150px; display: inline-block; }\
@@ -4130,8 +4381,8 @@ function addProfile(profession, profile, base){
                 .custom_resources_delete { height: 16px; } .customResources input:not([type='checkbox']) { margin: 3px 10px } .customResources label { margin-right: 10px; }\
                 .customResources input[type='checkbox'] { margin-right: 10px } .customResources button { margin: 0 10px } div.customResources { margin: 10px 0;} \
                 #settingsPanel table {border-collapse: collapse; }\
-                tr.totals > td { border-top: 1px solid grey; padding-top: 3px; color: #000080 } \
-                .rarity_Gold {color: blue; } .rarity_Silver {color: green; } .rarity_Special {color: purple; }  \
+                tr.totals > td { border-bottom: 1px solid grey; padding-top: 3px; color: #000080 } \
+                .rarity_Gold {color: blue; } .rarity_Silver {color: green; } .rarity_Special {color: purple; } .rarity_Legendary {color: orange; } .rarity_Mythic {color: teal; }  \
                 #dialog-inventory { overflow-y: scroll; font: 10px Arial; } #dialog-inventory table { width: 100% } #dialog-inventory table th { text-align: left; font-weight: bold; }\
                 .slt_None {color: red;} .slt_Lead {color: blue;} .slt_Alch {color: green;} .slt_Jewe {color: gold;} .slt_Leat {color: brown;}\
                 #copy_settings_to { width: 200px; height: 350px; margin: 5px 0;} #copy_settings_from { margin: 5px 0;}\
@@ -4205,7 +4456,7 @@ function addProfile(profession, profile, base){
             
             tab = addTab("#script_settings", tr('tab.advanced'));
             var thtml = "<button id='reset_settings_btn'>Reset ALL Settings</button><br /><br />";
-            thtml += "Must be logged in and at the correct charactar to list it's items.<br />";
+            thtml += "Must be logged in and at the correct character to list it's items.<br />";
             thtml += "<button id='list_inventory_btn'>List Inventory</button><br /><br />";
             thtml += "List settings (display all the configuration and obscure char names to char 1,2... and banker)<br />";
             thtml += "<button id='list_settings_btn'>Dump settings </button><br /><br />";
@@ -5261,25 +5512,32 @@ function addProfile(profession, profile, base){
         html = "<table class='withRotation'><tr><th class='rotate'><div><span>Character Name</div></span></th>";
         html += "<th class='rotate'><div><span>Main bags empty slots</div></span></th>";
         html += "<th class='rotate'><div><span>Celestials</div></span></th>";
+        html += "<th class='rotate'><div><span>Ardents</div></span></th>";
         trackResources.forEach(function(item) {
             html += "<th class='rotate'><div><span>" + item.fname + "</div></span></th>";
         })
         var total = []; for (var i = 0; i < trackResources.length; i++) total[i] = 0;
         html += '</tr>';
+
+        var endhtml = '';
         charNamesList.forEach(function(charName) {
-            html += '<tr><td>' + charName + '</td>';
-            html += '<td>' + charStatisticsList[charName].general.emptyBagSlots + '</td>';
-            html += '<td>' + charStatisticsList[charName].general.celestial + '</td>';
+            endhtml += '<tr><td>' + charName + '</td>';
+            endhtml += '<td>' + charStatisticsList[charName].general.emptyBagSlots + '</td>';
+            endhtml += '<td>' + charStatisticsList[charName].general.celestial + '</td>';
+            endhtml += '<td>' + charStatisticsList[charName].general.ardent + '</td>';
             charStatisticsList[charName].trackedResources.forEach(function(count, idx) {
-                html += '<td>' + count + '</td>';
+                endhtml += '<td>' + count + '</td>';
                 total[idx] += count;
             })
-            html += '</tr>';
+            endhtml += '</tr>';
         })
-        html += "<tr class=\" totals\"><td>Totals:</td><td>--</td><td>--</td>";
+        endhtml += "</table>";
+
+        html += "<tr class=\"totals\"><td>Totals:</td><td>--</td><td>--</td><td>--</td>";
         for (var i = 0; i < total.length; i++) html += "<td>" + total[i] + "</td>";
         html += "</tr>";
-        html += "</table>";
+
+        html += endhtml
         $('#resource_tracker').html(html);
 
 
@@ -5391,6 +5649,12 @@ function addProfile(profession, profile, base){
     function vendorJunk(evnt) {
         var _vendorItems = [];
         var _sellCount = 0;
+        if (getSetting('vendorSettings', 'vendorInvocationBlessingsAll')) {
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Invocation_Random_Buff$/,
+                limit: 0
+            };
+        }
         if (getSetting('vendorSettings', 'vendorKitsLimit')) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Item_Consumable_Skill/,
@@ -5411,7 +5675,7 @@ function addProfile(profession, profile, base){
         }
         if (getSetting('vendorSettings', 'vendorAltarsAll')) {
             _vendorItems[_vendorItems.length] = {
-                pattern: /^Item_Portable_Altar$/,
+                pattern: /^Item_Portable_Altar(_Bound)?$/,
                 limit: 0
             };
         }
@@ -5455,43 +5719,61 @@ function addProfile(profession, profile, base){
                 limit: 0
             };
         }
+        if (getSetting('vendorSettings', 'vendorLesserMarks')) {
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^(Gem_Upgrade_Resource_R[1-2]|Artifact_Upgrade_Resource_R1_[A-Z])$/,
+                limit: 0
+            };
+        }
         if (getSetting('vendorSettings', 'vendorPots1')) {
             _vendorItems[_vendorItems.length] = {
-                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)$/,
+                pattern: /^Potion_(Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)(_Bound)?$/,
                 limit: 0
             };
         }
         if (getSetting('vendorSettings', 'vendorPots2')) {
             _vendorItems[_vendorItems.length] = {
-                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_2$/,
+                pattern: /^Potion_(Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_2(_Bound)?$/,
                 limit: 0
             };
         }
         if (getSetting('vendorSettings', 'vendorPots3')) {
             _vendorItems[_vendorItems.length] = {
-                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_3$/,
+                pattern: /^Potion_(Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_3(_Bound)?$/,
                 limit: 0
             };
         }
         if (getSetting('vendorSettings', 'vendorPots4')) {
             _vendorItems[_vendorItems.length] = {
-                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_4$/,
+                pattern: /^Potion_(Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_4(_Bound)?$/,
                 limit: 0
             };
         }
         if(getSetting('vendorSettings', 'vendorPots5')) {
             _vendorItems[_vendorItems.length] = {
-                pattern: /^Potion_(Healing|Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_5$/,
+                pattern: /^Potion_(Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_5(_Bound)?$/,
+                limit: 0
+            };
+        }
+        if(getSetting('vendorSettings', 'vendorPots6')) {
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Potion_(Tidespan|Force|Fortification|Reflexes|Accuracy|Rejuvenation)_6(_Bound)?$/,
                 limit: 0
             };
         }
         if (getSetting('vendorSettings', 'vendorHealingPots')) {
             _vendorItems[_vendorItems.length] = {
-                pattern: /^Potion_Healing(|_[1-5])$/,
+                pattern: /^Potion_Healing(_[1-5])?(_Bound)?$/,
                 limit: 0
             };
-        }        
-        
+        }
+        if (getSetting('vendorSettings', 'vendorHealingPotsAll')) {
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Potion_Healing(_[1-9])?(_Bound)?$/,
+                limit: 0
+            };
+        }
+
         if (getSetting('vendorSettings', 'vendorJunk')) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Item_Snowworks_/,
@@ -5532,28 +5814,33 @@ function addProfile(profession, profile, base){
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Object_Trinket_/,
                 limit: 0
-            };
-            _vendorItems[_vendorItems.length] = {
-                pattern: /_Green_T[1-6]_Unid$/,
-                limit: 0
-            }; // Unidentified Green Gear
-            _vendorItems[_vendorItems.length] = {
-                pattern: /^Object_Trinket_/,
-                limit: 0
             }; 
              _vendorItems[_vendorItems.length] = {
                 pattern: /^Object_Skill_/,
                 limit: 0
             };
         }
-        
-        if (getSetting('vendorSettings', 'vendorProfResults')) {
+
+        if (getSetting('vendorSettings', 'vendorGreenUnidAll')) {
             _vendorItems[_vendorItems.length] = {
-                pattern: /^Crafted_(Jewelcrafting_Waist_Offense_3|Jewelcrafting_Neck_Defense_3|Jewelcrafting_Waist_Defense_3|Med_Armorsmithing_T3_Chain_Armor_Set_1|Med_Armorsmithing_T3_Chain_Pants2|Med_Armorsmithing_T3_Chain_Shirt2|Med_Armorsmithing_T3_Chain_Helm_Set_1|Med_Armorsmithing_T3_Chain_Pants|Med_Armorsmithing_T3_Chain_Boots_Set_1|Hvy_Armorsmithing_T3_Plate_Armor_Set_1|Hvy_Armorsmithing_T3_Plate_Pants2|Hvy_Armorsmithing_T3_Plate_Shirt2|Hvy_Armorsmithing_T3_Plate_Helm_Set_1|Hvy_Armorsmithing_T3_Plate_Boots_Set_1|Leatherworking_T3_Leather_Armor_Set_1|Leatherworking_T3_Leather_Pants2|Leatherworking_T3_Leather_Shirt2|Leatherworking_T3_Leather_Helm_Set_1|Leatherworking_T3_Leather_Boots_Set_1|Tailoring_T3_Cloth_Armor_Set_3|Tailoring_T3_Cloth_Armor_Set_2|Tailoring_T3_Cloth_Armor_Set_1|Tailoring_T3_Cloth_Pants2_Set2|Tailoring_T3_Cloth_Shirt2|Tailoring_T3_Cloth_Helm_Set_1|Artificing_T3_Pactblade_Temptation_5|Artificing_T3_Icon_Virtuous_5|Weaponsmithing_T3_Dagger_4)|^Potion_Unstable_([1-6])*$/,
+                pattern: /_Green_T[1-9]_Unid$/,
                 limit: 0
             };
         }
-        
+        if (getSetting('vendorSettings', 'vendorBlueUnidAll')) {
+            _vendorItems[_vendorItems.length] = {
+                pattern: /_Blue_T[1-9]_Unid$/,
+                limit: 0
+            };
+        }
+
+        if (getSetting('vendorSettings', 'vendorProfResults')) {
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^Crafted_(Jewelcrafting_Waist_Offense_3|Jewelcrafting_Neck_Defense_3|Jewelcrafting_Waist_Defense_3|Med_Armorsmithing_T3_Chain_Armor_Set_1|Med_Armorsmithing_T3_Chain_Pants2|Med_Armorsmithing_T3_Chain_Shirt2|Med_Armorsmithing_T3_Chain_Helm_Set_1|Med_Armorsmithing_T3_Chain_Pants|Med_Armorsmithing_T3_Chain_Boots_Set_1|Med_Armorsmithing_Pants_3|Med_Armorsmithing_Chain_Pants_3|Hvy_Armorsmithing_T3_Plate_Armor_Set_1|Hvy_Armorsmithing_T3_Plate_Pants2|Hvy_Armorsmithing_T3_Plate_Shirt2|Hvy_Armorsmithing_T3_Plate_Helm_Set_1|Hvy_Armorsmithing_T3_Plate_Boots_Set_1|Hvy_Armorsmithing_Pants_3|Leatherworking_T3_Leather_Armor_Set_1|Leatherworking_T3_Leather_Pants2|Leatherworking_T3_Leather_Shirt2|Leatherworking_T3_Leather_Helm_Set_1|Leatherworking_T3_Leather_Boots_Set_1|Leatherworking_Pants_3|Tailoring_T3_Cloth_Armor_Set_3|Tailoring_T3_Cloth_Armor_Set_2|Tailoring_T3_Cloth_Armor_Set_1|Tailoring_T3_Cloth_Pants2_Set2|Tailoring_T3_Cloth_Shirt2|Tailoring_T3_Cloth_Helm_Set_1|Tailoring_Pants_3|Artificing_T3_Pactblade_Temptation_5|Artificing_T3_Icon_Virtuous_5|Weaponsmithing_T3_Dagger_4)|^Potion_Unstable_([1-6])*$/,
+                limit: 0
+            };
+        }
+
         if (_vendorItems.length > 0) {
             console.log("Attempting to vendor selected items...");
             _sellCount = vendorItemsLimited(_vendorItems);
@@ -5632,10 +5919,8 @@ function addProfile(profession, profile, base){
                 'settings.profession.autoPurchase.tooltip': 'Automatically purchase required resources from gateway shop (100 at a time)',
                 'settings.profession.trainAssets': 'Train Assets',
                 'settings.profession.trainAssets.tooltip': 'Enable training/upgrading of asset worker resources',
-                'settings.profession.smartLeadership': 'Smart Asset allocation for leadership',
-                'settings.profession.smartLeadership.tooltip': 'Try to spread and fill non-common assets and supplement with common if needed',
-                'settings.profession.skipPatrol': 'Skip Patrol task if > 10 claims',
-                'settings.profession.skipPatrol.tooltip': 'Skip &quot;Patrol the Mines&quot; leadership task if there are more than 10 mining claims in the inventory (Never, Always, On AD profile, if Leadership level is &gt;= 20, or both of the above )',
+                'settings.profession.spreadLeadership': 'Spread Asset allocation for leadership',
+                'settings.profession.spreadLeadership.tooltip': 'Try to spread and fill non-common assets and supplement with common if needed',
                 'settings.profession.stopNotLeadership': 'Stop NON-Leadership task at level: ',
                 'settings.profession.stopNotLeadership.tooltip': 'Block All professions except Leadership at level 20 or 25 and above. Make sure you have Leadership set.',
                 'settings.profession.stopAlchemyAt3': 'Stop Alchemy leveling at level 3',
@@ -5711,10 +5996,8 @@ function addProfile(profession, profile, base){
                 'settings.profession.autoPurchase.tooltip': 'Automatycznie kupuj wynagane surowce profesji ze sklepu (po 100 sztuk równocześnie)',
                 'settings.profession.trainAssets': 'Trenuj pracowników',
                 'settings.profession.trainAssets.tooltip': 'Pozwól na trenowanie/ulepszanie zwykłych pracowników',
-                'settings.profession.smartLeadership': 'Inteligentny przydział pracowników do Przywództwa',
-                'settings.profession.smartLeadership.tooltip': 'Próbuje przydzielić jak najmniej zwykłych pracowników do zadań przywództwa',
-                'settings.profession.skipPatrol': 'Pomiń zadanie Patrol jeśli masz >10 zezwoleń',
-                'settings.profession.skipPatrol.tooltip': 'Pomiń zadanie Przywództwa &quot;Patroluj kopalnie&quot; jeśli masz więcej niż 10 pozwoleń górniczych (Nigdy, Zawsze, Gdy wybrany profil to AD, jeśli poziom Przywództwa is &gt;= 20, lub jeśli obydwa poprzednie)',
+                'settings.profession.spreadLeadership': 'Inteligentny przydział pracowników do Przywództwa',
+                'settings.profession.spreadLeadership.tooltip': 'Próbuje przydzielić jak najmniej zwykłych pracowników do zadań przywództwa',
                 'settings.profession.stopNotLeadership': 'Wstrzymaj profesje inne od Przywództwa na poziomie',
                 'settings.profession.stopNotLeadership.tooltip': 'Nie uruchamiaj zadań profesji innej od Przywództwa po osiągnięciu poziomu. Upewnij się, ze masz ustawione Przywództwo.',
                 'settings.profession.stopAlchemyAt3': 'Wstrzymaj naukę Alchemii na poziomie 3',

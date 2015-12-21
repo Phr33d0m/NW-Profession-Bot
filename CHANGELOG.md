@@ -1,6 +1,90 @@
 RELEASE NOTES
 =============
 
+4.7.13
+- Corrected Winterevent and Artificing profiles.
+
+4.7.12
+- Added crafted rank 3 pants to the vendor list.
+
+4.7.11
+- Fixed "Mass Silver & Yellow Vitriol", "Mass Red & Emerald Vitriol", and "Mass Orange & Purple Vitriol" in Alchemy.
+
+4.7.10
+- Added "Mass Silver & Yellow Vitriol", "Mass Red & Emerald Vitriol", and "Mass Orange & Purple Vitriol" to Alchemy.
+
+4.7.9
+- Added "Silver & Yellow Vitriol", "Red & Emerald Vitriol", and "Orange & Purple Vitriol" to Alchemy.
+
+4.7.8
+- Added all the different color Vitriol to the default tracked resources. (Click the "Reset to default" button under the "Tracked resources" tab to see the changes.)
+
+4.7.7
+- Rearranged default tracked resources. (Click the "Reset to default" button under the "Tracked resources" tab to see the changes.)
+
+4.7.4
+- Replaced "RP & Coffer" with "RP Coffer" in Leadership.
+- Added "RP Double Coffer" to Leadership.
+
+4.7.3
+- Replaced "Boxes" with "RP & Coffer" in Leadership.
+
+4.7.2
+- Added the tracked resource totals at the top of the list instead of at the bottom.
+
+4.7.1
+- Rearranged default tracked resources. (Click the "Reset to default" button under the "Tracked resources" tab to see the changes.)
+
+4.7
+---
+- Settings reset to defaults.
+- Added a lot of default tracked resources.
+- Added "Distilled Potion of Superior Healing" to Alchemy.
+- Added "RP (Stacked Assets)" to Leadership.
+
+4.6
+---
+- Removed AD profiles from leadership.
+- Added rare leadership task "Capture Bandit Leader".
+- Will now choose leadership assets based on speed first if spread leadership asset allocation is disabled.
+
+4.5
+---
+- Added option to vendor Unidentified Items.
+
+4.4.10
+---
+- Added option to vendor superior potions.
+- Made RP the default Leadership profile.
+
+4.4.9
+---
+- Added Leadership RP profile that focuses on Resonant Bags, Artifact Paraphenalia, and Thaumaturgic Bags instead of Enchanted Coffers.
+
+4.4.8
+---
+- Updated the Leadership RP Boxes profile to prioritise for Resonant Bags, Enchanted Coffers, and Artifact Paraphenalia.
+
+4.4.7
+---
+- Updated the Leadership RP Boxes profile to focus on XP until level 24, and then go for Resonant Bags, Thaumaturgic Bags, and Enchanted Coffers.
+
+4.4.6
+---
+- Added option to vendor Lesser Marks.
+
+4.4.5
+---
+- Added bound items to the potion and portable alter vendor lists.
+
+4.4.4
+---
+- Added option to vendor Invocation Blessings
+
+4.4.3
+---
+- Added Ardent Coins to the Resource Tracker
+
 4.4.2
 ---
 - Added option to auto vendor enchants & runes Rank 4
