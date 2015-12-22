@@ -2308,7 +2308,7 @@ function addProfile(profession, profile, base){
         defaultCharSettings.taskListSettingsManual[i].Profile = tasklist[0].profiles[0].profileName;
         defaultCharSettings.taskListSettingsManual[i].fillAssets = 0;
         defaultCharSettings.taskListSettingsManual[i].useGond = false;
-        defaultCharSettings.taskListSettingsManual[i].optPrio = false;
+        defaultCharSettings.taskListSettingsManual[i].optPrio = 0;
     }
     // 0 - default, 1 - do not fill, 2 - people (white to purple), 3 - people (purple to white), 4 - tools
     var charSlotsFillAssetsOptions = ['default', 'Do not fill', 'people (white to purple)', 'people (purple to white)', 'tools'];
