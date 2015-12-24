@@ -2223,7 +2223,7 @@ function addProfile(profession, profile, base){
             transferRate: 100,
             consolidate: false,
             minCharBalance: 0,
-            minToTransfer: 100,
+            minToTransfer: 10000,
         },
     };
 
@@ -2298,6 +2298,8 @@ function addProfile(profession, profile, base){
         defaultCharSettings.taskListSettings[task.taskListName].taskProfile = profileNames[0].value;
         defaultCharSettings.taskListSettings[task.taskListName].taskPriority = task.taskDefaultPriority;
         defaultCharSettings.taskListSettings[task.taskListName].stopTaskAtLevel = 0;
+        defaultCharSettings.taskListSettings[task.taskListName].useGond = false;
+        defaultCharSettings.taskListSettings[task.taskListName].optPrio = 0;        // optional slots priority 0 = assets,  1 = workers
     });
 
     for (var i = 0; i < 9; i++) {
@@ -2305,6 +2307,8 @@ function addProfile(profession, profile, base){
         defaultCharSettings.taskListSettingsManual[i].Profession = tasklist[0].taskListName;
         defaultCharSettings.taskListSettingsManual[i].Profile = tasklist[0].profiles[0].profileName;
         defaultCharSettings.taskListSettingsManual[i].fillAssets = 0;
+        defaultCharSettings.taskListSettingsManual[i].useGond = false;
+        defaultCharSettings.taskListSettingsManual[i].optPrio = 0;
     }
     // 0 - default, 1 - do not fill, 2 - people (white to purple), 3 - people (purple to white), 4 - tools
     var charSlotsFillAssetsOptions = ['default', 'Do not fill', 'people (white to purple)', 'people (purple to white)', 'tools'];
@@ -2608,8 +2612,13 @@ function addProfile(profession, profile, base){
 
                 console.log("Allocating per slot. For slot #" + slotIndex + " profession: " + _task.taskListName + " profile: " +  _profile.profileName);
                 unsafeWindow.client.professionFetchTaskList('craft_' + _task.taskName);
+                var tOptions = {
+                    useGond: charSettingsList[curCharName].taskListSettingsManual[slotIndex].useGond,
+                    optPrio: charSettingsList[curCharName].taskListSettingsManual[slotIndex].optPrio
+                }
+                
                 window.setTimeout(function() {
-                    createNextTask(_task, _profile, 0);
+                    createNextTask(_task, _profile, 0, tOptions);
                 }, delay.SHORT);
                 return true;
             }
@@ -2667,8 +2676,12 @@ function addProfile(profession, profile, base){
                                 return false;
                             }
                         } else {
+                            var tOptions = {
+                                useGond: charSettingsList[curCharName].taskListSettings[charTaskList[i].taskListName].useGond,
+                                optPrio: charSettingsList[curCharName].taskListSettings[charTaskList[i].taskListName].optPrio
+                            }
                             window.setTimeout(function() {
-                                createNextTask(charTaskList[i], profile, 0);
+                                createNextTask(charTaskList[i], profile, 0, tOptions);
                             }, delay.SHORT);
                             return true;
                           }
@@ -2867,12 +2880,12 @@ function addProfile(profession, profile, base){
      * @param {int} i The current task number being attempted
      */
 
-    function createNextTask(prof, profile, i) {
+    function createNextTask(prof, profile, i, addOptions) {
         // TODO: Use callback function
         if (!unsafeWindow.client.dataModel.model.craftinglist || unsafeWindow.client.dataModel.model.craftinglist === null || !unsafeWindow.client.dataModel.model.craftinglist['craft_' + prof.taskName] || unsafeWindow.client.dataModel.model.craftinglist['craft_' + prof.taskName] === null) {
             console.log('Task list not loaded for:', prof.taskName);
             window.setTimeout(function() {
-                createNextTask(prof, profile, i);
+                createNextTask(prof, profile, i, addOptions);
             }, delay.SHORT);
             return false;
         }
@@ -2928,7 +2941,11 @@ function addProfile(profession, profile, base){
                 var def = $.Deferred();
                 var buttonList = $('.taskdetails-assets:eq(1)').find("button");
                 if (buttonList.length && getSetting('professionSettings','fillOptionals')) {
-                    SelectItemFor(buttonList, 0, def, prof, taskName, prof.taskName, profile, level);
+                    var _options = {
+                        useGond: addOptions["useGond"],
+                        optPrio: addOptions["optPrio"]
+                    }
+                    SelectItemFor(buttonList, 0, def, prof, taskName, prof.taskName, profile, level, _options);
                 } else {
                     def.resolve();
                 }
@@ -2963,14 +2980,14 @@ function addProfile(profession, profile, base){
                         WaitForState("").done(function() {
                             // continue with the next one
                             console.log('Finding next task');
-                            createNextTask(prof, profile, i + 1);
+                            createNextTask(prof, profile, i + 1, addOptions);
                         });
                     }
                 });
             });
         } else {
             console.log('Finding next task');
-            createNextTask(prof, profile, i + 1);
+            createNextTask(prof, profile, i + 1, addOptions);
         }
     }
     /** Count resouce in bags
@@ -3237,11 +3254,17 @@ function addProfile(profession, profile, base){
      * @param {Deferred} jQuery Deferred object to resolve when all of the assets have been assigned
      */
 
-    function SelectItemFor(buttonListIn, i, def, prof, taskname, profname, profile, professionLevel) {
+    function SelectItemFor(buttonListIn, i, def, prof, taskname, profname, profile, professionLevel, options) {
         buttonListIn[i].click();
         WaitForState("").done(function() {
 
-            var $assets = $("div.modal-item-list a").has("img[src*='_Resource_'],img[src*='_Assets_'],img[src*='_Tools_'],img[src*='_Tool_'],img[src*='_Jewelersloupe_'],img[src*='_Bezelpusher_']"); //edited by RottenMind
+            var $assets;
+            if (options != null && options["useGond"]) {
+                $assets = $("div.modal-item-list a").has("img[src*='Hammer'],img[src*='_Resource_'],img[src*='_Assets_'],img[src*='_Tools_'],img[src*='_Tool_'],img[src*='_Jewelersloupe_'],img[src*='_Bezelpusher_']");
+            } 
+            else {
+                $assets = $("div.modal-item-list a").has("img[src*='_Resource_'],img[src*='_Assets_'],img[src*='_Tools_'],img[src*='_Tool_'],img[src*='_Jewelersloupe_'],img[src*='_Bezelpusher_']");
+            }
             var $persons = $("div.modal-item-list a").has("img[src*='_Follower_']");
             var quality = [".Mythic", ".Legendary", ".Special", ".Gold", ".Silver", ".Bronze"];
             var ic,
@@ -3294,11 +3317,21 @@ function addProfile(profession, profile, base){
 
             }
 
+            var $select1;
+            var $select2;
+            if (jQuery.isEmptyObject(options) || options["optPrio"] == 0)  { // quality over speed 
+                $select1 = $assets;
+                $select2 = $persons;
+            }  
+            else {
+                $select1 = $persons;
+                $select2 = $assets;
+            }
 
             // check resources & assets for best quality, in descending order
             if (!clicked) {
                 for (ic in quality) {
-                    $it = $assets.filter(quality[ic]);
+                    $it = $select1.filter(quality[ic]);
                     if ($it.length) {
                         $it[0].click();
                         clicked = true;
@@ -3310,7 +3343,7 @@ function addProfile(profession, profile, base){
             // if no asset was selected, check for persons for best speed, in descending order
             if (!clicked) {
                 for (ic in quality) {
-                    $it = $persons.filter(quality[ic]);
+                    $it = $select2.filter(quality[ic]);
                     if ($it.length) {
                         $it[0].click();
                         clicked = true;
@@ -3334,7 +3367,7 @@ function addProfile(profession, profile, base){
                 // Get the new set of select buttons created since the other ones are removed when the asset loads
                 var buttonList = $('.taskdetails-assets:eq(1)').find("button");
                 if (i < buttonList.length - 1) {
-                    SelectItemFor(buttonList, i + 1, def, prof, taskname, profname, profile, professionLevel);
+                    SelectItemFor(buttonList, i + 1, def, prof, taskname, profname, profile, professionLevel, options);
                 } else {
                     // Let main loop continue
                     def.resolve();
@@ -4918,7 +4951,7 @@ function addProfile(profession, profile, base){
                 var task_tab = addTab(char_tabs[0], "Tasks");
 
                 // Creating the Tasks custom tab
-                var tableHTML = $('<table><thead><tr><th>Task name</th><th># of slots</th><th>profile</th><th>priority</th><th>stop at lvl</th></tr></thead><tbody>');
+                var tableHTML = $('<table><thead><tr><th>Task name</th><th># of slots</th><th>profile</th><th>priority</th><th>optionals</th><th>gond</th><th>stop at lvl</th></tr></thead><tbody>');
                 
                 var _slotOptions = [];
                 for (var i = 0; i < 10; i++) 
@@ -4930,6 +4963,8 @@ function addProfile(profession, profile, base){
                 var _stopTaskAtLevelOptions = []; 
                     _stopTaskAtLevelOptions.push({name: 'none', value: 0}); 
                     for (var i = 1; i < 26; i++) _stopTaskAtLevelOptions.push({name: i, value: i});
+
+                var _optPrioOptions = [{name:'Quality',value:0},{name:'Speed',value:1}];                    
 
                 tasklist.forEach(function(task) {
                     if (!task.taskActive) return;
@@ -4943,11 +4978,15 @@ function addProfile(profession, profile, base){
                     var _slots = {scope: 'char_task', group: 'taskListSettings', name: task.taskListName, sub_name: 'taskSlots', opts: _slotOptions ,title: task.taskListName, type: 'select', pane: 'tasks1', tooltip: 'Number of slots to assign to ' + task.taskListName};
                     var _profile = {scope: 'char_task', group: 'taskListSettings', name: task.taskListName, sub_name: 'taskProfile', opts: _profileNames ,title: task.taskListName, type: 'select', pane: 'tasks1', tooltip: ''};
                     var _priority = {scope: 'char_task', group: 'taskListSettings', name: task.taskListName, sub_name: 'taskPriority', opts: _priorityOptions ,title: task.taskListName, type: 'select', pane: 'tasks1', tooltip: ''};
+                    var _optPrio = {scope: 'char_task', group: 'taskListSettings', name: task.taskListName, sub_name: 'optPrio', opts:  _optPrioOptions,title: task.taskListName, type: 'select', pane: 'tasks1', tooltip: ''};
+                    var _useGond = {scope: 'char_task', group: 'taskListSettings', name: task.taskListName, sub_name: 'useGond', title: task.taskListName, type: 'checkbox', pane: 'tasks1', tooltip: ''};
                     var _stop = {scope: 'char_task', group: 'taskListSettings', name: task.taskListName, sub_name: 'stopTaskAtLevel', opts: _stopTaskAtLevelOptions ,title: task.taskListName, type: 'select', pane: 'tasks1', tooltip: ''};                    
 
                     var _slt = createInput(_slots, charName, 'settingsInput', 'settingsLabel');
                     var _prf = createInput(_profile, charName, 'settingsInput', 'settingsLabel');
                     var _pr = createInput(_priority, charName, 'settingsInput', 'settingsLabel');
+                    var _optp = createInput(_optPrio, charName, 'settingsInput', 'settingsLabel');
+                    var _gnd = createInput(_useGond, charName, 'settingsInput', 'settingsLabel');
                     var _stp = createInput(_stop, charName, 'settingsInput', 'settingsLabel');
                     
                     var tr = $("<tr>");
@@ -4955,6 +4994,8 @@ function addProfile(profession, profile, base){
                     $("<td>").append(_slt.input).appendTo(tr);
                     $("<td>").append(_prf.input).appendTo(tr);
                     $("<td>").append(_pr.input).appendTo(tr);
+                    $("<td>").append(_optp.input).appendTo(tr);
+                    $("<td>").append(_gnd.input).appendTo(tr);
                     $("<td>").append(_stp.input).appendTo(tr);
                     tr.appendTo(tableHTML);
                 });
@@ -4964,7 +5005,7 @@ function addProfile(profession, profile, base){
                 // Manual Slots allocation tab
                 var task2_tab = addTab(char_tabs[0], "Manual Tasks");
                 
-                var tableHTML2 = $('<table><thead><tr><th>Slot #</th><th>Profession</th><th>Profile</th></tr></thead><tbody>');
+                var tableHTML2 = $('<table><thead><tr><th>Slot #</th><th>Profession</th><th>Profile</th><th>Optionals</th><th>Gond</th></tr></thead><tbody>');
 
                 var taskOpts = [];
                 tasklist.forEach(function(task) {
@@ -5005,11 +5046,21 @@ function addProfile(profession, profile, base){
                     var _profile = {scope: 'char_task', group: 'taskListSettingsManual', name: j, sub_name: 'Profile', opts: fillProfile($(_tsk.input).val()) ,title: '', type: 'select', pane: 'tasks2', tooltip: ''};
                     var _prf = createInput(_profile, charName, 'settingsInput taskListSettingsManual taskListSettingsManualProfile', 'settingsLabel');
                     
+                    var _optPrio = {scope: 'char_task', group: 'taskListSettingsManual', name: j, sub_name: 'optPrio', opts:  _optPrioOptions, title: '', type: 'select', pane: 'tasks2', tooltip: ''};
+                    var _useGond = {scope: 'char_task', group: 'taskListSettingsManual', name: j, sub_name: 'useGond', title: '', type: 'checkbox', pane: 'tasks2', tooltip: ''};
+                    
+                    var _optp = createInput(_optPrio, charName, 'settingsInput', 'settingsLabel');
+                    var _gnd = createInput(_useGond, charName, 'settingsInput', 'settingsLabel');
+                    
+                    
                     var tr = $("<tr>");
                     //$("<td>").append(_slt.label).appendTo(tr);
                     $("<td>").append(_tsk.label).appendTo(tr);
                     $("<td>").append(_tsk.input).appendTo(tr);
                     $("<td>").append(_prf.input).appendTo(tr);
+                    $("<td>").append(_optp.input).appendTo(tr);
+                    $("<td>").append(_gnd.input).appendTo(tr);
+                   
                     tr.appendTo(tableHTML2);
                 }
                 task2_tab.append(tableHTML2);
