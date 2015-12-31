@@ -454,8 +454,8 @@ function addProfile(profession, profile, base){
                 21: ["Leadership_Tier4_21_Training", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
                 22: ["Leadership_Tier4_21_Training", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
                 23: ["Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_21_Training", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                24: ["Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_21r_Killelemental", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_23r_Securepilgrimage"],
-                25: ["Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_21r_Killelemental", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_25_Battleelementalcultists", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier4_25r_Huntexperiment"],
+                24: ["Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_22_Guardclerics"],
+                25: ["Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_22_Guardclerics"],
             },
         }]
     };
@@ -464,26 +464,26 @@ function addProfile(profession, profile, base){
         "profileName": "RP Coffer",
             "level": {
                 "24": [
-                    "Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_24r_Killdragon",
-                    "Leadership_Tier4_24_Wizardsseneschal",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_23r_Securepilgrimage",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier4_22_Guardclerics"
+                    "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
+                    "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
+                    "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
+                    "Leadership_Tier4_21_Protectmagic", // Protect Magical Goods Market (Bandit Camp Clue, Thaumaturgic Bag) 12h
+                    "Leadership_Tier4_23_Guardnoble", // Guard Young Noble on Trip (Enchanted Coffer) 4h
+                        "Leadership_Tier4_23r_Securepilgrimage", // Provide Security For Pilgrims (Enchanted Coffer) Rare 8h
+                        "Leadership_Tier4_22_Guardclerics", // Guard Clerics of Ilmater (Artifact Paraphenalia) 8h
+                        "Leadership_Tier4_21r_Killelemental" // Kill Rogue Elemental (Thaumaturgic Bag) Rare 16h
                 ],
                 "25": [
-                    "Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_24r_Killdragon",
-                    "Leadership_Tier4_24_Wizardsseneschal",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_25_Battleelementalcultists",
-                    "Leadership_Tier4_23r_Securepilgrimage",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier4_22_Guardclerics",
-                    "Leadership_Tier4_25r_Huntexperiment"
+                    "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
+                    "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
+                    "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
+                    "Leadership_Tier4_21_Protectmagic", // Protect Magical Goods Market (Bandit Camp Clue, Thaumaturgic Bag) 12h
+                    "Leadership_Tier4_23_Guardnoble", // Guard Young Noble on Trip (Enchanted Coffer) 4h
+                        "Leadership_Tier4_25_Battleelementalcultists", // Battle Elemental Cultists (2xEnchanted Coffer) 12h
+                        "Leadership_Tier4_23r_Securepilgrimage", // Provide Security For Pilgrims (Enchanted Coffer) Rare 8h
+                        "Leadership_Tier4_22_Guardclerics", // Guard Clerics of Ilmater (Artifact Paraphenalia) 8h
+                        "Leadership_Tier4_25r_Huntexperiment", // Hunt down an escaped Experiment (Artifact Paraphenalia) 12h
+                        "Leadership_Tier4_21r_Killelemental" // Kill Rogue Elemental (Thaumaturgic Bag) Rare 16h
                 ]
             }
         }, 'RP');
@@ -492,26 +492,26 @@ function addProfile(profession, profile, base){
         "profileName": "RP Double Coffer",
             "level": {
                 "24": [
-                    "Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_24r_Killdragon",
-                    "Leadership_Tier4_24_Wizardsseneschal",
-                    "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_23r_Securepilgrimage",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier4_22_Guardclerics"
+                    "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
+                    "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
+                    "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
+                    "Leadership_Tier4_23_Guardnoble", // Guard Young Noble on Trip (Enchanted Coffer) 4h
+                    "Leadership_Tier4_23r_Securepilgrimage", // Provide Security For Pilgrims (Enchanted Coffer) Rare 8h
+                    "Leadership_Tier4_21_Protectmagic", // Protect Magical Goods Market (Bandit Camp Clue, Thaumaturgic Bag) 12h
+                        "Leadership_Tier4_22_Guardclerics", // Guard Clerics of Ilmater (Artifact Paraphenalia) 8h
+                        "Leadership_Tier4_21r_Killelemental" // Kill Rogue Elemental (Thaumaturgic Bag) Rare 16h
                 ],
                 "25": [
-                    "Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_24r_Killdragon",
-                    "Leadership_Tier4_24_Wizardsseneschal",
-                    "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_25_Battleelementalcultists",
-                    "Leadership_Tier4_23r_Securepilgrimage",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier4_22_Guardclerics",
-                    "Leadership_Tier4_25r_Huntexperiment"
+                    "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
+                    "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
+                    "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
+                    "Leadership_Tier4_23_Guardnoble", // Guard Young Noble on Trip (Enchanted Coffer) 4h
+                    "Leadership_Tier4_25_Battleelementalcultists", // Battle Elemental Cultists (2xEnchanted Coffer) 12h
+                        "Leadership_Tier4_23r_Securepilgrimage", // Provide Security For Pilgrims (Enchanted Coffer) Rare 8h
+                        "Leadership_Tier4_21_Protectmagic", // Protect Magical Goods Market (Bandit Camp Clue, Thaumaturgic Bag) 12h
+                        "Leadership_Tier4_22_Guardclerics", // Guard Clerics of Ilmater (Artifact Paraphenalia) 8h
+                        "Leadership_Tier4_25r_Huntexperiment", // Hunt down an escaped Experiment (Artifact Paraphenalia) 12h
+                        "Leadership_Tier4_21r_Killelemental" // Kill Rogue Elemental (Thaumaturgic Bag) Rare 16h
                 ]
             }
         }, 'RP');
@@ -520,26 +520,21 @@ function addProfile(profession, profile, base){
         "profileName": "RP (Stacked Assets)",
             "level": {
                 "24": [
-                    "Leadership_Tier4_24_Wizardsseneschal",
-                    "Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_24r_Killdragon",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier4_22_Guardclerics",
-                    "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_23r_Securepilgrimage"
+                    "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
+                    "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
+                    "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
+                    "Leadership_Tier4_21_Protectmagic", // Protect Magical Goods Market (Bandit Camp Clue, Thaumaturgic Bag) 12h
+                    "Leadership_Tier4_22_Guardclerics", // Guard Clerics of Ilmater (Artifact Paraphenalia) 8h
+                        "Leadership_Tier4_21r_Killelemental" // Kill Rogue Elemental (Thaumaturgic Bag) Rare 16h
                 ],
                 "25": [
-                    "Leadership_Tier4_24_Wizardsseneschal",
-                    "Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_24r_Killdragon",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier4_22_Guardclerics",
-                    "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_25_Battleelementalcultists",
-                    "Leadership_Tier4_23r_Securepilgrimage",
-                    "Leadership_Tier4_25r_Huntexperiment"
+                    "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
+                    "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
+                    "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
+                    "Leadership_Tier4_21_Protectmagic", // Protect Magical Goods Market (Bandit Camp Clue, Thaumaturgic Bag) 12h
+                    "Leadership_Tier4_22_Guardclerics", // Guard Clerics of Ilmater (Artifact Paraphenalia) 8h
+                        "Leadership_Tier4_25r_Huntexperiment", // Hunt down an escaped Experiment (Artifact Paraphenalia) 12h
+                        "Leadership_Tier4_21r_Killelemental" // Kill Rogue Elemental (Thaumaturgic Bag) Rare 16h
                 ]
             }
         }, 'RP');
@@ -548,26 +543,26 @@ function addProfile(profession, profile, base){
         "profileName": "RP Coffer (Stacked Assets)",
             "level": {
                 "24": [
-                    "Leadership_Tier4_24_Wizardsseneschal",
-                    "Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_24r_Killdragon",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_23r_Securepilgrimage",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier4_22_Guardclerics"
+                    "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
+                    "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
+                    "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
+                    "Leadership_Tier4_21_Protectmagic", // Protect Magical Goods Market (Bandit Camp Clue, Thaumaturgic Bag) 12h
+                    "Leadership_Tier4_23_Guardnoble", // Guard Young Noble on Trip (Enchanted Coffer) 4h
+                        "Leadership_Tier4_23r_Securepilgrimage", // Provide Security For Pilgrims (Enchanted Coffer) Rare 8h
+                        "Leadership_Tier4_22_Guardclerics", // Guard Clerics of Ilmater (Artifact Paraphenalia) 8h
+                        "Leadership_Tier4_21r_Killelemental" // Kill Rogue Elemental (Thaumaturgic Bag) Rare 16h
                 ],
                 "25": [
-                    "Leadership_Tier4_24_Wizardsseneschal",
-                    "Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_24r_Killdragon",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_25_Battleelementalcultists",
-                    "Leadership_Tier4_23r_Securepilgrimage",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier4_22_Guardclerics",
-                    "Leadership_Tier4_25r_Huntexperiment"
+                    "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
+                    "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
+                    "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
+                    "Leadership_Tier4_21_Protectmagic", // Protect Magical Goods Market (Bandit Camp Clue, Thaumaturgic Bag) 12h
+                    "Leadership_Tier4_23_Guardnoble", // Guard Young Noble on Trip (Enchanted Coffer) 4h
+                        "Leadership_Tier4_25_Battleelementalcultists", // Battle Elemental Cultists (2xEnchanted Coffer) 12h
+                        "Leadership_Tier4_23r_Securepilgrimage", // Provide Security For Pilgrims (Enchanted Coffer) Rare 8h
+                        "Leadership_Tier4_22_Guardclerics", // Guard Clerics of Ilmater (Artifact Paraphenalia) 8h
+                        "Leadership_Tier4_25r_Huntexperiment", // Hunt down an escaped Experiment (Artifact Paraphenalia) 12h
+                        "Leadership_Tier4_21r_Killelemental" // Kill Rogue Elemental (Thaumaturgic Bag) Rare 16h
                 ]
             }
         }, 'RP');
@@ -576,26 +571,26 @@ function addProfile(profession, profile, base){
         "profileName": "RP Double Coffer (Stacked Assets)",
             "level": {
                 "24": [
-                    "Leadership_Tier4_24_Wizardsseneschal",
-                    "Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_24r_Killdragon",
-                    "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_23r_Securepilgrimage",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier4_22_Guardclerics"
+                    "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
+                    "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
+                    "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
+                    "Leadership_Tier4_23_Guardnoble", // Guard Young Noble on Trip (Enchanted Coffer) 4h
+                    "Leadership_Tier4_23r_Securepilgrimage", // Provide Security For Pilgrims (Enchanted Coffer) Rare 8h
+                    "Leadership_Tier4_21_Protectmagic", // Protect Magical Goods Market (Bandit Camp Clue, Thaumaturgic Bag) 12h
+                        "Leadership_Tier4_22_Guardclerics", // Guard Clerics of Ilmater (Artifact Paraphenalia) 8h
+                        "Leadership_Tier4_21r_Killelemental" // Kill Rogue Elemental (Thaumaturgic Bag) Rare 16h
                 ],
                 "25": [
-                    "Leadership_Tier4_24_Wizardsseneschal",
-                    "Leadership_Tier4_22r_Capturebandithq",
-                    "Leadership_Tier4_24r_Killdragon",
-                    "Leadership_Tier4_23_Guardnoble",
-                    "Leadership_Tier4_25_Battleelementalcultists",
-                    "Leadership_Tier4_23r_Securepilgrimage",
-                    "Leadership_Tier4_21_Protectmagic",
-                    "Leadership_Tier4_21r_Killelemental",
-                    "Leadership_Tier4_22_Guardclerics",
-                    "Leadership_Tier4_25r_Huntexperiment"
+                    "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
+                    "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
+                    "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
+                    "Leadership_Tier4_23_Guardnoble", // Guard Young Noble on Trip (Enchanted Coffer) 4h
+                    "Leadership_Tier4_25_Battleelementalcultists", // Battle Elemental Cultists (2xEnchanted Coffer) 12h
+                        "Leadership_Tier4_23r_Securepilgrimage", // Provide Security For Pilgrims (Enchanted Coffer) Rare 8h
+                        "Leadership_Tier4_21_Protectmagic", // Protect Magical Goods Market (Bandit Camp Clue, Thaumaturgic Bag) 12h
+                        "Leadership_Tier4_22_Guardclerics", // Guard Clerics of Ilmater (Artifact Paraphenalia) 8h
+                        "Leadership_Tier4_25r_Huntexperiment", // Hunt down an escaped Experiment (Artifact Paraphenalia) 12h
+                        "Leadership_Tier4_21r_Killelemental" // Kill Rogue Elemental (Thaumaturgic Bag) Rare 16h
                 ]
             }
         }, 'RP');
