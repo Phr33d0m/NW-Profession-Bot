@@ -1,6 +1,9 @@
 RELEASE NOTES
 =============
 
+4.8
+- Added selection for optional assets and support for the Forgehammer of Gond.
+
 4.7.13
 - Corrected Winterevent and Artificing profiles.
 
