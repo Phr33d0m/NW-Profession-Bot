@@ -1,6 +1,12 @@
 RELEASE NOTES
 =============
 
+4.8
+- Added selection for optional assets and support for the Forgehammer of Gond.
+
+4.7.13
+- Corrected Winterevent and Artificing profiles.
+
 4.7.12
 - Added crafted rank 3 pants to the vendor list.
 
