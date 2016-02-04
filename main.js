@@ -1601,6 +1601,22 @@ function addProfile(profession, profile, base){
     });
 
     addProfile("Alchemy", {
+        profileName: "Batch of Minor Potions (Rank 3 result)",
+        level: {
+            3: [
+            "Alchemy_Tier1_Accuracy_Potion_Minor_Mass", // Batch of Minor Elixir of Accuracy Rare
+            "Alchemy_Tier1_Reflexes_Potion_Minor_Mass", // Batch of Minor Elixirs of Reflexes Rare
+            "Alchemy_Tier1_Force_Potion_Minor_Mass", // Batch of Minor Force Potions
+            "Alchemy_Tier1_Fortification_Potion_Minor_Mass", // Batch of Minor Fortification Potions
+            // "Alchemy_Tier1_Healing_Potion_Minor_Mass", // Batch of Minor Healing Potions
+            "Alchemy_Tier1_Rejuvenation_Potion_Minor_Mass", // Batch of Minor Rejuvenation Potions
+            "Alchemy_Tier1_Tidespan_Potion_Minor_Mass" // Batch of Minor Tidespan Potions
+            ],
+            4: '+25',
+        }
+    });
+
+    addProfile("Alchemy", {
         profileName: "Elemental Aggregate",
         level: {
             24: ["Alchemy_Tier4_Create_Elemental_Aggregate", "Alchemy_Tier4_Experiment_Rank25", "Alchemy_Tier4_Experimentation_Rank24", "Alchemy_Tier4_Aquaregia_2", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components", "Alchemy_Tier1_Gather_Basic"],
