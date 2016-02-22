@@ -3295,7 +3295,7 @@ function addProfile(profession, profile, base){
                     $select2 = $persons;
                     if (prof.taskName === "Leadership") {
                         $select1 = $persons;
-                        $select2 = [];
+                        $select2 = $persons;
                         
                     var T3_Epic = 0; var T3_Rare = 0; var T3_Uncommon = 0;    
                     unsafeWindow.client.dataModel.model.ent.main.inventory.notassignedslots
