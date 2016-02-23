@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.8
+// @version 4.8.1
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -2207,6 +2207,7 @@ function addProfile(profession, profile, base){
             vendorEnchR2: false,
             vendorEnchR3: false,
             vendorEnchR4: false,
+            vendorEnchR5: false,
             vendorLesserMarks: false,
         },
         professionSettings: {
@@ -2265,6 +2266,7 @@ function addProfile(profession, profile, base){
             vendorEnchR2: false,
             vendorEnchR3: false,
             vendorEnchR4: false,
+            vendorEnchR5: false,
             vendorLesserMarks: false,
         },
         professionSettings: {
@@ -2433,6 +2435,7 @@ function addProfile(profession, profile, base){
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorEnchR4',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 4',    tooltip:'Vendor all Rank 4 enchantments & runestones found in player bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorEnchR5',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 5',    tooltip:'Vendor all Rank 5 enchantments & runestones found in player bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorLesserMarks',    type:'checkbox', pane:'vend',   title:'Vendor Lesser Marks',    tooltip:'Vendor all Lesser Marks found in player bags'},
         {scope: 'account', group: 'consolidationSettings', name:'consolidate',    type:'checkbox', pane:'bank', title: tr('settings.consolid.consolidate'),    tooltip: tr('settings.consolid.consolidate.tooltip') ,border:true},
         {scope: 'account', group: 'consolidationSettings', name:'bankCharName',   type:'text',     pane:'bank', title: tr('settings.consolid.bankerName'),     tooltip: tr('settings.consolid.bankerName.tooltip')},
@@ -2492,6 +2495,7 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR2',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 2',    tooltip:'Vendor all Rank 2 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR3',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 3',    tooltip:'Vendor all Rank 3 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorEnchR4',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 4',    tooltip:'Vendor all Rank 4 enchantments & runestones found in player bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorEnchR5',    type:'checkbox', pane:'vend',   title:'Vendor enchants & runes Rank 5',    tooltip:'Vendor all Rank 5 enchantments & runestones found in player bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorLesserMarks',    type:'checkbox', pane:'vend',   title:'Vendor Lesser Marks',    tooltip:'Vendor all Lesser Marks found in player bags'},
         {scope: 'char', group: 'consolidationSettings', name:'consolidate',    type:'checkbox', pane:'bank', title: tr('settings.consolid.consolidate'),    tooltip: tr('settings.consolid.consolidate.tooltip'), border:true},
         {scope: 'char', group: 'consolidationSettings', name:'minToTransfer',  type:'text',     pane:'bank', title: tr('settings.consolid.minToTransfer'),  tooltip: tr('settings.consolid.minToTransfer.tooltip')},
@@ -5873,6 +5877,16 @@ function addProfile(profession, profile, base){
             };
             _vendorItems[_vendorItems.length] = {
                 pattern: /^T4_Runestone/,
+                limit: 0
+            };
+        }
+        if (getSetting('vendorSettings', 'vendorEnchR5')) {
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^T5_Enchantment/,
+                limit: 0
+            };
+            _vendorItems[_vendorItems.length] = {
+                pattern: /^T5_Runestone/,
                 limit: 0
             };
         }
