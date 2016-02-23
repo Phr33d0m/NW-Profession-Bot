@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.8.1
+// @version 4.8.2
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -3617,7 +3617,7 @@ function addProfile(profession, profile, base){
         var _tmpBag = [];
         var _profitems = [];
         // Pattern for items to leave out of auto vendoring (safeguard)
-        var _excludeItems = /(Gemfood|Gem_Upgrade_Resource_R[3-9]|Artifact(?!_Upgrade_Resource_R1_)|Hoard|Coffer|Fuse|Ward|Preservation|Armor_Enhancement|Weapon_Enhancement|T[5-9]_Enchantment|T[5-9]_Runestones|T10_Enchantment|T10_Runestones|4c_Personal|Item_Potion_Companion_Xp|Gateway_Rewardpack|Consumable_Id_Scroll|Dungeon_Delve_Key)/; // edited by RottenMind 17.01.2015
+        var _excludeItems = /(Gemfood|Gem_Upgrade_Resource_R[3-9]|Artifact(?!_Upgrade_Resource_R1_)|Hoard|Coffer|Fuse|Ward|Preservation|Armor_Enhancement|Weapon_Enhancement|T[6-9]_Enchantment|T[1-9][0-9]_Enchantment|T[6-9]_Runestone|T[1-9][0-9]_Runestone|4c_Personal|Item_Potion_Companion_Xp|Gateway_Rewardpack|Consumable_Id_Scroll|Dungeon_Delve_Key)/; // edited by RottenMind 17.01.2015
 
             /** Profession leveling result item cleanup logic for T1-4 crafted results
              * Created by RM on 14.1.2015.
