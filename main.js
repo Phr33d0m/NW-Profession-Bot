@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.8.2
+// @version 4.8.3
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -5659,7 +5659,8 @@ function addProfile(profession, profile, base){
         // Resource tracker update.
         html = "<table class='withRotation'><tr><th class='rotate'><div><span>Character Name</div></span></th>";
         html += "<th class='rotate'><div><span>Overflow</div></span></th>";
-        html += "<th class='rotate'><div><span>Empty bag slots (total)</div></span></th>";
+        html += "<th class='rotate'><div><span>Empty bag slots</div></span></th>";
+        html += "<th class='rotate'><div><span>Total bag slots</div></span></th>";
         html += "<th class='rotate'><div><span>Empty resources slots</div></span></th>";
         html += "<th class='rotate'><div><span>Celestials</div></span></th>";
         html += "<th class='rotate'><div><span>Ardents</div></span></th>";
@@ -5676,7 +5677,10 @@ function addProfile(profession, profile, base){
             css_class = (charStatisticsList[charName].general.overflow > 0) ? " warning1 " : "";
             endhtml += '<td class=\"' + css_class + '\">' + charStatisticsList[charName].general.overflow + '</td>';
             css_class = ((charStatisticsList[charName].general.emptyBagSlots / charStatisticsList[charName].general.bagSlots *100) < 5) ? " warning2 " : "";
-            endhtml += '<td class=\"' + css_class + '\">' + charStatisticsList[charName].general.emptyBagSlots + ' (' + charStatisticsList[charName].general.bagSlots + ')' + '</td>';
+            endhtml += '<td class=\"' + css_class + '\">' + charStatisticsList[charName].general.emptyBagSlots + '</td>';
+            
+            endhtml += '<td>' + charStatisticsList[charName].general.bagSlots + '</td>';
+            
             css_class = ((charStatisticsList[charName].general.emptyResourceSlots / charStatisticsList[charName].general.resourceSlots *100) < 10) ? " warning2 " : "";
             css_class = ((charStatisticsList[charName].general.emptyResourceSlots / charStatisticsList[charName].general.resourceSlots *100) < 5) ? " warning1 " : css_class;
             endhtml += '<td class=\"' + css_class + '\">' + charStatisticsList[charName].general.emptyResourceSlots + '</td>';
@@ -5694,7 +5698,7 @@ function addProfile(profession, profile, base){
         })
         endhtml += "</table>";
 
-        html += "<tr class=\"totals\"><td>Totals:</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td>";
+        html += "<tr class=\"totals\"><td>Totals:</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td>";
         for (var i = 0; i < total.length; i++) html += "<td>" + total[i] + "</td>";
         html += "</tr>";
 
