@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.8.3
+// @version 4.8.4
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -5683,8 +5683,8 @@ function addProfile(profession, profile, base){
             css_class = (charStatisticsList[charName].general.celestial >= 11)  ? " warning2 " : "";
             css_class = (charStatisticsList[charName].general.celestial == 14)  ? " warning1 " : css_class;
             endhtml += '<td class=\"' + css_class + '\">' + charStatisticsList[charName].general.celestial + '</td>';
-            css_class = (charStatisticsList[charName].general.ardent >= 450)  ? " warning2 " : "";
-            css_class = (charStatisticsList[charName].general.ardent == 490)  ? " warning1 " : css_class;
+            css_class = (charStatisticsList[charName].general.ardent >= 270)  ? " warning2 " : "";
+            css_class = (charStatisticsList[charName].general.ardent >= 360)  ? " warning1 " : css_class;
             endhtml += '<td class=\"' + css_class + '\">' + charStatisticsList[charName].general.ardent + '</td>';
             charStatisticsList[charName].trackedResources.forEach(function(count, idx) {
                 endhtml += '<td>' + count + '</td>';
