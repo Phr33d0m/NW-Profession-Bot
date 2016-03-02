@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.8.4
+// @version 4.8.5
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -465,8 +465,8 @@ function addProfile(profession, profile, base){
                     "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
                     "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
                     "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
-                    "Leadership_Tier4_21_Protectmagic", // Protect Magical Goods Market (Bandit Camp Clue, Thaumaturgic Bag) 12h
                     "Leadership_Tier4_23_Guardnoble", // Guard Young Noble on Trip (Enchanted Coffer) 4h
+                    "Leadership_Tier4_21_Protectmagic", // Protect Magical Goods Market (Bandit Camp Clue, Thaumaturgic Bag) 12h
                         "Leadership_Tier4_23r_Securepilgrimage", // Provide Security For Pilgrims (Enchanted Coffer) Rare 8h
                         "Leadership_Tier4_22_Guardclerics", // Guard Clerics of Ilmater (Artifact Paraphenalia) 8h
                         "Leadership_Tier4_21r_Killelemental" // Kill Rogue Elemental (Thaumaturgic Bag) Rare 16h
@@ -475,8 +475,8 @@ function addProfile(profession, profile, base){
                     "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
                     "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
                     "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
-                    "Leadership_Tier4_21_Protectmagic", // Protect Magical Goods Market (Bandit Camp Clue, Thaumaturgic Bag) 12h
                     "Leadership_Tier4_23_Guardnoble", // Guard Young Noble on Trip (Enchanted Coffer) 4h
+                    "Leadership_Tier4_21_Protectmagic", // Protect Magical Goods Market (Bandit Camp Clue, Thaumaturgic Bag) 12h
                         "Leadership_Tier4_25_Battleelementalcultists", // Battle Elemental Cultists (2xEnchanted Coffer) 12h
                         "Leadership_Tier4_23r_Securepilgrimage", // Provide Security For Pilgrims (Enchanted Coffer) Rare 8h
                         "Leadership_Tier4_22_Guardclerics", // Guard Clerics of Ilmater (Artifact Paraphenalia) 8h
@@ -544,8 +544,8 @@ function addProfile(profession, profile, base){
                     "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
                     "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
                     "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
-                    "Leadership_Tier4_21_Protectmagic", // Protect Magical Goods Market (Bandit Camp Clue, Thaumaturgic Bag) 12h
                     "Leadership_Tier4_23_Guardnoble", // Guard Young Noble on Trip (Enchanted Coffer) 4h
+                    "Leadership_Tier4_21_Protectmagic", // Protect Magical Goods Market (Bandit Camp Clue, Thaumaturgic Bag) 12h
                         "Leadership_Tier4_23r_Securepilgrimage", // Provide Security For Pilgrims (Enchanted Coffer) Rare 8h
                         "Leadership_Tier4_22_Guardclerics", // Guard Clerics of Ilmater (Artifact Paraphenalia) 8h
                         "Leadership_Tier4_21r_Killelemental" // Kill Rogue Elemental (Thaumaturgic Bag) Rare 16h
@@ -554,8 +554,8 @@ function addProfile(profession, profile, base){
                     "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
                     "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
                     "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
-                    "Leadership_Tier4_21_Protectmagic", // Protect Magical Goods Market (Bandit Camp Clue, Thaumaturgic Bag) 12h
                     "Leadership_Tier4_23_Guardnoble", // Guard Young Noble on Trip (Enchanted Coffer) 4h
+                    "Leadership_Tier4_21_Protectmagic", // Protect Magical Goods Market (Bandit Camp Clue, Thaumaturgic Bag) 12h
                         "Leadership_Tier4_25_Battleelementalcultists", // Battle Elemental Cultists (2xEnchanted Coffer) 12h
                         "Leadership_Tier4_23r_Securepilgrimage", // Provide Security For Pilgrims (Enchanted Coffer) Rare 8h
                         "Leadership_Tier4_22_Guardclerics", // Guard Clerics of Ilmater (Artifact Paraphenalia) 8h
