@@ -3564,7 +3564,7 @@ function addProfile(profession, profile, base){
                 console.log("Canceling ZAX orders");
 
                 var charDiamonds = parseInt(unsafeWindow.client.dataModel.model.ent.main.currencies.diamonds);
-                var ZenRate = parseInt(getSetting('consolidationSettings','transferRate'));
+                var ZenRate = parseInt(accountSettings.consolidationSettings.transferRate);
 
                 // cycle through the zax listings
                 unsafeWindow.client.dataModel.model.exchangeaccountdata.openorders.forEach(function(item) {
@@ -4501,7 +4501,7 @@ function addProfile(profession, profile, base){
                 #dialog-inventory { overflow-y: scroll; font: 10px Arial; } #dialog-inventory table { width: 100% } #dialog-inventory table th { text-align: left; font-weight: bold; }\
                 .slt_None {color: red;} .slt_Lead {color: blue;} .slt_Alch {color: green;} .slt_Jewe {color: gold;} .slt_Leat {color: brown;}\
                 #copy_settings_to { width: 200px; height: 350px; margin: 5px 0;} #copy_settings_from { margin: 5px 0;}\
-                .warning1 { color: red; } .warning2 { color: orange; }\
+                .warning1 { color: red; } .warning2 { color: orange; } .warning3 { color: green; }\
                 .profileInput { width: 150px; } label.settingsTaskName { min-width: 100px; }\
                 ");
             
@@ -5683,8 +5683,10 @@ function addProfile(profession, profile, base){
             css_class = (charStatisticsList[charName].general.celestial >= 11)  ? " warning2 " : "";
             css_class = (charStatisticsList[charName].general.celestial == 14)  ? " warning1 " : css_class;
             endhtml += '<td class=\"' + css_class + '\">' + charStatisticsList[charName].general.celestial + '</td>';
-            css_class = (charStatisticsList[charName].general.ardent >= 270)  ? " warning2 " : "";
-            css_class = (charStatisticsList[charName].general.ardent >= 360)  ? " warning1 " : css_class;
+            
+            css_class = (charStatisticsList[charName].general.ardent >= 270)  ? " warning3 " : "";
+            css_class = (charStatisticsList[charName].general.ardent >= 360)  ? " warning2 " : css_class;
+            css_class = (charStatisticsList[charName].general.ardent >= 480)  ? " warning1 " : css_class;
             endhtml += '<td class=\"' + css_class + '\">' + charStatisticsList[charName].general.ardent + '</td>';
             charStatisticsList[charName].trackedResources.forEach(function(count, idx) {
                 endhtml += '<td>' + count + '</td>';
