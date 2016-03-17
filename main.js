@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.8.10
+// @version 4.8.9
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -2414,7 +2414,7 @@ function addProfile(profession, profile, base){
         {scope: 'account', group: 'vendorSettings', name:'vendorGreenUnidAll',  type:'checkbox',     pane:'vend',   title:'Vendor All Green Unidentified Items',     tooltip:'Vendor all green unidentified items'},
         {scope: 'account', group: 'vendorSettings', name:'vendorBlueUnidAll',  type:'checkbox',     pane:'vend',   title:'Vendor All Blue Unidentified Items',     tooltip:'Vendor all blue unidentified items'},
         {scope: 'account', group: 'vendorSettings', name:'vendorInvocationBlessingsAll',  type:'checkbox',     pane:'vend',   title:'Vendor All Invocation Blessings',     tooltip:'Vendor all Invocation Blessings'},
-        {scope: 'account', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Node Kit Stacks',  tooltip:'Limit skill kits stacks to 80, vendor kits unusable by class, remove all if player has one bag or full bags'},
+        {scope: 'account', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Node Kit Stacks',  tooltip:'Limit skill kits stacks to 50, vendor kits unusable by class, remove all if player has one bag or full bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorAltarsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Altar Stacks',  tooltip:'Limit Altars to 80,remove all if player has one bag or full bags'},
         {scope: 'account', group: 'vendorSettings', name:'vendorKitsAll',   type:'checkbox', pane:'vend',   title:'Vendor All Node Kits',   tooltip:'Sell ALL skill kits.'},
         {scope: 'account', group: 'vendorSettings', name:'vendorAltarsAll', type:'checkbox', pane:'vend',   title:'Vendor All Altar',       tooltip:'Sell ALL Altars.'},
@@ -2474,7 +2474,7 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'vendorSettings', name:'vendorGreenUnidAll',  type:'checkbox',     pane:'vend',   title:'Vendor All Green Unidentified Items',     tooltip:'Vendor all green unidentified items'},
         {scope: 'char', group: 'vendorSettings', name:'vendorBlueUnidAll',  type:'checkbox',     pane:'vend',   title:'Vendor All Blue Unidentified Items',     tooltip:'Vendor all blue unidentified items'},
         {scope: 'char', group: 'vendorSettings', name:'vendorInvocationBlessingsAll',  type:'checkbox',     pane:'vend',   title:'Vendor All Invocation Blessings',     tooltip:'Vendor All Invocation Blessings'},
-        {scope: 'char', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Node Kit Stacks',  tooltip:'Limit skill kits stacks to 80, vendor kits unusable by class, remove all if player has one bag or full bags'},
+        {scope: 'char', group: 'vendorSettings', name:'vendorKitsLimit', type:'checkbox', pane:'vend',   title:'Vendor/Maintain Node Kit Stacks',  tooltip:'Limit skill kits stacks to 50, vendor kits unusable by class, remove all if player has one bag or full bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorAltarsLimit', type:'checkbox', pane:'vend', title:'Vendor/Maintain Altar Stacks',  tooltip:'Limit Altars to 80,remove all if player has one bag or full bags'},
         {scope: 'char', group: 'vendorSettings', name:'vendorKitsAll',   type:'checkbox', pane:'vend',   title:'Vendor All Node Kits',   tooltip:'Sell ALL skill kits.'},
         {scope: 'char', group: 'vendorSettings', name:'vendorAltarsAll', type:'checkbox', pane:'vend',   title:'Vendor All Altar',       tooltip:'Sell ALL Altars.'},
@@ -5821,7 +5821,7 @@ function addProfile(profession, profile, base){
         if (getSetting('vendorSettings', 'vendorKitsLimit')) {
             _vendorItems[_vendorItems.length] = {
                 pattern: /^Item_Consumable_Skill/,
-                limit: 80
+                limit: 50
             };
         }
         if (getSetting('vendorSettings', 'vendorAltarsLimit')) {
