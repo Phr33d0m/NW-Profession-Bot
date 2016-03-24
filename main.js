@@ -24,7 +24,7 @@
 /*
 
 Developers & Contributors
-- BigRedBrent
+- BigRedBot
 - Bluep
 - dlebedynskyi
 - Frankescript
