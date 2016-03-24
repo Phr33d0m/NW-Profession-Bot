@@ -169,7 +169,7 @@ RELEASE NOTES
 - Added more menu options for Skip "Patrol the Mines" to allow more flexability (Until per char options implemented).
 - Better use of leadership assets (white used only if heros, adventurers & man-at-arms to low). WloBeb
 - Added level +20 tasks for Leadership, Mailsmithing, Jewelcrafting by dlebedynskyi 
-- Fix the AD counter when AD is in ZEX transition by BigRedBrent
+- Fix the AD counter when AD is in ZEX transition by BigRedBot
 - Added overview tabs for profession levels and profession slots
 - More info in the Counter Tab
 - Added Resources overview
