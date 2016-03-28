@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.8.11
+// @version 4.8.12
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -1061,7 +1061,7 @@ function addProfile(profession, profile, base){
 
     addProfile("Mailsmithing", {
         profileName: "Wondrous Sprocket",
-        isProfileActive: false,
+        isProfileActive: true,
         level: {
             6: ["Med_Armorsmithing_Tier1_Event_Gond"],
             7: "+25",            
@@ -1207,7 +1207,7 @@ function addProfile(profession, profile, base){
 
     addProfile("Platesmithing", {
         profileName: "Wondrous Sprocket",
-        isProfileActive: false,
+        isProfileActive: true,
         level: {
             6: ["Hvy_Armorsmithing_Tier1_Event_Gond"],
             7: "+25",
@@ -1350,7 +1350,7 @@ function addProfile(profession, profile, base){
 
     addProfile("Leatherworking", {
         profileName: "Wondrous Sprocket",
-        isProfileActive: false,
+        isProfileActive: true,
         level: {
             6: ["Leatherworking_Tier1_Event_Gond"],
             7: "+25",
@@ -1428,7 +1428,7 @@ function addProfile(profession, profile, base){
 
     addProfile("Tailoring", {
         profileName: "Wondrous Sprocket",
-        isProfileActive: false,
+        isProfileActive: true,
         level: {
             6: ["Tailoring_Tier1_Event_Gond"],
             7: "+25",
@@ -1479,6 +1479,16 @@ function addProfile(profession, profile, base){
     };
 
     addProfile("Artificing", {
+        profileName: "Surplus Equipment",
+        isProfileActive: true,
+        level: {
+            23: ["Artificing_Voucher_Gear_T4", "Artificing_Voucher_Gear_T3", "Artificing_Voucher_Gear_T2", "Artificing_Voucher_Gear_T1", "Artificing_Tier4_Gather_Basic"],
+            24: ["Artificing_Voucher_Gear_T4", "Artificing_Voucher_Gear_T3", "Artificing_Voucher_Gear_T2", "Artificing_Voucher_Gear_T1", "Artificing_Tier4_Gather_Basic"],
+            25: ["Artificing_Voucher_Gear_T4", "Artificing_Voucher_Gear_T3", "Artificing_Voucher_Gear_T2", "Artificing_Voucher_Gear_T1", "Artificing_Tier4_Refine_Basic", "Artificing_Tier4_Gather_Basic"],
+        }
+    });
+
+    addProfile("Artificing", {
         profileName: "mass refining",
         isProfileActive: true,
         useMassTask: true,
@@ -1497,7 +1507,7 @@ function addProfile(profession, profile, base){
 
     addProfile("Artificing", {
         profileName: "Wondrous Sprocket",
-        isProfileActive: false,
+        isProfileActive: true,
         level: {
             6: ["Artificing_Tier1_Event_Gond"],
             7: "+25",
@@ -1566,7 +1576,7 @@ function addProfile(profession, profile, base){
 
     addProfile("Weaponsmithing", {
         profileName: "Wondrous Sprocket",
-        isProfileActive: false,
+        isProfileActive: true,
         level: {
             6: ["Weaponsmithing_Tier1_Event_Gond"],
             7: "+25",
@@ -1768,7 +1778,7 @@ function addProfile(profession, profile, base){
 
     addProfile("Alchemy", {
         profileName: "Wondrous Sprocket",
-        isProfileActive: false,
+        isProfileActive: true,
         level: {
             6: ["Alchemy_Tier1_Event_Gond"],
             7: "+25",
