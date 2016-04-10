@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.8.12
+// @version 4.8.13
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -1917,6 +1917,10 @@ function addProfile(profession, profile, base){
         name: 'Item_Potion_Xp_Account',
         bank: false, unbound: true, btc: false, bta: true
     }, {
+        fname: 'Dragon Egg',
+        name: 'Crafting_Resource_Dragon_Egg',
+        bank: false, unbound: true, btc: false, bta: false
+    }, {
         fname: 'Unified Elements',
         name: 'Crafting_Resource_Elemental_Unified',
         bank: false, unbound: true, btc: false, bta: false
@@ -3808,14 +3812,14 @@ function addProfile(profession, profile, base){
 
         if (getSetting('generalSettings','openRewards')) {
             var _pbags = unsafeWindow.client.dataModel.model.ent.main.inventory.playerbags;
-            var _cRewardPat = /Reward_Item_Chest|Gateway_Rewardpack/;
+            var _cRewardPat = /Reward_Item_Chest|Gateway_Rewardpack|Rewardpack_Invocation_Mechanical/;
             console.log("Opening Rewards");
             $.each(_pbags, function(bi, bag) {
                 bag.slots.forEach(function(slot) {
                     if (slot && _cRewardPat.test(slot.name)) {
                         if (slot.count >= 99)
                             slot.count = 99;
-                        
+
                         var reserve = getSetting('generalSettings', 'keepOneUnopened') ? 1 : 0;
                         for (i = 1; i <= (slot.count - reserve); i++) {
                             window.setTimeout(function() {
