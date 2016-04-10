@@ -10,6 +10,7 @@ RELEASE NOTES
 - Will now vendor rank 24 crafted jewelcrafting items.
 - Added Surplus Equipment to Artificing.
 - Will now also open the Mechanical Pack with the open rewards option.
+
 Tracked resources: 
 - Added a counter for total bag space. 
 - Counter for resource bags.
