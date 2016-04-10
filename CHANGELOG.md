@@ -11,11 +11,11 @@ RELEASE NOTES
 - Added Surplus Equipment to Artificing.
 - Will now also open the Mechanical Pack with the open rewards option.
 - Tracked resources: 
-..* Added a counter for total bag space. 
-..* Counter for resource bags.
-..* Column for overflow bag.
-..* Added Dragon Eggs to the default tracked resources.
-..* Added color coding for resources at or near specific limits.
+... Added a counter for total bag space. 
+... Counter for resource bags.
+... Column for overflow bag.
+... Added Dragon Eggs to the default tracked resources.
+... Added color coding for resources at or near specific limits.
 
 4.8
 - Added selection for optional assets and support for the Forgehammer of Gond.
