@@ -1,6 +1,9 @@
 RELEASE NOTES
 =============
 
+4.9.1
+- Added rare rough astral diamond tasks to default Leadership profiles.
+
 4.9
 - More optional assets options.
 - Added option to vendor rank 5 enchantments.
