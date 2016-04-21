@@ -1,6 +1,9 @@
 RELEASE NOTES
 =============
 
+4.9.2
+- Removed rare rough astral diamond tasks from default Leadership profiles.
+
 4.9.1
 - Added rare rough astral diamond tasks to default Leadership profiles.
 

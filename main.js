@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.9.1
+// @version 4.9.2
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -453,8 +453,8 @@ function addProfile(profession, profile, base){
                 21: ["Leadership_Tier4_21_Training", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier3_13_Training", "Leadership_Tier1_5_Explore", "Leadership_Tier1_4_Protect", "Leadership_Tier2_7_Training"],
                 22: ["Leadership_Tier4_21_Training", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
                 23: ["Leadership_Tier4_23_Guardnoble", "Leadership_Tier4_21_Training", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_22_Guardclerics", "Leadership_Tier4_23r_Securepilgrimage", "Leadership_Tier3_13_Patrol", "Leadership_Tier2_9_Chart", "Leadership_Tier1_5_Explore"],
-                24: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_22_Guardclerics"],
-                25: ["Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", "Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_22_Guardclerics"],
+                24: ["Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_22_Guardclerics"],
+                25: ["Leadership_Tier4_22r_Capturebandithq", "Leadership_Tier4_24r_Killdragon", "Leadership_Tier4_24_Wizardsseneschal", "Leadership_Tier4_21_Protectmagic", "Leadership_Tier4_22_Guardclerics"],
             },
         }]
     };
@@ -464,7 +464,6 @@ function addProfile(profession, profile, base){
         //"profileDescription": "Does Resonance Stones, Enchanted Coffers and Thaumaturgic Stones.",
             "level": {
                 "24": [
-                    "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", // Rare Rough Astral Diamond Tasks (1,600 Rough Astral Diamonds) Rare 12h
                     "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
                     "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
                     "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
@@ -475,7 +474,6 @@ function addProfile(profession, profile, base){
                         "Leadership_Tier4_21r_Killelemental" // Kill Rogue Elemental (Thaumaturgic Bag) Rare 16h
                 ],
                 "25": [
-                    "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", // Rare Rough Astral Diamond Tasks (1,600 Rough Astral Diamonds) Rare 12h
                     "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
                     "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
                     "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
@@ -495,7 +493,6 @@ function addProfile(profession, profile, base){
         //"profileDescription": "Does Resonance Stones and Enchanted Coffers.",
             "level": {
                 "24": [
-                    "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", // Rare Rough Astral Diamond Tasks (1,600 Rough Astral Diamonds) Rare 12h
                     "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
                     "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
                     "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
@@ -506,7 +503,6 @@ function addProfile(profession, profile, base){
                         "Leadership_Tier4_21r_Killelemental" // Kill Rogue Elemental (Thaumaturgic Bag) Rare 16h
                 ],
                 "25": [
-                    "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", // Rare Rough Astral Diamond Tasks (1,600 Rough Astral Diamonds) Rare 12h
                     "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
                     "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
                     "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
@@ -527,7 +523,6 @@ function addProfile(profession, profile, base){
             "level": {
                 "24": [
                     "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
-                    "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", // Rare Rough Astral Diamond Tasks (1,600 Rough Astral Diamonds) Rare 12h
                     "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
                     "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
                     "Leadership_Tier4_21_Protectmagic", // Protect Magical Goods Market (Bandit Camp Clue, Thaumaturgic Bag) 12h
@@ -536,7 +531,6 @@ function addProfile(profession, profile, base){
                 ],
                 "25": [
                     "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
-                    "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", // Rare Rough Astral Diamond Tasks (1,600 Rough Astral Diamonds) Rare 12h
                     "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
                     "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
                     "Leadership_Tier4_21_Protectmagic", // Protect Magical Goods Market (Bandit Camp Clue, Thaumaturgic Bag) 12h
@@ -553,7 +547,6 @@ function addProfile(profession, profile, base){
             "level": {
                 "24": [
                     "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
-                    "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", // Rare Rough Astral Diamond Tasks (1,600 Rough Astral Diamonds) Rare 12h
                     "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
                     "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
                     "Leadership_Tier4_23_Guardnoble", // Guard Young Noble on Trip (Enchanted Coffer) 4h
@@ -564,7 +557,6 @@ function addProfile(profession, profile, base){
                 ],
                 "25": [
                     "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
-                    "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", // Rare Rough Astral Diamond Tasks (1,600 Rough Astral Diamonds) Rare 12h
                     "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
                     "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
                     "Leadership_Tier4_23_Guardnoble", // Guard Young Noble on Trip (Enchanted Coffer) 4h
@@ -584,7 +576,6 @@ function addProfile(profession, profile, base){
             "level": {
                 "24": [
                     "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
-                    "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", // Rare Rough Astral Diamond Tasks (1,600 Rough Astral Diamonds) Rare 12h
                     "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
                     "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
                     "Leadership_Tier4_23_Guardnoble", // Guard Young Noble on Trip (Enchanted Coffer) 4h
@@ -595,7 +586,6 @@ function addProfile(profession, profile, base){
                 ],
                 "25": [
                     "Leadership_Tier4_24_Wizardsseneschal", // Escort a Wizard's Seneschal (Resonant Bag) 16h
-                    "Leadership_Tier3_20r_Master2", "Leadership_Tier3_20r_Master1", "Leadership_Tier3_20r_Master3", // Rare Rough Astral Diamond Tasks (1,600 Rough Astral Diamonds) Rare 12h
                     "Leadership_Tier4_22r_Capturebandithq", // Capture Bandit Leader (Resonant Bag) Rare 8h
                     "Leadership_Tier4_24r_Killdragon", // Kill a Young Dragon (Resonant Bag) Rare 12h
                     "Leadership_Tier4_23_Guardnoble", // Guard Young Noble on Trip (Enchanted Coffer) 4h
