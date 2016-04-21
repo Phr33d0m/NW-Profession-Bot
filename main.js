@@ -4502,7 +4502,7 @@ function addProfile(profession, profile, base){
                 table.withRotation td.rotate, table.withRotation th.rotate { height: 125px; } \
                 table.withRotation td.rotate, table.withRotation th.rotate > div { transform: translate(0, 38px) rotate(290deg); width: 30px; } \
                 table.withRotation td.rotate, table.withRotation th.rotate > div > span { border-bottom: 1px solid #bbb; padding: 0px 0px; white-space: nowrap; } \
-                table.withRotation td { border-right: 1px solid #bbb;} \
+                table.withRotation td { border-right: 1px solid #bbb; white-space: nowrap; } \
                 input[type='checkbox'].settingsInput { margin: 5px 10px 5px 5px;  }\
                 input.settingsInput { margin: 5px 5px; }\
                 label.settingsLabel { margin: 5px 5px; min-width: 150px; display: inline-block; }\
