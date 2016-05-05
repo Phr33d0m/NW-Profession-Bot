@@ -4491,6 +4491,7 @@ function addProfile(profession, profile, base){
                 .charSettingsTab div { overflow: auto; }\
                 #rcounters ul li span { display: inline-block; min-width: 125px; }\
                 #settingsPanel table { width: 100%; }\
+                #settingsPanel table tbody tr:hover { font-weight: bold; }\
                 .ranked:nth-child(6n+2) { color: purple; } .ranked:nth-child(6n+3) { color: blue; } .ranked:nth-child(6n+4) { color: green } \
                 .ranked2:nth-child(6n+1) { color: purple; } .ranked2:nth-child(6n+2) { color: blue; } .ranked2:nth-child(6n+3) { color: green } \
                 .tranked:nth-child(4n+2) { color: purple; } .tranked:nth-child(4n+3) { color: blue; } .tranked:nth-child(4n) { color: green } \
