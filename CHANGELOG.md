@@ -1,6 +1,10 @@
 RELEASE NOTES
 =============
 
+X.X.X
+- Add some CSS changes to make it easier to use the Settings panel on big resolutions
+- Add some CSS changes to help track the character name on hover when going through tracking tables
+
 4.9.2
 - Removed rare rough astral diamond tasks from default Leadership profiles.
 
