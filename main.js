@@ -4268,6 +4268,7 @@ function addProfile(profession, profile, base){
         // Continue again later
         dfdNextRun.done(function(delayTimer) {
             waitingNextChar = true;
+            dfdNextRun = $.Deferred();
             timerHandle = window.setTimeout(function() {
                 process();
             }, typeof delayTimer !== 'undefined' ? delayTimer : delay.DEFAULT);
