@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.9.2
+// @version 4.9.3
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -1601,12 +1601,12 @@ function addProfile(profession, profile, base){
             isProfileActive: true,
             level: {
                 0: ["Alchemy_Tier0_Intro_1"],
-                1: ["Alchemy_Tier1_Experiment_Rank2", "Alchemy_Tier1_Experimentation_Rank1", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier1_Refine_Basic", "Alchemy_Tier1_Gather_Basic"],
-                2: ["Alchemy_Tier1_Experiment_Rank3", "Alchemy_Tier1_Experimentation_Rank2", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier1_Refine_Basic", "Alchemy_Tier1_Gather_Basic"],
-                3: ["Alchemy_Tier1_Experiment_Rank4", "Alchemy_Tier1_Experimentation_Rank3", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier1_Refine_Basic", "Alchemy_Tier1_Gather_Basic"],
-                4: ["Alchemy_Tier1_Experiment_Rank5", "Alchemy_Tier1_Experimentation_Rank4", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier1_Refine_Basic", "Alchemy_Tier1_Gather_Basic"],
-                5: ["Alchemy_Tier1_Experiment_Rank6", "Alchemy_Tier1_Experimentation_Rank5", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier1_Refine_Basic", "Alchemy_Tier1_Gather_Basic"],
-                6: ["Alchemy_Tier1_Experiment_Rank7", "Alchemy_Tier1_Experimentation_Rank6", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier1_Refine_Basic", "Alchemy_Tier1_Gather_Basic"],
+                1: ["Alchemy_Tier1_Experiment_Rank2", "Alchemy_Tier1_Experimentation_Rank1", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier1_Refine_Basic", "Alchemy_Tier1_Gather_Components"],
+                2: ["Alchemy_Tier1_Experiment_Rank3", "Alchemy_Tier1_Experimentation_Rank2", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier1_Refine_Basic", "Alchemy_Tier1_Gather_Components"],
+                3: ["Alchemy_Tier1_Experiment_Rank4", "Alchemy_Tier1_Experimentation_Rank3", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier1_Refine_Basic", "Alchemy_Tier1_Gather_Components"],
+                4: ["Alchemy_Tier1_Experiment_Rank5", "Alchemy_Tier1_Experimentation_Rank4", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier1_Refine_Basic", "Alchemy_Tier1_Gather_Components"],
+                5: ["Alchemy_Tier1_Experiment_Rank6", "Alchemy_Tier1_Experimentation_Rank5", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier1_Refine_Basic", "Alchemy_Tier1_Gather_Components"],
+                6: ["Alchemy_Tier1_Experiment_Rank7", "Alchemy_Tier1_Experimentation_Rank6", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier1_Refine_Basic", "Alchemy_Tier1_Gather_Components"],
                 7: ["Alchemy_Tier2_Experiment_Rank08", "Alchemy_Tier2_Experimentation_Rank07", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier1_Refine_Basic", "Alchemy_Tier2_Gather_Basic"],
                 8: ["Alchemy_Tier2_Experiment_Rank09", "Alchemy_Tier2_Experimentation_Rank08", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier1_Refine_Basic", "Alchemy_Tier2_Gather_Basic"],
                 9: ["Alchemy_Tier2_Experiment_Rank10", "Alchemy_Tier2_Experimentation_Rank09", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier1_Refine_Basic", "Alchemy_Tier2_Gather_Basic"],
@@ -1622,10 +1622,10 @@ function addProfile(profession, profile, base){
                 19: ["Alchemy_Tier3_Experiment_Rank20", "Alchemy_Tier3_Experimentation_Rank19", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier2_Refine_Basic", "Alchemy_Tier1_Refine_Special", "Alchemy_Tier3_Refine_Basic", "Alchemy_Tier3_Gather_Basic"],
                 20: ["Alchemy_Tier3_Experiment_Rank21", "Alchemy_Tier3_Experimentation_Rank20", "Alchemy_Tier2_Aquaregia", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components", "Alchemy_Tier4_Gather_Basic"],
                 21: ["Alchemy_Tier4_Experiment_Rank22", "Alchemy_Tier4_Experimentation_Rank21", "Alchemy_Tier2_Aquaregia", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components", "Alchemy_Tier4_Gather_Basic"],
-                22: ["Alchemy_Tier4_Experiment_Rank23", "Alchemy_Tier4_Experimentation_Rank22", "Alchemy_Tier4_Aquaregia_2", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components", "Alchemy_Tier1_Gather_Basic"],
-                23: ["Alchemy_Tier4_Experiment_Rank24", "Alchemy_Tier4_Experimentation_Rank23", "Alchemy_Tier4_Aquaregia_2", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components", "Alchemy_Tier1_Gather_Basic"],
-                24: ["Alchemy_Tier4_Experiment_Rank25", "Alchemy_Tier4_Experimentation_Rank24", "Alchemy_Tier4_Aquaregia_2", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components", "Alchemy_Tier1_Gather_Basic"],
-                25: ["Alchemy_Tier4_Experimentation_Rank25", "Alchemy_Tier4_Create_Elemental_Unified", "Alchemy_Tier4_Create_Elemental_Aggregate", "Alchemy_Tier3_Protection_Potion_Major", "Alchemy_Tier3_Potency_Potion_Major", "Alchemy_Tier4_Aquaregia_2", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier1_Gather_Basic"],
+                22: ["Alchemy_Tier4_Experiment_Rank23", "Alchemy_Tier4_Experimentation_Rank22", "Alchemy_Tier4_Aquaregia_2", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components", "Alchemy_Tier1_Gather_Components"],
+                23: ["Alchemy_Tier4_Experiment_Rank24", "Alchemy_Tier4_Experimentation_Rank23", "Alchemy_Tier4_Aquaregia_2", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components", "Alchemy_Tier1_Gather_Components"],
+                24: ["Alchemy_Tier4_Experiment_Rank25", "Alchemy_Tier4_Experimentation_Rank24", "Alchemy_Tier4_Aquaregia_2", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components", "Alchemy_Tier1_Gather_Components"],
+                25: ["Alchemy_Tier4_Experimentation_Rank25", "Alchemy_Tier4_Create_Elemental_Unified", "Alchemy_Tier4_Create_Elemental_Aggregate", "Alchemy_Tier3_Protection_Potion_Major", "Alchemy_Tier3_Potency_Potion_Major", "Alchemy_Tier4_Aquaregia_2", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier1_Gather_Components"],
             },
         }]
     };
@@ -1665,7 +1665,7 @@ function addProfile(profession, profile, base){
     addProfile("Alchemy", {
         profileName: "Elemental Aggregate",
         level: {
-            24: ["Alchemy_Tier4_Create_Elemental_Aggregate", "Alchemy_Tier4_Experiment_Rank25", "Alchemy_Tier4_Experimentation_Rank24", "Alchemy_Tier4_Aquaregia_2", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components", "Alchemy_Tier1_Gather_Basic"],
+            24: ["Alchemy_Tier4_Create_Elemental_Aggregate", "Alchemy_Tier4_Experiment_Rank25", "Alchemy_Tier4_Experimentation_Rank24", "Alchemy_Tier4_Aquaregia_2", "Alchemy_Tier4_Refine_Basic", "Alchemy_Tier4_Gather_Components", "Alchemy_Tier1_Gather_Components"],
             25: '+25',
         }
     });
@@ -1913,15 +1913,15 @@ function addProfile(profession, profile, base){
     var defaultTrackResources = [{
         fname: 'Coalescent Ward (Invocation)',
         name: 'Fuse_Ward_Coalescent_Invocation',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: true, bta: true
     }, {
         fname: 'Preservation Ward (Invocation)',
         name: 'Fuse_Ward_Preservation_Invocation',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: true, bta: true
     }, {
-        fname: 'Tome of Experience',
+        fname: 'Tome of Experience (Account)',
         name: 'Item_Potion_Xp_Account',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: true, bta: true
     }, {
         fname: 'Dragon Egg',
         name: 'Crafting_Resource_Dragon_Egg',
@@ -1981,23 +1981,23 @@ function addProfile(profession, profile, base){
     }, {
         fname: 'Superior Mark of Potency',
         name: 'Gem_Upgrade_Resource_R5',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Greater Mark of Potency',
         name: 'Gem_Upgrade_Resource_R4',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Greater Mark of Power',
         name: 'Artifact_Upgrade_Resource_R3_A',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Greater Mark of Stability',
         name: 'Artifact_Upgrade_Resource_R3_B',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Greater Mark of Union',
         name: 'Artifact_Upgrade_Resource_R3_C',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Greater Resonance Stone',
         name: 'Artifactgear_Food_R4_A',
@@ -2025,19 +2025,19 @@ function addProfile(profession, profile, base){
     }, {
         fname: 'Mark of Potency',
         name: 'Gem_Upgrade_Resource_R3',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Mark of Power',
         name: 'Artifact_Upgrade_Resource_R2_A',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Mark of Stability',
         name: 'Artifact_Upgrade_Resource_R2_B',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Mark of Union',
         name: 'Artifact_Upgrade_Resource_R2_C',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Resonance Stone',
         name: 'Artifactgear_Food_R3_A',
@@ -2069,19 +2069,19 @@ function addProfile(profession, profile, base){
     }, {
         fname: 'Lesser Mark of Potency',
         name: 'Gem_Upgrade_Resource_R2',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Lesser Mark of Power',
         name: 'Artifact_Upgrade_Resource_R1_A',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Lesser Mark of Stability',
         name: 'Artifact_Upgrade_Resource_R1_B',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Lesser Mark of Union',
         name: 'Artifact_Upgrade_Resource_R1_C',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Lesser Resonance Stone',
         name: 'Artifactgear_Food_R2_A',
@@ -2130,6 +2130,138 @@ function addProfile(profession, profile, base){
         fname: 'White Pearl',
         name: 'Gemfood_R1',
         bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: '(Bound) Superior Mark of Potency',
+        name: 'Gem_Upgrade_Resource_R5',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Greater Mark of Potency',
+        name: 'Gem_Upgrade_Resource_R4',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Greater Mark of Power',
+        name: 'Artifact_Upgrade_Resource_R3_A',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Greater Mark of Stability',
+        name: 'Artifact_Upgrade_Resource_R3_B',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Greater Mark of Union',
+        name: 'Artifact_Upgrade_Resource_R3_C',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Greater Resonance Stone',
+        name: 'Artifactgear_Food_R4_A',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Greater Thaumaturgic Stone',
+        name: 'Gemfood_Stone_R4',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Greater Power Stone',
+        name: 'Artifactfood_R4_A',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Greater Stability Stone',
+        name: 'Artifactfood_R4_B',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Greater Union Stone',
+        name: 'Artifactfood_R4_C',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Mark of Potency',
+        name: 'Gem_Upgrade_Resource_R3',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Mark of Power',
+        name: 'Artifact_Upgrade_Resource_R2_A',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Mark of Stability',
+        name: 'Artifact_Upgrade_Resource_R2_B',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Mark of Union',
+        name: 'Artifact_Upgrade_Resource_R2_C',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Resonance Stone',
+        name: 'Artifactgear_Food_R3_A',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Thaumaturgic Stone',
+        name: 'Gemfood_Stone_R3',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Power Stone',
+        name: 'Artifactfood_R3_A',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Stability Stone',
+        name: 'Artifactfood_R3_B',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Union Stone',
+        name: 'Artifactfood_R3_C',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Lesser Mark of Potency',
+        name: 'Gem_Upgrade_Resource_R2',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Lesser Mark of Power',
+        name: 'Artifact_Upgrade_Resource_R1_A',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Lesser Mark of Stability',
+        name: 'Artifact_Upgrade_Resource_R1_B',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Lesser Mark of Union',
+        name: 'Artifact_Upgrade_Resource_R1_C',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Lesser Resonance Stone',
+        name: 'Artifactgear_Food_R2_A',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Lesser Thaumaturgic Stone',
+        name: 'Gemfood_Stone_R2',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Lesser Power Stone',
+        name: 'Artifactfood_R2_A',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Lesser Stability Stone',
+        name: 'Artifactfood_R2_B',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Lesser Union Stone',
+        name: 'Artifactfood_R2_C',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Minor Resonance Stone',
+        name: 'Artifactgear_Food_R1_A',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Minor Thaumaturgic Stone',
+        name: 'Gemfood_Stone_R1',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Minor Power Stone',
+        name: 'Artifactfood_R1_A',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Minor Stability Stone',
+        name: 'Artifactfood_R1_B',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Minor Union Stone',
+        name: 'Artifactfood_R1_C',
+        bank: false, unbound: false, btc: true, bta: true
     }, 
 ];
     var trackResources;
@@ -4472,11 +4604,12 @@ function addProfile(profession, profile, base){
         if (!($("#settingsButton").length)) {
             // Add the required CSS
             AddCss("\
+            	#content_box.section{margin-left: 120px !important;}\
                 #settingsButton{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); display: block; position: fixed; overflow: auto; right: 0px; top: 0px; padding: 3px; z-index: 1000;}\
                 #pauseButton{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); display: block; position: fixed; overflow: auto; right: 23px; top: 0px; padding: 3px; z-index: 1000;}\
                 #manualButton{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); display: block; position: fixed; overflow: auto; right: 46px; top: 0px; padding: 3px; z-index: 1000;}\
                 #revisitButton{border-bottom: 1px solid rgb(102, 102, 102); border-right: 1px solid rgb(102, 102, 102); background: none repeat scroll 0% 0% rgb(238, 238, 238); display: block; position: fixed; overflow: auto; right: 69px; top: 0px; padding: 3px; z-index: 1000;}\
-                #settingsPanel{position: fixed; overflow: auto; right: 0px; top: 0px; width: 700px;max-height:100%;font: 12px sans-serif; text-align: left; display: block; z-index: 1001;}\
+                #settingsPanel{position: fixed; overflow: auto; right: 0px; top: 0px; min-width: 700px;max-width: 60%;max-height:100%;font: 12px sans-serif; text-align: left; display: block; z-index: 1001;}\
                 #settings_title{font-weight: bolder; background: none repeat scroll 0% 0% rgb(204, 204, 204); border-bottom: 1px solid rgb(102, 102, 102); padding: 3px;}\
                 #settingsPanelButtonContainer {background: none repeat scroll 0% 0% rgb(204, 204, 204); border-top: 1px solid rgb(102, 102, 102);padding: 3px;text-align:center} \
                 #charSettingsAccordion h3.inactive {color: LightGray ;}\
@@ -4491,6 +4624,7 @@ function addProfile(profession, profile, base){
                 .charSettingsTab div { overflow: auto; }\
                 #rcounters ul li span { display: inline-block; min-width: 125px; }\
                 #settingsPanel table { width: 100%; }\
+                #settingsPanel table tbody tr:hover { font-weight: bold; }\
                 .ranked:nth-child(6n+2) { color: purple; } .ranked:nth-child(6n+3) { color: blue; } .ranked:nth-child(6n+4) { color: green } \
                 .ranked2:nth-child(6n+1) { color: purple; } .ranked2:nth-child(6n+2) { color: blue; } .ranked2:nth-child(6n+3) { color: green } \
                 .tranked:nth-child(4n+2) { color: purple; } .tranked:nth-child(4n+3) { color: blue; } .tranked:nth-child(4n) { color: green } \
@@ -4502,7 +4636,7 @@ function addProfile(profession, profile, base){
                 table.withRotation td.rotate, table.withRotation th.rotate { height: 125px; } \
                 table.withRotation td.rotate, table.withRotation th.rotate > div { transform: translate(0, 38px) rotate(290deg); width: 30px; } \
                 table.withRotation td.rotate, table.withRotation th.rotate > div > span { border-bottom: 1px solid #bbb; padding: 0px 0px; white-space: nowrap; } \
-                table.withRotation td { border-right: 1px solid #bbb;} \
+                table.withRotation td { border-right: 1px solid #bbb; white-space: nowrap; } \
                 input[type='checkbox'].settingsInput { margin: 5px 10px 5px 5px;  }\
                 input.settingsInput { margin: 5px 5px; }\
                 label.settingsLabel { margin: 5px 5px; min-width: 150px; display: inline-block; }\
