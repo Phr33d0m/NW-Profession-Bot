@@ -1,6 +1,10 @@
 RELEASE NOTES
 =============
 
+4.9.4
+- Re-labeled bound resources in the resource tracker.
+- Adde a red color when hovering over resources in place of bold. The bold font was making the columns shift in a disturbing way.
+
 4.9.3
 - Add some CSS changes to make it easier to use the Settings panel on big resolutions
 - Add some CSS changes to help track the character name on hover when going through tracking tables
