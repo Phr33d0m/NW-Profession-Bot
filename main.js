@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.9.2
+// @version 4.9.3
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -1913,15 +1913,15 @@ function addProfile(profession, profile, base){
     var defaultTrackResources = [{
         fname: 'Coalescent Ward (Invocation)',
         name: 'Fuse_Ward_Coalescent_Invocation',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: true, bta: true
     }, {
         fname: 'Preservation Ward (Invocation)',
         name: 'Fuse_Ward_Preservation_Invocation',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: true, bta: true
     }, {
-        fname: 'Tome of Experience',
+        fname: 'Tome of Experience (Account)',
         name: 'Item_Potion_Xp_Account',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: true, bta: true
     }, {
         fname: 'Dragon Egg',
         name: 'Crafting_Resource_Dragon_Egg',
@@ -1981,23 +1981,23 @@ function addProfile(profession, profile, base){
     }, {
         fname: 'Superior Mark of Potency',
         name: 'Gem_Upgrade_Resource_R5',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Greater Mark of Potency',
         name: 'Gem_Upgrade_Resource_R4',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Greater Mark of Power',
         name: 'Artifact_Upgrade_Resource_R3_A',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Greater Mark of Stability',
         name: 'Artifact_Upgrade_Resource_R3_B',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Greater Mark of Union',
         name: 'Artifact_Upgrade_Resource_R3_C',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Greater Resonance Stone',
         name: 'Artifactgear_Food_R4_A',
@@ -2025,19 +2025,19 @@ function addProfile(profession, profile, base){
     }, {
         fname: 'Mark of Potency',
         name: 'Gem_Upgrade_Resource_R3',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Mark of Power',
         name: 'Artifact_Upgrade_Resource_R2_A',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Mark of Stability',
         name: 'Artifact_Upgrade_Resource_R2_B',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Mark of Union',
         name: 'Artifact_Upgrade_Resource_R2_C',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Resonance Stone',
         name: 'Artifactgear_Food_R3_A',
@@ -2069,19 +2069,19 @@ function addProfile(profession, profile, base){
     }, {
         fname: 'Lesser Mark of Potency',
         name: 'Gem_Upgrade_Resource_R2',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Lesser Mark of Power',
         name: 'Artifact_Upgrade_Resource_R1_A',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Lesser Mark of Stability',
         name: 'Artifact_Upgrade_Resource_R1_B',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Lesser Mark of Union',
         name: 'Artifact_Upgrade_Resource_R1_C',
-        bank: false, unbound: true, btc: false, bta: true
+        bank: false, unbound: true, btc: false, bta: false
     }, {
         fname: 'Lesser Resonance Stone',
         name: 'Artifactgear_Food_R2_A',
@@ -2130,6 +2130,138 @@ function addProfile(profession, profile, base){
         fname: 'White Pearl',
         name: 'Gemfood_R1',
         bank: false, unbound: true, btc: false, bta: false
+    }, {
+        fname: '(Bound) Superior Mark of Potency',
+        name: 'Gem_Upgrade_Resource_R5',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Greater Mark of Potency',
+        name: 'Gem_Upgrade_Resource_R4',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Greater Mark of Power',
+        name: 'Artifact_Upgrade_Resource_R3_A',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Greater Mark of Stability',
+        name: 'Artifact_Upgrade_Resource_R3_B',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Greater Mark of Union',
+        name: 'Artifact_Upgrade_Resource_R3_C',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Greater Resonance Stone',
+        name: 'Artifactgear_Food_R4_A',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Greater Thaumaturgic Stone',
+        name: 'Gemfood_Stone_R4',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Greater Power Stone',
+        name: 'Artifactfood_R4_A',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Greater Stability Stone',
+        name: 'Artifactfood_R4_B',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Greater Union Stone',
+        name: 'Artifactfood_R4_C',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Mark of Potency',
+        name: 'Gem_Upgrade_Resource_R3',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Mark of Power',
+        name: 'Artifact_Upgrade_Resource_R2_A',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Mark of Stability',
+        name: 'Artifact_Upgrade_Resource_R2_B',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Mark of Union',
+        name: 'Artifact_Upgrade_Resource_R2_C',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Resonance Stone',
+        name: 'Artifactgear_Food_R3_A',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Thaumaturgic Stone',
+        name: 'Gemfood_Stone_R3',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Power Stone',
+        name: 'Artifactfood_R3_A',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Stability Stone',
+        name: 'Artifactfood_R3_B',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Union Stone',
+        name: 'Artifactfood_R3_C',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Lesser Mark of Potency',
+        name: 'Gem_Upgrade_Resource_R2',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Lesser Mark of Power',
+        name: 'Artifact_Upgrade_Resource_R1_A',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Lesser Mark of Stability',
+        name: 'Artifact_Upgrade_Resource_R1_B',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Lesser Mark of Union',
+        name: 'Artifact_Upgrade_Resource_R1_C',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Lesser Resonance Stone',
+        name: 'Artifactgear_Food_R2_A',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Lesser Thaumaturgic Stone',
+        name: 'Gemfood_Stone_R2',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Lesser Power Stone',
+        name: 'Artifactfood_R2_A',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Lesser Stability Stone',
+        name: 'Artifactfood_R2_B',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Lesser Union Stone',
+        name: 'Artifactfood_R2_C',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Minor Resonance Stone',
+        name: 'Artifactgear_Food_R1_A',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Minor Thaumaturgic Stone',
+        name: 'Gemfood_Stone_R1',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Minor Power Stone',
+        name: 'Artifactfood_R1_A',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Minor Stability Stone',
+        name: 'Artifactfood_R1_B',
+        bank: false, unbound: false, btc: true, bta: true
+    }, {
+        fname: '(Bound) Minor Union Stone',
+        name: 'Artifactfood_R1_C',
+        bank: false, unbound: false, btc: true, bta: true
     }, 
 ];
     var trackResources;
