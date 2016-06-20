@@ -5807,7 +5807,8 @@ function addProfile(profession, profile, base){
 
 
         // Resource tracker update.
-        html = "<table class='withRotation'><tr><th class='rotate'><div><span>Character Name</div></span></th>";
+        html = "<table class='withRotation'><tr><th class='rotate'><div><span>Character Number</div></span></th>";
+        html += "<th class='rotate'><div><span>Character Name</div></span></th>";
         html += "<th class='rotate'><div><span>Overflow</div></span></th>";
         html += "<th class='rotate'><div><span>Empty bag slots</div></span></th>";
         html += "<th class='rotate'><div><span>Total bag slots</div></span></th>";
@@ -5820,10 +5821,11 @@ function addProfile(profession, profile, base){
         var total = []; for (var i = 0; i < trackResources.length; i++) total[i] = 0;
         html += '</tr>';
 
+        var charNumPos = 1;
         var endhtml = '';
         charNamesList.forEach(function(charName) {
             var css_class = '';
-            endhtml += '<tr><td>' + charName + '</td>';
+            endhtml += '<tr><td>' + charNumPos++ + '</td><td>' + charName + '</td>';
             css_class = (charStatisticsList[charName].general.overflow > 0) ? " warning1 " : "";
             endhtml += '<td class=\"' + css_class + '\">' + charStatisticsList[charName].general.overflow + '</td>';
             css_class = ((charStatisticsList[charName].general.emptyBagSlots / charStatisticsList[charName].general.bagSlots *100) < 5) ? " warning2 " : "";
@@ -5850,7 +5852,7 @@ function addProfile(profession, profile, base){
         })
         endhtml += "</table>";
 
-        html += "<tr class=\"totals\"><td>Totals:</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td>";
+        html += "<tr class=\"totals\"><td>" + --charNumPos  + "</td><td>Totals:</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td>";
         for (var i = 0; i < total.length; i++) html += "<td>" + total[i] + "</td>";
         html += "</tr>";
 
