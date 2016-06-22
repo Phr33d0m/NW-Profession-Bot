@@ -1,6 +1,10 @@
 RELEASE NOTES
 =============
 
+4.9.6
+- Will now open VIP Account Reward bags that you may have collected.
+- Added character count to the resource tracker.
+
 4.9.5
 - Added light blue background when hovering over resources instead of red color.
 

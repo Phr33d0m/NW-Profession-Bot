@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.9.5
+// @version 4.9.6
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
@@ -2371,6 +2371,7 @@ function addProfile(profession, profile, base){
             openRewards: false,
             openCelestialBox: false,
             openInvocation: true,
+            openVIP: true,
             keepOneUnopened: false,
             runSCA: 'never',
             SCADailyReset: Date.now() - 24*60*60*1000,
@@ -2430,6 +2431,7 @@ function addProfile(profession, profile, base){
             openRewards: false,
             openCelestialBox: false,
             openInvocation: true,
+            openVIP: true,
             keepOneUnopened: false,
             runSCA: 'never',
         },
@@ -2549,6 +2551,7 @@ function addProfile(profession, profile, base){
         {scope: 'account', group: 'generalSettings', name: 'openCelestialBox', title: tr('settings.general.opencelestial'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.opencelestial.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'keepOneUnopened', title: tr('settings.general.keepOneUnopened'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.keepOneUnopened.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'openInvocation', title: tr('settings.general.openInvocation'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openInvocation.tooltip')},
+        {scope: 'account', group: 'generalSettings', name: 'openVIP', title: tr('settings.general.openVIP'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openVIP.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'refineAD', title: tr('settings.general.refinead'),           type: 'checkbox', pane: 'main', tooltip: tr('settings.general.refinead.tooltip')},
         {scope: 'account', group: 'generalSettings', name: 'runSCA', title: tr('settings.general.runSCA'),               type: 'select',   pane: 'main', tooltip: tr('settings.general.runSCA.tooltip'),
             opts: [ { name: 'never',        value: 'never'},
@@ -2607,6 +2610,7 @@ function addProfile(profession, profile, base){
         {scope: 'char', group: 'generalSettings', name: 'openCelestialBox', title: tr('settings.general.opencelestial'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.opencelestial.tooltip')},
         {scope: 'char', group: 'generalSettings', name: 'keepOneUnopened', title: tr('settings.general.keepOneUnopened'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.keepOneUnopened.tooltip')},
         {scope: 'char', group: 'generalSettings', name: 'openInvocation', title: tr('settings.general.openInvocation'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openInvocation.tooltip')},
+        {scope: 'char', group: 'generalSettings', name: 'openVIP', title: tr('settings.general.openVIP'),  type: 'checkbox', pane: 'main', tooltip: tr('settings.general.openVIP.tooltip')},
         {scope: 'char', group: 'generalSettings', name: 'refineAD',    title: tr('settings.general.refinead'),           type: 'checkbox', pane: 'main', tooltip: tr('settings.general.refinead.tooltip')},
         {scope: 'char', group: 'generalSettings', name: 'runSCA',    title: tr('settings.general.runSCA'),               type: 'select',   pane: 'main', tooltip: tr('settings.general.runSCA.tooltip'),
             opts: [ { name: 'never',        value: 'never'}, 
@@ -4004,6 +4008,22 @@ function addProfile(profession, profile, base){
                 });
             });
         }
+
+        if (getSetting('generalSettings','openVIP')) {
+            var _pbags = unsafeWindow.client.dataModel.model.ent.main.inventory.playerbags;
+            var _cRewardPat = /Vip_Account_Perdiem/;
+            console.log("Opening Account Bound VIP Rewards");
+            $.each(_pbags, function(bi, bag) {
+                bag.slots.forEach(function(slot) {
+                    if (slot && _cRewardPat.test(slot.name)) {
+                        window.setTimeout(function() {
+                            client.sendCommand('GatewayInventory_OpenRewardPack', slot.uid);
+                        }, 500);
+                    }
+                });
+            });
+        }
+
         // Check Vendor Options & Vendor matched items
         vendorJunk();
 
@@ -6236,6 +6256,8 @@ function addProfile(profession, profile, base){
                 'settings.general.opencelestial.tooltip': 'Open Chests bought with Celestial Coins',
                 'settings.general.openInvocation': 'Open Invocation Rewards',
                 'settings.general.openInvocation.tooltip': 'Enable opening rewards from invocation',
+                'settings.general.openVIP': 'Open Account Bound VIP Rewards',
+                'settings.general.openVIP.tooltip': 'Enable opening account bound rewards from VIP',
                 'settings.general.keepOneUnopened': 'Keep one reward box unopened',
                 'settings.general.keepOneUnopened.tooltip': 'Used to reserve the slots for the reward boxes',
                 'settings.general.refinead': 'Refine AD',
@@ -6311,6 +6333,8 @@ function addProfile(profession, profile, base){
                 'settings.general.openrewards.tooltip': 'Otwieraj skrzynki z zadań Przywództwa przy zmianie postaci',
                 'settings.general.openInvocation': 'Otwieraj nagrody z inwokacji',
                 'settings.general.openInvocation.tooltip': 'Otwieraj nagrody z inwokacji - zajmują masę miejsca, bo się nie łączą w stosy',
+                'settings.general.openVIP': 'Otw�rz rachunek Zwiazany Nagrody VIP',
+                'settings.general.openVIP.tooltip': 'Wlacz otwarcie konta nagrody zwiazane z VIP',
                 'settings.general.opencelestial': 'Otwieraj skrzynki za monety',
                 'settings.general.opencelestial.tooltip': 'Otwieraj skrzynki kupione za 13 monet z inwokacji',
                 'settings.general.keepOneUnopened': 'Pozostaw jedną skrzynkę nieotwartą',
