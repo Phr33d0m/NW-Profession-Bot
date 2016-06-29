@@ -1,6 +1,9 @@
 RELEASE NOTES
 =============
 
+4.9.7
+- Corrected 0-20 leveling for Jewelcrafting. Will now use Knight's Necklaces and Knight's Belts on the way to 20.
+
 4.9.6
 - Will now open VIP Account Reward bags that you may have collected.
 - Added character count to the resource tracker.
