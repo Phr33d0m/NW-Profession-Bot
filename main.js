@@ -11,7 +11,7 @@
 // @originalAuthor Mustex/Bunta
 // @modifiedBy NW gateway Professions Bot Developers & Contributors
 
-// @version 4.9.9
+// @version 4.9.10
 // @license http://creativecommons.org/licenses/by-nc-sa/3.0/us/
 // @grant GM_getValue
 // @grant GM_setValue
