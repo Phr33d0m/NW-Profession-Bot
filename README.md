@@ -1,15 +1,6 @@
 # Neverwinter Gateway - Professions Robot 
 Automatically selects professions for empty slots
 
-Please use this development site for bug reports and feature requests:  
-https://github.com/Phr33d0m/NW-Profession-Bot/issues
-
-Please use the GreasyFork site for questions and discussions:  
-https://greasyfork.org/scripts/9812-neverwinter-gateway-professions-robot/feedback
-
-RELEASE NOTES:  
-https://github.com/Phr33d0m/NW-Profession-Bot/blob/master/CHANGELOG.md
-
 + Fills professions slots
 + Per-character professions configuration
 + Levels up professions
@@ -18,6 +9,15 @@ https://github.com/Phr33d0m/NW-Profession-Bot/blob/master/CHANGELOG.md
 + Open rewardchest(99) per session
 + Sell/limit items from inventory, UI controlled
 + etc...
+
+Please use this development site for bug reports and feature requests:  
+https://github.com/Phr33d0m/NW-Profession-Bot/issues
+
+Please use the GreasyFork site for questions and discussions:  
+https://greasyfork.org/scripts/9812-neverwinter-gateway-professions-robot/feedback
+
+RELEASE NOTES:  
+https://github.com/Phr33d0m/NW-Profession-Bot/blob/master/CHANGELOG.md
 
 ### Installation
 1. Install/Use Google Chrome
