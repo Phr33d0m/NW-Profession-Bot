@@ -1,4 +1,7 @@
-# Neverwinter Gateway - Professions Robot 
+# This project has been DEPRECATED
+Why? [#247](https://github.com/Phr33d0m/NW-Profession-Bot/issues/247)
+
+# Neverwinter Gateway - Professions Robot
 Automatically selects professions for empty slots
 
 + Fills professions slots
